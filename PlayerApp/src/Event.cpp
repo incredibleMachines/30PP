@@ -34,7 +34,6 @@ Event::Event(ofxLibwebsockets::Event &args){
     }
     
     cout<<"total assets: "<<eAssets.size()<<endl;
-    cout <<"======================="<<endl;
 }
 
 //void Event::initEvent(){ }

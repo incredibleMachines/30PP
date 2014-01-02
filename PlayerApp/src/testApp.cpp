@@ -15,9 +15,11 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     if(!connected){
-        cout << "Not Connected: "<< endl;
-        connected = client.connect(options);
-        cout <<"Connection Status: " << connected << endl;
+        if(ofGetElapsedTimeMillis() % 500 <= 25){ //every half second try to reconnect
+            cout << "Not Connected: "<< endl;
+            connected = client.connect(options);
+            cout <<"Connection Status: " << connected << endl;
+        }
     }
 }
 
@@ -30,10 +32,10 @@ void testApp::draw(){
     
     if (connected){
         ofSetColor(0,255,20);
-        ofDrawBitmapString("CONNECTED", 140, 30);
+        ofDrawBitmapString("CONNECTED", 140, 32);
     } else {
         ofSetColor(255,0,20);
-        ofDrawBitmapString("NOT CONNECTED", 140, 30);
+        ofDrawBitmapString("NOT CONNECTED", 140, 32);
     }
 }
 //--------------------------------------------------------------
@@ -55,6 +57,7 @@ void testApp::onClose(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void testApp::onMessage(ofxLibwebsockets::Event &args){
     
+    cout <<"================================"<<endl;
     cout<<"EVENT NUMBER: "<< allEvents.size() << endl;
     
     Event thisEvent = * new Event(args);
