@@ -3,9 +3,9 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
+    options = ofxLibwebsockets::defaultClientOptions();
     options.port = 8080;
-    bool connected = client.connect(options);
+    connected = client.connect(options);
     
     client.addListener(this);
     ofSetFrameRate(60);
@@ -13,7 +13,11 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+    if(!connected){
+        cout << "Not Connected: "<< endl;
+        connected = client.connect(options);
+        cout <<"Connection Status: " << connected << endl;
+    }
 }
 
 //--------------------------------------------------------------
@@ -31,6 +35,7 @@ void testApp::onOpen(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void testApp::onClose(ofxLibwebsockets::Event &args){
     cout << "Websocket onClose"<<endl;
+    connected = false;
 }
 //--------------------------------------------------------------
 void testApp::onMessage(ofxLibwebsockets::Event &args){

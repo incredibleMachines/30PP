@@ -22,6 +22,9 @@ class testApp : public ofBaseApp{
     
         //Web Sockets
         ofxLibwebsockets::Client client;
+        ofxLibwebsockets::ClientOptions options;
+        bool connected;
+    
         void onConnect(ofxLibwebsockets::Event& args);
         void onOpen(ofxLibwebsockets::Event& args);
         void onClose(ofxLibwebsockets::Event& args);
