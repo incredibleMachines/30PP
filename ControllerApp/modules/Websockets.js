@@ -12,7 +12,7 @@ exports.sendFakeData = function(_socket){
 	
 	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset));
 	fakeAsset2.title = 'restaurant two';
-	fakeAsset2.link = 'URI://localhost/documents/media/file.mpg';
+	fakeAsset2.link = 'URI://localhost/documents/media/file2.mpg';
 	
 	var fakeData = {};
 	fakeData.command = 'start';
