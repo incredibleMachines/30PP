@@ -4,7 +4,7 @@
 #include "ofxLibwebsockets.h"
 #include "Event.h"
 
-class testApp : public ofBaseApp{
+class playerApp : public ofBaseApp{
 
 	public:
 		void setup();
