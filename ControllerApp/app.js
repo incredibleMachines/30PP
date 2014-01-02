@@ -9,6 +9,11 @@ var http = require('http');
 var path = require('path');
 var WebSocket = require('./modules/Websockets');
 
+/**
+ * Basic web socket control 
+ *
+ */
+ 
 var WSS = WebSocket.wss;
 WSS.on('connection',function(socket){
 	socket.on('message',function(msg){
@@ -19,8 +24,12 @@ WSS.on('connection',function(socket){
 
 var app = express();
 
-// all environments
+/**
+ * Basic Express Environment setup
+ */
+ 
 app.set('port', process.env.PORT || 3000);
+app.set('title', '30 Park Place Controller');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -37,7 +46,10 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-//routes
+/** 
+ * HTTP Routes Handled by Express
+ */
+ 
 app.get('/', routes.index);
 
 http.createServer(app).listen(app.get('port'), function(){
