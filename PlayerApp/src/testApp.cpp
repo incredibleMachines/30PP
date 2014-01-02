@@ -39,8 +39,15 @@ void testApp::onClose(ofxLibwebsockets::Event &args){
 }
 //--------------------------------------------------------------
 void testApp::onMessage(ofxLibwebsockets::Event &args){
-    cout << "Websocket onMessage: "<<endl;
-    cout << args.message <<endl;
+    
+    Event thisEvent = * new Event(args);
+    
+//    cout << "Websocket onMessage: "<<endl;
+//    cout << args.message <<endl;
+//    
+//    cout << "args: "<< endl;
+//    cout<<args.json["command"].asString() <<endl;
+    
 }
 //--------------------------------------------------------------
 void testApp::onBroadcast(ofxLibwebsockets::Event &args){

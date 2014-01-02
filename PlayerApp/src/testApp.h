@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
+#include "Event.h"
 
 class testApp : public ofBaseApp{
 
@@ -31,6 +32,8 @@ class testApp : public ofBaseApp{
         void onIdle(ofxLibwebsockets::Event& args);
         void onMessage(ofxLibwebsockets::Event& args);
         void onBroadcast(ofxLibwebsockets::Event& args);
+    
+    vector <Event> myEvent;
     
 		
 };
