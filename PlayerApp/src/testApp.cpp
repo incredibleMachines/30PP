@@ -9,6 +9,7 @@ void testApp::setup(){
     
     client.addListener(this);
     ofSetFrameRate(60);
+    
 }
 
 //--------------------------------------------------------------
@@ -22,31 +23,43 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-
+    
+    ofBackground(0);
+    ofSetColor(255);
+    ofDrawBitmapString("socket status: ", 20, 30);
+    
+    if (connected){
+        ofSetColor(0,255,20);
+        ofDrawBitmapString("CONNECTED", 140, 30);
+    } else {
+        ofSetColor(255,0,20);
+        ofDrawBitmapString("NOT CONNECTED", 140, 30);
+    }
 }
 //--------------------------------------------------------------
 void testApp::onConnect(ofxLibwebsockets::Event &args){
     cout << "Websocket onConnect" << endl;
+    
 }
 //--------------------------------------------------------------
 void testApp::onOpen(ofxLibwebsockets::Event &args){
     cout << "Websocket onOpen" << endl;
+    
 }
 //--------------------------------------------------------------
 void testApp::onClose(ofxLibwebsockets::Event &args){
     cout << "Websocket onClose"<<endl;
     connected = false;
+    
 }
 //--------------------------------------------------------------
 void testApp::onMessage(ofxLibwebsockets::Event &args){
     
+    cout<<"EVENT NUMBER: "<< allEvents.size() << endl;
+    
     Event thisEvent = * new Event(args);
     
-//    cout << "Websocket onMessage: "<<endl;
-//    cout << args.message <<endl;
-//    
-//    cout << "args: "<< endl;
-//    cout<<args.json["command"].asString() <<endl;
+    allEvents.push_back(thisEvent);
     
 }
 //--------------------------------------------------------------
@@ -57,15 +70,15 @@ void testApp::onBroadcast(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void testApp::onIdle(ofxLibwebsockets::Event &args){
     cout << "Websocket onIdle" << endl;
+    
 }
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     
     client.send("Hello World");
-    cout << "Sending Data on Socket"<< endl;
+    cout << "Sending Data on Socket: ";
 
 }
-
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
 

@@ -33,7 +33,7 @@ class testApp : public ofBaseApp{
         void onMessage(ofxLibwebsockets::Event& args);
         void onBroadcast(ofxLibwebsockets::Event& args);
     
-    vector <Event> myEvent;
+    vector <Event> allEvents;
     
 		
 };

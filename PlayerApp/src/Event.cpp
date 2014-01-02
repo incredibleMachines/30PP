@@ -14,21 +14,23 @@ Event::Event(ofxLibwebsockets::Event &args){
     eTitle = args.json["title"].asString();
     eDuration = args.json["duration"].asString();
     
+    //print EVENT keys
     cout << "eCmd: " << eCommand << "    eTitle: "<< eTitle << "    eDur: " << eDuration << endl;
     
     for (int i=0; i < args.json["assets"].size(); i++){
+        // cout<< "asset #: "<< i << "   data: "<< args.json["assets"].get(i, "default") << endl; // full asset object print out
+
+        Asset thisAsset = * new Asset; //temp Asset
         
-        // cout<< "asset #: "<< i << "   data: "<< args.json["assets"].get(i, "title") << endl; // full asset object print out
+        thisAsset.aLink     = args.json["assets"].get(i, "asset not found").get("link", "link not found").asString();
+        thisAsset.aTitle    = args.json["assets"].get(i, "asset not found").get("title", "title not found").asString();
+        thisAsset.aType     = args.json["assets"].get(i, "asset not found").get("type", "type not found").asString();
+        thisAsset.aLocation = args.json["assets"].get(i, "asset not found").get("location", "loc not found").asString();
 
-        Asset thisAsset = * new Asset;
-        thisAsset.aLink = args.json["assets"].get(i, "asset not found").get("link", "link not found").asString();
-        thisAsset.aTitle = args.json["assets"].get(i, "asset not found").get("title", "link not found").asString();
-        thisAsset.aType = args.json["assets"].get(i, "asset not found").get("type", "link not found").asString();
-        thisAsset.aLocation = args.json["assets"].get(i, "asset not found").get("location", "link not found").asString();
-
+        //print ASSET keys
         cout<< "asset #: "<< i << "   aTitle: "<< thisAsset.aTitle << "   aLink: "<< thisAsset.aLink <<"   aType: "<< thisAsset.aType << "   aLoc: "<< thisAsset.aLocation << endl;
         
-        eAssets.push_back(thisAsset);
+        eAssets.push_back(thisAsset); //push into eventAssets vector
     }
     
     cout<<"total assets: "<<eAssets.size()<<endl;
