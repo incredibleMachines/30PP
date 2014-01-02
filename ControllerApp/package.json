@@ -1,19 +1,14 @@
 {
-	"name": "30_Park_Place_ControllerApp",
-	"version": "0.0.1",
-	"author": "Incredible Machines <hello@incrediblemachines.net>",
-	"description": "An Application to control content for the 30PP projection Mapped installation, works in Tandem with the PlayerApp",
-	"contributors": [
-		{
-			"name": "Chris Piuggi",
-			"email": "chris@incrediblemachines.net"
-		},
-		{	"name": "Joe Saavedra",
-			"email": "joe@incrediblemachines.net"
-		}
-	],
-	"dependencies":{
-		"colors": "*",
-		"ws": "0.4.x"	
-	}
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.0",
+    "colors" : "*",
+	"ws" : "0.4.x",
+    "ejs": "*"
+  }
 }

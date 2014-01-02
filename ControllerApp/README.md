@@ -6,5 +6,5 @@ $ cd /path/to/your/folder
 
 $ npm install 
 
-$ node Controller.js
+$ node app.js
 
