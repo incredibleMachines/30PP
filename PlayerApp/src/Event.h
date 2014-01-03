@@ -1,9 +1,15 @@
 //
 //  Event.h
 //  PlayerApp
-//
 //  Created by Joseph Saavedra on 1/2/14.
-//
+/*
+ 
+ Event Object
+
+ gets instantiated on each incoming Event object, all fields + associated Asset object fields are populated,
+ (TODO: load assets)
+ 
+*/
 //
 
 #pragma once
