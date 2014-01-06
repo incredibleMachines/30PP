@@ -1,0 +1,61 @@
+<% include ../includes/header %>
+
+    <h2><%= title %> <small>Total: <%= events.length%></small></h2>
+    <section class='current_events'>
+    <table class="table table-hover">
+    	<thead>
+	    	<tr>
+	    		<th>+</th>
+		    	<th>#</th>
+		    	<th>Title</th>
+		    	<th>Animation Type</th>
+		    	<th>Duration</th>
+		    	<th>Total Assets</th>
+				<th>Actions</th>
+	    	</tr>
+    	</thead>
+    	<tbody>
+	    <% events.forEach(function(event,i){ %>
+	    	<tr>
+	    		<form method="post" action="/events/<%=event.slug%>">
+	    			<td><input type="checkbox"></td>
+		    		<td><strong><%= i %></strong></td>
+					<td><input type="text" name="title" value="<%=event.title%>"></td>
+					<td class="row">
+						<select name="anim_type">
+						<% for(var i =0; i<4;i++){ %>
+							<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Animation <%= i %></option>
+						<% }%>
+						</select>
+					</td>
+					<td>
+						<input type="range" value="<%= event.duration %>" class="range duration" step="1" min="3" max="300"  name="duration" >
+					    <input type="text" value="<%= event.duration %> seconds" class="input-sm duration_view" name="duration_view" >
+					</td>
+					<td>&nbsp;<%=event.assets.length%>&nbsp;&nbsp;
+						<div class="btn-group">
+							<button type="button" class="btn btn-default btn-xs new-assets" data-event_id="<%=event._id %>" data-toggle="modal" data-target="#new_asset_modal">+</button>
+							<button type="button" class="btn btn-default btn-xs view-asset">View&nbsp;
+							<span class="caret"></span>
+							</button>
+						</div>
+					</td>
+					<td>
+						<!-- Split button -->
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default btn-xs edit-event">							
+						  	<span class="caret"></span>
+						  	&nbsp;Edit
+						  </button>
+						  <button type="button" class="btn btn-default btn-xs update-event">Update</button>
+						  <button type="button" class="btn btn-default btn-xs delete-event">Delete</button>
+						</div>
+					</td>
+	    		</form>
+	    	</tr>
+	    <% }) //end events.forEach %>
+    	</tbody>
+    </table>
+    </section>
+   
+<% include ../includes/footer %>
