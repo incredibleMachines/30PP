@@ -1,7 +1,24 @@
 var WebSocketServer = require('ws').Server;
-exports.wss = new WebSocketServer({port:8080});
+var Socket;
+exports._socket; 
 
-exports.sendFakeData = function(_socket){
+exports.Connect = function(){
+
+	ofSocket = new WebSocketServer({port:8080})
+	ofSocket.on('connection',function(socket){
+		_socket = socket;
+		console.log('Socket Connection on 8080');
+		socket.on('message',function(msg){
+			console.log('Socket Received: %s', msg);
+			sendFakeData(socket);
+			
+		})
+	})
+
+}
+
+
+function sendFakeData(_socket){
 	
 	var fakeAsset = {};
 	
@@ -25,3 +42,6 @@ exports.sendFakeData = function(_socket){
 }
 
 
+exports.socket = function(){
+	return _socket;
+}	
