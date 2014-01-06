@@ -35,7 +35,7 @@ function sendFakeData(_socket){
 	fakeData.command = 'start';
 	fakeData.title = 'restaurants';
 	fakeData.assets = [fakeAsset,fakeAsset2];
-	fakeData.duration = 34;
+	fakeData.duration = Math.floor(Math.random()*100)+10;
 	
 	//We Can only send strings NOT JSON DATA!
 	_socket.send(JSON.stringify(fakeData));
