@@ -18,9 +18,9 @@ var Database = require('./modules/DBConnection');
 
 /** 
  *	File Checking 	
- *	
+ *	TO DO:: Pull this and place into './modules/FolderStructure'
  */ 
-
+//base file linking relative to app root
 var tempDir= './.tmp'; 
 var assetsDir = './../.assets';
 //check assetsDirectory
@@ -59,6 +59,7 @@ try{
 	fs.mkdirSync(tempDir);
 }
 
+//check for assets/video
 try{
 	
 	var v = fs.lstatSync(assetsDir+"/video");
@@ -72,7 +73,7 @@ try{
 		console.log("No Video Directory".red);
 		fs.mkdirSync(assetsDir+"/video");
 }
-
+//check for assets/image
 try{
 	
 	var i = fs.lstatSync(assetsDir+"/image");
@@ -101,12 +102,12 @@ Database.MongoConnect();
 
 WebSocket.Connect(); 
 
-var app = express();
-
 /**
  * Basic Express Environment setup
  *
  */
+
+var app = express();
  
 app.set('port', process.env.PORT || 3000);
 app.set('title', '30 Park Place Controller');
@@ -114,7 +115,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({uploadDir: tempDir, keepExtensions: true})); //temporary folder to store images
+app.use(express.bodyParser({uploadDir: tempDir, keepExtensions: true})); //temporary folder to store images on upload
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );

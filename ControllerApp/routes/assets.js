@@ -27,32 +27,47 @@ exports.add = function(_Database){
 		
 		var files = req.files;
 		//console.log(req.files.content);
-		
+		//TO DO: Functionatize whats happening in video and image
 		switch(post.asset_type){
 			case 'video':
 				post.body_text = null;
-				//TO DO: verify content type
+				//TO DO: Verify Content Type
 				upload.video(req.files.content,function(vid){
-					console.log(vid);
+					//console.log(vid);
 					
-					//add to post and update in database
-					res.send(200,'Video')
+					post.path = vid.path;
+					post.type = post.asset_type;
+					delete post.asset_type;
+					post.created_at = new Date();
+
+					addNewAsset(post,_Database,res);
 
 				})
-				break;
+			break; // break video
 			case 'image':
 				post.body_text = null;
 				//TO DO: verify content type
 				upload.image(req.files.content,function(img){
-					console.log(img)
+					//console.log(img)
 					
-					//add to post and update in database
-					res.send(200,'Image')
+					post.path = img.path;
+					post.type = post.asset_type;
+					delete post.asset_type;
+					post.created_at = new Date();
+
+					addNewAsset(post,_Database,res);
 				})
-				break;
+			break;//break image
 			case 'text':
 				
-				break;
+				post.path = null;
+				post.type = post.asset_type;
+				delete post.asset_type;
+				post.created_at = new Date();
+				
+				addNewAsset(post,_Database,res);
+
+			break;//break text
 		}
 		
 		//check file data
@@ -85,4 +100,31 @@ exports.delete = function(_Database){
 		
 		res.render('events/index', { title: 'add event' });
 	}
+}
+
+//_post= the json obj
+//__Database = _Database
+
+function addNewAsset(_post,__Database,_res){
+	
+	__Database.add('assets', _post, function(e,_doc){
+		console.log('Added New Asset')
+		//update event with new asset -
+		if(!e){ 
+			var updateObj = {$push:{assets:_doc._id.toString()}};
+			__Database.updateById('events', _post.event_id,updateObj,function(_e){
+				if(!_e){
+					//we're all good
+					_res.jsonp(200,{success:_doc})
+				}else{ //_e
+					//we successfully added the asset,but didn't associate it with our event
+					_res.jsonp(500,_e);
+				}
+			})
+		}else{ //e 
+			_res.jsonp(500,e);
+		}
+		
+	});
+	
 }

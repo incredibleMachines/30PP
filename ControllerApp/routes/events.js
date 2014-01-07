@@ -40,7 +40,7 @@ exports.add = function(_Database){
 		post.created_at = new Date();
 		console.log(post)
 		
-		_Database.add(post,'events',function(_a, e){
+		_Database.add('events', post, function(_a, e){
 			
 			if(!e) res.jsonp(_a)
 			else res.jsonp(500,e);
