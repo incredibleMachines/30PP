@@ -32,7 +32,7 @@ void playerApp::update(){
     
     else { //socket IS connected
         if (!inited){
-            string initMsg = "{'command' : 'init'}";
+            string initMsg = "{\"command\" : \"init\"}";
             socketClient.send(initMsg);
             cout << "Sent init command:\t"+initMsg;
         }
