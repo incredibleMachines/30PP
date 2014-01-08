@@ -1,4 +1,9 @@
+
 #include "playerApp.h"
+
+//constants
+
+#define INIT_CMD "{\"command\" : \"init\"}"
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -32,9 +37,9 @@ void playerApp::update(){
     
     else { //socket IS connected
         if (!inited){
-            string initMsg = "{'command' : 'init'}";
-            socketClient.send(initMsg);
-            cout << "Sent init command:\t"+initMsg;
+            //--- auto-init commented out for now
+//            socketClient.send(INIT_CMD);
+//            cout << "==== SENT INIT_CMD ====";
         }
     }
     
@@ -144,9 +149,8 @@ void playerApp::keyPressed(int key){
     
    
     if (key == ' '){ //happens on setup (when inited == false)
-        string initJson = "{'command' : 'init'}";
-        socketClient.send(initJson);
-        cout << "Sent init command:\t"+initJson;
+        socketClient.send(INIT_CMD);
+        cout << "==== SENT INIT_CMD ====";
     }
     
     else if (key == 'a'){ //testing asset loading
