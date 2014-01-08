@@ -14,18 +14,19 @@
 
 #pragma once
 #include "ofMain.h"
+#include "Asset.h"
 #include "ofxLibwebsockets.h"
 
 
 // Asset object
-// does not need any inherent methods (as of yet)
-class Asset {
-public:
-    string aType;
-    string aTitle;
-    string aLink;
-    string aLocation;
-};
+// >>> moved into it's own class
+//class Asset {
+//public:
+//    string aType;
+//    string aTitle;
+//    string aLink;
+//    string aLocation;
+//};
 
 
 
@@ -40,7 +41,8 @@ public:
     string eCommand;
     string eTitle;
     string eDuration;
-    vector <Asset> eAssets;
+    vector <Asset> eAssets; //to contain a copy of allAssets vector from playerApp
+    
     
 private:
     

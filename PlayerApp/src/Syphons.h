@@ -10,20 +10,29 @@
 
 #include "ofMain.h"
 #include "ofxSyphon.h"
+#include "Asset.h"
+#include "Event.h"
 
-#define NUM_TEXTURES 12
+// hardcoded based on number of projection outputs
+#define NUM_SYPHONS 8
 
 class Syphons {
     
 public:
     Syphons();
-    void setup();
+    void setup( vector <Asset> & _pAssets );
+    void update();
     void draw();
     void publishAll();
     
 
 private:
-    ofxSyphonServer server[NUM_TEXTURES];
-    ofTexture tex[NUM_TEXTURES];
+    ofxSyphonServer server [NUM_SYPHONS];
     
+    ofFbo fbo [NUM_SYPHONS];
+    
+    //ofTexture tex [NUM_SYPHONS];
+    //ofVboMesh vboMesh;
+    
+    vector <Asset> * pAsset; //<-- referenced from playerApp
 };

@@ -8,6 +8,7 @@
 
 #include "Event.h"
 
+//--------------------------------------------------------------
 Event::Event(ofxLibwebsockets::Event &args){
 
     eCommand = args.json["command"].asString();
@@ -20,19 +21,23 @@ Event::Event(ofxLibwebsockets::Event &args){
     for (int i=0; i < args.json["assets"].size(); i++){
         // cout<< "asset #: "<< i << "   data: "<< args.json["assets"].get(i, "default") << endl; // full asset object print out
 
-        Asset thisAsset = * new Asset; // pointer to temp Asset
-        thisAsset.aLink     = args.json["assets"].get(i, "asset not found").get("link", "link not found").asString();
-        thisAsset.aTitle    = args.json["assets"].get(i, "asset not found").get("title", "title not found").asString();
-        thisAsset.aType     = args.json["assets"].get(i, "asset not found").get("type", "type not found").asString();
-        thisAsset.aLocation = args.json["assets"].get(i, "asset not found").get("location", "loc not found").asString();
 
-        // print ASSET keys
-        cout<< "asset #: "<< i << "   aTitle: "<< thisAsset.aTitle << "   aLink: "<< thisAsset.aLink <<"   aType: "<< thisAsset.aType << "   aLoc: "<< thisAsset.aLocation << endl;
+        string aUri      = args.json["assets"].get(i, "asset not found").get("link", "link not found").asString();
+        string aTitle    = args.json["assets"].get(i, "asset not found").get("title", "title not found").asString();
+        string aType     = args.json["assets"].get(i, "asset not found").get("type", "type not found").asString();
+        string aLocation = args.json["assets"].get(i, "asset not found").get("location", "loc not found").asString();
+
         
-        eAssets.push_back(thisAsset); //push into eventAssets vector
+        // print ASSET keys
+        cout<< "asset #: "<< i << "\taTitle: "<< aTitle << "\taUri: "<< aUri <<"\taType: "<< aType << "\taLoc: "<< aLocation << endl;
+        
+        //now happens in createAssets in playerApp class
+        //Asset thisAsset = * new Asset (aTitle, aType, aLocation, aUri); // pointer to temp Asset
+        //eAssets.push_back(thisAsset); //push into eventAssets vector
     }
     
-    cout<<"total assets: "<<eAssets.size()<<endl; // completed parsing event
+    cout<<"total assets in Event: "<<args.json["assets"].size()<<endl; // completed parsing event
 }
 
+//--------------------------------------------------------------
 //void Event::initEvent(){ } // can be moved into here if needed
