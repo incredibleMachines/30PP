@@ -55,16 +55,22 @@ void playerApp::draw(){
     ofDrawBitmapString("socket status: ", 20, 30);
     ofDrawBitmapString("SPACE to request Event start", 20, ofGetHeight()-20);
     
-    if (socketConnected){
+    if (!socketConnected){
+        ofSetColor(255,0,20);
+        ofDrawBitmapString("NOT CONNECTED", 140, 32);
+        
+    }
+    else { //socketConnected
+        //--- connected msg
         ofSetColor(0,255,20);
         ofDrawBitmapString("CONNECTED", 140, 32);
         
-        //--- draw all syphon textures
-        allSyphons.draw();
         
-    } else {
-        ofSetColor(255,0,20);
-        ofDrawBitmapString("NOT CONNECTED", 140, 32);
+        if(inited){ //allAssets has been populated, follow SOP
+            
+            //--- draw all syphon textures
+            allSyphons.draw();
+        }
     }
 }
 
@@ -136,18 +142,14 @@ void playerApp::onIdle(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void playerApp::keyPressed(int key){
     
-    if (key == ' '){ //for testing
-        socketClient.send("Hello World");
-        cout << "Sending Data on Socket: ";
-    }
-    
-    else if (key == '1'){ //happens on setup (when inited == false)
+   
+    if (key == ' '){ //happens on setup (when inited == false)
         string initJson = "{'command' : 'init'}";
         socketClient.send(initJson);
         cout << "Sent init command:\t"+initJson;
     }
     
-    else if (key == 't'){ //testing asset loading
+    else if (key == 'a'){ //testing asset loading
     
         for(int i=0; i<5; i++){ //everything in here is the same as createAssets() --> this is just for testing
             Asset thisAsset = * new Asset ("restaurant one", "test_type", "test_loc"+ofToString(i), "/Users/jmsaavedra/30pp/culture/1.mov"); // temp Asset to push into allAssets
