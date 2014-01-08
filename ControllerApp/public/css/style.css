@@ -1,0 +1,30 @@
+body {
+  padding-top: 70px;
+}
+input {
+  background-color: transparent;
+  border: 0px solid;
+}
+textarea:focus,
+input:focus {
+  outline: 0;
+}
+*:focus {
+  outline: 0;
+}
+section.new_event {
+  width: 40%;
+  padding: 10px 5% 30px;
+  margin: 0 auto;
+}
+/* BOOTSTRAP MODS */
+/* HTML5 Range Finder Styling w. form-control*/
+.form-control.range {
+  height: 4px;
+  font-size: 0;
+  line-height: 0;
+  border-radius: 2px;
+  background: #202020;
+  padding: 0;
+  margin: 10px 0;
+}

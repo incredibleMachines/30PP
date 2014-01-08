@@ -67,3 +67,8 @@ Desktop.ini
 #node.js
 
 /node_modules
+
+#app specific 
+
+/.assets
+

@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "30PP_ControllerApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "express": "3.4.0",
     "colors" : "*",
 	"ws" : "0.4.x",
+	"mongodb":"1.x",
+    "less-middleware": "0.x",
     "ejs": "*"
   }
 }
