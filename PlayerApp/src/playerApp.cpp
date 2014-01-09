@@ -113,6 +113,7 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
     //--- init assets
     if (thisCmd == "init"){
         cout << ">>> received init, creating assets" << endl;
+        cout << "MESSAGE" << args.json["events"] << endl;
         createAssets(args);
         
     }
