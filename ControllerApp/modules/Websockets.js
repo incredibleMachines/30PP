@@ -10,6 +10,18 @@ exports.Connect = function(){
 		console.log('Socket Connection on 8080');
 		socket.on('message',function(msg){
 			console.log('Socket Received: %s', msg);
+
+			if(typeof msg === 'object'){
+				//console.log('JSON OBJECT!');
+				//look for control statment
+			}else{
+				var message =JSON.parse(msg);
+				console.log(typeof message)
+				console.log(message);
+				
+				
+			}
+			
 			sendFakeData(socket);
 			
 		})

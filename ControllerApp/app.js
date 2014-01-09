@@ -43,6 +43,8 @@ try {
     
     //make a folder
     fs.mkdirSync(assetsDir);
+   	console.log("Assets Directory Created".green);
+
 }
 //check temp file directory
 try{
@@ -57,6 +59,8 @@ try{
 }catch(e){
 	console.error("Temp Directory Find Error: ".red+e);
 	fs.mkdirSync(tempDir);
+	console.log("Temp Directory Created".green);
+
 }
 
 //check for assets/video
@@ -68,10 +72,13 @@ try{
 	}else{
 		console.log("No Video Directory".red);
 		fs.mkdirSync(assetsDir+"/video");
+		console.log("Video Directory Created".green);
 	}
 }catch(e){
 		console.log("No Video Directory".red);
 		fs.mkdirSync(assetsDir+"/video");
+		console.log("Video Directory Created".green);
+
 }
 //check for assets/image
 try{
@@ -82,10 +89,12 @@ try{
 	}else{
 		console.log("No Image Directory".red);
 		fs.mkdirSync(assetsDir+"/image");
+		console.log("Image Directory Created".green);
 	}
 }catch(e){
 		console.log("No Image Directory".red);
 		fs.mkdirSync(assetsDir+"/image");
+		console.log("Image Directory Created".green);
 }
 
 /**
