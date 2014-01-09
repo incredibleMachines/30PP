@@ -27,9 +27,12 @@ Asset::Asset(string _eventId, string _title, string _type, string _location, str
     
     filePath += uri; //append URI to base file path (30PP root folder)
     
+//if (type == "video"){
+    
     vid.loadMovie(filePath);
     
     vid.play();
+//}
 }
 
 //--------------------------------------------------------------
