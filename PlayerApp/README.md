@@ -18,5 +18,6 @@ Install ofxLibwebsockets:
 -  execute ControllerApp in terminal
 -  run this PlayerApp from xcode
 -  press spacebar to request an init command from ControllerApp.
+-  watch the console for event and asset info and creation
 	
 **Currently all video output (syphon class) is commented due to bug with file path/directory in Asset.cpp as well as ControllerApp path naming**
