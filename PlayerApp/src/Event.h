@@ -34,14 +34,17 @@
 class Event {
 public:
     
-    Event(ofxLibwebsockets::Event &args);
+    Event(int eventIndex, ofxLibwebsockets::Event &args);
     //void initEvent(ofxLibwebsockets::Event &args);
     
     string eCommand;
     string eTitle;
     string eDuration;
+    string eAnimType;
+    string eId;
+    string eCreatedAt;
     
-    vector <Asset> eAssets; //to contain a copy of allAssets vector from playerApp
+    vector <Asset> eAssets; //vector of all assets for this event
     
 private:
     

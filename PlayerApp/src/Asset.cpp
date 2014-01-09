@@ -9,8 +9,9 @@
 #include "Asset.h"
 
 //--------------------------------------------------------------
-Asset::Asset(string _title, string _type, string _location, string _uri){ //x,y,w,h in later?
+Asset::Asset(string _eventId, string _title, string _type, string _location, string _uri){ //x,y,w,h in later?
     
+    eventId = _eventId;
     type = _type;
     title = _title;
     uri = _uri;
@@ -20,9 +21,18 @@ Asset::Asset(string _title, string _type, string _location, string _uri){ //x,y,
     y = 0;
     width = 960;
     height = 360;
-
-    vid.loadMovie(uri);
+    
+    //TODO: generate this path automatically
+    string filePath = "/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/apps/30PP/";
+    
+    filePath += uri; //append URI to base file path (30PP root folder)
+    
+//if (type == "video"){
+    
+    vid.loadMovie(filePath);
+    
     vid.play();
+//}
 }
 
 //--------------------------------------------------------------

@@ -14,10 +14,11 @@
 class Asset {
     
 public:
-    Asset(string _title, string _type, string _location, string _uri);
+    Asset(string _eventId, string _title, string _type, string _location, string _uri);
     void update();
     void draw();
     
+    string eventId;
     string type;
     string title;
     string uri;
