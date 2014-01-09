@@ -10,8 +10,7 @@ Install ofxSyphon:
 Install ofxLibwebsockets:
 -  $ cd /path/to/your/OF/Folder/{addons}
 -  $ git clone [https://github.com/labatrockwell/ofxLibwebsockets.git] (https://github.com/labatrockwell/ofxLibwebsockets.git)
-	
-FOR OSX: Delete *ofxLibwebsockets/libs/libwebsockets/include/win32port*
+-  FOR OSX: Delete *ofxLibwebsockets/libs/libwebsockets/include/win32port*
 	
 ###To Run:###
 -  execute ControllerApp in terminal
