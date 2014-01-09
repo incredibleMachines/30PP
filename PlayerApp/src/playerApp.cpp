@@ -32,16 +32,16 @@ void playerApp::update(){
             socketConnected = socketClient.connect(socketOptions);
             cout << "Connection Status: " << socketConnected << endl;
         }
-        //if (inited) { ERR: network went down AFTER app was able to initialize, filled allAssets }
+        //if (inited) { ERR: network went down AFTER app was able to initialize, and filled allAssets }
     }
     
     else { //socket IS connected
         if (!inited){
-            if(ofGetElapsedTimeMillis() % 500 <= 20){ // ~every half second request init cmd
-                cout << "-----------------------" << endl;
-                cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
-                socketClient.send(INIT_CMD);
-                cout << ">>> SENT INIT_CMD ====";
+            if(ofGetElapsedTimeMillis() % 1000 <= 20){ // ~every second request init cmd (for now)
+                //cout << "-----------------------" << endl;
+                //cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
+                //socketClient.send(INIT_CMD);
+                //cout << ">>> SENT INIT_CMD ====";
             }
         }
     }
@@ -61,7 +61,9 @@ void playerApp::draw(){
     ofBackground(0);
     ofSetColor(255);
     ofDrawBitmapString("socket status: ", 20, 30);
-    ofDrawBitmapString("SPACE to request Event start", 20, ofGetHeight()-20);
+    ofDrawBitmapString("' ' to request init manually", 20, ofGetHeight()-40);
+    ofDrawBitmapString("socket status: ", 20, 30);
+    ofDrawBitmapString("'a' to test populating files manually", 20, ofGetHeight()-20);
     
     if (!socketConnected){
         ofSetColor(255,0,20);
@@ -138,7 +140,7 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
         // server has returned an error
     }
     
-    //--- error
+    //--- unknown event
     else {
         cout << ">>> received UNKNOWN EVENT" << endl;
     }
