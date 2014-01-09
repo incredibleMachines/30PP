@@ -14,10 +14,15 @@ exports.imagesDir = exports.assetsDir+'/images';
 
 //check assetsDirectory
 exports.setup = function(){
+
 	var tempDir = exports.tempDir;
 	var assetsDir = exports.assetsDir;
 	var videosDir = exports.videosDir;
 	var imagesDir = exports.imagesDir;
+	
+	console.log();
+	console.log(" ... Reviewing Folder Status ... ".inverse);
+	console.log();
 	
 	try {
 	    // Query the entry
@@ -28,17 +33,17 @@ exports.setup = function(){
 	        // Yes it is
 	        console.log("Directory Assets Exists".green)
 	    }else{
-		    console.log("No Assets Directory".red)
+		    console.log(" No Assets Directory ".red.inverse)
 		    fs.mkdirSync(assetsDir);
 	
 	    }
 	}catch (e) {
 	    // ...
-	    console.error("Assets Find Error: ".red+e);
+	    console.error(" No Assets Directory ".red.inverse);
 	    
 	    //make a folder
 	    fs.mkdirSync(assetsDir);
-	   	console.log("Assets Directory Created".green);
+	   	console.log(" Assets Directory Created ".green.inverse);
 	
 	}
 	//check temp file directory
@@ -47,14 +52,14 @@ exports.setup = function(){
 		if(t.isDirectory()){
 			console.log("Directory Temp Exists".green);
 		}else{
-			console.log("No Temp Directory".red);
+			console.log(" No Temp Directory ".red.inverse);
 			fs.mkdirSync(tempDir);
 		}
 		
 	}catch(e){
-		console.error("Temp Directory Find Error: ".red+e);
+		console.error(" No Temp Directory ".red.inverse);
 		fs.mkdirSync(tempDir);
-		console.log("Temp Directory Created".green);
+		console.log(" Temp Directory Created ".green.inverse);
 	
 	}
 	
@@ -65,14 +70,14 @@ exports.setup = function(){
 		if(v.isDirectory()){
 			console.log("Video Directory Exists".green);
 		}else{
-			console.log("No Video Directory".red);
+			console.log(" No Video Directory ".red.inverse);
 			fs.mkdirSync(videosDir);
-			console.log("Video Directory Created".green);
+			console.log(" Video Directory Created ".green);
 		}
 	}catch(e){
-			console.log("No Video Directory".red);
+			console.log(" No Video Directory ".inverse.red);
 			fs.mkdirSync(videosDir);
-			console.log("Video Directory Created".green);
+			console.log(" Video Directory Created ".green.inverse);
 	
 	}
 	//check for assets/image
@@ -82,13 +87,16 @@ exports.setup = function(){
 		if(i.isDirectory()){
 			console.log("Image Directory Exists".green);
 		}else{
-			console.log("No Image Directory".red);
+			console.log(" No Image Directory ".inverse.red);
 			fs.mkdirSync(imagesDir);
-			console.log("Image Directory Created".green);
+			console.log(" Image Directory Created ".green);
 		}
 	}catch(e){
-			console.log("No Image Directory".red);
+			console.log(" No Image Directory ".inverse.red);
 			fs.mkdirSync(imagesDir);
-			console.log("Image Directory Created".green);
+			console.log(" Image Directory Created ".green.inverse);
 	}
+	console.log();
+	console.log(" ... Folder Setup Complete ... ".inverse);
+	console.log();
 }

@@ -1,6 +1,6 @@
 var colors = require('colors');
 var fs = require('fs');
-var Folders = require('./modules/FolderStructure');
+var Folders = require('../modules/FolderStructure');
 
 
 exports.image = function( _image, _cb){

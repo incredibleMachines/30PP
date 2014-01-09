@@ -11,6 +11,7 @@ exports.Connect = function(_port,_Db){
 		_socket = socket;
 		console.log('New Socket Connection '.grey+' %s '.inverse,_port);
 		socket.on('message',function(msg){
+			console.log();
 			console.log('Socket Received: %s'.grey, msg);
 
 			if(typeof msg === 'object'){
@@ -43,6 +44,8 @@ function parseCommand(_json){
 
 	if(_json.hasOwnProperty('command')){
 		console.log("Incoming JSON Command: ".grey+_json.command.toString().cyan)
+		console.log();
+
 		switch(_json.command){
 			case 'init':
 				sendPlayerInit();
@@ -51,6 +54,8 @@ function parseCommand(_json){
 				_socket.send(JSON.stringify({'command':'error', 'error': 'unknown command'}));
 			break;
 		}
+	}else{
+		_socket.send(JSON.stringify({command:'error','error':'API Malformed: No Command Property'}));
 	}
 	
 }
@@ -61,7 +66,7 @@ function sendPlayerInit(){
 		if(!e) var resp = {command: 'init', events: _events};
 		else  var resp = {'command':'error', 'error': 'Database Error: '+JSON.stringify(e)};
 		
-		console.log(JSON.stringify(resp));
+		//console.log(JSON.stringify(resp));
 		_socket.send(JSON.stringify(resp));
 		
 	});
