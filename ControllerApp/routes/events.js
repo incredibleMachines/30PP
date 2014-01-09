@@ -10,7 +10,11 @@ exports.index = function(_Database){
 	return function(req,res){
 	 	//retrieve all events
 	 	_Database.getAll('events',function(err, _events){
-		 	res.render('events/index', { title: 'Events', page_slug: 'event-index', events: _events } );
+	 		//error handling needs to happen
+	 		_Database.getAll('assets',function(err,_assets){
+		 		res.render('events/index', { title: 'Events', page_slug: 'event-index', events: _events, assets: _assets } );
+
+	 		})
 	 	});
 	}
 }

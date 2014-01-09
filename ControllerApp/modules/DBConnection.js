@@ -88,41 +88,46 @@ exports.updateById=function(_type,_id,_updateObj,_cb){
 exports.formatInit=function(_cb){
 	collection.events.find().toArray(function(e,_events){
 		if(!e){
-			var events_counter = 0;
-			_events.forEach(function(event,i){
-				//console.log(i+' :: '+JSON.stringify(event))
-				if(event.assets.length>0){
-					var asset_counter = 0;
-					event.assets.forEach(function(asset,j){
-						//console.log(j+' :: '+asset);
-						returnDocumentByID('assets', asset,  function(e,_doc){
-							//console.log(_doc)
-							if(!e){
-								_events[i].assets[j] = _doc;
-								asset_counter++;
-								if(asset_counter == event.assets.length){
-									events_counter++;
+			if(_events>0){
+				var events_counter = 0;
+				_events.forEach(function(event,i){
+					//console.log(i+' :: '+JSON.stringify(event))
+					if(event.assets.length>0){
+						var asset_counter = 0;
+						event.assets.forEach(function(asset,j){
+							//console.log(j+' :: '+asset);
+							returnDocumentByID('assets', asset,  function(e,_doc){
+								//console.log(_doc)
+								if(!e){
+									_events[i].assets[j] = _doc;
+									asset_counter++;
+									if(asset_counter == event.assets.length){
+										events_counter++;
+									}
+									if(events_counter == _events.length){
+										console.log("  Formatted Event Object  ".green.inverse)
+										//console.log(_events)
+										//connect to our socket and send the data to everyone
+										_cb(null,_events);
+									}
+								}else{
+									//Handle Error
+									console.error(e);
+									_cb(e);
 								}
-								if(events_counter == _events.length){
-									console.log("  Formatted Event Object  ".green.inverse)
-									//console.log(_events)
-									//connect to our socket and send the data to everyone
-									_cb(null,_events);
-								}
-							}else{
-								//Handle Error
-								console.error(e);
-								_cb(e);
-							}
+							})
 						})
-					})
-				}else{ //no assets
-					   //console.log('EVENTS['+i+'] Contains No Assets');
-					   events_counter++;
-				}
-				
-			})
-		}else{
+					}else{ //no assets
+						   //console.log('EVENTS['+i+'] Contains No Assets');
+						   events_counter++;
+					}
+					
+				})
+			}else{//if(_events>0)
+				//console.error('No Events');
+				_cb({'error':'No Events Loaded into Database'});
+			}
+		}else{ //if(!e)
 			//Handle Error
 			console.error(e);
 			_cb(e)

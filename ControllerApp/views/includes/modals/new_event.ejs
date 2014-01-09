@@ -23,8 +23,8 @@
 					    <label for="title">Select Assets</label>
 						<select multiple class="form-control" name="assets">
 							<% // add dynamic loading of assets %>
-							<% for(var i =0; i<10;i++){ %>
-								<option value="<%= i %>">Asset <%= i %></option>
+							<% for(var i =0; i<assets.length;i++){ %>
+								<option value="<%= assets[i]._id %>"><%= assets[i].title %></option>
 							<% }%>
 						</select>
 						<p class="help-block">Select assets for this event.</p>
