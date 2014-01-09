@@ -5,14 +5,14 @@ Instructions for PlayerApp
 
 Install ofxSyphon:
 -  add ofxSyphon to your addons folder
--  add ofxSyphon/libs/Syphon/lib/osx/Syphon.framework to the 'Copy Files' under 'Build Phases'
+-  add *ofxSyphon/libs/Syphon/lib/osx/Syphon.framework* to the 'Copy Files' under 'Build Phases'
 
 Install ofxLibwebsockets:
 -  $ cd /path/to/your/OF/Folder/{addons}
 -  $ git clone [https://github.com/labatrockwell/ofxLibwebsockets.git] (https://github.com/labatrockwell/ofxLibwebsockets.git)
 	
-	FOR OSX DELETE
-		- Delete ofxLibwebsockets/libs/libwebsockets/include/win32port
+FOR OSX DELETE:
+	Delete ofxLibwebsockets/libs/libwebsockets/include/win32port
 	
 ###To Run:###
 -  execute ControllerApp in terminal
