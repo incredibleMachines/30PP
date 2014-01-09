@@ -11,12 +11,11 @@ Install ofxLibwebsockets:
 -  $ cd /path/to/your/OF/Folder/{addons}
 -  $ git clone [https://github.com/labatrockwell/ofxLibwebsockets.git] (https://github.com/labatrockwell/ofxLibwebsockets.git)
 	
-FOR OSX DELETE:
-	Delete ofxLibwebsockets/libs/libwebsockets/include/win32port
+FOR OSX: Delete *ofxLibwebsockets/libs/libwebsockets/include/win32port*
 	
 ###To Run:###
 -  execute ControllerApp in terminal
 -  run this PlayerApp from xcode
 -  press spacebar to request an init command from ControllerApp.
 	
-***Currently all video output (syphon class) is commented due to bug with file path/directory in Asset.cpp as well as ControllerApp path naming
+**Currently all video output (syphon class) is commented due to bug with file path/directory in Asset.cpp as well as ControllerApp path naming**
