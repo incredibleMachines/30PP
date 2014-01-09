@@ -7,12 +7,22 @@ var express = require('express');
 var less= require('less-middleware');
 var fs = require('fs');
 var colors = require('colors');
-
-
-var events = require('./routes/events');
-var assets = require('./routes/assets');
 var http = require('http');
 var path = require('path');
+
+/**
+ * Site Route Responses
+ *
+ */
+ 
+var events = require('./routes/events');
+var assets = require('./routes/assets');
+
+/**
+ * Custom Modules
+ *
+ */
+
 var WebSocket = require('./modules/Websockets');
 var Database = require('./modules/DBConnection');
 var Folders = require('./modules/FolderStructure');
@@ -21,7 +31,9 @@ var Folders = require('./modules/FolderStructure');
  *	File Checking 	
  *
  */ 
+ 
 Folders.setup();
+
 /**
  * Setup Database
  *

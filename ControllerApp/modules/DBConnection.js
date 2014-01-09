@@ -120,6 +120,10 @@ exports.formatInit=function(_cb){
 					}else{ //no assets
 						   //console.log('EVENTS['+i+'] Contains No Assets');
 						   events_counter++;
+						   if(events_counter==_events.length){
+					   		//edge case - out last event doesn't have any assets
+					   		 _cb(null,_events); 
+						   }
 					}
 					
 				})

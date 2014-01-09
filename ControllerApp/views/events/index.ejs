@@ -55,9 +55,20 @@
 	    			
 	    		</div>
 	    	</tr>
-	    	<tr id="<%=event._id %>">
+	    	<tr id="<%=event._id %>" class="event-row">
 	    		<td colspan="7">
-					<div>So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!So much stuff!!!		</div>
+	    			<section class="event-details" style="width: 40%;">
+						<form method="post" action="/events/<%=event.slug%>">
+								<input class="form-control" type="text" name="title" value="<%=event.title%>"/>
+								<select name="anim_type" class="form-control">
+									<% for(var i =0; i<4;i++){ %>
+									<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Animation <%= i %></option>
+									<% }%>
+								</select>
+								<input type="range" value="<%= event.duration %>" class="form-control range duration" step="1" min="3" max="300"  name="duration" />
+								<input type="text" value="<%= event.duration %> seconds" class="form-control input-sm duration_view" name="duration_view" />
+						</form>
+	    			</section>
 				</td>
 	    	</tr>
 	    <% }) //end events.forEach %>

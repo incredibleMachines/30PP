@@ -1,10 +1,11 @@
 var colors = require('colors');
 var fs = require('fs');
+var Folders = require('./modules/FolderStructure');
 
 
 exports.image = function( _image, _cb){
 	console.log('Upload Image Request: '.grey)
-	var path = "./../.assets/images/"+_image.originalFilename;
+	var path = Folders.imagesDir+'/'+_image.originalFilename;
 	console.log(path.toString().grey);
 	
 	fs.rename("./"+_image.path, path, function(err){
@@ -24,7 +25,7 @@ exports.image = function( _image, _cb){
 
 exports.video = function( _video, _cb){
 	console.log('Upload Video Request: '.grey)
-	var path = "./../.assets/videos/"+_video.originalFilename;
+	var path = Folders.videosDir+'/'+_video.originalFilename;
 	console.log(path.toString().grey);
 
 	fs.rename("./"+_video.path, path, function(err){

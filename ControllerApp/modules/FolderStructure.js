@@ -9,10 +9,16 @@ var fs = require('fs');
 */
 exports.tempDir= './.tmp'; 
 exports.assetsDir = './../.assets';
+exports.videosDir = exports.assetsDir+'/videos';
+exports.imagesDir = exports.assetsDir+'/images';
+
 //check assetsDirectory
 exports.setup = function(){
 	var tempDir = exports.tempDir;
 	var assetsDir = exports.assetsDir;
+	var videosDir = exports.videosDir;
+	var imagesDir = exports.imagesDir;
+	
 	try {
 	    // Query the entry
 	    var a = fs.lstatSync(assetsDir);
@@ -55,34 +61,34 @@ exports.setup = function(){
 	//check for assets/video
 	try{
 		
-		var v = fs.lstatSync(assetsDir+"/video");
+		var v = fs.lstatSync(videosDir);
 		if(v.isDirectory()){
 			console.log("Video Directory Exists".green);
 		}else{
 			console.log("No Video Directory".red);
-			fs.mkdirSync(assetsDir+"/video");
+			fs.mkdirSync(videosDir);
 			console.log("Video Directory Created".green);
 		}
 	}catch(e){
 			console.log("No Video Directory".red);
-			fs.mkdirSync(assetsDir+"/video");
+			fs.mkdirSync(videosDir);
 			console.log("Video Directory Created".green);
 	
 	}
 	//check for assets/image
 	try{
 		
-		var i = fs.lstatSync(assetsDir+"/image");
+		var i = fs.lstatSync(imagesDir);
 		if(i.isDirectory()){
 			console.log("Image Directory Exists".green);
 		}else{
 			console.log("No Image Directory".red);
-			fs.mkdirSync(assetsDir+"/image");
+			fs.mkdirSync(imagesDir);
 			console.log("Image Directory Created".green);
 		}
 	}catch(e){
 			console.log("No Image Directory".red);
-			fs.mkdirSync(assetsDir+"/image");
+			fs.mkdirSync(imagesDir);
 			console.log("Image Directory Created".green);
 	}
 }
