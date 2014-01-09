@@ -1,6 +1,6 @@
 Instructions for PlayerApp
 -----------------------
-
+####Install and Setup####
 - Assumptions: You have openframeworks 0.8.0 installed.
 
 Install ofxSyphon:
@@ -12,7 +12,7 @@ Install ofxLibwebsockets:
 -  $ git clone [https://github.com/labatrockwell/ofxLibwebsockets.git] (https://github.com/labatrockwell/ofxLibwebsockets.git)
 -  FOR OSX: Delete *ofxLibwebsockets/libs/libwebsockets/include/win32port*
 	
-###To Run:###
+####To Run:####
 -  execute ControllerApp in terminal
 -  run this PlayerApp from xcode
 -  press spacebar to request an init command from ControllerApp.
