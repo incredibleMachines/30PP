@@ -15,7 +15,7 @@ public:
     void setup();
     void update();
     void draw();
-    void createAssets(ofxLibwebsockets::Event &args);
+    void initEvents(ofxLibwebsockets::Event &args);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -43,8 +43,6 @@ public:
 
     vector <Event> allEvents;
     
-    vector <Asset> allAssets;
-
     Syphons allSyphons;
     
 };

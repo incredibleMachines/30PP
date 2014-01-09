@@ -108,30 +108,28 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
 
     cout <<"============ SOCKET MESSAGE =============="<<endl;
     string thisCmd = args.json["command"].asString();
-    
-    
+    cout <<">>> raw message: " << args.message << endl;
+
+    cout <<"\n>>> thisCmd = "<< thisCmd << endl;
     //TODO: make switch cases
     
     //--- init assets
     if (thisCmd == "init"){
-        cout << ">>> received init, creating assets" << endl;
-        cout << "MESSAGE" << args.json["events"] << endl;
-        createAssets(args);
-        
+        cout << ">>> received init" << endl;
+        initEvents(args);
     }
     
     //--- start an event
     else if (thisCmd == "start"){
         cout << ">>> received start event" << endl;
         cout<<"EVENT NUMBER: "<< allEvents.size() << endl;
-        Event thisEvent = * new Event(args);
-        allEvents.push_back(thisEvent);
+        //startEvent(args); <-- TODO
     }
     
     //--- stop an event
     else if (thisCmd == "stop"){
         cout << ">>> received stop event" << endl;
-        // stop current event
+        //startEvent(args); <-- TODO
     }
     
     //--- server error
@@ -163,51 +161,50 @@ void playerApp::keyPressed(int key){
     
    
     if (key == ' '){ //happens on setup (when inited == false)
+        cout << "-----------------------" << endl;
+        cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
         socketClient.send(INIT_CMD);
-        cout << "==== SENT INIT_CMD ====";
+        cout << ">>> SENT INIT_CMD ====";
     }
     
-    else if (key == 'a'){ //testing asset loading
-    
-        for(int i=0; i<5; i++){ //everything in here is the same as createAssets() --> this is just for testing
-            Asset thisAsset = * new Asset ("restaurant one", "test_type", "test_loc"+ofToString(i), "/Users/jmsaavedra/30pp/culture/1.mov"); // temp Asset to push into allAssets
-            // print ASSET keys
-            cout<< "asset #: "<< i << "\tTitle: "<< thisAsset.title << "\tUri: "<< thisAsset.uri <<"\tType: "<< thisAsset.type << "\tLoc: "<< thisAsset.location << endl;
-            allAssets.push_back(thisAsset); //push into allAssets vector
-        }
-        
-        cout << "total assets inited: "<< allAssets.size()<<endl;
-        
-        //--- call syphon setup
-        allSyphons.setup( allAssets ); //pass in as ref for pointer ( can move to setup()? )
-        
-        inited = true;
-    }
+//    else if (key == 'a'){ //testing asset loading
+//    
+//        for(int i=0; i<5; i++){ //everything in here is the same as createAssets() --> this is just for testing
+//            Asset thisAsset = * new Asset ("restaurant one", "test_type", "test_loc"+ofToString(i), "/Users/jmsaavedra/30pp/culture/1.mov"); // temp Asset to push into allAssets
+//            // print ASSET keys
+//            cout<< "asset #: "<< i << "\tTitle: "<< thisAsset.title << "\tUri: "<< thisAsset.uri <<"\tType: "<< thisAsset.type << "\tLoc: "<< thisAsset.location << endl;
+//            allAssets.push_back(thisAsset); //push into allAssets vector
+//        }
+//        
+//        cout << "total assets inited: "<< allAssets.size()<<endl;
+//        
+//        //--- call syphon setup
+//        allSyphons.setup( allAssets ); //pass in as ref for pointer ( can move to setup()? )
+//        
+//        inited = true;
+//    }
 }
 
 //--------------------------------------------------------------
-void playerApp::createAssets(ofxLibwebsockets::Event &args){ //fills the allAssets vector on init
+void playerApp::initEvents(ofxLibwebsockets::Event &args){ //fills the allAssets vector on init
     
-    for (int i=0; i < args.json["assets"].size(); i++){
-        // cout<< "asset #: "<< i << "   data: "<< args.json["assets"].get(i, "default") << endl; // full asset object print out
+    cout<<">>> hit initEvents()"<<endl;
+    
+    int numEvents = args.json["events"].size();
+    
+    cout<<">>> num events received: "<< numEvents <<endl<<endl;
+    
+    for (int e=0; e<numEvents; e++) {
         
-        string aUri      = args.json["assets"].get(i, "asset not found").get("link", "link not found").asString();
-        string aTitle    = args.json["assets"].get(i, "asset not found").get("title", "title not found").asString();
-        string aType     = args.json["assets"].get(i, "asset not found").get("type", "type not found").asString();
-        string aLocation = args.json["assets"].get(i, "asset not found").get("location", "loc not found").asString();
+        //TODO: make this work:
+        //Event thisEvent = * new Event (args.json["events"].get(e, "just 1 complete event"));
         
-        Asset thisAsset = * new Asset (aTitle, aType, aLocation, aUri); // pointer to temp Asset
-        
-        // print asset keys
-        cout<< "asset #: "<< i << "\tTitle: "<< thisAsset.title << "\tUri: "<< thisAsset.uri <<"\tType: "<< thisAsset.type << "\tLoc: "<< thisAsset.location << endl;
-        
-        allAssets.push_back(thisAsset); //push into allAssets vector
+        Event thisEvent = * new Event (e, args); //for now pass in index and all args
+        allEvents.push_back(thisEvent);
     }
-    
-    cout << "total assets inited: "<< allAssets.size()<<endl;
         
     //--- syphon setup
-    allSyphons.setup( allAssets ); //pass in ref to allAssets here ( can move to setup()? )
+    //allSyphons.setup( allEvents ); //pass in ref to allAssets here ( can move to setup()? )
     
     inited = true; //we're inited, ready to go
 }
