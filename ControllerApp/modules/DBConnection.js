@@ -41,7 +41,7 @@ exports.add= function(_type,_doc,_cb){
 
 //returns all the results within a collection
 //_type = collection name
-//_cb = callback()
+//_cb = callback(err,collection[])
 //returns mongodb Collection as an Array
 exports.getAll=function(_type,_cb){
 
@@ -59,21 +59,91 @@ exports.getAll=function(_type,_cb){
 exports.update=function(_type,_what,_updateObj,_cb){
 	
 	collection[_type].update(_what,_updateObj,true,true,function(e){
-		
+		//needs to be tested and finished
 	})
 	
 }
 //update a document by providing a mongodb ID string
+//_type = collection name
+//_what = collection query
+//_updateObj = the update operation which needs to take place
+//_cb = callback(err)
 exports.updateById=function(_type,_id,_updateObj,_cb){
 	
 	//convert _id to MongoObject
-	var o_id = new BSON.ObjectID(_id.toString());
+	//var o_id = new BSON.ObjectID(_id.toString());
 	
-	collection[_type].update({_id:o_id},_updateObj,true,function(e){
+	collection[_type].update({_id: makeMongoID(_id)},_updateObj,true,function(e){
 		if(!e) _cb(null);
 		else _cb(e)
 		
 	})
 	
 	
+}
+
+//get all events and assets formatted for init command
+//async function which parses all events and assets and reorders them and sends them back to the socket
+//_cb=callback(err,_events[])
+exports.formatInit=function(_cb){
+	collection.events.find().toArray(function(e,_events){
+		if(!e){
+			var events_counter = 0;
+			_events.forEach(function(event,i){
+				//console.log(i+' :: '+JSON.stringify(event))
+				if(event.assets.length>0){
+					var asset_counter = 0;
+					event.assets.forEach(function(asset,j){
+						//console.log(j+' :: '+asset);
+						returnDocumentByID('assets', asset,  function(e,_doc){
+							//console.log(_doc)
+							if(!e){
+								_events[i].assets[j] = _doc;
+								asset_counter++;
+								if(asset_counter == event.assets.length){
+									events_counter++;
+								}
+								if(events_counter == _events.length){
+									console.log("  Formatted Event Object  ".green.inverse)
+									//console.log(_events)
+									//connect to our socket and send the data to everyone
+									_cb(null,_events);
+								}
+							}else{
+								//Handle Error
+								console.error(e);
+								_cb(e);
+							}
+						})
+					})
+				}else{ //no assets
+					   //console.log('EVENTS['+i+'] Contains No Assets');
+					   events_counter++;
+				}
+				
+			})
+		}else{
+			//Handle Error
+			console.error(e);
+			_cb(e)
+		}
+	});	
+}
+
+//get a mongo document by collection and string id 
+//_type = collection type
+//_id = mongodb id as string
+//_cb = callback(err,_document)
+function returnDocumentByID(_type,__id,_cb){
+	collection[_type].findOne({_id:makeMongoID(__id)},function(e,_doc){
+		//does error handling happen here?
+		if(!e) _cb(null,_doc)
+		else _cb(e);
+	})
+	
+}
+function makeMongoID(__id){
+	//TODO:
+	//check for character sizing. must be 12?
+	return new BSON.ObjectID(__id.toString());
 }
