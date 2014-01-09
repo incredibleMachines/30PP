@@ -37,12 +37,11 @@ public:
     Event(ofxLibwebsockets::Event &args);
     //void initEvent(ofxLibwebsockets::Event &args);
     
-    
     string eCommand;
     string eTitle;
     string eDuration;
-    vector <Asset> eAssets; //to contain a copy of allAssets vector from playerApp
     
+    vector <Asset> eAssets; //to contain a copy of allAssets vector from playerApp
     
 private:
     

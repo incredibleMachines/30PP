@@ -27,6 +27,7 @@ public:
     
 
 private:
+    
     ofxSyphonServer server [NUM_SYPHONS];
     
     ofFbo fbo [NUM_SYPHONS];
@@ -35,4 +36,10 @@ private:
     //ofVboMesh vboMesh;
     
     vector <Asset> * pAsset; //<-- referenced from playerApp
+    
+    int numAssets; // number of total assets
 };
+
+
+
+

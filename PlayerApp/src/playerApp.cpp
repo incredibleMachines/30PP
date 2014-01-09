@@ -27,23 +27,26 @@ void playerApp::setup(){
 void playerApp::update(){
     if(!socketConnected){
         if(ofGetElapsedTimeMillis() % 500 <= 20){ // ~every half second try to reconnect
-            cout << "---------------------" << endl;
-            cout << "Not Connected. Time: "<< ofGetElapsedTimeMillis() << endl;
+            cout << "-------------------------" << endl;
+            cout << "Socket Not Connected. Time: "<< ofGetUnixTime() << endl;
             socketConnected = socketClient.connect(socketOptions);
             cout << "Connection Status: " << socketConnected << endl;
         }
-        //if (inited) { ERR: network went down after app was able to initialize, filled allAssets }
+        //if (inited) { ERR: network went down AFTER app was able to initialize, filled allAssets }
     }
     
     else { //socket IS connected
         if (!inited){
-            //--- auto-init commented out for now
-//            socketClient.send(INIT_CMD);
-//            cout << "==== SENT INIT_CMD ====";
+            if(ofGetElapsedTimeMillis() % 500 <= 20){ // ~every half second request init cmd
+                cout << "-----------------------" << endl;
+                cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
+                socketClient.send(INIT_CMD);
+                cout << ">>> SENT INIT_CMD ====";
+            }
         }
     }
     
-    if (inited){ //app is running normally, populated allAssets, network be damned, we're playing the loop.
+    if (inited){ //app is running normally, populated allAssets. network be damned, we're playing the loop.
         
         //--- update syphons
         allSyphons.update();
@@ -109,13 +112,14 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
     
     //--- init assets
     if (thisCmd == "init"){
-        cout << "init all assets" << endl;
+        cout << ">>> received init, creating assets" << endl;
         createAssets(args);
         
     }
     
     //--- start an event
     else if (thisCmd == "start"){
+        cout << ">>> received start event" << endl;
         cout<<"EVENT NUMBER: "<< allEvents.size() << endl;
         Event thisEvent = * new Event(args);
         allEvents.push_back(thisEvent);
@@ -123,12 +127,19 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
     
     //--- stop an event
     else if (thisCmd == "stop"){
+        cout << ">>> received stop event" << endl;
         // stop current event
+    }
+    
+    //--- server error
+    else if (thisCmd == "error"){
+        cout << ">>> received server error" << endl;
+        // server has returned an error
     }
     
     //--- error
     else {
-        cout<< "UKNOWN COMMAND"<<endl;
+        cout << ">>> received UNKNOWN EVENT" << endl;
     }
 }
 
@@ -184,7 +195,7 @@ void playerApp::createAssets(ofxLibwebsockets::Event &args){ //fills the allAsse
         
         Asset thisAsset = * new Asset (aTitle, aType, aLocation, aUri); // pointer to temp Asset
         
-        // print ASSET keys
+        // print asset keys
         cout<< "asset #: "<< i << "\tTitle: "<< thisAsset.title << "\tUri: "<< thisAsset.uri <<"\tType: "<< thisAsset.type << "\tLoc: "<< thisAsset.location << endl;
         
         allAssets.push_back(thisAsset); //push into allAssets vector
