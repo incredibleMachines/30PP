@@ -4,7 +4,7 @@ Instructions for PlayerApp
 - Assumptions: You have openframeworks 0.8.0 installed.
 
 Install ofxSyphon:
--  add ofxSyphon to your addons folder
+-  add ofxSyphon to your addons in project
 -  add *ofxSyphon/libs/Syphon/lib/osx/Syphon.framework* to the 'Copy Files' under 'Build Phases'
 
 Install ofxLibwebsockets:
