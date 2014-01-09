@@ -28,7 +28,8 @@ void playerApp::update(){
     if(!socketConnected){
         if(ofGetElapsedTimeMillis() % 500 <= 20){ // ~every half second try to reconnect
             cout << "-------------------------" << endl;
-            cout << "Socket Not Connected. Time: "<< ofGetUnixTime() << endl;
+            cout << "Socket Not Connected. Attempting Reconnect."<<endl;
+            cout<<"Time: "<< ofGetUnixTime() << endl;
             socketConnected = socketClient.connect(socketOptions);
             cout << "Connection Status: " << socketConnected << endl;
         }
@@ -49,8 +50,7 @@ void playerApp::update(){
     if (inited){ //app is running normally, populated allAssets. network be damned, we're playing the loop.
         
         //--- update syphons
-        allSyphons.update();
-        
+        //allSyphons.update();
     }
 }
 
@@ -61,9 +61,8 @@ void playerApp::draw(){
     ofBackground(0);
     ofSetColor(255);
     ofDrawBitmapString("socket status: ", 20, 30);
-    ofDrawBitmapString("' ' to request init manually", 20, ofGetHeight()-40);
+    ofDrawBitmapString("SPACE to request init manually", 20, ofGetHeight()-20);
     ofDrawBitmapString("socket status: ", 20, 30);
-    ofDrawBitmapString("'a' to test populating files manually", 20, ofGetHeight()-20);
     
     if (!socketConnected){
         ofSetColor(255,0,20);
@@ -79,7 +78,7 @@ void playerApp::draw(){
         if(inited){ //allAssets has been populated, follow SOP
             
             //--- draw all syphon textures
-            allSyphons.draw();
+            //allSyphons.draw();
         }
     }
 }
@@ -106,9 +105,9 @@ void playerApp::onClose(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void playerApp::onMessage(ofxLibwebsockets::Event &args){
 
-    cout <<"============ SOCKET MESSAGE =============="<<endl;
+    cout <<"\n==================== SOCKET MESSAGE RECEIVED ====================="<<endl;
     string thisCmd = args.json["command"].asString();
-    cout <<">>> raw message: " << args.message << endl;
+    cout <<">>> raw message:\n" << args.message << endl;
 
     cout <<"\n>>> thisCmd = "<< thisCmd << endl;
     //TODO: make switch cases
@@ -162,27 +161,9 @@ void playerApp::keyPressed(int key){
    
     if (key == ' '){ //happens on setup (when inited == false)
         cout << "-----------------------" << endl;
-        cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
         socketClient.send(INIT_CMD);
-        cout << ">>> SENT INIT_CMD ====";
+        cout << ">>> SENT INIT_CMD  \t||\t Time: "<< ofGetUnixTime() << endl << endl;
     }
-    
-//    else if (key == 'a'){ //testing asset loading
-//    
-//        for(int i=0; i<5; i++){ //everything in here is the same as createAssets() --> this is just for testing
-//            Asset thisAsset = * new Asset ("restaurant one", "test_type", "test_loc"+ofToString(i), "/Users/jmsaavedra/30pp/culture/1.mov"); // temp Asset to push into allAssets
-//            // print ASSET keys
-//            cout<< "asset #: "<< i << "\tTitle: "<< thisAsset.title << "\tUri: "<< thisAsset.uri <<"\tType: "<< thisAsset.type << "\tLoc: "<< thisAsset.location << endl;
-//            allAssets.push_back(thisAsset); //push into allAssets vector
-//        }
-//        
-//        cout << "total assets inited: "<< allAssets.size()<<endl;
-//        
-//        //--- call syphon setup
-//        allSyphons.setup( allAssets ); //pass in as ref for pointer ( can move to setup()? )
-//        
-//        inited = true;
-//    }
 }
 
 //--------------------------------------------------------------
@@ -204,7 +185,7 @@ void playerApp::initEvents(ofxLibwebsockets::Event &args){ //fills the allAssets
     }
         
     //--- syphon setup
-    //allSyphons.setup( allEvents ); //pass in ref to allAssets here ( can move to setup()? )
+    //allSyphons.setup( allEvents ); //pass in ref to allAssets here ( might move to setup )
     
     inited = true; //we're inited, ready to go
 }

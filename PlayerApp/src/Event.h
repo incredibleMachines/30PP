@@ -44,7 +44,7 @@ public:
     string eId;
     string eCreatedAt;
     
-    vector <Asset> eAssets; //to contain a copy of allAssets vector from playerApp
+    vector <Asset> eAssets; //vector of all assets for this event
     
 private:
     

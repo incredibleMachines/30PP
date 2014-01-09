@@ -11,7 +11,7 @@
 //--------------------------------------------------------------
 Event::Event(int eventIndex, ofxLibwebsockets::Event &args){
     
-    cout << "->creating event number: "<< eventIndex << " -------------------------------"<<endl;
+    cout << "CREATING EVENT NUMBER: "<< eventIndex << " -------------------------------"<<endl;
     
     int numAssets = args.json["events"].get(eventIndex, "event not found").get("assets", "asset not found").size();
 
@@ -27,21 +27,23 @@ Event::Event(int eventIndex, ofxLibwebsockets::Event &args){
     
     //go through every asset in this event and push it into this eventAssets vector
     for (int i=0; i < numAssets; i++){
-
-        string aUri   = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("path", "path not found").asString();
-        string aTitle = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("title", "title not found").asString();
-        string aType  = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("type", "type not found").asString();
+        
+        string eventId  = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("event_id", "eventId not found").asString();
+        string aUri     = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("path", "path not found").asString();
+        string aTitle   = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("title", "title not found").asString();
+        string aType    = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("type", "type not found").asString();
         string aLocation = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("location", "location not found").asString();
 
-        
         // print ASSET keys
-        cout<< "\t>>> asset #: "<< i << "\taTitle: "<< aTitle << "\taUri: "<< aUri <<"\taType: "<< aType << "\taLoc: "<< aLocation << endl;
+        cout<< "\t\t>>> asset #: "<< i <<"\taTitle: "<< aTitle << "\taUri: "<< aUri <<"\taType: "<< aType << "\taLoc: "<< aLocation << "\teventId: "<< eventId << endl;
         
-        Asset thisAsset = * new Asset (aTitle, aType, aLocation, aUri); // pointer to temp Asset
+        Asset thisAsset = * new Asset (eventId, aTitle, aType, aLocation, aUri); // pointer to temp Asset
         eAssets.push_back(thisAsset); //push into eventAssets vector
     }
-    cout << "\t>>> eventAssets.size = "<<eAssets.size()<<endl;
+    cout << "\t=== this eventAssets.size = "<<eAssets.size()<<endl<<endl;
 }
 
 //--------------------------------------------------------------
-//void Event::initEvent(){ } // can be moved into here if needed
+//void Event::update(){ //might make sense
+
+//}
