@@ -1,4 +1,4 @@
-ome general ignore patterns
+#some general ignore patterns
 build/
 obj/
 *.o
