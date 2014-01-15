@@ -36,6 +36,7 @@ exports.Connect = function(_port,_Db){
 
 }
 
+//a reference object to our single websocket connection
 exports.socket = function(){
 	return _socket;
 }	
@@ -55,7 +56,7 @@ function parseCommand(_json){
 			break;
 		}
 	}else{
-		_socket.send(JSON.stringify({command:'error','error':'API Malformed: No Command Property'}));
+		_socket.send(JSON.stringify({command:'error', 'error':'API Malformed: No Command Property'}));
 	}
 	
 }

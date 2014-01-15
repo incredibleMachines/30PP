@@ -65,7 +65,7 @@ exports.update=function(_type,_what,_updateObj,_cb){
 }
 //update a document by providing a mongodb ID string
 //_type = collection name
-//_what = collection query
+//_id = string as mongo id
 //_updateObj = the update operation which needs to take place
 //_cb = callback(err)
 exports.updateById=function(_type,_id,_updateObj,_cb){
