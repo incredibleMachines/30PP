@@ -8,73 +8,29 @@ void testApp::setup(){
 	ofBackground(70, 70, 70);
 	ofEnableSmoothing();
 	ofEnableDepthTest();
-
-
-	//--
-	// Setup cameras
-
-	cam1.scale = 20;
-    cam1.tilt(-90);
-	cameras[0] = &cam1;
     
-    cam2.scale = 20;
-	cameras[1] = &cam2;
+    bool parsingSuccessful = settings.open("settings.json");
     
-    cam3.scale=20;
-    cam3.pan(90);
-    cameras[2]= &cam3;
-
-
-
-
-	//--
-	// Define viewports
-
-	setupViewports();
-
-	//
-	//--
-
-
-
-
-	//--
-	// Setup swarm
-
-	// swarm is a custom ofNode in this example (see Swarm.h / Swarm.cpp)
-	nodeSwarm.init(100, 50, 10);
-
-	//
-	//--
-}
-
-//--------------------------------------------------------------
-void testApp::setupViewports(){
-	//call here whenever we resize the window
-
-
-	//--
-	// Define viewports
-
-    viewGrid[0].x=0;
-    viewGrid[0].y=0;
-    viewGrid[0].width=1440;
-    viewGrid[0].height=900;
+    if (parsingSuccessful) {
+        
+        //--
+        // Setup cameras
+        
+        setupCameras();
+		
+	}
     
-    viewGrid[1].x=1440;
-    viewGrid[1].y=0;
-    viewGrid[1].width=1920;
-    viewGrid[1].height=1080;
-   
-    
-    viewGrid[2].x=3360;
-    viewGrid[2].y=0;
-    viewGrid[2].width=1920;
-    viewGrid[2].height=1080;
-    
+    else {
+		cout  << "Failed to parse JSON" << endl;
+	}
 
-	//
-	//--
+
+    
+    model.loadModel("squirrel/NewSquirrel.3ds");
+    model.setPosition(0, 0, 0);
+    model.setScale(.02,.02,.02);
+    ofDisableSeparateSpecularLight();
+
 }
 
 //--------------------------------------------------------------
@@ -97,9 +53,9 @@ void testApp::draw(){
 
 	// draw side viewports
 	for(int i = 0; i < N_CAMERAS; i++){
-		cameras[i]->begin(viewGrid[i]);
+		cameras[i].camera.begin(cameras[i].viewport);
 		drawScene(i);
-		cameras[i]->end();
+		cameras[i].camera.end();
 	}
 
 	//
@@ -125,7 +81,7 @@ void testApp::draw(){
 	ofSetColor(255, 255, 255);
 	//
 	for(int i = 0; i < N_CAMERAS; i++){
-		ofRect(viewGrid[i]);
+		ofRect(cameras[i].viewport);
 	}
 	//
 
@@ -140,8 +96,8 @@ void testApp::draw(){
 
 void testApp::drawScene(int iCameraDraw){
 
-	nodeSwarm.draw();
 	nodeGrid.draw();
+    model.drawFaces();
 
 	//--
 	// Draw frustum preview for ofEasyCam camera
@@ -158,9 +114,6 @@ void testApp::drawScene(int iCameraDraw){
 	//	camera as 'the view frustum'.
 
 
-	// First check if we're already drawing the view through the easycam
-	// If so, don't draw the frustum preview.
-	if(iCameraDraw != 0){
 
 		ofPushStyle();
 		ofPushMatrix();
@@ -193,13 +146,13 @@ void testApp::drawScene(int iCameraDraw){
 		//   viewMain, else we'll use viewGrid[0]
 		ofRectangle boundsToUse;
 
-        boundsToUse = viewGrid[0];
+        boundsToUse = cameras[iCameraDraw].viewport;
 
 
 		// Now lets get the inverse ViewProjection
 		//  for the camera
 		ofMatrix4x4 inverseCameraMatrix;
-		inverseCameraMatrix.makeInvertOf(cam1.getModelViewProjectionMatrix(boundsToUse));
+		inverseCameraMatrix.makeInvertOf(cameras[iCameraDraw].camera.getModelViewProjectionMatrix(boundsToUse));
 
 		// By default, we can say
 		//	'we are drawing in world space'
@@ -240,7 +193,6 @@ void testApp::drawScene(int iCameraDraw){
 
 		ofPopStyle();
 		ofPopMatrix();
-	}
 
 	//
 	//--
@@ -251,7 +203,8 @@ void testApp::drawScene(int iCameraDraw){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    
+//TODO: a-z zoom in/out, arrows x/y, num keys select camera
 }
 
 //--------------------------------------------------------------
@@ -276,6 +229,18 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	setupViewports();
+	
+}
+
+void testApp:: setupCameras() {
+    for(int i=0; i<N_CAMERAS;i++){
+        if (settings["cameras"].size()>i){
+            ofVec3f camPos = ofVec3f(settings["cameras"][i]["camPos"]["x"].asFloat(), settings["cameras"][i]["camPos"]["y"].asFloat(), settings["cameras"][i]["camPos"]["z"].asFloat());
+            ofVec3f lookPos = ofVec3f(settings["cameras"][i]["lookPos"]["x"].asFloat(),settings["cameras"][i]["lookPos"]["y"].asFloat(),settings["cameras"][i]["lookPos"]["z"].asFloat());
+            ofVec3f viewPos = ofVec3f(settings["cameras"][i]["viewPos"]["x"].asFloat(),settings["cameras"][i]["viewPos"]["y"].asFloat());
+            ofVec3f viewSize = ofVec3f(settings["cameras"][i]["viewSize"]["x"].asFloat(),settings["cameras"][i]["viewSize"]["y"].asFloat());
+            cameras[i].setup(camPos, lookPos, viewPos,viewSize);
+        }
+    }
 }
 

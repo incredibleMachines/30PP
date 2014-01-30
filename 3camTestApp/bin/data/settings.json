@@ -1,0 +1,67 @@
+{
+    "cameras": [
+                {
+                "name": "left",
+                "camPos": {
+                "x": 40,
+                "y:": 0,
+                "z": 40
+                },
+                "lookPos": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+                },
+                "viewPos": {
+                "x": 0,
+                "y": 0
+                },
+                "viewSize": {
+                "x": 1440,
+                "y": 900
+                }
+                },
+                {
+                "name": "center",
+                "camPos": {
+                "x": 40,
+                "y": 0,
+                "z": 40
+                },
+                "lookPos": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+                },
+                "viewPos": {
+                "x": 0,
+                "y": 0
+                },
+                "viewSize": {
+                "x": 1440,
+                "y": 900
+                }
+                },
+                {
+                "name": "right",
+                "camPos": {
+                "x": 40,
+                "y": 0,
+                "z": 40
+                },
+                "lookPos": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+                },
+                "viewPos": {
+                "x": 0,
+                "y": 0
+                },
+                "viewSize": {
+                "x": 1440,
+                "y": 900
+                }
+                }
+                ]
+}

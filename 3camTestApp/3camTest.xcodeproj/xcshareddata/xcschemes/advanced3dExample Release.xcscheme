@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-               BuildableName = "advanced3dExample.app"
+               BuildableName = "3camTest.app"
                BlueprintName = "3camTest"
                ReferencedContainer = "container:3camTest.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "advanced3dExample.app"
+            BuildableName = "3camTest.app"
             BlueprintName = "3camTest"
             ReferencedContainer = "container:3camTest.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "advanced3dExample.app"
+            BuildableName = "3camTest.app"
             BlueprintName = "3camTest"
             ReferencedContainer = "container:3camTest.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "advanced3dExample.app"
+            BuildableName = "3camTest.app"
             BlueprintName = "3camTest"
             ReferencedContainer = "container:3camTest.xcodeproj">
          </BuildableReference>

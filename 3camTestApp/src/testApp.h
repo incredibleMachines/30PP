@@ -13,9 +13,12 @@
 #include "ofMain.h"
 
 // Custom objects for this example
-#include "Swarm.h"
 #include "Grid.h"
-#include "OrthoCamera.h"
+#include "Camera.h"
+
+#include "ofxAssimpModelLoader.h"
+#include "ofxJSONElement.h"
+
 
 #define N_CAMERAS 3
 
@@ -26,9 +29,8 @@ class testApp : public ofBaseApp {
 		void update();
 		void draw();
 
-		void setupViewports();
 		void drawScene(int iCameraDraw);
-		void updateMouseRay();
+    void setupCameras();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -38,19 +40,16 @@ class testApp : public ofBaseApp {
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 
-		//cameras (all these inherit from ofCamera)
-		orthoCamera cam1, cam2, cam3;    
 
-		//camera pointers
-		ofCamera * cameras[N_CAMERAS];
-
-		//viewports
-		ofRectangle viewGrid[N_CAMERAS];
-
-		//my custom node
-		swarm nodeSwarm;
+    
+        //test AssimpModel
+        ofxAssimpModelLoader model;
+		
+        //my custom node
 		grid nodeGrid;
+    
+        Camera cameras[N_CAMERAS];
 
-		//ray drawn under mouse cursor [start,end]
-		ofVec3f ray[2];
+    
+    ofxJSONElement settings;
 };
