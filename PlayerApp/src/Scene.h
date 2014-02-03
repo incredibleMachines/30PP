@@ -6,9 +6,32 @@
 //
 //
 
-#ifndef __PlayerApp__Scene__
-#define __PlayerApp__Scene__
+#pragma once
+#include "ofMain.h"
 
-#include <iostream>
-
-#endif /* defined(__PlayerApp__Scene__) */
+// Scene object
+// does not need any inherent methods (as of yet)
+class Scene {
+    
+public:
+    Scene(string _eventId, string _title, string _type, string _location, string _uri);
+    void update();
+    void draw();
+    
+    string eventId;
+    string type;
+    string title;
+    string uri;
+    string location;
+    
+    int x;
+    int y;
+    int width;
+    int height;
+    
+    ofVideoPlayer vid;
+    //    ofFile file;
+    
+private:
+    
+};

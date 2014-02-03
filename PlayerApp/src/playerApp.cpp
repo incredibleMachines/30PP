@@ -39,6 +39,7 @@ void playerApp::update(){
     else { //socket IS connected
         if (!inited){
             if(ofGetElapsedTimeMillis() % 1000 <= 20){ // ~every second request init cmd (for now)
+                //--- status update should go here
                 //cout << "-----------------------" << endl;
                 //cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
                 //socketClient.send(INIT_CMD);

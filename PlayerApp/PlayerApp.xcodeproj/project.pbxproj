@@ -22,6 +22,7 @@
 		E207C918187640DB00386D7A /* Syphons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E207C916187640DB00386D7A /* Syphons.cpp */; };
 		E28AF52C187B45B00079D38A /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28AF52A187B45B00079D38A /* Asset.cpp */; };
 		E28BD5D6187606D8001508F2 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28BD5D4187606D8001508F2 /* Event.cpp */; };
+		E2DCCD85189C4C110002119A /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD83189C4C110002119A /* Scene.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -99,6 +100,8 @@
 		E28AF52B187B45B00079D38A /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
 		E28BD5D4187606D8001508F2 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		E28BD5D5187606D8001508F2 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		E2DCCD83189C4C110002119A /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
+		E2DCCD84189C4C110002119A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -344,6 +347,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* playerApp.h */,
 				E28BD5D4187606D8001508F2 /* Event.cpp */,
 				E28BD5D5187606D8001508F2 /* Event.h */,
+				E2DCCD83189C4C110002119A /* Scene.cpp */,
+				E2DCCD84189C4C110002119A /* Scene.h */,
 				E28AF52A187B45B00079D38A /* Asset.cpp */,
 				E28AF52B187B45B00079D38A /* Asset.h */,
 				E207C916187640DB00386D7A /* Syphons.cpp */,
@@ -451,6 +456,7 @@
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* playerApp.cpp in Sources */,
+				E2DCCD85189C4C110002119A /* Scene.cpp in Sources */,
 				E28BD5D6187606D8001508F2 /* Event.cpp in Sources */,
 				E207C918187640DB00386D7A /* Syphons.cpp in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,

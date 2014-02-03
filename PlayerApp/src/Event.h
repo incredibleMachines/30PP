@@ -39,7 +39,7 @@ public:
     
     string eCommand;
     string eTitle;
-    string eDuration;
+    string eType;
     string eAnimType;
     string eId;
     string eCreatedAt;

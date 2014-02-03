@@ -13,16 +13,17 @@ Event::Event(int eventIndex, ofxLibwebsockets::Event &args){
     
     cout << "CREATING EVENT NUMBER: "<< eventIndex << " -------------------------------"<<endl;
     
+    int numScenes = args.json["events"].get(eventIndex, "event not found").get("scenes", "NO SCENES FOUND").size();
     int numAssets = args.json["events"].get(eventIndex, "event not found").get("assets", "asset not found").size();
 
     eAnimType   = args.json["events"].get(eventIndex, "event not found").get("anim_type", "anim_type not found").asString();
     eId         = args.json["events"].get(eventIndex, "event not found").get("_id", "id not found").asString();
     eTitle      = args.json["events"].get(eventIndex, "event not found").get("title", "title not found").asString();
-    eDuration   = args.json["events"].get(eventIndex, "event not found").get("duration", "duration not found").asString();
+    eType       = args.json["events"].get(eventIndex, "event not found").get("type", "type not found").asString();
     eCreatedAt  = args.json["events"].get(eventIndex, "event not found").get("created_at", "created not found").asString();
     
     //print EVENT keys
-    cout << "\t>>> eID: " << eId << "\t||\teTitle: "<< eTitle << "\t||\tnumAssets: "<< numAssets<< "\t||\teDur: " << eDuration << "\t||\teCreatedAt: " << eCreatedAt << endl;
+    cout << "\t>>> eID: " << eId << "\t||\teTitle: "<< eTitle << "\t||\tnumScenes: "<< numScenes<< "\t||\teType: " << eType << "\t||\teCreatedAt: " << eCreatedAt << endl;
     
     
     //go through every asset in this event and push it into this eventAssets vector
