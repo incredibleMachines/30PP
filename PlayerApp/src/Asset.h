@@ -8,30 +8,38 @@
 
 #pragma once
 #include "ofMain.h"
+#include "ofxLibwebsockets.h"
+
+// Location object
+class Location {
+    public:
+        string address;
+        string title;
+};
+
 
 // Asset object
-// does not need any inherent methods (as of yet)
 class Asset {
     
-public:
-    Asset(string _eventId, string _title, string _type, string _location, string _uri);
-    void update();
-    void draw();
-    
-    string eventId;
-    string type;
-    string title;
-    string uri;
-    string location;
-    
-    int x;
-    int y;
-    int width;
-    int height;
-    
-    ofVideoPlayer vid;
-//    ofFile file;
-    
-private:
+    public:
+        //Asset(string _eventId, string _title, string _type, string _location, string _uri);
+        Asset(Json::Value thisAsset);
+        void update();
+        void draw();
+        
+        string aTitle;
+        string aUri;
+        string aType;
+        Location aLoc;
+        
+        int x;
+        int y;
+        int width;
+        int height;
+        
+        ofVideoPlayer vid;
+    //    ofFile file;
+        
+    private:
 
 };

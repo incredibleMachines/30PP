@@ -25,7 +25,8 @@ void playerApp::setup(){
 
 //--------------------------------------------------------------
 void playerApp::update(){
-    if(!socketConnected){
+    
+    if(!socketConnected){ //we're not connected to controllerApp !
         if(ofGetElapsedTimeMillis() % 500 <= 20){ // ~every half second try to reconnect
             cout << "-------------------------" << endl;
             cout << "Socket Not Connected. Attempting Reconnect."<<endl;
@@ -37,9 +38,8 @@ void playerApp::update(){
     }
     
     else { //socket IS connected
-        if (!inited){
+        if (!inited){ //we have yet to init all of our events/scenes/assets
             if(ofGetElapsedTimeMillis() % 1000 <= 20){ // ~every second request init cmd (for now)
-                //--- status update should go here
                 //cout << "-----------------------" << endl;
                 //cout << "Socket Connected, Not Inited. Time: "<< ofGetUnixTime() << endl;
                 //socketClient.send(INIT_CMD);
@@ -49,6 +49,9 @@ void playerApp::update(){
     }
     
     if (inited){ //app is running normally, populated allAssets. network be damned, we're playing the loop.
+        if(ofGetElapsedTimeMillis() % 1000 <= 20){
+            //--- status update / heartbeat should go here
+        }
         
         //--- update syphons
         //allSyphons.update();
@@ -109,8 +112,9 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
     cout <<"\n==================== SOCKET MESSAGE RECEIVED ====================="<<endl;
     string thisCmd = args.json["command"].asString();
     cout <<">>> raw message:\n" << args.message << endl;
-
+    cout <<"====================== END SOCKET MESSAGE ========================"<<endl;
     cout <<"\n>>> thisCmd = "<< thisCmd << endl;
+
     //TODO: make switch cases
     
     //--- init assets
@@ -171,19 +175,16 @@ void playerApp::keyPressed(int key){
 void playerApp::initEvents(ofxLibwebsockets::Event &args){ //fills the allAssets vector on init
     
     cout<<">>> hit initEvents()"<<endl;
-    
     int numEvents = args.json["events"].size();
-    
     cout<<">>> num events received: "<< numEvents <<endl<<endl;
-    
+
+    cout<<"\t>>--------------START EVENT INIT--------------<<"<<endl<<endl;
     for (int e=0; e<numEvents; e++) {
-        
-        //TODO: make this work:
-        //Event thisEvent = * new Event (args.json["events"].get(e, "just 1 complete event"));
-        
-        Event thisEvent = * new Event (e, args); //for now pass in index and all args
+        Event thisEvent = * new Event (args.json["events"].get(e, "1 complete event"));
+        cout<<endl;
         allEvents.push_back(thisEvent);
     }
+    cout<<"\t>>--------------END EVENT INIT--------------<<"<<endl;
         
     //--- syphon setup
     //allSyphons.setup( allEvents ); //pass in ref to allAssets here ( might move to setup )

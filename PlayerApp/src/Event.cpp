@@ -9,40 +9,32 @@
 #include "Event.h"
 
 //--------------------------------------------------------------
-Event::Event(int eventIndex, ofxLibwebsockets::Event &args){
+Event::Event(Json::Value thisEvent){
     
-    cout << "CREATING EVENT NUMBER: "<< eventIndex << " -------------------------------"<<endl;
+    //cout<< "EVENT RECEIVED: "<<thisEvent.toStyledString()<<endl; //entire raw event
     
-    int numScenes = args.json["events"].get(eventIndex, "event not found").get("scenes", "NO SCENES FOUND").size();
-    int numAssets = args.json["events"].get(eventIndex, "event not found").get("assets", "asset not found").size();
-
-    eAnimType   = args.json["events"].get(eventIndex, "event not found").get("anim_type", "anim_type not found").asString();
-    eId         = args.json["events"].get(eventIndex, "event not found").get("_id", "id not found").asString();
-    eTitle      = args.json["events"].get(eventIndex, "event not found").get("title", "title not found").asString();
-    eType       = args.json["events"].get(eventIndex, "event not found").get("type", "type not found").asString();
-    eCreatedAt  = args.json["events"].get(eventIndex, "event not found").get("created_at", "created not found").asString();
+    //--- this event
+    eAnimType       = thisEvent.get("anim_type", "anim_type not found").asString();
+    eId             = thisEvent.get("_id", "id not found").asString();
+    eTitle          = thisEvent.get("title", "title not found").asString();
+    eType           = thisEvent.get("type", "type not found").asString();
+    eCreatedAt      = thisEvent.get("created_at", "created not found").asString();
+    int numScenes   = thisEvent.get("scenes", "NO SCENES FOUND").size();
     
     //print EVENT keys
-    cout << "\t>>> eID: " << eId << "\t||\teTitle: "<< eTitle << "\t||\tnumScenes: "<< numScenes<< "\t||\teType: " << eType << "\t||\teCreatedAt: " << eCreatedAt << endl;
+    cout << "\t----> EVENT TITLE: " << eTitle << "\t||\tID: "<< eId << "\t||\tnumScenes: "<< numScenes<< "\t||\teType: " << eType << "\t||\teCreatedAt: " << eCreatedAt << endl;
     
+    //--- now lemme get some scenes brah
+    Json::Value scenes = thisEvent.get("scenes", "scene object not found");
     
-    //go through every asset in this event and push it into this eventAssets vector
-    for (int i=0; i < numAssets; i++){
-        
-        string eventId  = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("event_id", "eventId not found").asString();
-        string aUri     = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("path", "path not found").asString();
-        string aTitle   = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("title", "title not found").asString();
-        string aType    = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("type", "type not found").asString();
-        string aLocation = args.json["events"].get(eventIndex, "event not found").get("assets", "assets not found").get(i, "asset i not found").get("location", "location not found").asString();
-
-        // print ASSET keys
-        cout<< "\t\t>>> asset #: "<< i <<"\taTitle: "<< aTitle << "\taUri: "<< aUri <<"\taType: "<< aType << "\taLoc: "<< aLocation << "\teventId: "<< eventId << endl;
-        
-        Asset thisAsset = * new Asset (eventId, aTitle, aType, aLocation, aUri); // pointer to temp Asset
-        eAssets.push_back(thisAsset); //push into eventAssets vector
+    for (int i=0; i < numScenes; i++){
+        Scene thisScene = * new Scene(scenes[i]);
+        eScenes.push_back(thisScene);
     }
-    cout << "\t=== this eventAssets.size = "<<eAssets.size()<<endl<<endl;
 }
+
+
+
 
 //--------------------------------------------------------------
 //void Event::update(){ //might make sense

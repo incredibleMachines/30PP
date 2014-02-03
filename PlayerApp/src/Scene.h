@@ -8,29 +8,23 @@
 
 #pragma once
 #include "ofMain.h"
+#include "Asset.h"
+#include "ofxLibwebsockets.h"
 
 // Scene object
 // does not need any inherent methods (as of yet)
 class Scene {
     
 public:
-    Scene(string _eventId, string _title, string _type, string _location, string _uri);
+    //Scene(string _eventId, string _title, string _type, string _location, string _uri);
+    Scene(Json::Value thisScene);
     void update();
     void draw();
     
-    string eventId;
-    string type;
-    string title;
-    string uri;
-    string location;
+    string sType;
+    string sTitle;
     
-    int x;
-    int y;
-    int width;
-    int height;
-    
-    ofVideoPlayer vid;
-    //    ofFile file;
+    vector <Asset> sAssets;
     
 private:
     

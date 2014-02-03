@@ -14,27 +14,15 @@
 
 #pragma once
 #include "ofMain.h"
-#include "Asset.h"
+#include "Scene.h"
 #include "ofxLibwebsockets.h"
-
-
-// Asset object
-// >>> moved into it's own class
-//class Asset {
-//public:
-//    string aType;
-//    string aTitle;
-//    string aLink;
-//    string aLocation;
-//};
-
-
 
 // Event class
 class Event {
 public:
     
-    Event(int eventIndex, ofxLibwebsockets::Event &args);
+//    Event(ofxLibwebsockets::Event json);
+    Event(Json::Value thisEvent);
     //void initEvent(ofxLibwebsockets::Event &args);
     
     string eCommand;
@@ -44,7 +32,7 @@ public:
     string eId;
     string eCreatedAt;
     
-    vector <Asset> eAssets; //vector of all assets for this event
+    vector <Scene> eScenes; //vector of all scenes for this event
     
 private:
     
