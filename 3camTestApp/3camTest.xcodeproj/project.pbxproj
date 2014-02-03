@@ -73,6 +73,7 @@
 /* Begin PBXFileReference section */
 		78b74b8473099893bbb37332 /* Grid.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Grid.h; path = src/Grid.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
+		D3A0D36718A05CA000C8FB9C /* mesh_1.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_1.ply; sourceTree = "<group>"; };
 		D3AF6DD81899D36000EA63B9 /* NewSquirrel.3ds */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSquirrel.3ds; sourceTree = "<group>"; };
 		D3AF6DD91899D36000EA63B9 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		D3AF6DDA1899D36000EA63B9 /* Squirrel.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Squirrel.jpg; sourceTree = "<group>"; };
@@ -146,6 +147,11 @@
 		D3AF6EA8189AA37C00EA63B9 /* ofxAssimpTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpTexture.h; sourceTree = "<group>"; };
 		D3AF6EA9189AA37C00EA63B9 /* ofxAssimpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpUtils.h; sourceTree = "<group>"; };
 		D3AF6EB2189AA41E00EA63B9 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3DDB14818A043C40081E56F /* test.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.ply; sourceTree = "<group>"; };
+		D3DDB14A18A04E510081E56F /* lofi-bunny.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lofi-bunny.ply"; sourceTree = "<group>"; };
+		D3F53663189C3DA200214BEE /* 3walls Material - Default Texture.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "3walls Material - Default Texture.PNG"; sourceTree = "<group>"; };
+		D3F53664189C3DA200214BEE /* 3walls.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 3walls.dae; sourceTree = "<group>"; };
+		D3F53665189C3DA200214BEE /* Default IBL.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default IBL.PNG"; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -243,6 +249,10 @@
 		D3AF6DD51899D36000EA63B9 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D3A0D36718A05CA000C8FB9C /* mesh_1.ply */,
+				D3DDB14A18A04E510081E56F /* lofi-bunny.ply */,
+				D3DDB14818A043C40081E56F /* test.ply */,
+				D3F53662189C3DA200214BEE /* 3wall */,
 				D3AF6EB2189AA41E00EA63B9 /* settings.json */,
 				D3AF6DD71899D36000EA63B9 /* squirrel */,
 			);
@@ -445,6 +455,16 @@
 				D3AF6EA9189AA37C00EA63B9 /* ofxAssimpUtils.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		D3F53662189C3DA200214BEE /* 3wall */ = {
+			isa = PBXGroup;
+			children = (
+				D3F53663189C3DA200214BEE /* 3walls Material - Default Texture.PNG */,
+				D3F53664189C3DA200214BEE /* 3walls.dae */,
+				D3F53665189C3DA200214BEE /* Default IBL.PNG */,
+			);
+			path = 3wall;
 			sourceTree = "<group>";
 		};
 		E4328144138ABC890047C5CB /* Products */ = {

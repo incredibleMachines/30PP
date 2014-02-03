@@ -20,7 +20,13 @@
 #include "ofxJSONElement.h"
 
 
-#define N_CAMERAS 3
+#define N_CAMERAS 2
+
+
+#define ADJUST_MODE_CAMERA 1
+#define ADJUST_MODE_VIEWPORT 4
+#define ADJUST_MODE_LOOK_AT 2
+#define ADJUST_MODE_MESH 3
 
 class testApp : public ofBaseApp {
 
@@ -30,7 +36,8 @@ class testApp : public ofBaseApp {
 		void draw();
 
 		void drawScene(int iCameraDraw);
-    void setupCameras();
+        void setupCameras();
+        void saveCameras();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -39,17 +46,32 @@ class testApp : public ofBaseApp {
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
-
-
     
-        //test AssimpModel
-        ofxAssimpModelLoader model;
-		
-        //my custom node
-		grid nodeGrid;
+        void rotateToNormal(ofVec3f normal);
     
+        
+        int adjustMode;
+
+        //CAMERA AND PLACEMENT SETTINGS
         Camera cameras[N_CAMERAS];
-
+        ofxJSONElement settings;
+        int cameraSelect;
+        bool rotateSelect, scaleSelect;
+        ofVec3f previous, current;
     
-    ofxJSONElement settings;
+        //MESH SETTINGS
+
+        ofxAssimpModelLoader test;
+        int masterIndex;
+        class meshVertex{
+        public:
+            ofVec3f vertex;
+            int index;
+            bool drawHighlight=false;
+        };
+        vector<meshVertex> moveVertices;
+        bool bMouseDown;
+        ofVec2f mouseDown;
+        ofRectangle selectRect;
+        float distThreshold, clickThreshold;
 };
