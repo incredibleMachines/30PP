@@ -11,16 +11,16 @@
 #include "Camera.h"
 
 //--------------------------------------------------------------
-void Camera::setup(ofVec3f pos, ofQuaternion orientation, ofVec3f viewPos, ofVec3f viewSize, ofMesh _mesh){
+void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, ofMesh _mesh){
 
-    camera.setGlobalPosition(pos);
-    camera.setGlobalOrientation(orientation);
+    camera.setGlobalPosition(_pos);
+    camera.setGlobalOrientation(_orientation);
     camera.disableMouseInput();
     
-    viewport.x=viewPos.x;
-    viewport.y=viewPos.y;
-    viewport.width=viewSize.x;
-    viewport.height=viewSize.y;
+    viewport.x=_viewPos.x;
+    viewport.y=_viewPos.y;
+    viewport.width=_viewSize.x;
+    viewport.height=_viewSize.y;
     
     mesh=_mesh;
     

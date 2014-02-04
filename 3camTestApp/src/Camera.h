@@ -11,11 +11,11 @@
 
 class Camera {
     public:
-        void setup(ofVec3f pos, ofQuaternion orientation, ofVec3f viewPos, ofVec3f viewSize, ofMesh _mesh);
-    
+        void setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, ofMesh _mesh);
+    void draw();
         ofEasyCam camera;
         ofRectangle viewport;
-    ofMesh mesh;
+        ofMesh mesh;
 };
 
 
