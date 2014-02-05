@@ -19,12 +19,6 @@ void playerApp::setup(){
     
     //--- have assets been received and loaded?
     inited = false;
-    
-
-    
-    thisImg.loadImage("../../../.assets/image/img.png");
-    
-
 }
 
 //--------------------------------------------------------------
