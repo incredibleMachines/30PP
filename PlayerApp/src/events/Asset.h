@@ -9,9 +9,9 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
-#include "VideoFile.h"
-#include "ImageFile.h"
-#include "TextFile.h"
+#include "file_types/VideoFile.h"
+#include "file_types/ImageFile.h"
+#include "file_types/TextFile.h"
 
 // Location object
 class Location {

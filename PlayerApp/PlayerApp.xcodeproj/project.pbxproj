@@ -20,12 +20,12 @@
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		C6C3882A0B0872D1485F3874 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE5E38D74C62B19279B65BC7 /* Client.cpp */; };
 		E207C918187640DB00386D7A /* Syphons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E207C916187640DB00386D7A /* Syphons.cpp */; };
-		E28AF52C187B45B00079D38A /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28AF52A187B45B00079D38A /* Asset.cpp */; };
-		E28BD5D6187606D8001508F2 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28BD5D4187606D8001508F2 /* Event.cpp */; };
-		E2DCCD85189C4C110002119A /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD83189C4C110002119A /* Scene.cpp */; };
-		E2DCCD9218A2C29C0002119A /* VideoFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD9018A2C29C0002119A /* VideoFile.cpp */; };
-		E2DCCD9518A2C2A40002119A /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD9318A2C2A40002119A /* TextFile.cpp */; };
-		E2DCCD9818A2C2AA0002119A /* ImageFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD9618A2C2AA0002119A /* ImageFile.cpp */; };
+		E2DCCDAE18A2CF0A0002119A /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDA218A2CF0A0002119A /* Asset.cpp */; };
+		E2DCCDAF18A2CF0A0002119A /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDA418A2CF0A0002119A /* Event.cpp */; };
+		E2DCCDB018A2CF0A0002119A /* ImageFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDA618A2CF0A0002119A /* ImageFile.cpp */; };
+		E2DCCDB118A2CF0A0002119A /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDA818A2CF0A0002119A /* Scene.cpp */; };
+		E2DCCDB218A2CF0A0002119A /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDAA18A2CF0A0002119A /* TextFile.cpp */; };
+		E2DCCDB318A2CF0A0002119A /* VideoFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCDAC18A2CF0A0002119A /* VideoFile.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -99,18 +99,18 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E207C916187640DB00386D7A /* Syphons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Syphons.cpp; sourceTree = "<group>"; };
 		E207C917187640DB00386D7A /* Syphons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphons.h; sourceTree = "<group>"; };
-		E28AF52A187B45B00079D38A /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = src/Asset.cpp; sourceTree = "<group>"; };
-		E28AF52B187B45B00079D38A /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Asset.h; path = src/Asset.h; sourceTree = "<group>"; };
-		E28BD5D4187606D8001508F2 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = src/Event.cpp; sourceTree = "<group>"; };
-		E28BD5D5187606D8001508F2 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = src/Event.h; sourceTree = "<group>"; };
-		E2DCCD83189C4C110002119A /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = src/Scene.cpp; sourceTree = "<group>"; };
-		E2DCCD84189C4C110002119A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = src/Scene.h; sourceTree = "<group>"; };
-		E2DCCD9018A2C29C0002119A /* VideoFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VideoFile.cpp; path = src/VideoFile.cpp; sourceTree = "<group>"; };
-		E2DCCD9118A2C29C0002119A /* VideoFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFile.h; path = src/VideoFile.h; sourceTree = "<group>"; };
-		E2DCCD9318A2C2A40002119A /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextFile.cpp; path = src/TextFile.cpp; sourceTree = "<group>"; };
-		E2DCCD9418A2C2A40002119A /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFile.h; path = src/TextFile.h; sourceTree = "<group>"; };
-		E2DCCD9618A2C2AA0002119A /* ImageFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageFile.cpp; path = src/ImageFile.cpp; sourceTree = "<group>"; };
-		E2DCCD9718A2C2AA0002119A /* ImageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageFile.h; path = src/ImageFile.h; sourceTree = "<group>"; };
+		E2DCCDA218A2CF0A0002119A /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = src/events/Asset.cpp; sourceTree = "<group>"; };
+		E2DCCDA318A2CF0A0002119A /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Asset.h; path = src/events/Asset.h; sourceTree = "<group>"; };
+		E2DCCDA418A2CF0A0002119A /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = src/events/Event.cpp; sourceTree = "<group>"; };
+		E2DCCDA518A2CF0A0002119A /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = src/events/Event.h; sourceTree = "<group>"; };
+		E2DCCDA618A2CF0A0002119A /* ImageFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageFile.cpp; path = src/events/ImageFile.cpp; sourceTree = "<group>"; };
+		E2DCCDA718A2CF0A0002119A /* ImageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageFile.h; path = src/events/ImageFile.h; sourceTree = "<group>"; };
+		E2DCCDA818A2CF0A0002119A /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = src/events/Scene.cpp; sourceTree = "<group>"; };
+		E2DCCDA918A2CF0A0002119A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = src/events/Scene.h; sourceTree = "<group>"; };
+		E2DCCDAA18A2CF0A0002119A /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextFile.cpp; path = src/events/TextFile.cpp; sourceTree = "<group>"; };
+		E2DCCDAB18A2CF0A0002119A /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFile.h; path = src/events/TextFile.h; sourceTree = "<group>"; };
+		E2DCCDAC18A2CF0A0002119A /* VideoFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VideoFile.cpp; path = src/events/VideoFile.cpp; sourceTree = "<group>"; };
+		E2DCCDAD18A2CF0A0002119A /* VideoFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFile.h; path = src/events/VideoFile.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -318,23 +318,23 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
-		E2DCCD8618A03FFF0002119A /* event data */ = {
+		E2DCCD8618A03FFF0002119A /* events */ = {
 			isa = PBXGroup;
 			children = (
-				E28BD5D4187606D8001508F2 /* Event.cpp */,
-				E28BD5D5187606D8001508F2 /* Event.h */,
-				E2DCCD83189C4C110002119A /* Scene.cpp */,
-				E2DCCD84189C4C110002119A /* Scene.h */,
-				E28AF52A187B45B00079D38A /* Asset.cpp */,
-				E28AF52B187B45B00079D38A /* Asset.h */,
-				E2DCCD9018A2C29C0002119A /* VideoFile.cpp */,
-				E2DCCD9118A2C29C0002119A /* VideoFile.h */,
-				E2DCCD9618A2C2AA0002119A /* ImageFile.cpp */,
-				E2DCCD9718A2C2AA0002119A /* ImageFile.h */,
-				E2DCCD9318A2C2A40002119A /* TextFile.cpp */,
-				E2DCCD9418A2C2A40002119A /* TextFile.h */,
+				E2DCCDA218A2CF0A0002119A /* Asset.cpp */,
+				E2DCCDA318A2CF0A0002119A /* Asset.h */,
+				E2DCCDA418A2CF0A0002119A /* Event.cpp */,
+				E2DCCDA518A2CF0A0002119A /* Event.h */,
+				E2DCCDA618A2CF0A0002119A /* ImageFile.cpp */,
+				E2DCCDA718A2CF0A0002119A /* ImageFile.h */,
+				E2DCCDA818A2CF0A0002119A /* Scene.cpp */,
+				E2DCCDA918A2CF0A0002119A /* Scene.h */,
+				E2DCCDAA18A2CF0A0002119A /* TextFile.cpp */,
+				E2DCCDAB18A2CF0A0002119A /* TextFile.h */,
+				E2DCCDAC18A2CF0A0002119A /* VideoFile.cpp */,
+				E2DCCDAD18A2CF0A0002119A /* VideoFile.h */,
 			);
-			name = "event data";
+			name = events;
 			path = ..;
 			sourceTree = "<group>";
 		};
@@ -376,7 +376,7 @@
 				E4B69E1F0A3A1BDC003C02F2 /* playerApp.h */,
 				E207C916187640DB00386D7A /* Syphons.cpp */,
 				E207C917187640DB00386D7A /* Syphons.h */,
-				E2DCCD8618A03FFF0002119A /* event data */,
+				E2DCCD8618A03FFF0002119A /* events */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -479,24 +479,24 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */,
-				E2DCCD9518A2C2A40002119A /* TextFile.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* playerApp.cpp in Sources */,
-				E2DCCD85189C4C110002119A /* Scene.cpp in Sources */,
-				E2DCCD9818A2C2AA0002119A /* ImageFile.cpp in Sources */,
-				E28BD5D6187606D8001508F2 /* Event.cpp in Sources */,
 				E207C918187640DB00386D7A /* Syphons.cpp in Sources */,
+				E2DCCDB218A2CF0A0002119A /* TextFile.cpp in Sources */,
+				E2DCCDB318A2CF0A0002119A /* VideoFile.cpp in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
+				E2DCCDB118A2CF0A0002119A /* Scene.cpp in Sources */,
 				6D73A566CFEC0B462FE6E43C /* Reactor.cpp in Sources */,
 				86135253DC7909CA8590E157 /* Protocol.cpp in Sources */,
+				E2DCCDB018A2CF0A0002119A /* ImageFile.cpp in Sources */,
 				83E7C814187DEDC900746BAA /* ofxSyphonServer.mm in Sources */,
-				E28AF52C187B45B00079D38A /* Asset.cpp in Sources */,
 				F1AC6AEFB9B93C6AC45C9CA8 /* Events.cpp in Sources */,
 				A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */,
 				83E7C815187DEDC900746BAA /* ofxSyphonServerDirectory.mm in Sources */,
+				E2DCCDAF18A2CF0A0002119A /* Event.cpp in Sources */,
 				83E7C812187DEDC900746BAA /* SyphonNameboundClient.m in Sources */,
 				C6C3882A0B0872D1485F3874 /* Client.cpp in Sources */,
-				E2DCCD9218A2C29C0002119A /* VideoFile.cpp in Sources */,
+				E2DCCDAE18A2CF0A0002119A /* Asset.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

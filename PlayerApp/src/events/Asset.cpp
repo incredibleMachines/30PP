@@ -5,7 +5,6 @@
 //  Created by Joseph Saavedra on 1/6/14.
 //
 //
-
 /*
 
  Asset file class. Assets are stored inside of a vector in every Scene.
