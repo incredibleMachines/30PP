@@ -18,6 +18,8 @@
 		D3AF6EAC189AA37C00EA63B9 /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3AF6EA3189AA37C00EA63B9 /* ofxAssimpMeshHelper.cpp */; };
 		D3AF6EAD189AA37C00EA63B9 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3AF6EA5189AA37C00EA63B9 /* ofxAssimpModelLoader.cpp */; };
 		D3AF6EAE189AA37C00EA63B9 /* ofxAssimpTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3AF6EA7189AA37C00EA63B9 /* ofxAssimpTexture.cpp */; };
+		D3D35BC718A2C61B002ED404 /* Mask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D35BC518A2C61B002ED404 /* Mask.cpp */; };
+		D3D35BCD18A2E57E002ED404 /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3D35BCB18A2E57E002ED404 /* ModelMapper.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -146,6 +148,10 @@
 		D3AF6EA8189AA37C00EA63B9 /* ofxAssimpTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpTexture.h; sourceTree = "<group>"; };
 		D3AF6EA9189AA37C00EA63B9 /* ofxAssimpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpUtils.h; sourceTree = "<group>"; };
 		D3AF6EB2189AA41E00EA63B9 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3D35BC518A2C61B002ED404 /* Mask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mask.cpp; sourceTree = "<group>"; };
+		D3D35BC618A2C61B002ED404 /* Mask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mask.h; sourceTree = "<group>"; };
+		D3D35BCB18A2E57E002ED404 /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
+		D3D35BCC18A2E57E002ED404 /* ModelMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMapper.h; sourceTree = "<group>"; };
 		D3DDB14818A043C40081E56F /* test.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.ply; sourceTree = "<group>"; };
 		D3DDB14A18A04E510081E56F /* lofi-bunny.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lofi-bunny.ply"; sourceTree = "<group>"; };
 		D3F53663189C3DA200214BEE /* 3walls Material - Default Texture.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "3walls Material - Default Texture.PNG"; sourceTree = "<group>"; };
@@ -501,10 +507,14 @@
 			isa = PBXGroup;
 			children = (
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
-				D3AF6DE7189A9F7200EA63B9 /* Camera.cpp */,
+				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
+				D3D35BCC18A2E57E002ED404 /* ModelMapper.h */,
+				D3D35BCB18A2E57E002ED404 /* ModelMapper.cpp */,
 				D3AF6DE8189A9F7200EA63B9 /* Camera.h */,
+				D3AF6DE7189A9F7200EA63B9 /* Camera.cpp */,
+				D3D35BC618A2C61B002ED404 /* Mask.h */,
+				D3D35BC518A2C61B002ED404 /* Mask.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -616,6 +626,8 @@
 				D3AF6EAC189AA37C00EA63B9 /* ofxAssimpMeshHelper.cpp in Sources */,
 				D3AF6EAD189AA37C00EA63B9 /* ofxAssimpModelLoader.cpp in Sources */,
 				D3AF6EAE189AA37C00EA63B9 /* ofxAssimpTexture.cpp in Sources */,
+				D3D35BC718A2C61B002ED404 /* Mask.cpp in Sources */,
+				D3D35BCD18A2E57E002ED404 /* ModelMapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
