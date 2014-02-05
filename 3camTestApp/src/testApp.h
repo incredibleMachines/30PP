@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 
-//Necessary addons, currently stored in of addons folder, not locally
+//Necessary addons, currently stored in of addons folder not locally
 #include "ofxAssimpModelLoader.h"
 #include "ofxJSONElement.h"
 
@@ -19,7 +19,7 @@
 
 //--------USER DEFINABLE VARIABLES
 //N_CAMERAS is total number of cameras/viewports
-#define N_CAMERAS 2
+#define N_CAMERAS 4
 
 //GUI_CAMERA is
 #define GUI_CAMERA 0

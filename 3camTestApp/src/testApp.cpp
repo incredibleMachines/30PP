@@ -1,42 +1,35 @@
-
-
-
-
 #include "testApp.h"
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
+    //setup GL context
 	ofSetVerticalSync(true);
 	ofEnableSmoothing();
 	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
-    
     ofBackground(0, 0, 0);
+    ofDisableSeparateSpecularLight();
     
+    //set default variable values
     cameraSelect=1;
+    bMouseDown=false;
+    clickThreshold=4;
+    adjustMode=ADJUST_MODE_CAMERA;
     
+    //load JSON
     bool parsingSuccessful = settings.open("settings.json");
-    
     if (parsingSuccessful) {
         cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
         setupCameras();
 	}
-    
     else {
 		cout  << "Failed to parse JSON" << endl;
 	}
     
-    ofDisableSeparateSpecularLight();
-    
-    bMouseDown=false;
-    clickThreshold=4;
-    
-    adjustMode=ADJUST_MODE_CAMERA;
-    
+    //QT Kit Video Player instantion
     player.setPixelFormat(OF_PIXELS_RGBA);
-
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
     player.loadMovie("Bonus_waves.mov", decodeMode);
     player.play();
@@ -82,11 +75,19 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
       
     switch(key){
-            
+        
+        //Select Active Camera
         case '1':
             cameraSelect=1;
             break;
-            
+        case '2':
+            cameraSelect=2;
+            break;
+        case '3':
+            cameraSelect=3;
+            break;
+        
+        //Select adjust mode
         case 'c':
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustMode=ADJUST_MODE_VIEWPORT;
@@ -102,7 +103,9 @@ void testApp::keyPressed(int key){
                 adjustMode=ADJUST_MODE_CAMERA;
             }
             break;
-            
+        
+        //Adjustments to camera position and orientation, viewport alignment, or mesh position depending on mode
+        
         case OF_KEY_UP:
             if(adjustMode==ADJUST_MODE_CAMERA){
                 cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,1,0));
@@ -223,9 +226,13 @@ void testApp::keyPressed(int key){
                 }
             }
             break;
+            
+        //save camera settings to json and meshes to ply files
         case 's':
             saveCameras();
             break;
+        
+        //reset mesh to default dae or obj file
         case 'm':
             ofxAssimpModelLoader reload;
             reload.loadModel("3wall/3walls.dae");
@@ -414,16 +421,16 @@ void testApp:: drawCameras() {
         player.getTexture()->bind();
         
         //draw mesh
-        ofSetColor(255,255,255);
+        ofSetColor(100,100,100);
         cameras[i].mesh.drawFaces();
         
         //unbind video texture
         player.getTexture()->unbind();
        
         //DRAW MESH WIREFRAME
-        ofSetColor(0,0,0);
-        ofSetLineWidth(2);
-        cameras[i].mesh.drawWireframe();
+//        ofSetColor(0,0,0);
+//        ofSetLineWidth(2);
+//        cameras[i].mesh.drawWireframe();
         
         //end camera object
         cameras[i].camera.end();
@@ -485,7 +492,6 @@ void testApp::drawHighlights() {
         ofCircle(0,0,4);
         ofDrawAxis(20);
         ofPopMatrix();
-        
         if(cameraSelect!=GUI_CAMERA){
             ofPushMatrix();
             ofVec3f translate=cameras[GUI_CAMERA].camera.worldToScreen(cameras[GUI_CAMERA].mesh.getVertex(moveVertices[i].index),cameras[GUI_CAMERA].viewport);;
@@ -496,6 +502,7 @@ void testApp::drawHighlights() {
         }
     }
     
+    //reset line width
 	ofSetLineWidth(1);
 }
 
