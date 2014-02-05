@@ -96,7 +96,7 @@ function sendFakeData(__socket){
 	var fakeAsset1 = {};
 	fakeAsset1.title = 'asset one';
 	fakeAsset1.link = 'URI://localhost/documents/media/file.mpg';
-	fakeAsset1.type = 'video';
+	fakeAsset1.type = 0;
 	fakeAsset1.location = fakeLocation1;
 	
 	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset1));
@@ -111,25 +111,27 @@ function sendFakeData(__socket){
 
 	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset4.title = 'asset four';
-	fakeAsset4.type = 'image';
+	fakeAsset4.type = 1;
 	fakeAsset4.link = 'URI://localhost/documents/media/file4.png';
 	fakeAsset4.location = fakeLocation4;
 	
 	//--- fakeScenes
 	var fakeScene1 = {};
 	fakeScene1.title = "scene 1";
-	fakeScene1.type = "type 1";
+	fakeScene1.type = 1;
 	fakeScene1.assets = [fakeAsset1, fakeAsset2, fakeAsset4];
 	fakeScene1.created_at = "01-29-2014";
 	fakeScene1.last_edited = "01-30-2014";
 
 	var fakeScene2 = JSON.parse(JSON.stringify(fakeScene1));
 	fakeScene2.title = "scene 2";
+	fakeScene2.type = 2;
 	fakeScene2.assets = [fakeAsset1];
 	fakeScene2.last_edited = "02-15-2014";
 
 	var fakeScene3 = JSON.parse(JSON.stringify(fakeScene1));
 	fakeScene3.title = "scene 3";
+	fakeScene3.type = 0;
 	fakeScene3.assets = [fakeAsset4, fakeAsset2];
 	fakeScene3.last_edited = "03-30-2014";
 

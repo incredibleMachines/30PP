@@ -23,8 +23,8 @@
 Asset::Asset(Json::Value thisAsset){
     
     //--- pull out all asset metadata
-    aType           = thisAsset.get("type","no asset type found").asDouble();
-    aZone           = thisAsset.get("zone","no asset zone found").asDouble();
+    aType           = thisAsset.get("type","no asset type found").asInt();
+    aZone           = thisAsset.get("zone","no asset zone found").asInt();
     aCaption        = thisAsset.get("caption","null").asString();
     
     // NOTE: might move these to file class
@@ -36,7 +36,11 @@ Asset::Asset(Json::Value thisAsset){
     
     
     //--- check to see if there is a file in this asset
-    if (!thisAsset.get("file", "no asset file found").isNull()) {   // found a file !!
+
+    if (!thisAsset.get("file", 0).isInt() ) {   // found a file !!
+        
+        cout<<" FILE FOUND IN THIS ASSET "<< endl;
+        cout << thisAsset.get("file", "no asset file found").type() <<endl;
         
         //--- pull out and store JSON 'file' object in aFile
         aFile           = thisAsset.get("file","NO asset FILE FOUND WHAT LASTCHECKFAILED?!");
@@ -82,14 +86,13 @@ Asset::Asset(Json::Value thisAsset){
     switch (aFileType){
 
         case 0:  //--- TEXT
-            txtFile = new TextFile(aCaption, aCoords);
+            //txtFile = new TextFile(aCaption, aCoords);                    //TODO: uncomment
             
         case 1:  //--- VIDEO
-            vidFile = new VideoFile(finalFilePath, aCaption, aCoords);
+            //vidFile = new VideoFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
             
-        
         case 2:  //--- IMAGE
-            imgFile = new ImageFile(finalFilePath, aCaption, aCoords);
+            //imgFile = new ImageFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
         
         default: //wtf case
             ;

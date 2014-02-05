@@ -20,9 +20,11 @@
 //--------------------------------------------------------------
 Scene::Scene(Json::Value thisScene){
     
-    //cout<< "SCENE RECEIVED: "<<thisScene.toStyledString()<<endl; //print entire raw scene
+    //--- print entire raw scene
+    //cout<< "SCENE RECEIVED: "<<thisScene.toStyledString()<<endl;
     
-    sZoneType       = thisScene.get("type", "no scene type found").asDouble();
+    //--- pull out JSON scene data
+    sZoneType       = thisScene.get("type", "no scene type found").asInt();
     sTitle          = thisScene.get("title", "no scene title found").asString();
     sText           = thisScene.get("text", "no scene text found").asString();
     sCreatedAt      = thisScene.get("created_at", "no scene created_at").asString();
@@ -44,7 +46,7 @@ Scene::Scene(Json::Value thisScene){
 void Scene::update(){
     
     for (int i=0; i<sAssets.size(); i++) {
-        sAssets[i].update();
+        //sAssets[i].update();   //TODO: uncomment!
     }
 }
 
@@ -52,6 +54,6 @@ void Scene::update(){
 void Scene::draw(){
     
     for (int i=0; i<sAssets.size(); i++) {
-        sAssets[i].draw();
+        //sAssets[i].draw();    //TODO: uncomment!
     }
 }
