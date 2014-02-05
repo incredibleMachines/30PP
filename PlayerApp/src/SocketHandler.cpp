@@ -11,10 +11,10 @@
  
  methods
     - setup takes the port argument and instantiates the websocket Client on that port
-    - update
-    -
-    - sendInitCmd
- 
+    - update checks the connection status and attempts to connect if needed. if connected, requests init, sends heartbeats, updates
+    - drawDebugInfo draws the connection status to screen
+    - sendInitCmd sends init command to controllerApp, requesting init message of all events
+    - initEvents creates all Events, Scenes, Assets, Files, sets eventsInited to true
  
  */
 
@@ -23,6 +23,8 @@
 
 //constants
 #define INIT_CMD "{\"command\" : \"init\"}"
+#define STATUS_MSG "{\"command\" : \"statusinfoTBD\"}"
+#define HEARTBEAT_MSG "{\"command\" : \"heartbeat\"}"
 
 //--------------------------------------------------------------
 SocketHandler::SocketHandler(){
@@ -175,7 +177,7 @@ void SocketHandler::drawDebugInfo(){
     ofBackground(0);
     ofSetColor(255);
     ofDrawBitmapString("socket status: ", 20, 30);
-    ofDrawBitmapString("SPACE to request init manually", 20, ofGetHeight()-20);
+    ofDrawBitmapString("'i' to request init manually", 20, ofGetHeight()-20);
     ofDrawBitmapString("socket status: ", 20, 30);
 
     if (!socketConnected){ // socket not connected !

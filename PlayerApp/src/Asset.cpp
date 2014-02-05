@@ -32,7 +32,7 @@ Asset::Asset(Json::Value thisAsset){
     aLoc.title      = thisAsset.get("location","no asset location found").get("title","no asset loc title found").asString();
     aTitle          = thisAsset.get("title","no asset title found").asString();
     
-    cout<<"\t\t\t>> assetType: "<<aType<<"\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
+    cout<<"\t\t\t>> assetType: "<<aType<<"\t\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
     
     
     //--- check to see if there is a file in this asset

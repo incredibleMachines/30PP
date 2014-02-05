@@ -30,7 +30,7 @@ Scene::Scene(Json::Value thisScene){
     sCreatedAt      = thisScene.get("created_at", "no scene created_at").asString();
     int numAssets   = thisScene.get("assets", "NO SCENE ASSETS FOUND").size();
     
-    cout<<endl<<"\t sceneTitle: "<<sTitle<<"\t>> zoneType: "<<sZoneType<<"\t numAssets: "<<numAssets<<endl;
+    cout<<endl<<"\t>> sceneTitle: "<<sTitle<<"\t zoneType: "<<sZoneType<<"\t sText: "<<sText<<"\t sCreatedAt: "<<sCreatedAt<<"\t numAssets: "<<numAssets<<endl;
     
     //--- pull out assets object (array) for this scene
     Json::Value assets = thisScene.get("assets", "assets object not found");

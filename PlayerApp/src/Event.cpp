@@ -31,7 +31,7 @@ Event::Event(Json::Value thisEvent){
     int numScenes   = thisEvent.get("scenes", "NO SCENES FOUND").size();
     
     //print EVENT keys
-    cout << "\t----> EVENT TITLE: " << eTitle << "\t||\tID: "<< eId << "\t||\tnumScenes: "<< numScenes<< "\t||\teType: " << eType << "\t||\teCreatedAt: " << eCreatedAt << endl;
+    cout << "\t=====> EVENT TITLE: " << eTitle << "\t||\tID: "<< eId << "\t||\tnumScenes: "<< numScenes<< "\t||\teType: " << eType << "\t||\teCreatedAt: " << eCreatedAt << endl;
     
     //--- now lemme get some scenes brah
     Json::Value scenes = thisEvent.get("scenes", "scene object not found");
