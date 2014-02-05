@@ -45,4 +45,5 @@ public:
     
     Syphons allSyphons;
     
+        ofImage thisImg;
 };

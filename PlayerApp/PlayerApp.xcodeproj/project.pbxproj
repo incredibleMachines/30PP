@@ -23,6 +23,9 @@
 		E28AF52C187B45B00079D38A /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28AF52A187B45B00079D38A /* Asset.cpp */; };
 		E28BD5D6187606D8001508F2 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E28BD5D4187606D8001508F2 /* Event.cpp */; };
 		E2DCCD85189C4C110002119A /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD83189C4C110002119A /* Scene.cpp */; };
+		E2DCCD8918A063020002119A /* VideoFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD8718A063020002119A /* VideoFile.cpp */; };
+		E2DCCD8C18A063190002119A /* ImageFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD8A18A063190002119A /* ImageFile.cpp */; };
+		E2DCCD8F18A068700002119A /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2DCCD8D18A068700002119A /* TextFile.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -96,12 +99,18 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E207C916187640DB00386D7A /* Syphons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Syphons.cpp; sourceTree = "<group>"; };
 		E207C917187640DB00386D7A /* Syphons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphons.h; sourceTree = "<group>"; };
-		E28AF52A187B45B00079D38A /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Asset.cpp; sourceTree = "<group>"; };
-		E28AF52B187B45B00079D38A /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
-		E28BD5D4187606D8001508F2 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
-		E28BD5D5187606D8001508F2 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		E2DCCD83189C4C110002119A /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
-		E2DCCD84189C4C110002119A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		E28AF52A187B45B00079D38A /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = src/Asset.cpp; sourceTree = "<group>"; };
+		E28AF52B187B45B00079D38A /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Asset.h; path = src/Asset.h; sourceTree = "<group>"; };
+		E28BD5D4187606D8001508F2 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = src/Event.cpp; sourceTree = "<group>"; };
+		E28BD5D5187606D8001508F2 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = src/Event.h; sourceTree = "<group>"; };
+		E2DCCD83189C4C110002119A /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = src/Scene.cpp; sourceTree = "<group>"; };
+		E2DCCD84189C4C110002119A /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = src/Scene.h; sourceTree = "<group>"; };
+		E2DCCD8718A063020002119A /* VideoFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoFile.cpp; sourceTree = "<group>"; };
+		E2DCCD8818A063020002119A /* VideoFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFile.h; sourceTree = "<group>"; };
+		E2DCCD8A18A063190002119A /* ImageFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageFile.cpp; sourceTree = "<group>"; };
+		E2DCCD8B18A063190002119A /* ImageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFile.h; sourceTree = "<group>"; };
+		E2DCCD8D18A068700002119A /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = "<group>"; };
+		E2DCCD8E18A068700002119A /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -309,6 +318,26 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
+		E2DCCD8618A03FFF0002119A /* event data */ = {
+			isa = PBXGroup;
+			children = (
+				E28BD5D4187606D8001508F2 /* Event.cpp */,
+				E28BD5D5187606D8001508F2 /* Event.h */,
+				E2DCCD83189C4C110002119A /* Scene.cpp */,
+				E2DCCD84189C4C110002119A /* Scene.h */,
+				E28AF52A187B45B00079D38A /* Asset.cpp */,
+				E28AF52B187B45B00079D38A /* Asset.h */,
+				E2DCCD8718A063020002119A /* VideoFile.cpp */,
+				E2DCCD8818A063020002119A /* VideoFile.h */,
+				E2DCCD8A18A063190002119A /* ImageFile.cpp */,
+				E2DCCD8B18A063190002119A /* ImageFile.h */,
+				E2DCCD8D18A068700002119A /* TextFile.cpp */,
+				E2DCCD8E18A068700002119A /* TextFile.h */,
+			);
+			name = "event data";
+			path = ..;
+			sourceTree = "<group>";
+		};
 		E4328144138ABC890047C5CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,14 +374,9 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* playerApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* playerApp.h */,
-				E28BD5D4187606D8001508F2 /* Event.cpp */,
-				E28BD5D5187606D8001508F2 /* Event.h */,
-				E2DCCD83189C4C110002119A /* Scene.cpp */,
-				E2DCCD84189C4C110002119A /* Scene.h */,
-				E28AF52A187B45B00079D38A /* Asset.cpp */,
-				E28AF52B187B45B00079D38A /* Asset.h */,
 				E207C916187640DB00386D7A /* Syphons.cpp */,
 				E207C917187640DB00386D7A /* Syphons.h */,
+				E2DCCD8618A03FFF0002119A /* event data */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -456,8 +480,10 @@
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* playerApp.cpp in Sources */,
+				E2DCCD8C18A063190002119A /* ImageFile.cpp in Sources */,
 				E2DCCD85189C4C110002119A /* Scene.cpp in Sources */,
 				E28BD5D6187606D8001508F2 /* Event.cpp in Sources */,
+				E2DCCD8918A063020002119A /* VideoFile.cpp in Sources */,
 				E207C918187640DB00386D7A /* Syphons.cpp in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
@@ -465,6 +491,7 @@
 				86135253DC7909CA8590E157 /* Protocol.cpp in Sources */,
 				83E7C814187DEDC900746BAA /* ofxSyphonServer.mm in Sources */,
 				E28AF52C187B45B00079D38A /* Asset.cpp in Sources */,
+				E2DCCD8F18A068700002119A /* TextFile.cpp in Sources */,
 				F1AC6AEFB9B93C6AC45C9CA8 /* Events.cpp in Sources */,
 				A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */,
 				83E7C815187DEDC900746BAA /* ofxSyphonServerDirectory.mm in Sources */,

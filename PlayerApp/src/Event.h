@@ -2,14 +2,6 @@
 //  Event.h
 //  PlayerApp
 //  Created by Joseph Saavedra on 1/2/14.
-/*
- 
- Event Object
-
- gets instantiated on each incoming Event object, all fields + associated Asset object fields are populated,
- (TODO: load assets)
- 
-*/
 //
 
 #pragma once
@@ -21,9 +13,9 @@
 class Event {
 public:
     
-//    Event(ofxLibwebsockets::Event json);
     Event(Json::Value thisEvent);
-    //void initEvent(ofxLibwebsockets::Event &args);
+    void update();
+    void draw();
     
     string eCommand;
     string eTitle;

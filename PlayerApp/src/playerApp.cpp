@@ -2,7 +2,6 @@
 #include "playerApp.h"
 
 //constants
-
 #define INIT_CMD "{\"command\" : \"init\"}"
 
 //--------------------------------------------------------------
@@ -21,6 +20,11 @@ void playerApp::setup(){
     //--- have assets been received and loaded?
     inited = false;
     
+
+    
+    thisImg.loadImage("../../../.assets/image/img.png");
+    
+
 }
 
 //--------------------------------------------------------------
@@ -34,7 +38,7 @@ void playerApp::update(){
             socketConnected = socketClient.connect(socketOptions);
             cout << "Connection Status: " << socketConnected << endl;
         }
-        //if (inited) { ERR: network went down AFTER app was able to initialize, and filled allAssets }
+        //if (inited) { ERR: network went down AFTER app was able to init }
     }
     
     else { //socket IS connected
@@ -85,6 +89,8 @@ void playerApp::draw(){
             //allSyphons.draw();
         }
     }
+    
+    thisImg.draw(0,0);
 }
 
 //--------------------------------------------------------------
@@ -112,7 +118,7 @@ void playerApp::onMessage(ofxLibwebsockets::Event &args){
     cout <<"\n==================== SOCKET MESSAGE RECEIVED ====================="<<endl;
     string thisCmd = args.json["command"].asString();
     cout <<">>> raw message:\n" << args.message << endl;
-    cout <<"====================== END SOCKET MESSAGE ========================"<<endl;
+    cout <<"======================== END SOCKET MESSAGE ========================"<<endl;
     cout <<"\n>>> thisCmd = "<< thisCmd << endl;
 
     //TODO: make switch cases

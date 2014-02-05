@@ -6,71 +6,133 @@
 //
 //
 
+/*
+
+ Asset file class. Assets are stored inside of a vector in every Scene.
+ 
+ methods:
+ 
+    - constructer pulls out all metadata from asset JSON object, including type, zone, caption, and file. If file object exists, pulls all metadata at this moment. At most, only ever 1 file per asset is possible, so makes sense to do this here.
+    - update() updates this asset. will only ever contain 1 type of file. (if it has an img or video AND ALSO has text, TextFile is generated and updated from the VideoFile or ImageFile class. This is determined by checking the caption
+    - draw() draws this asset.
+ 
+*/
+
 #include "Asset.h"
 
 //--------------------------------------------------------------
-Asset::Asset(Json::Value thisAsset){ //x,y,w,h in later?
+Asset::Asset(Json::Value thisAsset){
     
+    //--- pull out all asset metadata
+    aType           = thisAsset.get("type","no asset type found").asDouble();
+    aZone           = thisAsset.get("zone","no asset zone found").asDouble();
+    aCaption        = thisAsset.get("caption","null").asString();
+    
+    // NOTE: might move these to file class
+    aLoc.address    = thisAsset.get("location","no asset location found").get("address","no asset loc address found").asString();
+    aLoc.title      = thisAsset.get("location","no asset location found").get("title","no asset loc title found").asString();
     aTitle          = thisAsset.get("title","no asset title found").asString();
-    aType           = thisAsset.get("type","no asset type found").asString();
-    aUri            = thisAsset.get("link","no asset link found").asString();
-    aLoc.address    = thisAsset.get("location","no asset location found").get("address","no loc address found").asString();
-    aLoc.title      = thisAsset.get("location","no asset location found").get("title","no loc title found").asString();
     
-    x = 0;
-    y = 0;
-    width = 960;
-    height = 360;
+    cout<<"\t\t\t>> assetType: "<<aType<<"\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
     
-    cout<<"\t\t\t>> assetType: "<<aType<<"\tassetTitle: "<<aTitle<<"\taUri: "<<aUri<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
     
-    //TODO: generate this path automatically
-    string filePath = "/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/apps/30PP/";
+    //--- check to see if there is a file in this asset
+    if (!thisAsset.get("file", "no asset file found").isNull()) {   // found a file !!
+        
+        //--- pull out and store JSON 'file' object in aFile
+        aFile           = thisAsset.get("file","NO asset FILE FOUND WHAT LASTCHECKFAILED?!");
+        
+        //--- pull out all aFile metadata
+        aFileMongoId    = aFile.get("_id","no file _id found").asString();
+        aFileTitle      = aFile.get("title","no file title found").asString();
+        aFileText       = aFile.get("text","no file text found").asString();
+        aFileType       = aFile.get("type","no file type found").asDouble();
+        aFileCreatedAt  = aFile.get("created_at","no file created_at found").asString();
+        aFileLoc.address= aFile.get("location","no file location found").get("address","no file loc addr found").asString();
+        aFileLoc.title  = aFile.get("location","no file location found").get("title","no file loc title found").asString();
+        aFilePath       = aFile.get("path","no file path found").asString();
+        
+        //--- file pathing!
+        // NOTE: this path is relative to the 30PP folder, meaning
+        // finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:
+        finalFilePath = "../../../";
+        finalFilePath += aFilePath; //append URI to base file path (30PP root folder)
+        cout<<"complete asset filepath: "<< finalFilePath << endl;  //print out completed file path
+    }
     
-//    filePath += uri; //append URI to base file path (30PP root folder)
-//  if (type == "video"){
-//    vid.loadMovie(filePath);
-//    vid.play();
-//  }
+    
+    //--- assign asset coordinates by zoneID
+    switch (aZone){
+        //TODO: define this cases
+        case 0:
+            aCoords = ofVec2f(10, 10);
+            
+        case 1:
+            aCoords = ofVec2f(210, 350);
+        
+        case 2:
+            aCoords = ofVec2f(450, 65);
+            
+        default: //wtf
+            aCoords = ofVec2f(0,0);
+    }
+    
+    //TODO: check fileType and assign asset dimensions (w,h) based on this. add w,h to constructor of file
+    
+    //--- now create the correct type of asset file
+    switch (aFileType){
+
+        case 0:  //--- TEXT
+            txtFile = new TextFile(aCaption, aCoords);
+            
+        case 1:  //--- VIDEO
+            vidFile = new VideoFile(finalFilePath, aCaption, aCoords);
+            
+        
+        case 2:  //--- IMAGE
+            imgFile = new ImageFile(finalFilePath, aCaption, aCoords);
+        
+        default: //wtf case
+            ;
+    }
+    
 }
+
+
 
 //--------------------------------------------------------------
 void Asset::update(){
-    vid.update();
+    
+    switch (aType){
+        case 0:  //TEXT
+            txtFile->update();
+            
+        case 1:  //VIDEO
+            vidFile->update();
+            
+        case 2:  //IMAGE
+            imgFile->update();
+            
+        default: //wtf case
+            ;
+    }
 }
 
 //--------------------------------------------------------------
 void Asset::draw(){
     
-    vid.draw(x, y, width, height);
+    switch (aType){
+        case 0:  //TEXT
+            txtFile->draw();
+            
+        case 1:  //VIDEO
+            vidFile->draw();
+            
+        case 2:  //IMAGE
+            imgFile->draw();
+            
+        default: //wtf case
+            ;
+    }
     
 }
-
-
-////--------------------------------------------------------------
-//Asset::Asset(string _eventId, string _title, string _type, string _location, string _uri){ //x,y,w,h in later?
-//    
-//    eventId = _eventId;
-//    type = _type;
-//    title = _title;
-//    uri = _uri;
-//    location = _location;
-//    
-//    x = 0;
-//    y = 0;
-//    width = 960;
-//    height = 360;
-//    
-//    //TODO: generate this path automatically
-//    string filePath = "/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/apps/30PP/";
-//    
-//    filePath += uri; //append URI to base file path (30PP root folder)
-//    
-//    //if (type == "video"){
-//    
-//    vid.loadMovie(filePath);
-//    
-//    vid.play();
-//    //}
-//}
-//

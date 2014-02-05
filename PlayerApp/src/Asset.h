@@ -9,6 +9,9 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
+#include "VideoFile.h"
+#include "ImageFile.h"
+#include "TextFile.h"
 
 // Location object
 class Location {
@@ -22,24 +25,36 @@ class Location {
 class Asset {
     
     public:
-        //Asset(string _eventId, string _title, string _type, string _location, string _uri);
         Asset(Json::Value thisAsset);
         void update();
         void draw();
-        
-        string aTitle;
-        string aUri;
-        string aType;
-        Location aLoc;
-        
-        int x;
-        int y;
-        int width;
-        int height;
-        
-        ofVideoPlayer vid;
-    //    ofFile file;
-        
+    
+        int aType;          // assetType
+        int aZone;          // dictates coordinates
+        ofVec2f aCoords;    // dicated by aZone (ID int)
+        string aCaption;
+        string aTitle;      // might move
+        Location aLoc;      // might move
+    
+        //--- Vars for a File, if found
+        Json::Value aFile;  // assetFile JSON
+        string aFilePath;   // rest comes in aFile JSON obj
+        string aFileTitle;
+        string aFileText;
+        string aFileMongoId;
+        int aFileType;
+        string aFileCreatedAt;
+        Location aFileLoc;
+        string finalFilePath;
+    
+        VideoFile * vidFile; //pointers so as to not allocate any memory when not needed
+        ImageFile * imgFile;
+        TextFile * txtFile;
+    
+        int width;  //future?
+        int height; //future?
+
+    
     private:
 
 };

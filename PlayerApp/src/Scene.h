@@ -12,19 +12,19 @@
 #include "ofxLibwebsockets.h"
 
 // Scene object
-// does not need any inherent methods (as of yet)
 class Scene {
     
-public:
-    //Scene(string _eventId, string _title, string _type, string _location, string _uri);
-    Scene(Json::Value thisScene);
-    void update();
-    void draw();
+    public:
+        Scene(Json::Value thisScene);
+        void update();
+        void draw();
+        
+        int sZoneType;
+        string sTitle;
+        string sText;
+        string sCreatedAt;
     
-    string sType;
-    string sTitle;
-    
-    vector <Asset> sAssets;
+        vector <Asset> sAssets; //sceneAssets
     
 private:
     

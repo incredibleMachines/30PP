@@ -5,6 +5,15 @@
 //  Created by Joseph Saavedra on 1/2/14.
 //
 //
+/*
+ 
+ Event class. Upon receiving an 'init' command from the controller app, all Events are generated.  Each Event contains a vector of Scenes, each of which store all Assets, each of which contain at least 1 file type. 
+ 
+ methods:
+    - constructor pulls all data about this event out. Creates a JSON obj for scenes. Runs through array and populates vector <eScenes>
+    - update() will update the appropriate scene for this event in the proper order, for proper amount of time
+    - draw() will draw the appropriate scene...
+ */
 
 #include "Event.h"
 
@@ -13,12 +22,12 @@ Event::Event(Json::Value thisEvent){
     
     //cout<< "EVENT RECEIVED: "<<thisEvent.toStyledString()<<endl; //entire raw event
     
-    //--- this event
-    eAnimType       = thisEvent.get("anim_type", "anim_type not found").asString();
-    eId             = thisEvent.get("_id", "id not found").asString();
-    eTitle          = thisEvent.get("title", "title not found").asString();
-    eType           = thisEvent.get("type", "type not found").asString();
-    eCreatedAt      = thisEvent.get("created_at", "created not found").asString();
+    //--- pull all data out from this event
+    eAnimType       = thisEvent.get("anim_type", "no event anim_type found").asString();
+    eId             = thisEvent.get("_id", "no event _id found").asString();
+    eTitle          = thisEvent.get("title", "no event title found").asString();
+    eType           = thisEvent.get("type", "notype found").asString();
+    eCreatedAt      = thisEvent.get("created_at", "no created found").asString();
     int numScenes   = thisEvent.get("scenes", "NO SCENES FOUND").size();
     
     //print EVENT keys
@@ -34,9 +43,16 @@ Event::Event(Json::Value thisEvent){
 }
 
 
+//--------------------------------------------------------------
+void Event::update(){ //might make sense
+    
+    //TODO: update scenes 1 at a time, in order, for proper amount of time
+
+}
 
 
 //--------------------------------------------------------------
-//void Event::update(){ //might make sense
+void Event::draw(){ //might make sense
 
-//}
+    //TODO: draw scenes 1 at time, in order, for proper amount of time
+}
