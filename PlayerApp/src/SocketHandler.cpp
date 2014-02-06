@@ -137,40 +137,6 @@ void SocketHandler::initEvents(ofxLibwebsockets::Event &args){
 }
 
 //--------------------------------------------------------------
-void SocketHandler::drawDebugInfo(){
-    //--- draw some info
-    ofBackground(0);
-    
-    if (!socketConnected){ // socket not connected !
-        ofSetColor(255,0,20);
-        ofDrawBitmapString("NOT CONNECTED", 140, 32);
-        
-    } else {  // socket connected
-        //--- connected msg
-        ofSetColor(0,255,20);
-        ofDrawBitmapString("CONNECTED", 140, 32);
-        if(((playerApp*)ofGetAppPtr())->eventsInited){
-            ofDrawBitmapString("+ EVENTS INITED", 220, 32);
-        } else {
-            ofSetColor(255, 0, 20);
-            ofDrawBitmapString("+ EVENTS NOT INITED", 220, 32);
-        }
-
-    }
-    
-    ofSetColor(255);
-    ofDrawBitmapString("socket status: ", 20, 30);
-    if(bVerbose){
-        ofDrawBitmapString("'i' to request init manually", 20, ofGetHeight()-20);
-        ofSetColor(200, 200, 200);
-        ofDrawBitmapString(debugActivityInfo, 20, 50);
-    }
-}
-
-
-
-
-//--------------------------------------------------------------
 void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
     
     cout <<"\n==================== SOCKET MESSAGE RECEIVED ====================="<<endl;
@@ -211,6 +177,39 @@ void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
         cout << ">>> received UNKNOWN EVENT" << endl;
     }
 }
+
+//--------------------------------------------------------------
+void SocketHandler::drawDebugInfo(){
+    //--- draw some info
+    ofBackground(0);
+    
+    if (!socketConnected){ // socket not connected !
+        ofSetColor(255,0,20);
+        ofDrawBitmapString("NOT CONNECTED", 140, ofGetHeight()-50);
+        
+    } else {  // socket connected
+        //--- connected msg
+        ofSetColor(0,255,20);
+        ofDrawBitmapString("CONNECTED", 140, ofGetHeight()-50);
+        if(((playerApp*)ofGetAppPtr())->eventsInited){
+            ofDrawBitmapString("+ EVENTS INITED", 220, ofGetHeight()-50);
+        } else {
+            ofSetColor(255, 0, 20);
+            ofDrawBitmapString("+ EVENTS NOT INITED", 220, ofGetHeight()-50);
+        }
+        
+    }
+    
+    ofSetColor(255);
+    ofDrawBitmapString("socket status: ", 20, ofGetHeight()-50);
+    if(bVerbose){
+        ofDrawBitmapString("'i' to request init manually", 20, ofGetHeight()-30);
+        //ofSetColor(200, 200, 200);
+        ofDrawBitmapString(debugActivityInfo, 20, ofGetHeight()-10);
+    }
+}
+
+
 
 //--------------------------------------------------------------
 void SocketHandler::onConnect(ofxLibwebsockets::Event &args){

@@ -19,13 +19,19 @@
 		A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF52649DEB8D25CA011EB41 /* Connection.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		C6C3882A0B0872D1485F3874 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE5E38D74C62B19279B65BC7 /* Client.cpp */; };
+		E285694418A42C6B0068B4AB /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285694018A42C6B0068B4AB /* Camera.cpp */; };
+		E285694518A42C6B0068B4AB /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285694218A42C6B0068B4AB /* ModelMapper.cpp */; };
+		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
+		E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */; };
+		E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */; };
+		E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697918A42E8C0068B4AB /* ofxAssimpModelLoader.cpp */; };
+		E285698218A42E8C0068B4AB /* ofxAssimpTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697B18A42E8C0068B4AB /* ofxAssimpTexture.cpp */; };
 		E2FEFA2418A2DC4F00C09106 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1318A2DC4F00C09106 /* Asset.cpp */; };
 		E2FEFA2518A2DC4F00C09106 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1518A2DC4F00C09106 /* Event.cpp */; };
 		E2FEFA2618A2DC4F00C09106 /* ImageFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1718A2DC4F00C09106 /* ImageFile.cpp */; };
 		E2FEFA2718A2DC4F00C09106 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1918A2DC4F00C09106 /* main.cpp */; };
 		E2FEFA2818A2DC4F00C09106 /* playerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1A18A2DC4F00C09106 /* playerApp.cpp */; };
 		E2FEFA2918A2DC4F00C09106 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1C18A2DC4F00C09106 /* Scene.cpp */; };
-		E2FEFA2A18A2DC4F00C09106 /* Syphons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA1E18A2DC4F00C09106 /* Syphons.cpp */; };
 		E2FEFA2B18A2DC4F00C09106 /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA2018A2DC4F00C09106 /* TextFile.cpp */; };
 		E2FEFA2C18A2DC4F00C09106 /* VideoFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA2218A2DC4F00C09106 /* VideoFile.cpp */; };
 		E2FEFA3118A2DDC400C09106 /* SocketHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FEFA2F18A2DDC400C09106 /* SocketHandler.cpp */; };
@@ -98,6 +104,57 @@
 		83E7C80F187DEDC900746BAA /* ofxSyphonServerDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSyphonServerDirectory.h; sourceTree = "<group>"; };
 		83E7C810187DEDC900746BAA /* ofxSyphonServerDirectory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxSyphonServerDirectory.mm; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
+		E285694018A42C6B0068B4AB /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		E285694118A42C6B0068B4AB /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		E285694218A42C6B0068B4AB /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
+		E285694318A42C6B0068B4AB /* ModelMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelMapper.h; sourceTree = "<group>"; };
+		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
+		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
+		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
+		E285694E18A42E8C0068B4AB /* aiCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiCamera.h; sourceTree = "<group>"; };
+		E285694F18A42E8C0068B4AB /* aiColor4D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiColor4D.h; sourceTree = "<group>"; };
+		E285695018A42E8C0068B4AB /* aiColor4D.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aiColor4D.inl; sourceTree = "<group>"; };
+		E285695118A42E8C0068B4AB /* aiConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiConfig.h; sourceTree = "<group>"; };
+		E285695218A42E8C0068B4AB /* aiDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiDefines.h; sourceTree = "<group>"; };
+		E285695318A42E8C0068B4AB /* aiFileIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiFileIO.h; sourceTree = "<group>"; };
+		E285695418A42E8C0068B4AB /* aiLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiLight.h; sourceTree = "<group>"; };
+		E285695518A42E8C0068B4AB /* aiMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiMaterial.h; sourceTree = "<group>"; };
+		E285695618A42E8C0068B4AB /* aiMaterial.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aiMaterial.inl; sourceTree = "<group>"; };
+		E285695718A42E8C0068B4AB /* aiMatrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiMatrix3x3.h; sourceTree = "<group>"; };
+		E285695818A42E8C0068B4AB /* aiMatrix3x3.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aiMatrix3x3.inl; sourceTree = "<group>"; };
+		E285695918A42E8C0068B4AB /* aiMatrix4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiMatrix4x4.h; sourceTree = "<group>"; };
+		E285695A18A42E8C0068B4AB /* aiMatrix4x4.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aiMatrix4x4.inl; sourceTree = "<group>"; };
+		E285695B18A42E8C0068B4AB /* aiMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiMesh.h; sourceTree = "<group>"; };
+		E285695C18A42E8C0068B4AB /* aiPostProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiPostProcess.h; sourceTree = "<group>"; };
+		E285695D18A42E8C0068B4AB /* aiQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiQuaternion.h; sourceTree = "<group>"; };
+		E285695E18A42E8C0068B4AB /* aiScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiScene.h; sourceTree = "<group>"; };
+		E285695F18A42E8C0068B4AB /* aiTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiTexture.h; sourceTree = "<group>"; };
+		E285696018A42E8C0068B4AB /* aiTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiTypes.h; sourceTree = "<group>"; };
+		E285696118A42E8C0068B4AB /* aiVector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiVector2D.h; sourceTree = "<group>"; };
+		E285696218A42E8C0068B4AB /* aiVector3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiVector3D.h; sourceTree = "<group>"; };
+		E285696318A42E8C0068B4AB /* aiVector3D.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aiVector3D.inl; sourceTree = "<group>"; };
+		E285696418A42E8C0068B4AB /* aiVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiVersion.h; sourceTree = "<group>"; };
+		E285696518A42E8C0068B4AB /* assimp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = assimp.h; sourceTree = "<group>"; };
+		E285696618A42E8C0068B4AB /* assimp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = assimp.hpp; sourceTree = "<group>"; };
+		E285696818A42E8C0068B4AB /* poppack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = poppack1.h; sourceTree = "<group>"; };
+		E285696918A42E8C0068B4AB /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pushpack1.h; sourceTree = "<group>"; };
+		E285696A18A42E8C0068B4AB /* DefaultLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultLogger.h; sourceTree = "<group>"; };
+		E285696B18A42E8C0068B4AB /* IOStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOStream.h; sourceTree = "<group>"; };
+		E285696C18A42E8C0068B4AB /* IOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSystem.h; sourceTree = "<group>"; };
+		E285696D18A42E8C0068B4AB /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		E285696E18A42E8C0068B4AB /* LogStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogStream.h; sourceTree = "<group>"; };
+		E285696F18A42E8C0068B4AB /* NullLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NullLogger.h; sourceTree = "<group>"; };
+		E285697018A42E8C0068B4AB /* ProgressHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressHandler.h; sourceTree = "<group>"; };
+		E285697318A42E8C0068B4AB /* assimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = assimp.a; sourceTree = "<group>"; };
+		E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpAnimation.cpp; sourceTree = "<group>"; };
+		E285697618A42E8C0068B4AB /* ofxAssimpAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpAnimation.h; sourceTree = "<group>"; };
+		E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpMeshHelper.cpp; sourceTree = "<group>"; };
+		E285697818A42E8C0068B4AB /* ofxAssimpMeshHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpMeshHelper.h; sourceTree = "<group>"; };
+		E285697918A42E8C0068B4AB /* ofxAssimpModelLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpModelLoader.cpp; sourceTree = "<group>"; };
+		E285697A18A42E8C0068B4AB /* ofxAssimpModelLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpModelLoader.h; sourceTree = "<group>"; };
+		E285697B18A42E8C0068B4AB /* ofxAssimpTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpTexture.cpp; sourceTree = "<group>"; };
+		E285697C18A42E8C0068B4AB /* ofxAssimpTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpTexture.h; sourceTree = "<group>"; };
+		E285697D18A42E8C0068B4AB /* ofxAssimpUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAssimpUtils.h; sourceTree = "<group>"; };
 		E2FEFA1318A2DC4F00C09106 /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Asset.cpp; sourceTree = "<group>"; };
 		E2FEFA1418A2DC4F00C09106 /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
 		E2FEFA1518A2DC4F00C09106 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
@@ -109,8 +166,6 @@
 		E2FEFA1B18A2DC4F00C09106 /* playerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playerApp.h; sourceTree = "<group>"; };
 		E2FEFA1C18A2DC4F00C09106 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		E2FEFA1D18A2DC4F00C09106 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
-		E2FEFA1E18A2DC4F00C09106 /* Syphons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Syphons.cpp; sourceTree = "<group>"; };
-		E2FEFA1F18A2DC4F00C09106 /* Syphons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syphons.h; sourceTree = "<group>"; };
 		E2FEFA2018A2DC4F00C09106 /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = "<group>"; };
 		E2FEFA2118A2DC4F00C09106 /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = "<group>"; };
 		E2FEFA2218A2DC4F00C09106 /* VideoFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoFile.cpp; sourceTree = "<group>"; };
@@ -156,6 +211,7 @@
 				83E7C811187DEDC900746BAA /* Syphon.framework in Frameworks */,
 				E45BE97E0E8CC7DD009D7055 /* Carbon.framework in Frameworks */,
 				E45BE97F0E8CC7DD009D7055 /* CoreAudio.framework in Frameworks */,
+				E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */,
 				E45BE9800E8CC7DD009D7055 /* CoreFoundation.framework in Frameworks */,
 				E45BE9810E8CC7DD009D7055 /* CoreServices.framework in Frameworks */,
 				E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */,
@@ -285,6 +341,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */,
 				83E7C7FE187DEDC900746BAA /* ofxSyphon */,
 				AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */,
 			);
@@ -321,7 +378,129 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
-		E2FEFA2D18A2DC7E00C09106 /* events */ = {
+		E285694618A42C720068B4AB /* ModelMapper */ = {
+			isa = PBXGroup;
+			children = (
+				E285694018A42C6B0068B4AB /* Camera.cpp */,
+				E285694118A42C6B0068B4AB /* Camera.h */,
+				E285694218A42C6B0068B4AB /* ModelMapper.cpp */,
+				E285694318A42C6B0068B4AB /* ModelMapper.h */,
+			);
+			name = ModelMapper;
+			sourceTree = "<group>";
+		};
+		E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */ = {
+			isa = PBXGroup;
+			children = (
+				E285694818A42E8C0068B4AB /* addon_config.mk */,
+				E285694918A42E8C0068B4AB /* libs */,
+				E285697418A42E8C0068B4AB /* src */,
+			);
+			name = ofxAssimpModelLoader;
+			path = ../../../addons/ofxAssimpModelLoader;
+			sourceTree = "<group>";
+		};
+		E285694918A42E8C0068B4AB /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				E285694A18A42E8C0068B4AB /* assimp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		E285694A18A42E8C0068B4AB /* assimp */ = {
+			isa = PBXGroup;
+			children = (
+				E285694B18A42E8C0068B4AB /* include */,
+				E285697118A42E8C0068B4AB /* lib */,
+			);
+			path = assimp;
+			sourceTree = "<group>";
+		};
+		E285694B18A42E8C0068B4AB /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E285694C18A42E8C0068B4AB /* aiAnim.h */,
+				E285694D18A42E8C0068B4AB /* aiAssert.h */,
+				E285694E18A42E8C0068B4AB /* aiCamera.h */,
+				E285694F18A42E8C0068B4AB /* aiColor4D.h */,
+				E285695018A42E8C0068B4AB /* aiColor4D.inl */,
+				E285695118A42E8C0068B4AB /* aiConfig.h */,
+				E285695218A42E8C0068B4AB /* aiDefines.h */,
+				E285695318A42E8C0068B4AB /* aiFileIO.h */,
+				E285695418A42E8C0068B4AB /* aiLight.h */,
+				E285695518A42E8C0068B4AB /* aiMaterial.h */,
+				E285695618A42E8C0068B4AB /* aiMaterial.inl */,
+				E285695718A42E8C0068B4AB /* aiMatrix3x3.h */,
+				E285695818A42E8C0068B4AB /* aiMatrix3x3.inl */,
+				E285695918A42E8C0068B4AB /* aiMatrix4x4.h */,
+				E285695A18A42E8C0068B4AB /* aiMatrix4x4.inl */,
+				E285695B18A42E8C0068B4AB /* aiMesh.h */,
+				E285695C18A42E8C0068B4AB /* aiPostProcess.h */,
+				E285695D18A42E8C0068B4AB /* aiQuaternion.h */,
+				E285695E18A42E8C0068B4AB /* aiScene.h */,
+				E285695F18A42E8C0068B4AB /* aiTexture.h */,
+				E285696018A42E8C0068B4AB /* aiTypes.h */,
+				E285696118A42E8C0068B4AB /* aiVector2D.h */,
+				E285696218A42E8C0068B4AB /* aiVector3D.h */,
+				E285696318A42E8C0068B4AB /* aiVector3D.inl */,
+				E285696418A42E8C0068B4AB /* aiVersion.h */,
+				E285696518A42E8C0068B4AB /* assimp.h */,
+				E285696618A42E8C0068B4AB /* assimp.hpp */,
+				E285696718A42E8C0068B4AB /* Compiler */,
+				E285696A18A42E8C0068B4AB /* DefaultLogger.h */,
+				E285696B18A42E8C0068B4AB /* IOStream.h */,
+				E285696C18A42E8C0068B4AB /* IOSystem.h */,
+				E285696D18A42E8C0068B4AB /* Logger.h */,
+				E285696E18A42E8C0068B4AB /* LogStream.h */,
+				E285696F18A42E8C0068B4AB /* NullLogger.h */,
+				E285697018A42E8C0068B4AB /* ProgressHandler.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E285696718A42E8C0068B4AB /* Compiler */ = {
+			isa = PBXGroup;
+			children = (
+				E285696818A42E8C0068B4AB /* poppack1.h */,
+				E285696918A42E8C0068B4AB /* pushpack1.h */,
+			);
+			path = Compiler;
+			sourceTree = "<group>";
+		};
+		E285697118A42E8C0068B4AB /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E285697218A42E8C0068B4AB /* osx */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E285697218A42E8C0068B4AB /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				E285697318A42E8C0068B4AB /* assimp.a */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		E285697418A42E8C0068B4AB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */,
+				E285697618A42E8C0068B4AB /* ofxAssimpAnimation.h */,
+				E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */,
+				E285697818A42E8C0068B4AB /* ofxAssimpMeshHelper.h */,
+				E285697918A42E8C0068B4AB /* ofxAssimpModelLoader.cpp */,
+				E285697A18A42E8C0068B4AB /* ofxAssimpModelLoader.h */,
+				E285697B18A42E8C0068B4AB /* ofxAssimpTexture.cpp */,
+				E285697C18A42E8C0068B4AB /* ofxAssimpTexture.h */,
+				E285697D18A42E8C0068B4AB /* ofxAssimpUtils.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E2FEFA2D18A2DC7E00C09106 /* Events */ = {
 			isa = PBXGroup;
 			children = (
 				E2FEFA1518A2DC4F00C09106 /* Event.cpp */,
@@ -331,10 +510,10 @@
 				E2FEFA1318A2DC4F00C09106 /* Asset.cpp */,
 				E2FEFA1418A2DC4F00C09106 /* Asset.h */,
 			);
-			name = events;
+			name = Events;
 			sourceTree = "<group>";
 		};
-		E2FEFA2E18A2DCB400C09106 /* files */ = {
+		E2FEFA2E18A2DCB400C09106 /* Files */ = {
 			isa = PBXGroup;
 			children = (
 				E2FEFA2218A2DC4F00C09106 /* VideoFile.cpp */,
@@ -344,7 +523,7 @@
 				E2FEFA2018A2DC4F00C09106 /* TextFile.cpp */,
 				E2FEFA2118A2DC4F00C09106 /* TextFile.h */,
 			);
-			name = files;
+			name = Files;
 			sourceTree = "<group>";
 		};
 		E4328144138ABC890047C5CB /* Products */ = {
@@ -385,10 +564,9 @@
 				E2FEFA1B18A2DC4F00C09106 /* playerApp.h */,
 				E2FEFA2F18A2DDC400C09106 /* SocketHandler.cpp */,
 				E2FEFA3018A2DDC400C09106 /* SocketHandler.h */,
-				E2FEFA2D18A2DC7E00C09106 /* events */,
-				E2FEFA2E18A2DCB400C09106 /* files */,
-				E2FEFA1E18A2DC4F00C09106 /* Syphons.cpp */,
-				E2FEFA1F18A2DC4F00C09106 /* Syphons.h */,
+				E285694618A42C720068B4AB /* ModelMapper */,
+				E2FEFA2D18A2DC7E00C09106 /* Events */,
+				E2FEFA2E18A2DCB400C09106 /* Files */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -491,14 +669,17 @@
 			files = (
 				83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */,
 				E2FEFA2518A2DC4F00C09106 /* Event.cpp in Sources */,
-				E2FEFA2A18A2DC4F00C09106 /* Syphons.cpp in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E2FEFA2B18A2DC4F00C09106 /* TextFile.cpp in Sources */,
+				E285694518A42C6B0068B4AB /* ModelMapper.cpp in Sources */,
 				E2FEFA2C18A2DC4F00C09106 /* VideoFile.cpp in Sources */,
 				E2FEFA2918A2DC4F00C09106 /* Scene.cpp in Sources */,
+				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
 				E2FEFA2418A2DC4F00C09106 /* Asset.cpp in Sources */,
+				E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
 				E2FEFA3118A2DDC400C09106 /* SocketHandler.cpp in Sources */,
+				E285698218A42E8C0068B4AB /* ofxAssimpTexture.cpp in Sources */,
 				6D73A566CFEC0B462FE6E43C /* Reactor.cpp in Sources */,
 				86135253DC7909CA8590E157 /* Protocol.cpp in Sources */,
 				83E7C814187DEDC900746BAA /* ofxSyphonServer.mm in Sources */,
@@ -506,6 +687,8 @@
 				F1AC6AEFB9B93C6AC45C9CA8 /* Events.cpp in Sources */,
 				A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */,
 				83E7C815187DEDC900746BAA /* ofxSyphonServerDirectory.mm in Sources */,
+				E285694418A42C6B0068B4AB /* Camera.cpp in Sources */,
+				E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */,
 				E2FEFA2818A2DC4F00C09106 /* playerApp.cpp in Sources */,
 				E2FEFA2618A2DC4F00C09106 /* ImageFile.cpp in Sources */,
 				83E7C812187DEDC900746BAA /* SyphonNameboundClient.m in Sources */,
@@ -701,6 +884,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
+					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				WRAPPER_EXTENSION = app;
@@ -788,6 +972,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
+					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

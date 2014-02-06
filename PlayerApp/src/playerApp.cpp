@@ -6,10 +6,14 @@
  
  methods
     - setup()  init all classes and json settings
-    - update() update routine on socketHandler. Standard Operating Procedures after eventsInited
+    - update() update routine on socketHandler. Standard Operating Procedures after eventsInited. 
+        - SOP: update modelMapper
     - draw()   socketDebugInfo to screen. Standard Operating Procedures after eventsInited
- 
+        - SOP: draw modelMapper
  */
+
+//--- constants
+#define MAPPER_DEBUG 1
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -18,20 +22,25 @@ void playerApp::setup(){
     ofSetFrameRate(60);
     
     //--- socket setup
-    socketHandler.setup(8080, false); // (PORT,  bool verboseMode)
+    socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
+    
+    //--- modelMapper setup
+    map.setup(4,0);
+    map.addVideoTexture("Bonus_waves.mov");
 }
 
 //--------------------------------------------------------------
 void playerApp::update(){
     
     //--- manage sockets, connect/reconnect as needed
-    socketHandler.update();
+    if(!MAPPER_DEBUG) socketHandler.update();
     
-    if(eventsInited){   // we're good to go, follow SOP
-       
-    
+    if(eventsInited || MAPPER_DEBUG){   // we're good to go, follow standard operating procedures
+        
         //everything
         
+        map.update();
+
     }
 }
 
@@ -40,10 +49,11 @@ void playerApp::draw(){
     
     socketHandler.drawDebugInfo(); //on screen socket debuggin
     
-    if(eventsInited){ //we're good to go, follow standard operating procedures
-        
+    if(eventsInited || MAPPER_DEBUG){ //we're good to go, follow SOP
         
         //everything
+        
+        map.draw();
         
     }
 }

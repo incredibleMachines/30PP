@@ -5,9 +5,10 @@
 
 
 //30PP
+#include "ModelMapper.h"
 #include "SocketHandler.h"
 #include "Event.h"
-#include "Syphons.h"
+
 
 class playerApp : public ofBaseApp {
 
@@ -31,6 +32,6 @@ public:
     bool eventsInited;
     vector <Event> allEvents;
     
-    //Syphons allSyphons;
-    
+    ModelMapper map;
+        
 };
