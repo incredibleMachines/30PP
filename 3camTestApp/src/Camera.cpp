@@ -27,6 +27,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
 }
 
 void Camera::addMask(){
-    Mask tempMask;
-    mask.push_back(tempMask);
+    ofPolyline tempMask;
+    masks.push_back(tempMask);
+    highlightMask=masks.size()-1;
 }

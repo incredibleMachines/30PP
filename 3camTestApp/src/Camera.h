@@ -10,7 +10,6 @@
 
 #pragma once
 #include "ofMain.h"
-#include "Mask.h"
 
 class Camera {
     public:
@@ -21,7 +20,9 @@ class Camera {
         ofEasyCam camera;
         ofRectangle viewport;
         ofMesh mesh;
-        vector<Mask> mask;
+        
+        vector<ofPolyline> masks;
+        int highlightMask;
 };
 
 

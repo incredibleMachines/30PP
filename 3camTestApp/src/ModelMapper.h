@@ -15,9 +15,10 @@
 
 //--------INTERNAL TYPE DEFS - DO NOT CHANGE
 #define ADJUST_MODE_CAMERA 1
-#define ADJUST_MODE_VIEWPORT 4
 #define ADJUST_MODE_LOOK_AT 2
 #define ADJUST_MODE_MESH 3
+#define ADJUST_MODE_VIEWPORT 4
+#define ADJUST_MODE_MASK 5
 
 class ModelMapper {
 public:
@@ -43,6 +44,8 @@ public:
     void drawCameras();
     //draw Highlights for selection box, nearest point, and selected points
     void drawHighlights();
+    //draw masks for selected camera
+    void drawMasks();
     //init cameras
     void setupCameras();
     //save camera data to json and meshes to .ply files
@@ -65,6 +68,16 @@ public:
         int index;
     };
     vector<meshVertex> moveVertices;
+
+    //---------MASK SETTINGS
+    class maskVertex{
+    public:
+        ofVec2f vertex;
+        int maskIndex;
+        int vertexIndex;
+    };
+    vector<maskVertex> maskVertices;
+    bool bNewMask, bDrawingMask, bMaskPoint;
     
     //---------HIGHLIGHT SETTINGS
     bool bMouseDown;
@@ -74,5 +87,7 @@ public:
     
     //---------VIDEO PLAYER
     ofQTKitPlayer player;
+    
+    float mouseTimer;
     
 };
