@@ -2,49 +2,29 @@
 //  Event.h
 //  PlayerApp
 //  Created by Joseph Saavedra on 1/2/14.
-/*
- 
- Event Object
-
- gets instantiated on each incoming Event object, all fields + associated Asset object fields are populated,
- (TODO: load assets)
- 
-*/
 //
 
 #pragma once
 #include "ofMain.h"
-#include "Asset.h"
+#include "Scene.h"
 #include "ofxLibwebsockets.h"
-
-
-// Asset object
-// >>> moved into it's own class
-//class Asset {
-//public:
-//    string aType;
-//    string aTitle;
-//    string aLink;
-//    string aLocation;
-//};
-
-
 
 // Event class
 class Event {
 public:
     
-    Event(int eventIndex, ofxLibwebsockets::Event &args);
-    //void initEvent(ofxLibwebsockets::Event &args);
+    Event(Json::Value thisEvent);
+    void update();
+    void draw();
     
     string eCommand;
     string eTitle;
-    string eDuration;
+    string eType;
     string eAnimType;
     string eId;
     string eCreatedAt;
     
-    vector <Asset> eAssets; //vector of all assets for this event
+    vector <Scene> eScenes; //vector of all scenes for this event
     
 private:
     

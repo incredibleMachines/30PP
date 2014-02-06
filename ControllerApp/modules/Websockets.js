@@ -49,7 +49,7 @@ function parseCommand(_json){
 
 		switch(_json.command){
 			case 'init':
-				sendPlayerInit();
+				sendFakeData();
 			break;
 			default:
 				_socket.send(JSON.stringify({'command':'error', 'error': 'unknown command'}));
@@ -75,24 +75,97 @@ function sendPlayerInit(){
 }
 function sendFakeData(__socket){
 	
-	var fakeAsset = {};
+	//--- fakeLocations
+	var fakeLocation1 = {};
+	fakeLocation1.title = "location1";
+	fakeLocation1.address = "182 Broadway, NY NY";
+
+	var fakeLocation2 = {};
+	fakeLocation2.title = "location2";
+	fakeLocation2.address = "66 Park Pl, NY NY";
 	
-	fakeAsset.title = 'restaurant one';
-	fakeAsset.link = 'URI://localhost/documents/media/file.mpg';
-	fakeAsset.type = 'video';
-	fakeAsset.location = 'location_id';
+	var fakeLocation3 = {};
+	fakeLocation3.title = "location3";
+	fakeLocation3.address = "1 Ludlow Rd, NY NY";
+
+	var fakeLocation4 = {};
+	fakeLocation4.title = "location4";
+	fakeLocation4.address = "810 York Rd, NY NY";
+
+	//--- fakeAssets
+	var fakeAsset1 = {};
+	fakeAsset1.title = 'asset one';
+	fakeAsset1.link = 'URI://localhost/documents/media/file.mpg';
+	fakeAsset1.type = 0;
+	fakeAsset1.location = fakeLocation1;
 	
-	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset));
-	fakeAsset2.title = 'restaurant two';
+	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset2.title = 'asset two';
 	fakeAsset2.link = 'URI://localhost/documents/media/file2.mpg';
+	fakeAsset2.location = fakeLocation2;
+
+	var fakeAsset3 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset3.title = 'asset three';
+	fakeAsset3.link = 'URI://localhost/documents/media/file3.mpg';
+	fakeAsset3.location = fakeLocation3;
+
+	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset4.title = 'asset four';
+	fakeAsset4.type = 1;
+	fakeAsset4.link = 'URI://localhost/documents/media/file4.png';
+	fakeAsset4.location = fakeLocation4;
 	
+	//--- fakeScenes
+	var fakeScene1 = {};
+	fakeScene1.title = "scene 1";
+	fakeScene1.type = 1;
+	fakeScene1.assets = [fakeAsset1, fakeAsset2, fakeAsset4];
+	fakeScene1.created_at = "01-29-2014";
+	fakeScene1.last_edited = "01-30-2014";
+
+	var fakeScene2 = JSON.parse(JSON.stringify(fakeScene1));
+	fakeScene2.title = "scene 2";
+	fakeScene2.type = 2;
+	fakeScene2.assets = [fakeAsset1];
+	fakeScene2.last_edited = "02-15-2014";
+
+	var fakeScene3 = JSON.parse(JSON.stringify(fakeScene1));
+	fakeScene3.title = "scene 3";
+	fakeScene3.type = 0;
+	fakeScene3.assets = [fakeAsset4, fakeAsset2];
+	fakeScene3.last_edited = "03-30-2014";
+
+	//--- fakeEvents
+	var fakeEvent1 = {};
+	fakeEvent1.title = "restaurants"; 
+	fakeEvent1.type = "intro";
+	fakeEvent1.created_at = "01-20-2014";
+	fakeEvent1.scenes = [fakeScene1, fakeScene2];
+
+	var fakeEvent2 = {};
+	fakeEvent2.title = "nightlife";
+	fakeEvent2.type = "sales";
+	fakeEvent2.created_at = "01-21-2014";
+	fakeEvent2.scenes = [fakeScene3, fakeScene1, fakeScene2];
+
+	var fakeEvent3 = {};
+	fakeEvent3.title = "event3";
+	fakeEvent3.type = "outro";
+	fakeEvent3.created_at = "02-18-2014";
+	fakeEvent3.scenes = [fakeScene2, fakeScene3, fakeScene1, fakeScene2];
+
+	var fakeEvent4 = {};
+	fakeEvent4.title = "event4";
+	fakeEvent4.type = "sales";
+	fakeEvent4.created_at = "02-21-2014";
+	fakeEvent4.scenes = [fakeScene2, fakeScene3, fakeScene1];
+
+	//--- fakePutItAllTogetherNow
 	var fakeData = {};
-	fakeData.command = 'start';
-	fakeData.title = 'restaurants';
-	fakeData.assets = [fakeAsset,fakeAsset2];
-	fakeData.duration = Math.floor(Math.random()*100)+10;
+	fakeData.command = 'init';
+	fakeData.events = [fakeEvent1, fakeEvent2, fakeEvent3, fakeEvent4];
 	
 	//We Can only send strings NOT JSON DATA!
-	__socket.send(JSON.stringify(fakeData));
+	_socket.send(JSON.stringify(fakeData));
 }
 

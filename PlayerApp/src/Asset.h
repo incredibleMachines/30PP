@@ -8,30 +8,54 @@
 
 #pragma once
 #include "ofMain.h"
+#include "ofxLibwebsockets.h"
+#include "VideoFile.h"
+#include "ImageFile.h"
+#include "TextFile.h"
+
+
+// Location object
+class Location {
+    public:
+        string address;
+        string title;
+};
+
 
 // Asset object
-// does not need any inherent methods (as of yet)
 class Asset {
     
-public:
-    Asset(string _eventId, string _title, string _type, string _location, string _uri);
-    void update();
-    void draw();
+    public:
+        Asset(Json::Value thisAsset);
+        void update();
+        void draw();
     
-    string eventId;
-    string type;
-    string title;
-    string uri;
-    string location;
+        int aType;          // assetType
+        int aZone;          // dictates coordinates
+        ofVec2f aCoords;    // dicated by aZone (ID int)
+        string aCaption;
+        string aTitle;      // might move
+        Location aLoc;      // might move
     
-    int x;
-    int y;
-    int width;
-    int height;
+        //--- Vars for a File, if found
+        Json::Value aFile;  // assetFile JSON
+        string aFilePath;   // rest comes in aFile JSON obj
+        string aFileTitle;
+        string aFileText;
+        string aFileMongoId;
+        int aFileType;
+        string aFileCreatedAt;
+        Location aFileLoc;
+        string finalFilePath;
     
-    ofVideoPlayer vid;
-//    ofFile file;
+        VideoFile * vidFile; //pointers so as to not allocate any memory when not needed
+        ImageFile * imgFile;
+        TextFile * txtFile;
     
-private:
+        int width;  //future?
+        int height; //future?
+
+    
+    private:
 
 };
