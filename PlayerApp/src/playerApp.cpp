@@ -2,7 +2,7 @@
 #include "playerApp.h"
 
 /*
- playerApp class. Master app, contains objects for Camera, ModelMapper, Masks, SocketHandler, Events.  
+ playerApp class. This is the master app, contains objects for Camera, ModelMapper, Masks, SocketHandler, Events.  
  
  methods
     - setup()  init all classes and json settings

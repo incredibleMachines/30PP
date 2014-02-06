@@ -7,7 +7,7 @@
 //
 /*
  
- socketHandler class. handles all socket communications with controllerApp. Also handles all of the Event Init request and kickoff.
+ SocketHandler class. handles all socket communications with controllerApp. Also handles all of the Event Init request and kickoff.
  
  methods
     - setup takes the port argument and instantiates the websocket Client on that port
