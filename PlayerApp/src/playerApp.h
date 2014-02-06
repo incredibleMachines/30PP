@@ -2,8 +2,7 @@
 
 //openFrameworks + addons
 #include "ofMain.h"
-#include "ofxLibwebsockets.h"
-#include "ofxSyphon.h"
+
 
 //30PP
 #include "SocketHandler.h"
@@ -16,7 +15,6 @@ public:
     void setup();
     void update();
     void draw();
-    void initEvents(ofxLibwebsockets::Event &args);
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -30,8 +28,9 @@ public:
     
     SocketHandler socketHandler;
     
+    bool eventsInited;
     vector <Event> allEvents;
     
-    Syphons allSyphons;
+    //Syphons allSyphons;
     
 };

@@ -330,7 +330,6 @@
 				E2FEFA1D18A2DC4F00C09106 /* Scene.h */,
 				E2FEFA1318A2DC4F00C09106 /* Asset.cpp */,
 				E2FEFA1418A2DC4F00C09106 /* Asset.h */,
-				E2FEFA2E18A2DCB400C09106 /* files */,
 			);
 			name = events;
 			sourceTree = "<group>";
@@ -387,6 +386,7 @@
 				E2FEFA2F18A2DDC400C09106 /* SocketHandler.cpp */,
 				E2FEFA3018A2DDC400C09106 /* SocketHandler.h */,
 				E2FEFA2D18A2DC7E00C09106 /* events */,
+				E2FEFA2E18A2DCB400C09106 /* files */,
 				E2FEFA1E18A2DC4F00C09106 /* Syphons.cpp */,
 				E2FEFA1F18A2DC4F00C09106 /* Syphons.h */,
 			);

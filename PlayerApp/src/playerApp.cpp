@@ -1,27 +1,36 @@
 
 #include "playerApp.h"
 
+/*
+ playerApp class. Master app, contains objects for Camera, ModelMapper, Masks, SocketHandler, Events.  
+ 
+ methods
+    - setup()  init all classes and json settings
+    - update() update routine on socketHandler. Standard Operating Procedures after eventsInited
+    - draw()   socketDebugInfo to screen. Standard Operating Procedures after eventsInited
+ 
+ */
+
 //--------------------------------------------------------------
 void playerApp::setup(){
 
     ofSetWindowTitle("30PP Player");
     ofSetFrameRate(60);
-    ofSetCircleResolution(60);
     
     //--- socket setup
-    socketHandler.setup(8080);
-    
-    //--- have assets been received and loaded?
-//    inited = false;
+    socketHandler.setup(8080, false); // (PORT,  bool verboseMode)
 }
 
 //--------------------------------------------------------------
 void playerApp::update(){
     
+    //--- manage sockets, connect/reconnect as needed
     socketHandler.update();
     
-    if(socketHandler.eventsInited){ //we're good to go, follow standard operating procedures
-        
+    if(eventsInited){   // we're good to go, follow SOP
+       
+    
+        //everything
         
     }
 }
@@ -29,10 +38,12 @@ void playerApp::update(){
 //--------------------------------------------------------------
 void playerApp::draw(){
     
-    socketHandler.drawDebugInfo();
+    socketHandler.drawDebugInfo(); //on screen socket debuggin
     
-    if(socketHandler.eventsInited){ //we're good to go, follow standard operating procedures
+    if(eventsInited){ //we're good to go, follow standard operating procedures
         
+        
+        //everything
         
     }
 }
@@ -40,7 +51,7 @@ void playerApp::draw(){
 //--------------------------------------------------------------
 void playerApp::keyPressed(int key){
     
-    if (key == 'i'){ // will happen in socketHandler.update() automatically in the future
+    if (key == 'i'){ // will happen in socketHandler.update() automatically when ready
         socketHandler.sendInitCmd();
     }
 }

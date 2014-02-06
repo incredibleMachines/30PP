@@ -16,17 +16,24 @@ class SocketHandler{
 
 public:
     
+    //setup and update
     SocketHandler();
-    void setup(int port);
+    void setup(int port, bool verboseMode);
     void update();
-    void drawDebugInfo();
+
+    //init events
     void sendInitCmd();
     void initEvents(ofxLibwebsockets::Event &args);
+    bool eventsInited;
     
+    //socket client
     ofxLibwebsockets::Client socketClient;
     ofxLibwebsockets::ClientOptions socketOptions;
+    void connectSocket();
     bool socketConnected;
+    bool reconnectFlag;
     
+    //socket callbacks
     void onConnect(ofxLibwebsockets::Event& args);
     void onOpen(ofxLibwebsockets::Event& args);
     void onClose(ofxLibwebsockets::Event& args);
@@ -34,5 +41,10 @@ public:
     void onMessage(ofxLibwebsockets::Event& args);
     void onBroadcast(ofxLibwebsockets::Event& args);
     
-    bool eventsInited;
+    //socket debug
+    void drawDebugInfo();
+    string debugActivityInfo;
+    bool bVerbose;
+    
+
 };
