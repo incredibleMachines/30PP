@@ -1,0 +1,166 @@
+<% /* EVENTS SINGLE PAGE */ %>
+<% include ../includes/header %>
+<section class="<%= page_slug %>">
+	<header class="row">
+	    <h3 class="col-md-4"><small>Event:</small> <%=title%></h3>
+		<section class="col-md-8">
+			<h3>Duration: <small><%= event.duration %></small></h3>
+		</section>
+	</header>
+	<section class="row <%= page_slug %> content">
+		<aside class="col-md-4">
+			<section class="panel panel-default">
+				<header class="panel-heading">
+					<h3 class="panel-title">Scenes <small>New Scene <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_scene_modal">+</button></small></h3>
+				</header> <!-- .panel-heading -->
+				<ul class="list-group">
+					<% /* Need to Pull from Asset Groups in the event object */ %>
+					<% for(var i = 0; i<event.scenes.length; i++){ %>
+					<li class="list-group-item">
+						<section class="btn-group-vertical">
+							<button class="btn btn-default btn-xs dropup scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs scene-order-down <% if(i == event.scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+						</section>
+						<button type="button" data-scene-id="<%=event.scenes[i]._id%>" class="scene-title <%=event.scenes[i].slug %> btn btn-link btn-lg "><%=event.scenes[i].title%></button>
+					</li>
+					<% } %>
+				</ul>
+			</section><!-- .panel .panel-default -->
+		</aside>
+		<%/* Must check for specific single scene if we are loading that currently defaults to the first scene */ %>
+		<section class="col-md-8 scene-view">
+			<section class="panel panel-default">
+				<header class="panel-heading">
+					<h3 class="panel-title scene-title <%=event.scenes[0].slug %>"><%= event.scenes[0].title %></h3>
+				</header>
+				<section id="scene-contents" class="row">						
+					<form action="/scenes/<%=event.scenes[0]._id%>" method="post">
+						<article id="scene-data" class="col-md-6">
+							<%/* Must Check for empty Scenes and serve up default content */%>
+							<% /* Update Scenes Slug etc for action */ %>
+								<!-- <input class="scene-id" name="scene[_id]" value="<%=event.scenes[0]._id%>"/> -->
+								<section class="form-group">
+									<label for="title" >Scene Title</label>
+									<input type="text"  class="scene-title <%=event.scenes[0].slug %> form-control" name="title" id="title" value="<%= event.scenes[0].title %>">
+								</section>
+								<section class="form-group">
+									<label for="zone_type">Zone Type</label>
+									<select  class="form-control show-tick scene-zone_type <%=event.scenes[0].slug %>" name="zone_type" id="zone_type">
+										<% for(var i = 0; i< 4; i++){ %>
+											<option <%if(event.scenes[0].zone_type == "zone_"+i){ %> selected <%}%> value="zone_<%=i%>">Zone Type <%= i %></option>
+										<% } %>
+									</select>
+									<p class="help-block">Select a zone type.</p>
+								</section>
+								<section class="form-group">
+									<label for="screen_text">On Screen Text</label>
+									<textarea class="form-control scene-text <%=event.scenes[0].slug %>" name="text" id="text"><%= event.scenes[0].text%></textarea>
+									<p class="help-block">Add text to display during scene (optional)</p>
+								</section>
+								<section style="width: 35%;" class="pull-right">
+									<button type="submit" class="btn btn-primary btn-block btn-sm">Save Changes</button>
+									<button type="button" class="btn btn-default btn-block btn-sm">Exit Without Saving</button>
+									<button type="button" class="btn btn-danger btn-block btn-sm">Delete This Scene</button>
+								</section>
+						</article><!-- #scene-data -->
+						
+						
+						<article id="asset-data" class="col-md-6">
+							<section class="form-group">
+								<label>Assign Assets to Each Zone</label>
+								<a href="#" class="thumbnail">
+									<img data-src="holder.js/100%x200" src=""/>
+								</a>
+							</section><!-- .form-group -->
+							<% /* Begin Loop for each Asset in Scene */ %>
+							<% 	var assetNum;
+								//assign a number value to our zones - note this is currently hard coded and will be updated
+								switch(event.scenes[0].zone_type){
+									//This is will have to change once we know what the fucks we need here.
+									case 'zone_0': assetNum = 1; break;
+									case 'zone_1': assetNum = 2; break;
+									case 'zone_2': assetNum = 3; break;
+									case 'zone_3': assetNum = 4; break; 
+								} %>
+							<%  for(var i = 0; i< assetNum; i++){ %>
+							<% /* Single Asset Object will be duplicated based on Number of Assets Needed */ %>
+							<% event.scenes[0].assets.forEach(function(asset,index){
+								Object.keys(asset).forEach(function(key){
+								
+									if(parseInt(key)== i){
+									%> <%= key+':' %>  <%-JSON.stringify(asset)%>
+									
+									<article class="row asset-single asset-single-<%= i %>">
+									<section class="col-md-6 asset-image">
+									<a href="#" class="thumbnail">
+									
+									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+									</a>
+									<button type="button" class="btn btn-default btn-sm">Delete</button>
+									</section>
+									<section class="col-md-6 asset-contents">
+									<!--<form action="/assets/:slug" method="post"> -->
+										<section class="form-group">
+											<label for="name">Select an asset
+												<button type="button" class="btn btn-xs btn-link disabled">Edit</button>
+												<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
+											</label>
+											<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
+												<option value="">No File</option>
+												<% for(var j = 0; j< files.length; j++){ %>
+													<% if(files[j]._id.toString() == asset[key].file.toString()){ %>
+													<option value="<%=files[j]._id%>" selected ><%=files[j].title%></option>
+													<% }else{ %>
+													<option value="<%= files[j]._id %>"><%= files[j].title %></option>
+													<% } %>
+												<% } %>
+											</select>
+										</section><!--.form-group -->
+										<section class="form-group">
+											<label for="zone">Assign to a zone</label>
+											<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
+												<% for(var k = 0; k<assetNum; k++){ %>
+													<% if("zone_"+(k+1) == asset[key].zone ){ %>
+														<option selected value="zone_<%=k+1%>">Zone <%= k+1 %></option>
+													<% }else{ %>
+														<option value="zone_<%=k+1 %>">Zone <%= k+1 %></option>
+													<% } /*end else if */%>
+												<% } %>
+											</select>
+										</section><!--.form-group -->
+										<section class="form-group">
+											<label for="caption">Caption</label>
+											<% 	var caption = true;
+												if(asset[key].caption == "undefined"){
+													caption= false;
+												}else if(asset[key].caption == ""){
+													caption=false;
+												}
+											%>
+											<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"><% if(caption==true){	
+											%><%=asset[key].caption%><% } %></textarea>
+										</section><!--.form-group -->
+									<!--</form>-->
+									</section><!-- .asset-contents -->
+									</article> <!-- .row .asset-single -->
+									
+									
+									
+									<% }
+								
+								})
+							})//end event.scenes[0].assets.forEach( %>
+							<% } %>
+							<% /* End Single Asset */ %>
+							<% /* End of Loop! */ %>
+						</article><!-- #asset-data -->
+					</form>
+				</section> <!-- #scene-contents .row -->
+			</section> <!-- .panel -->
+		</section> <!-- .scene-view -->
+	</section><!-- .row .<%= page_slug %> .content -->
+</section> <!-- .<%= page_slug %> -->
+<% /* Print all the EJS data passed from the server for reference and debugging only */ %>
+
+<%//-JSON.stringify(locals) %>
+<% include ../includes/footer %>

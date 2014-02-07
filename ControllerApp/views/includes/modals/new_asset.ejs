@@ -4,47 +4,26 @@
 	    	<div class="modal-header">
 	    		<h3>Add New Asset</h3>
 	    	</div> <!--modal-header -->
-		    <form class="modal-body" role="form" action="/assets" method="post" enctype="multipart/form-data" oninput="duration_view.value=duration.value+' seconds'">
-		    		<input type="hidden" value="" id="event_id" name="event_id"/>
+		    <form class="modal-body" role="form" action="/files" method="post" enctype="multipart/form-data" oninput="duration_view.value=duration.value+' seconds'">
 		    		<section class="form-group">
 					    <label for="title">Asset Title</label>
-					    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
-				    </section>
-				    <section class="form-group">
-					    <label for="title">Content Type</label>
-						<select class="form-control" id="asset_type" name="asset_type">
-							<% var types = ["Video","Image","Text"];
-								for(var i =0; i<types.length;i++){ %>
-								<option value="<%= types[i].toLowerCase() %>"><%= types[i] %></option>
-							<% }%>
-						</select>
-						<p class="help-block">Select the type of asset.</p>
+					    <input type="text" class="form-control" name="title" placeholder="Enter title">
 				    </section>
 			  		<section class="form-group content-upload">
 					    <label for="content">Content Upload</label>
-					    <input type="file" class="form-control" id="content" name="content"/>
+					    <input type="file" class="form-control" name="content"/>
 				    	<p class="help-block">Select the {file} to upload</p>
 				    </section>
-				    <section class="form-group content-text" style="display:none;">
-				    	<label for="body_text">Content Text</label>
-					    <textarea id="body_text" name="body_text" class="form-control body-text" placeholder="Enter the text to display here."></textarea>
-					    <p class="help-block">A brief statement to appear on screen. (Character Limit?).</p>
-					</section>
 					<section class="form-group">
-						<label for="location">Asset Location</label>
-						<select multiple class="form-control" name="location">
-							<% //var types = ["Wall 1","Wall 2","Projector 1"];
-								for(var i =0; i<10;i++){ %>
-								<option value="output_<%=i%>">Output <%= i %></option>
-							<% }%>
+						<label for="Location">Location <small>(if applicable)</small></label>
+						<select name="location" class="form-control">
+							<option>Location</option>
+							<option>Location</option>
+							<option>Location</option>
 						</select>
-						<p class="help-block">Select the outputs of this asset.</p>
+						<p class="help-block">...or enter a new location</p>
+						<input type="input" name="new_location" class="form-control" placeholder="Enter New Location (optional)"/>
 					</section>
-				    <section class="form-group">
-					    <label for="duration">Event Duration</label>
-					    <input type="range" value="35" class="form-control range" step="1" min="3" max="300"  id="duration" name="duration" >
-					    <input type="text" value="35 seconds" class="form-control input-sm" name="duration_view" id="duration_view">
-				    </section>
 		    </form>
 			<div class="modal-footer">
 			    	<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
