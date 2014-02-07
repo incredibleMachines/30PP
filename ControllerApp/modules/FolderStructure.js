@@ -54,6 +54,7 @@ exports.setup = function(){
 		}else{
 			console.log(" No Temp Directory ".red.inverse);
 			fs.mkdirSync(tempDir);
+			console.log(" Temp Directory Created ".green.inverse);
 		}
 		
 	}catch(e){
