@@ -1,13 +1,14 @@
 ControllerApp/Media Manager Application
 --------------------------------------------
 
-Requirements:
-http://nodejs.org/
-http://brew.sh/
-http://www.mongodb.org/
+### Requirements:
++http://nodejs.org/
++http://brew.sh/
++http://www.mongodb.org/
 		
-Instructions:	 
-Ensure you have node.js homebrew and mongodb installed. *Note Recommended to install Mongodb via Homebrew
+### Instructions:	 
+Ensure you have node.js homebrew and mongodb installed. 
+_*Note Recommended to install Mongodb via Homebrew_
 		
 Make sure that mongod is running, open terminal and type:
 ```
@@ -21,4 +22,4 @@ $ npm install
 		
 $ node app.js
 ```
-View system by opening a browser and directing it to http://localhost:3000
+View system by opening a browser and directing it to __http://localhost:3000__
