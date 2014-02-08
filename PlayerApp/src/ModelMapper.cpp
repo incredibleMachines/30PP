@@ -87,7 +87,7 @@ void ModelMapper::addVideoTexture(string videoTexture){
     //QT Kit Video Player instantion
     player.setPixelFormat(OF_PIXELS_RGBA);
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
-    player.loadMovie("Bonus_waves.mov", decodeMode);
+    player.loadMovie(videoTexture, decodeMode);
     player.play();
 
 }
@@ -374,8 +374,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
-            reload.loadModel("3wall/3walls.dae");
-            cameras[cameraSelect].mesh=reload.getCurrentAnimatedMesh(0);
+            reload.loadModel("mapping test_04/mapping test_04.obj");
+            cameras[cameraSelect].mesh=reload.getMesh(0);
+            vector<ofVec2f> texCoords=cameras[cameraSelect].mesh.getTexCoords();
+            cout<<texCoords.size()<<endl;
             cout<<"Reloaded Model"<<endl;
             break;
     }
@@ -568,12 +570,12 @@ void ModelMapper:: setupCameras() {
             string loader="mesh_"+ofToString(i)+".ply";
             mesh.load(loader);
             int n = mesh.getNumVertices();
-            for(int i=0;i<n;i++){
-                mesh.addTexCoord(ofVec3f(0,0,0));
-                mesh.addTexCoord(ofVec3f(1,0,0));
-                mesh.addTexCoord(ofVec3f(1,1,0));
-                mesh.addTexCoord(ofVec3f(0,1,0));
-            }
+//            for(int i=0;i<n;i++){
+//                mesh.addTexCoord(ofVec3f(0,0,0));
+//                mesh.addTexCoord(ofVec3f(1,0,0));
+//                mesh.addTexCoord(ofVec3f(1,1,0));
+//                mesh.addTexCoord(ofVec3f(0,1,0));
+//            }
             ofVec3f pos = ofVec3f(settings["cameras"][i]["pos"]["x"].asFloat(), settings["cameras"][i]["pos"]["y"].asFloat(), settings["cameras"][i]["pos"]["z"].asFloat());
             ofQuaternion rot = ofQuaternion(settings["cameras"][i]["orientation"]["x"].asFloat(), settings["cameras"][i]["orientation"]["y"].asFloat(), settings["cameras"][i]["orientation"]["z"].asFloat(), settings["cameras"][i]["orientation"]["w"].asFloat());
             ofVec3f viewPos = ofVec3f(settings["cameras"][i]["viewPos"]["x"].asFloat(),settings["cameras"][i]["viewPos"]["y"].asFloat());
@@ -671,18 +673,18 @@ void ModelMapper:: drawCameras() {
         player.getTexture()->bind();
         
         //draw mesh
-        ofSetColor(100,100,100);
+        ofSetColor(255,255,255);
         cameras[i].mesh.drawFaces();
         
         //unbind video texture
         player.getTexture()->unbind();
-        
-        //DRAW MESH WIREFRAME
-        //        ofSetColor(0,0,0);
-        //        ofSetLineWidth(2);
-        //        cameras[i].mesh.drawWireframe();
-        
-        //end camera object
+//
+//DRAW MESH WIREFRAME
+        ofSetColor(255,255,255);
+        ofSetLineWidth(2);
+        cameras[i].mesh.drawWireframe();
+
+//end camera object
         cameras[i].camera.end();
     }
 }

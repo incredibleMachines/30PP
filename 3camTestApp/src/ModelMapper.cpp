@@ -82,7 +82,7 @@ void ModelMapper::addVideoTexture(string videoTexture){
     //QT Kit Video Player instantion
     player.setPixelFormat(OF_PIXELS_RGBA);
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
-    player.loadMovie("Bonus_waves.mov", decodeMode);
+    player.loadMovie(videoTexture   , decodeMode);
     player.play();
 
 }
@@ -369,7 +369,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
-            reload.loadModel("3wall/3walls.dae");
+            reload.loadModel("mapping test_01/mapping test_01.obj");
             cameras[cameraSelect].mesh=reload.getCurrentAnimatedMesh(0);
             cout<<"Reloaded Model"<<endl;
             break;

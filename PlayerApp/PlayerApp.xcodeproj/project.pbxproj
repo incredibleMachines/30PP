@@ -8,12 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6D73A566CFEC0B462FE6E43C /* Reactor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2232A9453E355593EF36ADA7 /* Reactor.cpp */; };
-		83E7C811187DEDC900746BAA /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E7C804187DEDC900746BAA /* Syphon.framework */; };
-		83E7C812187DEDC900746BAA /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 83E7C807187DEDC900746BAA /* SyphonNameboundClient.m */; };
-		83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83E7C80C187DEDC900746BAA /* ofxSyphonClient.mm */; };
-		83E7C814187DEDC900746BAA /* ofxSyphonServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83E7C80E187DEDC900746BAA /* ofxSyphonServer.mm */; };
-		83E7C815187DEDC900746BAA /* ofxSyphonServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83E7C810187DEDC900746BAA /* ofxSyphonServerDirectory.mm */; };
-		83E7C816187DEDDE00746BAA /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 83E7C804187DEDC900746BAA /* Syphon.framework */; };
 		86135253DC7909CA8590E157 /* Protocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57EEFEC8B85F7C3B15DD45A4 /* Protocol.cpp */; };
 		9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 69668FDE141262BC3C6CA929 /* jsoncpp.cpp */; };
 		A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF52649DEB8D25CA011EB41 /* Connection.cpp */; };
@@ -80,7 +74,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				83E7C816187DEDDE00746BAA /* Syphon.framework in CopyFiles */,
 				BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,17 +86,39 @@
 		57EEFEC8B85F7C3B15DD45A4 /* Protocol.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Protocol.cpp; path = ../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src/Protocol.cpp; sourceTree = SOURCE_ROOT; };
 		5D95092D59E7A34C9DB7823E /* Server.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Server.cpp; path = ../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src/Server.cpp; sourceTree = SOURCE_ROOT; };
 		69668FDE141262BC3C6CA929 /* jsoncpp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = jsoncpp.cpp; path = ../../../addons/ofxLibwebsockets/libs/jsoncpp/jsoncpp.cpp; sourceTree = SOURCE_ROOT; };
-		83E7C804187DEDC900746BAA /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
-		83E7C806187DEDC900746BAA /* SyphonNameboundClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyphonNameboundClient.h; sourceTree = "<group>"; };
-		83E7C807187DEDC900746BAA /* SyphonNameboundClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyphonNameboundClient.m; sourceTree = "<group>"; };
-		83E7C80A187DEDC900746BAA /* ofxSyphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSyphon.h; sourceTree = "<group>"; };
-		83E7C80B187DEDC900746BAA /* ofxSyphonClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSyphonClient.h; sourceTree = "<group>"; };
-		83E7C80C187DEDC900746BAA /* ofxSyphonClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxSyphonClient.mm; sourceTree = "<group>"; };
-		83E7C80D187DEDC900746BAA /* ofxSyphonServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSyphonServer.h; sourceTree = "<group>"; };
-		83E7C80E187DEDC900746BAA /* ofxSyphonServer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxSyphonServer.mm; sourceTree = "<group>"; };
-		83E7C80F187DEDC900746BAA /* ofxSyphonServerDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSyphonServerDirectory.h; sourceTree = "<group>"; };
-		83E7C810187DEDC900746BAA /* ofxSyphonServerDirectory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxSyphonServerDirectory.mm; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
+		D303E82518A57AB0009F395A /* mapping test_04.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.c4d"; sourceTree = "<group>"; };
+		D303E82618A57AB0009F395A /* mapping test_04.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "mapping test_04.dae"; sourceTree = "<group>"; };
+		D303E82718A57AB0009F395A /* mapping test_04.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.fbx"; sourceTree = "<group>"; };
+		D303E82818A57AB0009F395A /* mapping test_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_04.obj"; sourceTree = "<group>"; };
+		D303E82918A57AB0009F395A /* mapping test_04.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.stl"; sourceTree = "<group>"; };
+		D303E82A18A57AB0009F395A /* mapping_test_04.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapping_test_04.mtl; sourceTree = "<group>"; };
+		D303E82C18A57AB0009F395A /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
+		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		D3A8F05D18A43ACB00DB961F /* 3walls Material - Default Texture.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "3walls Material - Default Texture.PNG"; sourceTree = "<group>"; };
+		D3A8F05E18A43ACB00DB961F /* 3walls Material - Default Texture0000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "3walls Material - Default Texture0000.png"; sourceTree = "<group>"; };
+		D3A8F05F18A43ACB00DB961F /* 3walls.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 3walls.dae; sourceTree = "<group>"; };
+		D3A8F06018A43ACB00DB961F /* 3walls.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3walls.mtl; sourceTree = "<group>"; };
+		D3A8F06118A43ACB00DB961F /* 3walls.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 3walls.obj; sourceTree = "<group>"; };
+		D3A8F06218A43ACB00DB961F /* Default IBL.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default IBL.PNG"; sourceTree = "<group>"; };
+		D3A8F06318A43ACB00DB961F /* Default IBL0000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default IBL0000.png"; sourceTree = "<group>"; };
+		D3A8F06418A43ACB00DB961F /* Bonus_waves.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Bonus_waves.mov; sourceTree = "<group>"; };
+		D3A8F06618A43ACB00DB961F /* mapping test_01.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.c4d"; sourceTree = "<group>"; };
+		D3A8F06818A43ACB00DB961F /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
+		D3A8F06918A43ACB00DB961F /* mapping test_01.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.fbx"; sourceTree = "<group>"; };
+		D3A8F06A18A43ACB00DB961F /* mapping test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_01.obj"; sourceTree = "<group>"; };
+		D3A8F06B18A43ACB00DB961F /* mapping test_01.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.stl"; sourceTree = "<group>"; };
+		D3A8F06D18A43ACB00DB961F /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
+		D3A8F06E18A43ACB00DB961F /* mesh_0.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_0.ply; sourceTree = "<group>"; };
+		D3A8F06F18A43ACB00DB961F /* mesh_1.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_1.ply; sourceTree = "<group>"; };
+		D3A8F07018A43ACB00DB961F /* mesh_2.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_2.ply; sourceTree = "<group>"; };
+		D3A8F07118A43ACB00DB961F /* mesh_3.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_3.ply; sourceTree = "<group>"; };
+		D3A8F07218A43ACB00DB961F /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3A8F09918A43C3800DB961F /* mapping test_01.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.c4d"; sourceTree = "<group>"; };
+		D3A8F09A18A43C3800DB961F /* mapping test_01.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.fbx"; sourceTree = "<group>"; };
+		D3A8F09B18A43C3800DB961F /* mapping test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_01.obj"; sourceTree = "<group>"; };
+		D3A8F09C18A43C3800DB961F /* mapping test_01.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.stl"; sourceTree = "<group>"; };
+		D3A8F09E18A43C3800DB961F /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
 		E285694018A42C6B0068B4AB /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E285694118A42C6B0068B4AB /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		E285694218A42C6B0068B4AB /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
@@ -208,7 +223,6 @@
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
-				83E7C811187DEDC900746BAA /* Syphon.framework in Frameworks */,
 				E45BE97E0E8CC7DD009D7055 /* Carbon.framework in Frameworks */,
 				E45BE97F0E8CC7DD009D7055 /* CoreAudio.framework in Frameworks */,
 				E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */,
@@ -256,72 +270,6 @@
 			name = libs;
 			sourceTree = "<group>";
 		};
-		83E7C7FE187DEDC900746BAA /* ofxSyphon */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C800187DEDC900746BAA /* libs */,
-				83E7C809187DEDC900746BAA /* src */,
-			);
-			name = ofxSyphon;
-			path = ../../../addons/ofxSyphon;
-			sourceTree = "<group>";
-		};
-		83E7C800187DEDC900746BAA /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C801187DEDC900746BAA /* Syphon */,
-			);
-			path = libs;
-			sourceTree = "<group>";
-		};
-		83E7C801187DEDC900746BAA /* Syphon */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C802187DEDC900746BAA /* lib */,
-				83E7C805187DEDC900746BAA /* src */,
-			);
-			path = Syphon;
-			sourceTree = "<group>";
-		};
-		83E7C802187DEDC900746BAA /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C803187DEDC900746BAA /* osx */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		83E7C803187DEDC900746BAA /* osx */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C804187DEDC900746BAA /* Syphon.framework */,
-			);
-			path = osx;
-			sourceTree = "<group>";
-		};
-		83E7C805187DEDC900746BAA /* src */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C806187DEDC900746BAA /* SyphonNameboundClient.h */,
-				83E7C807187DEDC900746BAA /* SyphonNameboundClient.m */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		83E7C809187DEDC900746BAA /* src */ = {
-			isa = PBXGroup;
-			children = (
-				83E7C80A187DEDC900746BAA /* ofxSyphon.h */,
-				83E7C80B187DEDC900746BAA /* ofxSyphonClient.h */,
-				83E7C80C187DEDC900746BAA /* ofxSyphonClient.mm */,
-				83E7C80D187DEDC900746BAA /* ofxSyphonServer.h */,
-				83E7C80E187DEDC900746BAA /* ofxSyphonServer.mm */,
-				83E7C80F187DEDC900746BAA /* ofxSyphonServerDirectory.h */,
-				83E7C810187DEDC900746BAA /* ofxSyphonServerDirectory.mm */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,7 +290,6 @@
 			isa = PBXGroup;
 			children = (
 				E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */,
-				83E7C7FE187DEDC900746BAA /* ofxSyphon */,
 				AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */,
 			);
 			name = addons;
@@ -376,6 +323,110 @@
 				BBAB23BE13894E4700AA2426 /* GLUT.framework */,
 			);
 			name = "3rd party frameworks";
+			sourceTree = "<group>";
+		};
+		D303E82418A57AB0009F395A /* mapping test_04 */ = {
+			isa = PBXGroup;
+			children = (
+				D303E82518A57AB0009F395A /* mapping test_04.c4d */,
+				D303E82618A57AB0009F395A /* mapping test_04.dae */,
+				D303E82718A57AB0009F395A /* mapping test_04.fbx */,
+				D303E82818A57AB0009F395A /* mapping test_04.obj */,
+				D303E82918A57AB0009F395A /* mapping test_04.stl */,
+				D303E82A18A57AB0009F395A /* mapping_test_04.mtl */,
+				D303E82B18A57AB0009F395A /* tex */,
+			);
+			path = "mapping test_04";
+			sourceTree = "<group>";
+		};
+		D303E82B18A57AB0009F395A /* tex */ = {
+			isa = PBXGroup;
+			children = (
+				D303E82C18A57AB0009F395A /* Test Map_02.mov */,
+			);
+			path = tex;
+			sourceTree = "<group>";
+		};
+		D3A8F05A18A43ACB00DB961F /* data */ = {
+			isa = PBXGroup;
+			children = (
+				D303E82418A57AB0009F395A /* mapping test_04 */,
+				D3A8F09818A43C3800DB961F /* mapping test_02 */,
+				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
+				D3A8F05C18A43ACB00DB961F /* 3wall */,
+				D3A8F06418A43ACB00DB961F /* Bonus_waves.mov */,
+				D3A8F06518A43ACB00DB961F /* mapping test_01 */,
+				D3A8F06E18A43ACB00DB961F /* mesh_0.ply */,
+				D3A8F06F18A43ACB00DB961F /* mesh_1.ply */,
+				D3A8F07018A43ACB00DB961F /* mesh_2.ply */,
+				D3A8F07118A43ACB00DB961F /* mesh_3.ply */,
+				D3A8F07218A43ACB00DB961F /* settings.json */,
+			);
+			name = data;
+			path = bin/data;
+			sourceTree = "<group>";
+		};
+		D3A8F05C18A43ACB00DB961F /* 3wall */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F05D18A43ACB00DB961F /* 3walls Material - Default Texture.PNG */,
+				D3A8F05E18A43ACB00DB961F /* 3walls Material - Default Texture0000.png */,
+				D3A8F05F18A43ACB00DB961F /* 3walls.dae */,
+				D3A8F06018A43ACB00DB961F /* 3walls.mtl */,
+				D3A8F06118A43ACB00DB961F /* 3walls.obj */,
+				D3A8F06218A43ACB00DB961F /* Default IBL.PNG */,
+				D3A8F06318A43ACB00DB961F /* Default IBL0000.png */,
+			);
+			path = 3wall;
+			sourceTree = "<group>";
+		};
+		D3A8F06518A43ACB00DB961F /* mapping test_01 */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F06618A43ACB00DB961F /* mapping test_01.c4d */,
+				D3A8F06718A43ACB00DB961F /* mapping test_01.fbm */,
+				D3A8F06918A43ACB00DB961F /* mapping test_01.fbx */,
+				D3A8F06A18A43ACB00DB961F /* mapping test_01.obj */,
+				D3A8F06B18A43ACB00DB961F /* mapping test_01.stl */,
+				D3A8F06C18A43ACB00DB961F /* tex */,
+			);
+			path = "mapping test_01";
+			sourceTree = "<group>";
+		};
+		D3A8F06718A43ACB00DB961F /* mapping test_01.fbm */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F06818A43ACB00DB961F /* Test Map_02.mov */,
+			);
+			path = "mapping test_01.fbm";
+			sourceTree = "<group>";
+		};
+		D3A8F06C18A43ACB00DB961F /* tex */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F06D18A43ACB00DB961F /* Test Map_02.mov */,
+			);
+			path = tex;
+			sourceTree = "<group>";
+		};
+		D3A8F09818A43C3800DB961F /* mapping test_02 */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F09918A43C3800DB961F /* mapping test_01.c4d */,
+				D3A8F09A18A43C3800DB961F /* mapping test_01.fbx */,
+				D3A8F09B18A43C3800DB961F /* mapping test_01.obj */,
+				D3A8F09C18A43C3800DB961F /* mapping test_01.stl */,
+				D3A8F09D18A43C3800DB961F /* tex */,
+			);
+			path = "mapping test_02";
+			sourceTree = "<group>";
+		};
+		D3A8F09D18A43C3800DB961F /* tex */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8F09E18A43C3800DB961F /* Test Map_02.mov */,
+			);
+			path = tex;
 			sourceTree = "<group>";
 		};
 		E285694618A42C720068B4AB /* ModelMapper */ = {
@@ -552,6 +603,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
+				D3A8F05A18A43ACB00DB961F /* data */,
 				E4B69B5B0A3A1756003C02F2 /* PlayerAppDebug.app */,
 			);
 			sourceTree = "<group>";
@@ -667,7 +719,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				83E7C813187DEDC900746BAA /* ofxSyphonClient.mm in Sources */,
 				E2FEFA2518A2DC4F00C09106 /* Event.cpp in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E2FEFA2B18A2DC4F00C09106 /* TextFile.cpp in Sources */,
@@ -682,16 +733,13 @@
 				E285698218A42E8C0068B4AB /* ofxAssimpTexture.cpp in Sources */,
 				6D73A566CFEC0B462FE6E43C /* Reactor.cpp in Sources */,
 				86135253DC7909CA8590E157 /* Protocol.cpp in Sources */,
-				83E7C814187DEDC900746BAA /* ofxSyphonServer.mm in Sources */,
 				E2FEFA2718A2DC4F00C09106 /* main.cpp in Sources */,
 				F1AC6AEFB9B93C6AC45C9CA8 /* Events.cpp in Sources */,
 				A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */,
-				83E7C815187DEDC900746BAA /* ofxSyphonServerDirectory.mm in Sources */,
 				E285694418A42C6B0068B4AB /* Camera.cpp in Sources */,
 				E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */,
 				E2FEFA2818A2DC4F00C09106 /* playerApp.cpp in Sources */,
 				E2FEFA2618A2DC4F00C09106 /* ImageFile.cpp in Sources */,
-				83E7C812187DEDC900746BAA /* SyphonNameboundClient.m in Sources */,
 				C6C3882A0B0872D1485F3874 /* Client.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

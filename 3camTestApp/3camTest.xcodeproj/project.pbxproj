@@ -72,6 +72,12 @@
 
 /* Begin PBXFileReference section */
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
+		D372E1AE18A43461008E16FE /* mapping test_01.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.c4d"; sourceTree = "<group>"; };
+		D372E1B018A43461008E16FE /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
+		D372E1B118A43461008E16FE /* mapping test_01.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.fbx"; sourceTree = "<group>"; };
+		D372E1B218A43461008E16FE /* mapping test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_01.obj"; sourceTree = "<group>"; };
+		D372E1B318A43461008E16FE /* mapping test_01.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.stl"; sourceTree = "<group>"; };
+		D372E1B518A43461008E16FE /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
 		D3A0D36718A05CA000C8FB9C /* mesh_1.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_1.ply; sourceTree = "<group>"; };
 		D3A0D36E18A17AFA00C8FB9C /* Bonus_waves.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Bonus_waves.mov; sourceTree = "<group>"; };
 		D3AF6DD81899D36000EA63B9 /* NewSquirrel.3ds */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewSquirrel.3ds; sourceTree = "<group>"; };
@@ -247,9 +253,39 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
+		D372E1AD18A43461008E16FE /* mapping test_01 */ = {
+			isa = PBXGroup;
+			children = (
+				D372E1AE18A43461008E16FE /* mapping test_01.c4d */,
+				D372E1AF18A43461008E16FE /* mapping test_01.fbm */,
+				D372E1B118A43461008E16FE /* mapping test_01.fbx */,
+				D372E1B218A43461008E16FE /* mapping test_01.obj */,
+				D372E1B318A43461008E16FE /* mapping test_01.stl */,
+				D372E1B418A43461008E16FE /* tex */,
+			);
+			path = "mapping test_01";
+			sourceTree = "<group>";
+		};
+		D372E1AF18A43461008E16FE /* mapping test_01.fbm */ = {
+			isa = PBXGroup;
+			children = (
+				D372E1B018A43461008E16FE /* Test Map_02.mov */,
+			);
+			path = "mapping test_01.fbm";
+			sourceTree = "<group>";
+		};
+		D372E1B418A43461008E16FE /* tex */ = {
+			isa = PBXGroup;
+			children = (
+				D372E1B518A43461008E16FE /* Test Map_02.mov */,
+			);
+			path = tex;
+			sourceTree = "<group>";
+		};
 		D3AF6DD51899D36000EA63B9 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D372E1AD18A43461008E16FE /* mapping test_01 */,
 				D3A0D36E18A17AFA00C8FB9C /* Bonus_waves.mov */,
 				D3A0D36718A05CA000C8FB9C /* mesh_1.ply */,
 				D3DDB14A18A04E510081E56F /* lofi-bunny.ply */,

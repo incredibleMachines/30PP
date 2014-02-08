@@ -17,16 +17,25 @@
 
 //--------------------------------------------------------------
 void playerApp::setup(){
+    
+    //setup GL context
+	ofSetVerticalSync(true);
+    ofSetFrameRate(60);
+	ofEnableSmoothing();
+	ofEnableDepthTest();
+    ofEnableNormalizedTexCoords();
+    ofEnableArbTex();
+    ofBackground(0, 0, 0);
+    ofDisableSeparateSpecularLight();
 
     ofSetWindowTitle("30PP Player");
-    ofSetFrameRate(60);
     
     //--- socket setup
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
     map.setup(4,0);
-    map.addVideoTexture("Bonus_waves.mov");
+    map.addVideoTexture("mapping test_02/tex/Test Map_02.mov");
 }
 
 //--------------------------------------------------------------

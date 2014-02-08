@@ -13,7 +13,7 @@ void testApp::setup(){
     ofDisableSeparateSpecularLight();
     
     map.setup(4,0);
-    map.addVideoTexture("Bonus_waves.mov");
+    map.addVideoTexture("mapping test_01/tex/Test Map_02.mov");
     
 }
 
