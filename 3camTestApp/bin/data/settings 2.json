@@ -1,2 +1,0 @@
-{"cameras":[{"camPos":{"x":0.0,"y":0.0,"y:":0,"z":27.0},"lookPos":{"x":0,"y":0,"z":0},"name":"left","viewPos":{"x":0,"y":0},"viewSize":{"x":1440,"y":900}},{"camPos":{"x":0.0,"y":0.0,"z":0.0},"lookPos":{"x":0,"y":0,"z":0},"name":"center","viewPos":{"x":1440,"y":0},"viewSize":{"x":1920,"y":1080}},{"camPos":{"x":40.0,"y":40.0,"z":40.0},"lookPos":{"x":0,"y":0,"z":0},"name":"right","viewPos":{"x":3040,"y":0},"viewSize":{"x":1920,"y":1080}}]}
-
