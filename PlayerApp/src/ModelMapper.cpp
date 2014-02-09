@@ -30,6 +30,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     bDrawingMask=false;
     mouseTimer=ofGetElapsedTimeMillis();
     bMaskPoint=false;
+    bDrawGui=true;
     
     //load JSON
     
@@ -74,13 +75,10 @@ void ModelMapper::update(){
 }
 
 void ModelMapper::draw(){
-    //DRAW GUI
+
     
-    ofPushStyle();
-	glDepthFunc(GL_ALWAYS);
-    drawGuiText();
-    glDepthFunc(GL_LESS);
-	ofPopStyle();
+
+
     
     //DRAW CAMERAS, MESHES AND TEXTURES
     
@@ -93,6 +91,11 @@ void ModelMapper::draw(){
     //DRAW MASKS
     
     drawMasks();
+    
+        //DRAW GUI
+    if(bDrawGui==true){
+        drawGuiText();
+    }
     
 }
 
@@ -412,6 +415,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
+        case 'g':
+            bDrawGui=!bDrawGui;
+            break;
+            
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
@@ -694,37 +701,119 @@ void ModelMapper:: saveCameras() {
 }
 
 void ModelMapper:: drawGuiText() {
-    
+        
     //Check adjustMode and apply relevant text/instructions
-    string cameraData="'c' to Change Adjust Mode. Current Mode: ";
-    if(adjustMode==ADJUST_MODE_CAMERA){
-        cameraData+="Adjust Camera Position using Arrows and z/a";
-    }
-    else if(adjustMode==ADJUST_MODE_LOOK_AT){
-        cameraData+="Adjust Camera Orientation using Arrows and z/a";
-    }
-    else if(adjustMode==ADJUST_MODE_VIEWPORT){
-        cameraData+="Adjust Camera Viewport Alignment using Arrows";
-    }
-    else if(adjustMode==ADJUST_MODE_MESH){
-        cameraData+="Adjust Mesh Points by Selecting with Mouse/Drag and using Arrows and z/a";
-    }
-    else if(adjustMode==ADJUST_MODE_MASK){
-        cameraData+="Add Mask by pressing m. Select mask by clicking within it. Select individual mask point by clicking it. Move mask or mask point using Arrows";
-    }
+    string cameraInfo="'c' to Change Adjust Mode. Current Mode: ";
+    string cameraDetails;
+    string cameraData;
+    int lineHeight=30;
+    int lineDraw=cameras[guiCam].viewport.y+lineHeight;
     
-    //DRAW GUI TEXT
+    ofEnableAlphaBlending();
+    ofFill();
+    ofSetColor(0,0,0,127);
+    ofRect(cameras[guiCam].viewport.x,cameras[guiCam].viewport.y,500,400);
+    ofDisableAlphaBlending();
     
     ofSetColor(255,255,255);
     
     //Draw selected camera number
-    ofDrawBitmapString("Adjusting Camera "+ofToString(cameraSelect), 10, 20);
+    ofDrawBitmapString("Adjusting Camera "+ofToString(cameraSelect), cameras[guiCam].viewport.x+10, lineDraw);
     
-    //Draw current adjust mode and instructions
-    ofDrawBitmapString(cameraData, cameras[guiCam].viewport.x+10, cameras[guiCam].viewport.y+50);
+    if(adjustMode==ADJUST_MODE_CAMERA){
+        cameraData+="Camera Position";
+        
+        ofSetColor(0,255,0);
+        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
+        lineDraw+=lineHeight;
+        
+        ofSetColor(255,255,255);
+        ofDrawBitmapString("(Arrows) Adjust Camera Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(a/z) Adjust Camera Forwards/Backwards",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        
+    }
+    else if(adjustMode==ADJUST_MODE_LOOK_AT){
+        cameraData+="Camera Orientation";
+
+        ofSetColor(0,255,0);
+        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
+        lineDraw+=lineHeight;
+        
+        ofSetColor(255,255,255);
+        ofDrawBitmapString("(Arrows) Adjust Camera Orientation Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(a/z) Adjust Camera Rotate",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+    }
+    else if(adjustMode==ADJUST_MODE_VIEWPORT){
+        cameraData+="Camera Viewport";
+
+        ofSetColor(0,255,0);
+        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
+        lineDraw+=lineHeight;
+        
+        ofSetColor(255,255,255);
+        ofDrawBitmapString("(Arrows) Adjust Viewport Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+
+    }
+    else if(adjustMode==ADJUST_MODE_MESH){
+        cameraData+="Mesh Points";
+        
+        ofSetColor(0,255,0);
+        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
+        lineDraw+=lineHeight;
+        
+        ofSetColor(255,255,255);
+        ofDrawBitmapString("(Mouse Click) Select Individual Mesh Point",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Mouse Drag) Select Multiple Mesh Points",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Arrows) Adjust Selected Mesh Point(s) Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(a/z) Adjust Selected Mesh Point(s) Forwards/Backwards",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(R) Reset Mesh",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+    }
+    else if(adjustMode==ADJUST_MODE_MASK){
+        cameraData+="Masks";
+        
+        ofSetColor(0,255,0);
+        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
+        lineDraw+=lineHeight;
+        
+        ofSetColor(255,255,255);
+        ofDrawBitmapString("(m) Create New Mask",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(New Mask Mouse Click) Add Mask Point",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(New Mask Mouse Double Click) Close Mask",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Mouse Click Inside Mask) Select Mask",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Mouse Click on Mask Point) Select Individual Mask Points",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Mouse Drag) Select Mutliple Mask Points",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Arrows) Adjust Selected Mask Point(s) Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+        ofDrawBitmapString("(Delete) Delete Selected Mask",cameras[guiCam].viewport.x+10,lineDraw);
+        lineDraw+=lineHeight;
+    }
     
     //Draw framerate
-    ofDrawBitmapString("Framerate: "+ofToString(ofGetFrameRate()), cameras[guiCam].viewport.x+10, cameras[guiCam].viewport.y+80);
+    ofDrawBitmapString("Framerate: "+ofToString(ofGetFrameRate()), cameras[guiCam].viewport.x+10, lineDraw);
+    
+
+    
+    
+    
+    
+    
+    
 }
 
 void ModelMapper:: drawCameras() {

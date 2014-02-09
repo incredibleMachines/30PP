@@ -91,5 +91,6 @@ public:
     vector<ofQTKitPlayer> player;
     
     float mouseTimer;
+    bool bDrawGui;
     
 };
