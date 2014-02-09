@@ -24,6 +24,7 @@ class ModelMapper {
 public:
     void setup(int _numCams);
     void setup(int _numCams, int _guiCam);
+    void setup(int _numCams, int _guiCam, int _numMeshes);
     void update();
     void draw();
     
@@ -35,6 +36,7 @@ public:
     
     int numCams;
     int guiCam;
+    int numMeshes;
     ofVec2f mouse;
     
     //---------CUSTOM FUNCTIONS
@@ -51,7 +53,7 @@ public:
     //save camera data to json and meshes to .ply files
     void saveCameras();
     //add video texture to model
-    void addVideoTexture(string videoTexture);
+    void addVideoTexture(int _meshNum, string videoTexture);
     
     
     //---------CAMERA SETTINGS
@@ -67,7 +69,7 @@ public:
         ofVec3f vertex;
         int index;
     };
-    vector<meshVertex> moveVertices;
+    vector< vector<meshVertex> > moveVertices;
 
     //---------MASK SETTINGS
     class maskVertex{
@@ -86,7 +88,7 @@ public:
     float clickThreshold;
     
     //---------VIDEO PLAYER
-    ofQTKitPlayer player;
+    vector<ofQTKitPlayer> player;
     
     float mouseTimer;
     

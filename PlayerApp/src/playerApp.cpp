@@ -34,8 +34,9 @@ void playerApp::setup(){
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
-    map.setup(4,0);
-    map.addVideoTexture("mapping test_02/tex/Test Map_02.mov");
+    map.setup(4,0,2);
+    map.addVideoTexture(0,"mapping test_02/tex/Test Map_02.mov");
+    map.addVideoTexture(1,"mapping test_02/tex/Test Map_02.mov");
 }
 
 //--------------------------------------------------------------

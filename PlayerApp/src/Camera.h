@@ -14,12 +14,12 @@
 class Camera {
     public:
 
-        void setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, ofMesh _mesh);
+        void setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh);
         void addMask();
     
         ofEasyCam camera;
         ofRectangle viewport;
-        ofMesh mesh;
+        vector<ofMesh> mesh;
         
         vector<ofPolyline> masks;
         int highlightMask;
