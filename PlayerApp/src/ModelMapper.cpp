@@ -31,6 +31,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     mouseTimer=ofGetElapsedTimeMillis();
     bMaskPoint=false;
     bDrawGui=true;
+    bShiftPressed=false;
+    moveModifier=.1;
     
     //load JSON
     
@@ -48,6 +50,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     
     //Event Listeners for key and mouse events
     ofAddListener(ofEvents().keyPressed,this,&ModelMapper::keyPressed);
+    ofAddListener(ofEvents().keyReleased,this,&ModelMapper::keyReleased);
     ofAddListener(ofEvents().mousePressed,this,&ModelMapper::mousePressed);
     ofAddListener(ofEvents().mouseDragged,this,&ModelMapper::mouseDragged);
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
@@ -57,7 +60,6 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
         ofQTKitPlayer tempPlayer;
         player.push_back(tempPlayer);
     }
-    
 }
 
 void ModelMapper::update(){
@@ -76,10 +78,6 @@ void ModelMapper::update(){
 
 void ModelMapper::draw(){
 
-    
-
-
-    
     //DRAW CAMERAS, MESHES AND TEXTURES
     
     drawCameras();
@@ -92,7 +90,8 @@ void ModelMapper::draw(){
     
     drawMasks();
     
-        //DRAW GUI
+    //DRAW GUI
+    
     if(bDrawGui==true){
         drawGuiText();
     }
@@ -105,13 +104,12 @@ void ModelMapper::addVideoTexture(int _meshNum, string videoTexture){
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
     player[_meshNum].loadMovie(videoTexture, decodeMode);
     player[_meshNum].play();
-
 }
 
 void ModelMapper::keyPressed(ofKeyEventArgs& args){
     switch(args.key){
             
-            //Select Active Camera
+        //Select Active Camera
         case '1':
             cameraSelect=1;
             break;
@@ -122,7 +120,12 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             cameraSelect=3;
             break;
             
-            //Select adjust mode
+        case OF_KEY_SHIFT:
+            bShiftPressed=true;
+            moveModifier=1;
+            break;
+            
+        //Select adjust mode
         case 'c':
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustMode=ADJUST_MODE_VIEWPORT;
@@ -142,16 +145,15 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
-            //Adjustments to camera position and orientation, viewport alignment, or mesh position depending on mode
-            
+        //Adjustments to camera position and orientation, viewport alignment, or mesh position depending on mode
         case OF_KEY_UP:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,1,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,-moveModifier,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
                 ofQuaternion yRot(0, ofVec3f(0,1,0));
-                ofQuaternion xRot(.1, ofVec3f(1,0,0));
+                ofQuaternion xRot(moveModifier, ofVec3f(1,0,0));
                 ofQuaternion zRot(0, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
@@ -165,7 +167,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
                         for(int i=0;i<vertices.size();i++){
-                            vertices[i]+=ofPoint(0,-.1);
+                            vertices[i]+=ofPoint(0,-moveModifier);
                         }
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
@@ -177,8 +179,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                             if(maskVertices[j].maskIndex==i){
                                 for(int k=0;k<vertices.size();k++){
                                     if(maskVertices[j].vertexIndex==k){
-                                        vertices[k]+=ofPoint(0,-.1);
-                                        maskVertices[j].vertex+=ofPoint(0,-.1);
+                                        vertices[k]+=ofPoint(0,-moveModifier);
+                                        maskVertices[j].vertex+=ofPoint(0,-moveModifier);
                                     }
                                 }
                             }
@@ -192,7 +194,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,.1,0));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,moveModifier,0));
                     }
                 }
             }
@@ -200,12 +202,12 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_DOWN:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,-1,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,moveModifier,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
                 ofQuaternion yRot(0, ofVec3f(0,1,0));
-                ofQuaternion xRot(-.1, ofVec3f(1,0,0));
+                ofQuaternion xRot(-moveModifier, ofVec3f(1,0,0));
                 ofQuaternion zRot(0, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
@@ -218,7 +220,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
                         for(int i=0;i<vertices.size();i++){
-                            vertices[i]+=ofPoint(0,-.1);
+                            vertices[i]+=ofPoint(0,-moveModifier);
                         }
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
@@ -230,8 +232,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                             if(maskVertices[j].maskIndex==i){
                                 for(int k=0;k<vertices.size();k++){
                                     if(maskVertices[j].vertexIndex==k){
-                                        vertices[k]+=ofPoint(0,.1);
-                                        maskVertices[j].vertex+=ofPoint(0,.1);
+                                        vertices[k]+=ofPoint(0,moveModifier);
+                                        maskVertices[j].vertex+=ofPoint(0,moveModifier);
                                     }
                                 }
                             }
@@ -244,7 +246,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,-.1,0));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,-moveModifier,0));
                     }
                 }
             }
@@ -252,11 +254,11 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_RIGHT:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(1,0,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(moveModifier,0,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                ofQuaternion yRot(-.1, ofVec3f(0,1,0));
+                ofQuaternion yRot(-moveModifier, ofVec3f(0,1,0));
                 ofQuaternion xRot(0, ofVec3f(1,0,0));
                 ofQuaternion zRot(0, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
@@ -270,7 +272,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
                         for(int i=0;i<vertices.size();i++){
-                            vertices[i]+=ofPoint(.1,0);
+                            vertices[i]+=ofPoint(moveModifier,0);
                         }
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
@@ -282,8 +284,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                             if(maskVertices[j].maskIndex==i){
                                 for(int k=0;k<vertices.size();k++){
                                     if(maskVertices[j].vertexIndex==k){
-                                        vertices[k]+=ofPoint(.1,0);
-                                        maskVertices[j].vertex+=ofPoint(.1,0);
+                                        vertices[k]+=ofPoint(moveModifier,0);
+                                        maskVertices[j].vertex+=ofPoint(moveModifier,0);
                                     }
                                 }
                             }
@@ -296,7 +298,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(.1,0,0));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(moveModifier,0,0));
                     }
                 }
             }
@@ -304,11 +306,11 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_LEFT:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(-1,0,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(-moveModifier,0,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                ofQuaternion yRot(.1, ofVec3f(0,1,0));
+                ofQuaternion yRot(moveModifier, ofVec3f(0,1,0));
                 ofQuaternion xRot(0, ofVec3f(1,0,0));
                 ofQuaternion zRot(0, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
@@ -322,7 +324,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
                         for(int i=0;i<vertices.size();i++){
-                            vertices[i]+=ofPoint(-.1,0);
+                            vertices[i]+=ofPoint(-moveModifier,0);
                         }
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
@@ -334,8 +336,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                             if(maskVertices[j].maskIndex==i){
                                 for(int k=0;k<vertices.size();k++){
                                     if(maskVertices[j].vertexIndex==k){
-                                        vertices[k]+=ofPoint(-.1,0);
-                                        maskVertices[j].vertex+=ofPoint(-.1,0);
+                                        vertices[k]+=ofPoint(-moveModifier,0);
+                                        maskVertices[j].vertex+=ofPoint(-moveModifier,0);
                                     }
                                 }
                             }
@@ -348,46 +350,48 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(-.1,0,0));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(-moveModifier,0,0));
                     }
                 }
             }
             break;
         case 'z':
+        case 'Z':
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,0,1));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,0,moveModifier));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
                 ofQuaternion yRot(0, ofVec3f(0,1,0));
                 ofQuaternion xRot(0, ofVec3f(1,0,0));
-                ofQuaternion zRot(-1, ofVec3f(0,0,1));
+                ofQuaternion zRot(-moveModifier, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,.1));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,moveModifier));
                     }
                 }
             }
             break;
             
         case 'a':
+        case 'A':
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,0,-1));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,0,-moveModifier));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
                 ofQuaternion yRot(0, ofVec3f(0,1,0));
                 ofQuaternion xRot(0, ofVec3f(0,0,0));
-                ofQuaternion zRot(1, ofVec3f(0,0,1));
+                ofQuaternion zRot(moveModifier, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else{
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
-                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,-.1));
+                        cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,-moveModifier));
                     }
                 }
             }
@@ -429,6 +433,18 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             cout<<"Reloaded Model"<<endl;
             break;
     }
+}
+
+void ModelMapper::keyReleased(ofKeyEventArgs& args){
+    
+    switch(args.key){
+        case OF_KEY_SHIFT:
+            bShiftPressed=false;
+            moveModifier=.1;
+            cout<<"up"<<endl;
+            break;
+    }
+    
 }
 
 void ModelMapper::mouseDragged(ofMouseEventArgs& args){
@@ -650,7 +666,18 @@ void ModelMapper:: setupCameras() {
             ofQuaternion rot = ofQuaternion(settings["cameras"][i]["orientation"]["x"].asFloat(), settings["cameras"][i]["orientation"]["y"].asFloat(), settings["cameras"][i]["orientation"]["z"].asFloat(), settings["cameras"][i]["orientation"]["w"].asFloat());
             ofVec3f viewPos = ofVec3f(settings["cameras"][i]["viewPos"]["x"].asFloat(),settings["cameras"][i]["viewPos"]["y"].asFloat());
             ofVec3f viewSize = ofVec3f(settings["cameras"][i]["viewSize"]["x"].asFloat(),settings["cameras"][i]["viewSize"]["y"].asFloat());
-            tempCam.setup(pos, rot, viewPos, viewSize, meshes);
+            
+            vector<ofPolyline> tempMasks;
+            for(int j=0;j<settings["cameras"][i]["mask"].size();j++){
+                vector<ofPoint> vertices;
+                for(int k=0;k<settings["cameras"][i]["mask"][j]["points"].size();k++){
+                    vertices.push_back(ofPoint(settings["cameras"][i]["mask"][j]["points"][k]["x"].asFloat(),settings["cameras"][i]["mask"][j]["points"][k]["y"].asFloat()));
+                }
+                cout<<vertices.size()<<endl;
+                tempMasks.push_back(ofPolyline(vertices));
+            }
+            
+            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks);
             cameras.push_back(tempCam);
             meshes.clear();
         }
@@ -676,6 +703,15 @@ void ModelMapper:: saveCameras() {
         settings["cameras"][i]["orientation"]["y"]=cameras[i].camera.getGlobalOrientation().y();
         settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
         settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
+        
+        for(int j=0;j<cameras[i].masks.size();j++){
+            vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
+            settings["cameras"][i]["mask"].clear();
+            for(int k=0;k<vertices.size();k++){
+                settings["cameras"][i]["mask"][j]["points"][k]["x"]=vertices[k].x;
+                settings["cameras"][i]["mask"][j]["points"][k]["y"]=vertices[k].y;
+            }
+        }
         
         //SAVE INDIVIDUAL MESH
         
@@ -806,14 +842,6 @@ void ModelMapper:: drawGuiText() {
     
     //Draw framerate
     ofDrawBitmapString("Framerate: "+ofToString(ofGetFrameRate()), cameras[guiCam].viewport.x+10, lineDraw);
-    
-
-    
-    
-    
-    
-    
-    
 }
 
 void ModelMapper:: drawCameras() {
@@ -825,24 +853,25 @@ void ModelMapper:: drawCameras() {
         cameras[i].camera.begin(cameras[i].viewport);
         
         for(int j=0;j<numMeshes;j++){
-        //bind video texture to mesh
-        player[j].getTexture()->bind();
-        
-        ofSetColor(255,255,255);
-        //draw mesh
-        cameras[i].mesh[j].drawFaces();
-        
-        
-        //unbind video texture
-        player[j].getTexture()->unbind();
-//
-//DRAW MESH WIREFRAME
-        ofSetColor(255,255,255);
-        ofSetLineWidth(2);
-        cameras[i].mesh[j].drawWireframe();
+
+            //Bind video texture to mesh
+            player[j].getTexture()->bind();
+            
+            ofSetColor(255,255,255);
+            //Draw mesh
+            cameras[i].mesh[j].drawFaces();        
+            
+            //Unbind video texture
+            player[j].getTexture()->unbind();
+
+            //DRAW MESH WIREFRAME
+                
+            ofSetColor(255,255,255);
+            ofSetLineWidth(2);
+            cameras[i].mesh[j].drawWireframe();
         }
 
-//end camera object
+        //End camera object
         cameras[i].camera.end();
     }
 }

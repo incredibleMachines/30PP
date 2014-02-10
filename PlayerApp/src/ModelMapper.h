@@ -29,6 +29,7 @@ public:
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
+    void keyReleased(ofKeyEventArgs& args);
     void mouseDragged(ofMouseEventArgs& args);
     void mousePressed(ofMouseEventArgs& args);
     void mouseReleased(ofMouseEventArgs& args);
@@ -92,5 +93,7 @@ public:
     
     float mouseTimer;
     bool bDrawGui;
+    bool bShiftPressed;
+    float moveModifier;
     
 };
