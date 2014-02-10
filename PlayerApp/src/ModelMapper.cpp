@@ -83,8 +83,11 @@ void ModelMapper::draw(){
     drawCameras();
     
     //DRAW MESH POINT SELECTION HIGHLIGHTS
-    
+    ofPushStyle();
+	glDepthFunc(GL_ALWAYS);
     drawHighlights();
+    glDepthFunc(GL_LESS);
+	ofPopStyle();
     
     //DRAW MASKS
     
@@ -140,7 +143,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMode=ADJUST_MODE_MASK;
             }
-            else {
+            else if (adjustMode==ADJUST_MODE_MASK){
+                adjustMode=ADJUST_MODE_LOCKED;
+            }
+            else{
                 adjustMode=ADJUST_MODE_CAMERA;
             }
             break;
@@ -148,7 +154,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         //Adjustments to camera position and orientation, viewport alignment, or mesh position depending on mode
         case OF_KEY_UP:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,-moveModifier,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,moveModifier,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
@@ -191,7 +197,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 
             }
 
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,moveModifier,0));
@@ -202,7 +208,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_DOWN:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,moveModifier,0));
+                cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,-moveModifier,0));
                 
             }
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
@@ -243,7 +249,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 }
                 
             }
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,-moveModifier,0));
@@ -295,7 +301,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 }
                 
             }
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(moveModifier,0,0));
@@ -347,7 +353,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 }
                 
             }
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(-moveModifier,0,0));
@@ -367,7 +373,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 ofQuaternion zRot(-moveModifier, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,moveModifier));
@@ -388,7 +394,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 ofQuaternion zRot(moveModifier, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
-            else{
+            else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
                         cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(0,0,-moveModifier));
@@ -423,6 +429,11 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             bDrawGui=!bDrawGui;
             break;
             
+        case ' ':
+            bDrawGui=false;
+            adjustMode==ADJUST_MODE_LOCKED;
+            break;
+            
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
@@ -453,15 +464,15 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
     
     
     if(adjustMode==ADJUST_MODE_MESH){
-        //clear selected vertex vector
+
         moveVertices.clear();
         
         //determine vertices inside drag box
         for(int i=0;i<numMeshes;i++)
         {
             vector<meshVertex> tempVector;
+            
             for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
-                
                 ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
                 if(selectRect.inside(cur)) {
                     meshVertex tempVert;
@@ -470,6 +481,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                     tempVector.push_back(tempVert);
                 }
             }
+            
             //determine vertices inside drag box on gui camera screen
             for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
                 ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
@@ -478,6 +490,12 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                     tempVert.vertex=cur;
                     tempVert.index=j;
                     tempVector.push_back(tempVert);
+                }
+            }
+            
+            if(tempVertices.size()>0){
+                for(int j=0;j < tempVertices[i].size();j++){
+                    tempVector.push_back(tempVertices[i][j]);
                 }
             }
             
@@ -530,6 +548,13 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
 
     if(adjustMode==ADJUST_MODE_MESH){
         //clear selected vertex vector
+        
+        if(bShiftPressed==false){
+            tempVertices.clear();
+        }
+        else{
+            tempVertices=moveVertices;
+        }
         moveVertices.clear();
         
         for(int i=0;i<numMeshes;i++)
@@ -561,6 +586,12 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 }
             }
             
+            if(tempVertices.size()>0){
+                for(int j=0;j < tempVertices[i].size();j++){
+                    tempVector.push_back(tempVertices[i][j]);
+                }
+            }
+            
             moveVertices.push_back(tempVector);
             tempVector.clear();
         }  
@@ -569,6 +600,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     
     else if (adjustMode==ADJUST_MODE_MASK){
         maskVertices.clear();
+        
         if(bDrawingMask==true){
             if(ofGetElapsedTimeMillis()-mouseTimer>250){
                 mouseTimer=ofGetElapsedTimeMillis();

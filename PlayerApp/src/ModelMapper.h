@@ -19,6 +19,7 @@
 #define ADJUST_MODE_MESH 3
 #define ADJUST_MODE_VIEWPORT 4
 #define ADJUST_MODE_MASK 5
+#define ADJUST_MODE_LOCKED 6
 
 class ModelMapper {
 public:
@@ -71,6 +72,7 @@ public:
         int index;
     };
     vector< vector<meshVertex> > moveVertices;
+    vector< vector<meshVertex> > tempVertices;
 
     //---------MASK SETTINGS
     class maskVertex{
