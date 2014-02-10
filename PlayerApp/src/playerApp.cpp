@@ -1,4 +1,3 @@
-
 #include "playerApp.h"
 
 /*
@@ -17,18 +16,33 @@
 
 //--------------------------------------------------------------
 void playerApp::setup(){
+    
+    //setup GL context
+	ofSetVerticalSync(true);
+    ofSetFrameRate(60);
+	ofEnableSmoothing();
+	ofEnableDepthTest();
+    ofEnableNormalizedTexCoords();
+    ofEnableArbTex();
+    ofBackground(0, 0, 0);
+    ofDisableSeparateSpecularLight();
 
     ofSetWindowTitle("30PP Player");
-    ofSetFrameRate(60);
     
     //--- socket setup
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
+<<<<<<< HEAD
     map.setup(4,0);
     map.addVideoTexture("Bonus_waves.mov");
     
 //    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
+=======
+    map.setup(4,0,2);
+    map.addVideoTexture(0,"mapping test_02/tex/Test Map_02.mov");
+    map.addVideoTexture(1,"mapping test_02/tex/Test Map_02.mov");
+>>>>>>> fd6ca34c1b1d7802d4d5924bdd08e19b5cec7693
 }
 
 //--------------------------------------------------------------
@@ -54,7 +68,6 @@ void playerApp::draw(){
     if(eventsInited || MAPPER_DEBUG){ //we're good to go, follow SOP
         
         //everything
-        
         map.draw();
 
     }

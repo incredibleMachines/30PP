@@ -3,7 +3,6 @@
 //openFrameworks + addons
 #include "ofMain.h"
 
-
 //30PP
 #include "ModelMapper.h"
 #include "SocketHandler.h"

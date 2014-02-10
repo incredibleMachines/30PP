@@ -19,15 +19,18 @@
 #define ADJUST_MODE_MESH 3
 #define ADJUST_MODE_VIEWPORT 4
 #define ADJUST_MODE_MASK 5
+#define ADJUST_MODE_LOCKED 6
 
 class ModelMapper {
 public:
     void setup(int _numCams);
     void setup(int _numCams, int _guiCam);
+    void setup(int _numCams, int _guiCam, int _numMeshes);
     void update();
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
+    void keyReleased(ofKeyEventArgs& args);
     void mouseDragged(ofMouseEventArgs& args);
     void mousePressed(ofMouseEventArgs& args);
     void mouseReleased(ofMouseEventArgs& args);
@@ -35,6 +38,7 @@ public:
     
     int numCams;
     int guiCam;
+    int numMeshes;
     ofVec2f mouse;
     
     //---------CUSTOM FUNCTIONS
@@ -46,12 +50,13 @@ public:
     void drawHighlights();
     //draw masks for selected camera
     void drawMasks();
+    void updateMasks();
     //init cameras
     void setupCameras();
     //save camera data to json and meshes to .ply files
     void saveCameras();
     //add video texture to model
-    void addVideoTexture(string videoTexture);
+    void addVideoTexture(int _meshNum, string videoTexture);
     
     
     //---------CAMERA SETTINGS
@@ -67,7 +72,8 @@ public:
         ofVec3f vertex;
         int index;
     };
-    vector<meshVertex> moveVertices;
+    vector< vector<meshVertex> > moveVertices;
+    vector< vector<meshVertex> > tempVertices;
 
     //---------MASK SETTINGS
     class maskVertex{
@@ -86,8 +92,11 @@ public:
     float clickThreshold;
     
     //---------VIDEO PLAYER
-    ofQTKitPlayer player;
+    vector<ofQTKitPlayer> player;
     
     float mouseTimer;
+    bool bDrawGui;
+    bool bShiftPressed;
+    float moveModifier;
     
 };
