@@ -33,7 +33,6 @@ exports.Connect = function(_port,_Db){
 			
 		})
 	})
-
 }
 
 //a reference object to our single websocket connection
@@ -49,8 +48,13 @@ function parseCommand(_json){
 
 		switch(_json.command){
 			case 'init':
-				sendFakeData();
+				sendFakeInit();
 			break;
+
+			case 'go':
+				sendFakeSalesEvent();
+			break;
+
 			default:
 				_socket.send(JSON.stringify({'command':'error', 'error': 'unknown command'}));
 			break;
@@ -73,8 +77,85 @@ function sendPlayerInit(){
 	});
 	
 }
-function sendFakeData(__socket){
-	
+
+function sendFakeSalesEvent(__socket){
+
+	var fakeCmdSales = 
+
+	{ 	"command": "sales",
+		"title": "restaurants",
+        "type": "intro",
+        "created_at": "01-20-2014",
+        "scenes": [
+            {
+                "title": "scene 1",
+                "type": 1,
+                "assets": [
+                    {
+                        "title": "asset one",
+                        "link": "URI://localhost/documents/media/file.mpg",
+                        "type": 1,
+                        "caption": "Dr. Chang's",
+                        "location": {
+                            "title": "location1",
+                            "address": "182 Broadway, NY NY"
+                        }
+                    },
+                    {
+                        "title": "asset two",
+                        "link": "URI://localhost/documents/media/file2.mpg",
+                        "type": 1,
+                        "caption": "Dr. Chang's",
+                        "location": {
+                            "title": "location2",
+                            "address": "66 Park Pl, NY NY"
+                        }
+                    },
+                    {
+                        "title": "asset four",
+                        "link": "URI://localhost/documents/media/file4.png",
+                        "type": 2,
+                        "caption": "Dr. Chang's",
+                        "location": {
+                            "title": "location4",
+                            "address": "810 York Rd, NY NY"
+                        }
+                    }
+                ],
+                "created_at": "01-29-2014",
+                "last_edited": "01-30-2014"
+            },
+            {
+                "title": "scene 2",
+                "type": 2,
+                "assets": [
+                    {
+                        "title": "asset four",
+                        "link": "URI://localhost/documents/media/file4.png",
+                        "type": 0,
+                        "caption": "Dr. Chang's",
+                        "location": {
+                            "title": "location1",
+                            "address": "182 Broadway, NY NY"
+                        }
+                    }
+                ],
+                "created_at": "01-29-2014",
+                "last_edited": "02-15-2014"
+            }
+        ]
+    }
+    _socket.send(JSON.stringify(fakeCmdSales));
+}
+
+
+/* 
+sendFakeInit(socket)
+• called when playerApp sends Init
+• builds 4 events with variations of the same assets w/files
+• sends them to playerApp as single json object {'init':[all events, with scenes, assets, file objects]}
+*/
+
 	//--- fakeLocations
 	var fakeLocation1 = {};
 	fakeLocation1.title = "location1";
@@ -96,11 +177,14 @@ function sendFakeData(__socket){
 	var fakeAsset1 = {};
 	fakeAsset1.title = 'asset one';
 	fakeAsset1.link = 'URI://localhost/documents/media/file.mpg';
-	fakeAsset1.type = 0;
+	fakeAsset1.type = 1;
+	fakeAsset1.caption = "Dr. Chang's";
 	fakeAsset1.location = fakeLocation1;
 	
 	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset2.title = 'asset two';
+	fakeAsset1.type = 1;
+	fakeAsset1.caption = "Dr. Chang's";
 	fakeAsset2.link = 'URI://localhost/documents/media/file2.mpg';
 	fakeAsset2.location = fakeLocation2;
 
@@ -111,9 +195,15 @@ function sendFakeData(__socket){
 
 	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset4.title = 'asset four';
-	fakeAsset4.type = 1;
+	fakeAsset4.type = 2;
 	fakeAsset4.link = 'URI://localhost/documents/media/file4.png';
 	fakeAsset4.location = fakeLocation4;
+
+	var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset5.title = 'asset four';
+	fakeAsset5.type = 0;
+	fakeAsset5.link = 'URI://localhost/documents/media/file4.png';
+	fakeAsset5.location = fakeLocation1;
 	
 	//--- fakeScenes
 	var fakeScene1 = {};
@@ -126,7 +216,7 @@ function sendFakeData(__socket){
 	var fakeScene2 = JSON.parse(JSON.stringify(fakeScene1));
 	fakeScene2.title = "scene 2";
 	fakeScene2.type = 2;
-	fakeScene2.assets = [fakeAsset1];
+	fakeScene2.assets = [fakeAsset5];
 	fakeScene2.last_edited = "02-15-2014";
 
 	var fakeScene3 = JSON.parse(JSON.stringify(fakeScene1));
@@ -164,6 +254,10 @@ function sendFakeData(__socket){
 	var fakeData = {};
 	fakeData.command = 'init';
 	fakeData.events = [fakeEvent1, fakeEvent2, fakeEvent3, fakeEvent4];
+
+function sendFakeInit(__socket){
+	
+
 	
 	//We Can only send strings NOT JSON DATA!
 	_socket.send(JSON.stringify(fakeData));

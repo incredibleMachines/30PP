@@ -10,7 +10,12 @@
 
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
+
+//30PP
+#include "EventHandler.h"
 #include "Event.h"
+#include "Definitions.h"
+
 
 class SocketHandler{
 
@@ -20,12 +25,8 @@ public:
     SocketHandler();
     void setup(int port, bool verboseMode);
     void update();
+    void sendSocketCmd(string cmd);
 
-    //init events
-    void sendInitCmd();
-    void initEvents(ofxLibwebsockets::Event &args);
-    bool eventsInited;
-    
     //socket client
     ofxLibwebsockets::Client socketClient;
     ofxLibwebsockets::ClientOptions socketOptions;
@@ -46,5 +47,9 @@ public:
     string debugActivityInfo;
     bool bVerbose;
     
-
+    
+    //event hander
+    EventHandler eventHandler;
+    
+    
 };

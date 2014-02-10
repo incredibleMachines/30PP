@@ -22,4 +22,6 @@ public:
     ofVec2f coords;
     
     ofVideoPlayer vid;
+
+    ofQTKitPlayer player;
 };

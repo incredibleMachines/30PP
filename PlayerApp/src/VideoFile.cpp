@@ -33,6 +33,7 @@ VideoFile::VideoFile(string _filepath, string _caption, ofVec2f _coords){
         
     }
     
+//     player.loadMovie(<#string path#>)
 }
 
 //--------------------------------------------------------------

@@ -32,7 +32,7 @@ Asset::Asset(Json::Value thisAsset){
     aLoc.title      = thisAsset.get("location","no asset location found").get("title","no asset loc title found").asString();
     aTitle          = thisAsset.get("title","no asset title found").asString();
     
-    cout<<"\t\t\t>> assetType: "<<aType<<"\t\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
+    cout<<"\t\t\t>> assetType: "<<aType<<"\t\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\taZone: "<<aZone<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
     
     
     //--- check to see if there is a file in this asset
@@ -69,15 +69,17 @@ Asset::Asset(Json::Value thisAsset){
         //TODO: define this cases
         case 0:
             aCoords = ofVec2f(10, 10);
+        break;
             
         case 1:
             aCoords = ofVec2f(210, 350);
-        
+        break;
         case 2:
             aCoords = ofVec2f(450, 65);
-            
+        break;
         default: //wtf
             aCoords = ofVec2f(0,0);
+        break;
     }
     
     //TODO: check fileType and assign asset dimensions (w,h) based on this. add w,h to constructor of file
@@ -86,14 +88,15 @@ Asset::Asset(Json::Value thisAsset){
     switch (aFileType){
 
         case 0:  //--- TEXT
-            //txtFile = new TextFile(aCaption, aCoords);                    //TODO: uncomment
-            
+            txtFile = new TextFile(aCaption, aCoords);                    //TODO: uncomment
+            txtFile->setup();
+        break;
         case 1:  //--- VIDEO
             //vidFile = new VideoFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
-            
+        break;
         case 2:  //--- IMAGE
             //imgFile = new ImageFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
-        
+        break;
         default: //wtf case
             ;
     }
@@ -108,15 +111,16 @@ void Asset::update(){
     switch (aType){
         case 0:  //TEXT
             txtFile->update();
-            
+        break;
         case 1:  //VIDEO
-            vidFile->update();
-            
+            //vidFile->update();
+        break;
         case 2:  //IMAGE
-            imgFile->update();
-            
+            //imgFile->update();
+        break;
         default: //wtf case
-            ;
+            //wtf
+        break;
     }
 }
 
@@ -126,13 +130,13 @@ void Asset::draw(){
     switch (aType){
         case 0:  //TEXT
             txtFile->draw();
-            
+        break;
         case 1:  //VIDEO
-            vidFile->draw();
-            
+            //vidFile->draw();
+        break;
         case 2:  //IMAGE
-            imgFile->draw();
-            
+            //imgFile->draw();
+        break;
         default: //wtf case
             ;
     }

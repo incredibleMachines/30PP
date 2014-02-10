@@ -21,16 +21,10 @@
 #include "SocketHandler.h"
 #include "playerApp.h"
 
-//constants
-#define INIT_CMD "{\"command\" : \"init\"}"
-#define STATUS_MSG "{\"command\" : \"statusinfoTBD\"}"
-#define HEARTBEAT_MSG "{\"command\" : \"heartbeat\"}"
-
 //--------------------------------------------------------------
 SocketHandler::SocketHandler(){
  
-    reconnectFlag = true;
-    eventsInited = false;
+    reconnectFlag = false;
 }
 
 //--------------------------------------------------------------
@@ -69,8 +63,8 @@ void SocketHandler::update(){
         if (!((playerApp*)ofGetAppPtr())->eventsInited){
             if(sec && reconnectFlag){ // attempt request init cmd once every 2 secs
 
-                //--- send INIT_CMD to controller app
-                sendInitCmd();
+                //--- send INIT_REQUEST to controller app
+                sendSocketCmd(INIT_REQ);
                 
                 reconnectFlag = 0;
             } else if (!sec) reconnectFlag = 1;
@@ -87,7 +81,6 @@ void SocketHandler::update(){
             } else if (!sec) reconnectFlag = 1;
         }
     }
-
 }
 
 //--------------------------------------------------------------
@@ -103,38 +96,16 @@ void SocketHandler::connectSocket(){
 
 
 //--------------------------------------------------------------
-void SocketHandler::sendInitCmd(){ //TODO: turn into generic sendMsg(string msg)
+void SocketHandler::sendSocketCmd(string cmd){ //TODO: turn into generic sendMsg(string msg)
     
     cout << "-----------------------" << endl;
-    socketClient.send(INIT_CMD);
+    socketClient.send(cmd);
     
-    debugActivityInfo = "SENT INIT_CMD || Time: "+ofGetTimestampString();
+    debugActivityInfo = "SENT "+cmd+" || Time: "+ofGetTimestampString();
     cout << ">>> socketHandler:  "<< debugActivityInfo << endl << endl;
 }
 
 
-//--------------------------------------------------------------
-void SocketHandler::initEvents(ofxLibwebsockets::Event &args){
-    
-    /* kicks off Event, Scene, and Asset vector filling */
-    
-    int numEvents = args.json["events"].size();
-    
-    cout<<">>> hit initEvents()"<<endl;
-    cout<<">>> num events received: "<< numEvents <<endl<<endl;
-    cout<<"\t>>--------------START EVENT INIT--------------<<"<<endl<<endl;
-    
-    for (int e=0; e<numEvents; e++) {
-        Event thisEvent = * new Event (args.json["events"].get(e, "1 complete event"));
-        cout<<endl;
-        ((playerApp*)ofGetAppPtr())->allEvents.push_back(thisEvent);
-    }
-    
-    cout<<"\t>>--------------END EVENT INIT--------------<<"<<endl;
-    
-    // set eventsInited true
-    ((playerApp*)ofGetAppPtr())->eventsInited = true;
-}
 
 //--------------------------------------------------------------
 void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
@@ -145,41 +116,13 @@ void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
     cout <<"======================== END SOCKET MESSAGE ========================"<<endl;
     cout <<"\n>>> thisCmd = "<< thisCmd << endl;
     
-    //TODO: make switch cases
-    
-    //--- init assets
-    if (thisCmd == "init"){
-        cout << ">>> received init" << endl;
-        initEvents(args);
-    }
-    
-    //--- start an event
-    else if (thisCmd == "start"){
-        cout << ">>> received start event" << endl;
-        //cout<<"EVENT NUMBER: "<< allEvents.size() << endl;
-        //startEvent(args); <-- TODO
-    }
-    
-    //--- stop an event
-    else if (thisCmd == "stop"){
-        cout << ">>> received stop event" << endl;
-        //stopEvent(args); <-- TODO
-    }
-    
-    //--- server error
-    else if (thisCmd == "error"){
-        cout << ">>> received server error" << endl;
-        // server has returned an error
-    }
-    
-    //--- unknown event
-    else {
-        cout << ">>> received UNKNOWN EVENT" << endl;
-    }
+    eventHandler.processEvent(thisCmd, args);
+
 }
 
 //--------------------------------------------------------------
 void SocketHandler::drawDebugInfo(){
+    
     //--- draw some info
     ofBackground(0);
     

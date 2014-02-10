@@ -5,7 +5,6 @@
 //  Created by Joseph Saavedra on 2/3/14.
 //
 //
-
 /*
  
  This is the object that will hold a TEXT File for any Asset that requires one.
@@ -26,6 +25,13 @@ TextFile::TextFile(string _text, ofVec2f _coords){
     //TODO: choose font lib to load text into
     text = _text;
     coords = _coords;
+
+}
+
+//--------------------------------------------------------------
+void TextFile::setup(){
+
+    //ttFont.loadFont("fonts/nobel_reg.ttf", 18);//, true, true, true);
 }
 
 //--------------------------------------------------------------
@@ -40,7 +46,8 @@ void TextFile::draw(){
     //TODO: use font framework/addon as chosen
     
     ofSetColor(200); //for now
-    ofDrawBitmapString(text, coords); //for now
+    //ofDrawBitmapString(text, coords); //for now
+    //ttFont.drawString("Dr. Chow's", 100, 200);
 }
 
 //--------------------------------------------------------------

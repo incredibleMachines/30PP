@@ -8,6 +8,7 @@
 #include "ModelMapper.h"
 #include "SocketHandler.h"
 #include "Event.h"
+#include "Definitions.h"
 
 
 class playerApp : public ofBaseApp {
@@ -27,11 +28,14 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    vector <Event> events;
+    
     SocketHandler socketHandler;
     
     bool eventsInited;
-    vector <Event> allEvents;
     
     ModelMapper map;
-        
+    
+//    ofTrueTypeFont ttFont;//testing
+    
 };

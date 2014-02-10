@@ -13,7 +13,7 @@
  */
 
 //--- constants
-#define MAPPER_DEBUG 1
+#define MAPPER_DEBUG 0
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -27,6 +27,8 @@ void playerApp::setup(){
     //--- modelMapper setup
     map.setup(4,0);
     map.addVideoTexture("Bonus_waves.mov");
+    
+//    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
 }
 
 //--------------------------------------------------------------
@@ -54,15 +56,26 @@ void playerApp::draw(){
         //everything
         
         map.draw();
-        
+
     }
+    ofSetColor(255);
+//    ttFont.drawString("TESTETSTTEST", 50, 150);
 }
 
 //--------------------------------------------------------------
 void playerApp::keyPressed(int key){
     
     if (key == 'i'){ // will happen in socketHandler.update() automatically when ready
-        socketHandler.sendInitCmd();
+        socketHandler.sendSocketCmd(INIT_REQ);
+        
+    }
+    else if (key == 'o'){ // will happen in socketHandler.update() automatically when ready
+        socketHandler.sendSocketCmd(GO_REQ);
+        
+    }
+    else if (key == '.'){
+        string test = events[0].eScenes[1].sTitle;
+        cout<< "event 0: scene 1: "+test<<endl;
     }
 }
 

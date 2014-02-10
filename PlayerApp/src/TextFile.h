@@ -15,10 +15,13 @@ public:
     TextFile(string _text, ofVec2f _coords);
     
     void update();
+    void setup();
     void draw();
     
     
     string text;
     ofVec2f coords;
+    
+    ofTrueTypeFont ttFont;
     
 };
