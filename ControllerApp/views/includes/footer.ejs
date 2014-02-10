@@ -37,6 +37,11 @@
   	$(document).ready(function(){
   		<% /*  */ %>
 	  	var sceneControl = new SceneController(<%-JSON.stringify(event.scenes)%>,function(){});
+	  		  		
+
+	  	<% if(event.scenes.length == 0){ %>
+	  	$('#new_scene_modal').modal('show');
+	  	<% } %>
 	 });
   	</script>
   <% }%>

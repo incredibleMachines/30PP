@@ -85,10 +85,10 @@ function createAssets(_val){
 		//assign a number value to our zones - note this is currently hard coded and will be updated
 		switch(_val){
 			//This is will have to change once we know what the fucks we need here.
-			case 'zone_0': assetNum = 1; break;
-			case 'zone_1': assetNum = 2; break;
-			case 'zone_2': assetNum = 3; break;
-			case 'zone_3': assetNum = 4; break; 
+			case '0': assetNum = 1; break;
+			case '1': assetNum = 2; break;
+			case '2': assetNum = 3; break;
+			case '3': assetNum = 4; break; 
 		}
 		
 		//clear all the old single assets from the column
@@ -110,8 +110,8 @@ function createAssets(_val){
 			//if the asset # matches the zone # make that option be default selected
 			for(var j = 0; j < assetNum; j++){
 				//console.log(j)
-				if(j == i) $(newAsset).find('select.asset-zone').append('<option value="zone_'+j+'" selected>Zone '+(j+1)+'</option>');
-				else $(newAsset).find('select.asset-zone').append('<option value="zone_'+j+'" >Zone '+(j+1)+'</option>');
+				if(j == i) $(newAsset).find('select.asset-zone').append('<option value="'+j+'" selected>Zone '+(j+1)+'</option>');
+				else $(newAsset).find('select.asset-zone').append('<option value="'+j+'" >Zone '+(j+1)+'</option>');
 			}
 			
 			

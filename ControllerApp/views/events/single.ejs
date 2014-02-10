@@ -28,6 +28,7 @@
 			</section><!-- .panel .panel-default -->
 		</aside>
 		<%/* Must check for specific single scene if we are loading that currently defaults to the first scene */ %>
+		<% if(event.scenes.length > 0){ %>
 		<section class="col-md-8 scene-view">
 			<section class="panel panel-default">
 				<header class="panel-heading">
@@ -47,7 +48,7 @@
 									<label for="zone_type">Zone Type</label>
 									<select  class="form-control show-tick scene-zone_type <%=event.scenes[0].slug %>" name="zone_type" id="zone_type">
 										<% for(var i = 0; i< 4; i++){ %>
-											<option <%if(event.scenes[0].zone_type == "zone_"+i){ %> selected <%}%> value="zone_<%=i%>">Zone Type <%= i %></option>
+											<option <%if(event.scenes[0].zone_type == i){ %> selected <%}%> value="<%=i%>">Zone Type <%= i %></option>
 										<% } %>
 									</select>
 									<p class="help-block">Select a zone type.</p>
@@ -77,79 +78,125 @@
 								//assign a number value to our zones - note this is currently hard coded and will be updated
 								switch(event.scenes[0].zone_type){
 									//This is will have to change once we know what the fucks we need here.
-									case 'zone_0': assetNum = 1; break;
-									case 'zone_1': assetNum = 2; break;
-									case 'zone_2': assetNum = 3; break;
-									case 'zone_3': assetNum = 4; break; 
+									case "0": assetNum = 1; break;
+									case "1": assetNum = 2; break;
+									case "2": assetNum = 3; break;
+									case "3": assetNum = 4; break; 
 								} %>
 							<%  for(var i = 0; i< assetNum; i++){ %>
 							<% /* Single Asset Object will be duplicated based on Number of Assets Needed */ %>
-							<% event.scenes[0].assets.forEach(function(asset,index){
-								Object.keys(asset).forEach(function(key){
-								
-									if(parseInt(key)== i){
-									%> <%= key+':' %>  <%-JSON.stringify(asset)%>
-									
-									<article class="row asset-single asset-single-<%= i %>">
+							<% if(event.scenes[0].assets.length == 0){%>
+								<article class="row asset-single asset-single-<%= i %>">
 									<section class="col-md-6 asset-image">
-									<a href="#" class="thumbnail">
-									
-									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
-									</a>
-									<button type="button" class="btn btn-default btn-sm">Delete</button>
-									</section>
-									<section class="col-md-6 asset-contents">
-									<!--<form action="/assets/:slug" method="post"> -->
-										<section class="form-group">
-											<label for="name">Select an asset
-												<button type="button" class="btn btn-xs btn-link disabled">Edit</button>
-												<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
-											</label>
-											<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
-												<option value="">No File</option>
-												<% for(var j = 0; j< files.length; j++){ %>
-													<% if(files[j]._id.toString() == asset[key].file.toString()){ %>
-													<option value="<%=files[j]._id%>" selected ><%=files[j].title%></option>
-													<% }else{ %>
-													<option value="<%= files[j]._id %>"><%= files[j].title %></option>
+										<a href="#" class="thumbnail">
+										
+										<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+										</a>
+										<button type="button" class="btn btn-default btn-sm">Delete</button>
+										</section>
+										<section class="col-md-6 asset-contents">
+										<!--<form action="/assets/:slug" method="post"> -->
+											<section class="form-group">
+												<label for="name">Select an asset
+													<button type="button" class="btn btn-xs btn-link disabled">Edit</button>
+													<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
+												</label>
+												<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
+													<option value="">No File</option>
+													<% for(var j = 0; j< files.length; j++){ %>
+														<option value="<%= files[j]._id %>"><%= files[j].title %></option>
 													<% } %>
-												<% } %>
-											</select>
-										</section><!--.form-group -->
-										<section class="form-group">
-											<label for="zone">Assign to a zone</label>
-											<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
-												<% for(var k = 0; k<assetNum; k++){ %>
-													<% if("zone_"+(k+1) == asset[key].zone ){ %>
-														<option selected value="zone_<%=k+1%>">Zone <%= k+1 %></option>
+												</select>
+											</section><!--.form-group -->
+											<section class="form-group">
+												<label for="zone">Assign to a zone</label>
+												<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
+													<% for(var k = 0; k<assetNum; k++){ %>
+													<% if(i == k){ %>
+														<option value="<%= k %>" selected>Zone <%= k+1 %></option>
 													<% }else{ %>
-														<option value="zone_<%=k+1 %>">Zone <%= k+1 %></option>
-													<% } /*end else if */%>
-												<% } %>
-											</select>
-										</section><!--.form-group -->
-										<section class="form-group">
-											<label for="caption">Caption</label>
-											<% 	var caption = true;
-												if(asset[key].caption == "undefined"){
-													caption= false;
-												}else if(asset[key].caption == ""){
-													caption=false;
-												}
-											%>
-											<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"><% if(caption==true){	
-											%><%=asset[key].caption%><% } %></textarea>
-										</section><!--.form-group -->
-									<!--</form>-->
-									</section><!-- .asset-contents -->
+														<option value="<%= k %>">Zone <%= k+1 %></option>
+													<% }//end if else%>
+													<% }//end for %>
+												</select>
+											</section><!--.form-group -->
+											<section class="form-group">
+												<label for="caption">Caption</label>
+												<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"></textarea>
+											</section><!--.form-group -->
+										<!--</form>-->
+										</section><!-- .asset-contents -->
 									</article> <!-- .row .asset-single -->
-									
-									
-									
-									<% }
+							<% }else{ %>
+								<% event.scenes[0].assets.forEach(function(asset,index){
 								
-								})
-							})//end event.scenes[0].assets.forEach( %>
+									Object.keys(asset).forEach(function(key){
+									
+										if(parseInt(key)== i){
+										%> 
+										<!-- The Object We're Working with Currently -->
+										<!--<%= key+':' %>  <%-JSON.stringify(asset)%> -->
+										<article class="row asset-single asset-single-<%= i %>">
+										<section class="col-md-6 asset-image">
+										<a href="#" class="thumbnail">
+										
+										<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+										</a>
+										<button type="button" class="btn btn-default btn-sm">Delete</button>
+										</section>
+										<section class="col-md-6 asset-contents">
+										<!--<form action="/assets/:slug" method="post"> -->
+											<section class="form-group">
+												<label for="name">Select an asset
+													<button type="button" class="btn btn-xs btn-link disabled">Edit</button>
+													<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
+												</label>
+												<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
+													<option value="">No File</option>
+													<% for(var j = 0; j< files.length; j++){ %>
+														<% if(files[j]._id.toString() == asset[key].file.toString()){ %>
+														<option value="<%=files[j]._id%>" selected ><%=files[j].title%></option>
+														<% }else{ %>
+														<option value="<%= files[j]._id %>"><%= files[j].title %></option>
+														<% } %>
+													<% } %>
+												</select>
+											</section><!--.form-group -->
+											<section class="form-group">
+												<label for="zone">Assign to a zone</label>
+												<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
+													<% for(var k = 0; k<assetNum; k++){ %>
+														<% if(k == parseInt(key) ){ %>
+															<option selected value="<%=k%>">Zone <%= k+1 %></option>
+														<% }else{ %>
+															<option value="<%=k %>">Zone <%= k+1 %></option>
+														<% } /*end else if */%>
+													<% } %>
+												</select>
+											</section><!--.form-group -->
+											<section class="form-group">
+												<label for="caption">Caption</label>
+												<% 	var caption = true;
+													if(asset[key].caption == "undefined"){
+														caption= false;
+													}else if(asset[key].caption == ""){
+														caption=false;
+													}
+												%>
+												<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"><% if(caption==true){	
+												%><%=asset[key].caption%><% } %></textarea>
+											</section><!--.form-group -->
+										<!--</form>-->
+										</section><!-- .asset-contents -->
+										</article> <!-- .row .asset-single -->
+										
+										
+										
+										<% }
+									
+									})
+								})//end event.scenes[0].assets.forEach( 
+							}//end if(event.scenes[0].assets.length == 0)%>
 							<% } %>
 							<% /* End Single Asset */ %>
 							<% /* End of Loop! */ %>
@@ -158,6 +205,7 @@
 				</section> <!-- #scene-contents .row -->
 			</section> <!-- .panel -->
 		</section> <!-- .scene-view -->
+		<% }//end if(event.scenes.length> 0) %>
 	</section><!-- .row .<%= page_slug %> .content -->
 </section> <!-- .<%= page_slug %> -->
 <% /* Print all the EJS data passed from the server for reference and debugging only */ %>

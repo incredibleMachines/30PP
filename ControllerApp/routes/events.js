@@ -59,18 +59,28 @@ exports.single = function(_Database){
 		_Database.getDocumentBySlug('events',slug,function(e,doc){
 				
 			if(!e){
-				_Database.formatScenes(doc._id, doc.scenes, function(e,_scenes){
-					if(!e){
-						 _Database.getAll('files',function(_e,_files){
-							 if(!_e) res.render('events/single', {current: req.url, title: doc.title, page_slug: 'events-single', event: doc, files:_files, error: null});
-							 else res.render('events/single', {current: req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event: doc, files:[], error: e})
-						 })
-						 
-					}else{ 
-						res.render('events/single', {current: req.url, title: 'Bind Scenes Event Error', page_slug: 'events-single error', event: [], files:[], error: e})
-					}
-				})		 
+				//check if there are scenes if there aren't return the page
+				if(doc.scenes.length>0){ //we have a few scenes so lets format them.
 				
+					_Database.formatScenes(doc._id, doc.scenes, function(err,_scenes){
+						if(!err){
+							 _Database.getAll('files',function(_e,_files){
+								 if(!_e) res.render('events/single', {current: req.url, title: doc.title, page_slug: 'events-single', event: doc, files:_files, error: null});
+								 else res.render('events/single', {current: req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event: doc, files:[], error: _e})
+							 })
+							 
+						}else{ 
+							res.render('events/single', {current: req.url, title: 'Bind Scenes Event Error', page_slug: 'events-single error', event: [], files:[], error: err})
+						}
+					})		 
+				}else{ //we have no scenes yet!
+					
+					_Database.getAll('files',function(_e,_files){
+						if(!_e) res.render('events/single',{current:req.url, title:doc.title, page_slug:'events-single', event: doc, files: _files, error: null});
+						else res.render('events/single',{current:req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event:doc,files:[],error:_e})
+					})
+					
+				}
 			}else{ 
 				res.render('events/single', {current: req.url, title: 'Find Event Error', page_slug: 'events-single error', event: [], files:[], error: e})
 			}
