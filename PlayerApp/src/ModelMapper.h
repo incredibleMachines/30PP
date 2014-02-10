@@ -50,6 +50,7 @@ public:
     void drawHighlights();
     //draw masks for selected camera
     void drawMasks();
+    void updateMasks();
     //init cameras
     void setupCameras();
     //save camera data to json and meshes to .ply files

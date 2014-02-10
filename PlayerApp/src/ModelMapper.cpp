@@ -75,6 +75,7 @@ void ModelMapper::update(){
     cameras[guiCam].masks=cameras[cameraSelect].masks;
     cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
     cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
+    cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
 }
 
 void ModelMapper::draw(){
@@ -116,12 +117,21 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         //Select Active Camera
         case '1':
             cameraSelect=1;
+            cameras[guiCam].masks=cameras[cameraSelect].masks;
+            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
+            updateMasks();
             break;
         case '2':
             cameraSelect=2;
+            cameras[guiCam].masks=cameras[cameraSelect].masks;
+            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
+            updateMasks();
             break;
         case '3':
             cameraSelect=3;
+            cameras[guiCam].masks=cameras[cameraSelect].masks;
+            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
+            updateMasks();
             break;
             
         case OF_KEY_SHIFT:
@@ -197,6 +207,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                      cameras[cameraSelect].masks[i]=ofPolyline(vertices);
                     }
                 }
+                updateMasks();
                 
             }
 
@@ -229,7 +240,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
                         for(int i=0;i<vertices.size();i++){
-                            vertices[i]+=ofPoint(0,-moveModifier);
+                            vertices[i]+=ofPoint(0,moveModifier);
                         }
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
@@ -250,6 +261,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                         cameras[cameraSelect].masks[i]=ofPolyline(vertices);
                     }
                 }
+                updateMasks();
                 
             }
             else if(adjustMode==ADJUST_MODE_MESH){
@@ -302,6 +314,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                         cameras[cameraSelect].masks[i]=ofPolyline(vertices);
                     }
                 }
+                updateMasks();
                 
             }
             else if(adjustMode==ADJUST_MODE_MESH){
@@ -354,6 +367,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                         cameras[cameraSelect].masks[i]=ofPolyline(vertices);
                     }
                 }
+                updateMasks();
                 
             }
             else if(adjustMode==ADJUST_MODE_MESH){
@@ -417,6 +431,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 cameras[cameraSelect].addMask();
                 bNewMask=true;
                 bDrawingMask=true;
+                updateMasks();
             }
             break;
             
@@ -424,7 +439,11 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             if(adjustMode==ADJUST_MODE_MASK){
                 if(cameras[cameraSelect].highlightMask!=-1){
                     cameras[cameraSelect].masks.erase(cameras[cameraSelect].masks.begin()+cameras[cameraSelect].highlightMask);
+                    cameras[cameraSelect].drawMasks.erase(cameras[cameraSelect].drawMasks.begin()+cameras[cameraSelect].highlightMask);
                 }
+                cameras[guiCam].masks=cameras[cameraSelect].masks;
+                cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
+                updateMasks();
             }
             break;
             
@@ -537,6 +556,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             }
         
         }
+        updateMasks();
     }
 }
 
@@ -676,6 +696,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 }
             }
         }
+        updateMasks();
     }
 }
 
@@ -705,10 +726,9 @@ void ModelMapper:: setupCameras() {
             vector<ofPolyline> tempMasks;
             for(int j=0;j<settings["cameras"][i]["mask"].size();j++){
                 vector<ofPoint> vertices;
-                for(int k=0;k<settings["cameras"][i]["mask"][j]["points"].size();k++){
-                    vertices.push_back(ofPoint(settings["cameras"][i]["mask"][j]["points"][k]["x"].asFloat(),settings["cameras"][i]["mask"][j]["points"][k]["y"].asFloat()));
+                for(int k=0;k<settings["cameras"][i]["mask"][j]["vertices"].size();k++){
+                    vertices.push_back(ofPoint(settings["cameras"][i]["mask"][j]["vertices"][k]["x"].asFloat(),settings["cameras"][i]["mask"][j]["vertices"][k]["y"].asFloat()));
                 }
-                cout<<vertices.size()<<endl;
                 tempMasks.push_back(ofPolyline(vertices));
             }
             
@@ -717,6 +737,8 @@ void ModelMapper:: setupCameras() {
             meshes.clear();
         }
     }
+    updateMasks();
+
 }
 
 void ModelMapper:: saveCameras() {
@@ -739,12 +761,12 @@ void ModelMapper:: saveCameras() {
         settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
         settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
         
+        settings["cameras"][i]["mask"].clear();
         for(int j=0;j<cameras[i].masks.size();j++){
             vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
-            settings["cameras"][i]["mask"].clear();
             for(int k=0;k<vertices.size();k++){
-                settings["cameras"][i]["mask"][j]["points"][k]["x"]=vertices[k].x;
-                settings["cameras"][i]["mask"][j]["points"][k]["y"]=vertices[k].y;
+                settings["cameras"][i]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
+                settings["cameras"][i]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
             }
         }
         
@@ -974,14 +996,12 @@ void ModelMapper::drawHighlights() {
                     ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index),cameras[cameraSelect].viewport);;
                     ofTranslate(translate);
                     ofCircle(0,0,4);
-//                    ofDrawAxis(20);
                     ofPopMatrix();
                     if(cameraSelect!=guiCam){
                         ofPushMatrix();
                         ofVec3f translate=cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index),cameras[guiCam].viewport);;
                         ofTranslate(translate);
                         ofCircle(0,0,4);
-//                        ofDrawAxis(20);
                         ofPopMatrix();
                     }
                 }
@@ -1040,39 +1060,45 @@ void ModelMapper::drawHighlights() {
 
 void ModelMapper::drawMasks(){
     for(int i = 0; i < numCams; i++){
-        for(int j=cameras[i].masks.size()-1; j>=0;j--){
+        for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
             ofSetColor(0,0,0);
-            ofFill();
-            vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
-            ofPath maskPath;
-            for (int k=0;k<vertices.size();k++){
-                if(k==0){
-                    maskPath.moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-
-                }
-                else{
-                    maskPath.lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-                }
-            }
-            maskPath.close();
-            maskPath.setStrokeColor(ofColor::white);
-            maskPath.setColor(ofColor::black);
-            maskPath.setFilled(true);
-            maskPath.setStrokeWidth(1);
             if(adjustMode==ADJUST_MODE_MASK){
-                maskPath.setStrokeColor(ofColor::white);
+                cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
                 if(i==cameraSelect||i==guiCam){
                     if(j==cameras[i].highlightMask&&bMaskPoint==false){
-                        maskPath.setStrokeColor(ofColor::yellow);
+                        cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
                     }
                 }
             }
-            maskPath.draw();
-            maskPath.clear();
+            cameras[i].drawMasks[j].draw();
         }
+
     }
 }
 
 void ModelMapper::mouseMoved(ofMouseEventArgs& args){
     mouse=ofVec2f(args.x,args.y);
+}
+
+void ModelMapper::updateMasks(){
+    for(int i=0;i<numCams;i++){
+        for(int j=0;j<cameras[i].drawMasks.size();j++){
+            vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
+            cameras[i].drawMasks[j].clear();
+            for (int k=0;k<vertices.size();k++){
+                if(k==0){
+                    cameras[i].drawMasks[j].moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+                              
+                }
+                else{
+                  cameras[i].drawMasks[j].lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+                  }
+              }
+            cameras[i].drawMasks[j].close();
+            cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
+            cameras[i].drawMasks[j].setColor(ofColor::black);
+            cameras[i].drawMasks[j].setFilled(true);
+            cameras[i].drawMasks[j].setStrokeWidth(1);
+            }
+        }
 }

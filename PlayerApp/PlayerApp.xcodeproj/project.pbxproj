@@ -113,12 +113,13 @@
 		D3A8F06F18A43ACB00DB961F /* mesh_1.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_1.ply; sourceTree = "<group>"; };
 		D3A8F07018A43ACB00DB961F /* mesh_2.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_2.ply; sourceTree = "<group>"; };
 		D3A8F07118A43ACB00DB961F /* mesh_3.ply */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh_3.ply; sourceTree = "<group>"; };
-		D3A8F07218A43ACB00DB961F /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
 		D3A8F09918A43C3800DB961F /* mapping test_01.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.c4d"; sourceTree = "<group>"; };
 		D3A8F09A18A43C3800DB961F /* mapping test_01.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.fbx"; sourceTree = "<group>"; };
 		D3A8F09B18A43C3800DB961F /* mapping test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_01.obj"; sourceTree = "<group>"; };
 		D3A8F09C18A43C3800DB961F /* mapping test_01.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_01.stl"; sourceTree = "<group>"; };
 		D3A8F09E18A43C3800DB961F /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
+		D3BB512418A9771500FCEFD8 /* Massing.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Massing.obj; sourceTree = "<group>"; };
+		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
 		E285694018A42C6B0068B4AB /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E285694118A42C6B0068B4AB /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		E285694218A42C6B0068B4AB /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
@@ -350,6 +351,8 @@
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D3BB512518A9859C00FCEFD8 /* settings.json */,
+				D3BB512418A9771500FCEFD8 /* Massing.obj */,
 				D303E82418A57AB0009F395A /* mapping test_04 */,
 				D3A8F09818A43C3800DB961F /* mapping test_02 */,
 				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
@@ -360,7 +363,6 @@
 				D3A8F06F18A43ACB00DB961F /* mesh_1.ply */,
 				D3A8F07018A43ACB00DB961F /* mesh_2.ply */,
 				D3A8F07118A43ACB00DB961F /* mesh_3.ply */,
-				D3A8F07218A43ACB00DB961F /* settings.json */,
 			);
 			name = data;
 			path = bin/data;
