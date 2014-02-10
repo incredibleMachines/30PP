@@ -1070,6 +1070,9 @@ void ModelMapper::drawMasks(){
                     }
                 }
             }
+            else{
+               cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
+            }
             cameras[i].drawMasks[j].draw();
         }
 
