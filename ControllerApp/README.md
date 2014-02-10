@@ -23,3 +23,19 @@ $ npm install
 $ node app.js
 ```
 View system by opening a browser and directing it to __[http://localhost:3000](http://localhost:3000)__
+
+#### Manually Removing DB Items
+
+Open Terminal and ensure that Mongod is running *See Above*
+```bash
+$ mongo 30_PP
+
+$ db.events.remove()
+
+$ db.scenes.remove()
+
+$ db.assets.remove()
+
+$ db.files.remove()
+
+```
