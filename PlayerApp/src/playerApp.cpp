@@ -61,7 +61,6 @@ void playerApp::draw(){
     if(eventsInited || MAPPER_DEBUG){ //we're good to go, follow SOP
         
         //everything
-        
         map.draw();
         
     }

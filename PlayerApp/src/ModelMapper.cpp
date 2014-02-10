@@ -71,9 +71,10 @@ void ModelMapper::update(){
     //update gui camera to display selected camera
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
-        cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
-        cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     }
+    cameras[guiCam].masks=cameras[cameraSelect].masks;
+    cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
+    cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
 }
 
 void ModelMapper::draw(){
@@ -130,6 +131,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         //Select adjust mode
         case 'c':
+            bDrawGui=true;
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustMode=ADJUST_MODE_VIEWPORT;
             }
@@ -145,6 +147,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             else if (adjustMode==ADJUST_MODE_MASK){
                 adjustMode=ADJUST_MODE_LOCKED;
+                bDrawGui=false;
             }
             else{
                 adjustMode=ADJUST_MODE_CAMERA;
@@ -164,7 +167,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.y--;
+                cameras[cameraSelect].viewport.y-=(moveModifier*10);
                 
             }
             
@@ -218,7 +221,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.y++;
+                cameras[cameraSelect].viewport.y+=(moveModifier*10);
                 
             }
             else if(adjustMode==ADJUST_MODE_MASK){
@@ -270,7 +273,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.x++;
+                cameras[cameraSelect].viewport.x+=(moveModifier*10);
                 
             }
             else if(adjustMode==ADJUST_MODE_MASK){
@@ -322,7 +325,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.x--;
+                cameras[cameraSelect].viewport.x-=(moveModifier*10);
                 
             }
             else if(adjustMode==ADJUST_MODE_MASK){
@@ -624,8 +627,8 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                     bDrawingMask=false;
                 }
             }
-            
         }
+        
         else{
                 //set up local variables for determining nearest
                 ofVec3f nearestVertex;
@@ -780,7 +783,7 @@ void ModelMapper:: drawGuiText() {
     ofEnableAlphaBlending();
     ofFill();
     ofSetColor(0,0,0,127);
-    ofRect(cameras[guiCam].viewport.x,cameras[guiCam].viewport.y,500,400);
+    ofRect(cameras[guiCam].viewport.x,cameras[guiCam].viewport.y,500,500);
     ofDisableAlphaBlending();
     
     ofSetColor(255,255,255);
@@ -872,7 +875,14 @@ void ModelMapper:: drawGuiText() {
         lineDraw+=lineHeight;
     }
     
-    //Draw framerate
+    ofDrawBitmapString("(c) Switch Selected Camera",cameras[guiCam].viewport.x+10,lineDraw);
+    lineDraw+=lineHeight;
+    ofDrawBitmapString("(s) Save Selected Camera",cameras[guiCam].viewport.x+10,lineDraw);
+    lineDraw+=lineHeight;
+    ofDrawBitmapString("(Spacebar) Trigger Presentation Mode",cameras[guiCam].viewport.x+10,lineDraw);
+    lineDraw+=lineHeight;
+    ofDrawBitmapString("(g) Switch GUI view on/off",cameras[guiCam].viewport.x+10,lineDraw);
+    lineDraw+=lineHeight;
     ofDrawBitmapString("Framerate: "+ofToString(ofGetFrameRate()), cameras[guiCam].viewport.x+10, lineDraw);
 }
 
@@ -1037,10 +1047,11 @@ void ModelMapper::drawMasks(){
             ofPath maskPath;
             for (int k=0;k<vertices.size();k++){
                 if(k==0){
-                    maskPath.moveTo(vertices[k]);
+                    maskPath.moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+
                 }
                 else{
-                    maskPath.lineTo(vertices[k]);
+                    maskPath.lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
                 }
             }
             maskPath.close();
