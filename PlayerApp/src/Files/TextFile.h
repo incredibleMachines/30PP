@@ -12,16 +12,19 @@
 class TextFile {
     
 public:
+    TextFile();
     TextFile(string _text, ofVec2f _coords);
     
     void update();
     void setup();
+    void setup(string _text);
     void draw();
     
     
-    string text;
+    string textString;
     ofVec2f coords;
     
     ofTrueTypeFont ttFont;
+    ofVboMesh text;
     
 };

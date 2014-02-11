@@ -23,7 +23,6 @@ void playerApp::setup(){
 	ofEnableSmoothing();
 	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
-    ofEnableArbTex();
     ofBackground(0, 0, 0);
     ofDisableSeparateSpecularLight();
 
@@ -35,9 +34,9 @@ void playerApp::setup(){
     //--- modelMapper setup
     
 //    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
+
     map.setup(4,0,2);
-    map.addVideoTexture(0,"mapping_test_04/tex/Test_Map_02.mov");
-    map.addVideoTexture(1,"mapping_test_04/tex/Test_Map_02.mov");
+    map.addCompositeTexture();
 }
 
 //--------------------------------------------------------------

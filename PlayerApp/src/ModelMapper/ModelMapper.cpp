@@ -33,6 +33,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     bDrawGui=true;
     bShiftPressed=false;
     moveModifier=.1;
+    bDrawWireframe=false;
+    textureMode=TEXTURE_MODE_NONE;
     
     //load JSON
     
@@ -57,15 +59,15 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
     
     for(int i=0;i<numMeshes;i++){
-        ofQTKitPlayer tempPlayer;
-        player.push_back(tempPlayer);
+        Composite tempComposite;
+        compositeTexture.push_back(tempComposite);
     }
 }
 
 void ModelMapper::update(){
     //update video texture
     for(int i=0;i<numMeshes;i++){
-        player[i].update();
+        compositeTexture[i].update();
     }
     
     //update gui camera to display selected camera
@@ -103,13 +105,11 @@ void ModelMapper::draw(){
     
 }
 
-void ModelMapper::addVideoTexture(int _meshNum, string videoTexture){
-    
-    //QT Kit Video Player instantion
-    player[_meshNum].setPixelFormat(OF_PIXELS_RGBA);
-	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
-    player[_meshNum].loadMovie(videoTexture, decodeMode);
-    player[_meshNum].play();
+void ModelMapper::addCompositeTexture(){
+    textureMode=TEXTURE_MODE_COMPOSITE;
+    for(int i=0; i<numMeshes;i++){
+        compositeTexture[i].setup();
+    }
 }
 
 void ModelMapper::keyPressed(ofKeyEventArgs& args){
@@ -142,7 +142,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         //Select adjust mode
         case 'c':
-            bDrawGui=true;
+            if(adjustMode!=ADJUST_MODE_LOCKED){
+                bDrawGui=true;
+            }
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustMode=ADJUST_MODE_VIEWPORT;
             }
@@ -157,10 +159,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMode=ADJUST_MODE_MASK;
             }
             else if (adjustMode==ADJUST_MODE_MASK){
-                adjustMode=ADJUST_MODE_LOCKED;
-                bDrawGui=false;
-            }
-            else{
                 adjustMode=ADJUST_MODE_CAMERA;
             }
             break;
@@ -449,12 +447,28 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             break;
             
         case 'g':
-            bDrawGui=!bDrawGui;
+            if(adjustMode!=ADJUST_MODE_LOCKED){
+                bDrawGui=!bDrawGui;
+            }
             break;
             
         case ' ':
-            bDrawGui=false;
-            adjustMode==ADJUST_MODE_LOCKED;
+            if(adjustMode!=ADJUST_MODE_LOCKED){
+                bDrawGui=false;
+                bDrawWireframe=false;
+                adjustMode=ADJUST_MODE_LOCKED;
+            }
+            else if(bShiftPressed==true){
+                adjustMode=ADJUST_MODE_CAMERA;
+                bDrawGui=true;
+            }
+            break;
+        
+            
+        case 'w':
+            if(adjustMode!=ADJUST_MODE_LOCKED){
+                bDrawWireframe=!bDrawWireframe;
+            }
             break;
             
             //reset mesh to default dae or obj file
@@ -913,31 +927,38 @@ void ModelMapper:: drawCameras() {
     for(int i = 0; i < numCams; i++){
         
         //CREATE AND POPULATE CAMERA
-        
+
+        if(adjustMode!=ADJUST_MODE_LOCKED||i!=guiCam){
         //Begin camera object
         cameras[i].camera.begin(cameras[i].viewport);
         
         for(int j=0;j<numMeshes;j++){
 
-            //Bind video texture to mesh
-            player[j].getTexture()->bind();
-            
-            ofSetColor(255,255,255);
-            //Draw mesh
-            cameras[i].mesh[j].drawFaces();        
-            
-            //Unbind video texture
-            player[j].getTexture()->unbind();
 
-            //DRAW MESH WIREFRAME
+                compositeTexture[j].bind();
+            
+                ofSetColor(255,255,255);
+                //Draw mesh
+                cameras[i].mesh[j].drawFaces();
                 
-            ofSetColor(255,255,255);
-            ofSetLineWidth(2);
-            cameras[i].mesh[j].drawWireframe();
-        }
+
+                compositeTexture[j].unbind();
+
+                //DRAW MESH WIREFRAME
+                
+                if(bDrawWireframe==true){
+                    ofSetColor(255,255,255);
+                    ofSetLineWidth(2);
+                    cameras[i].mesh[j].drawWireframe();
+                }
+            }
 
         //End camera object
         cameras[i].camera.end();
+        }
+        else{
+            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
+        }
     }
 }
 

@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
+#include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS - DO NOT CHANGE
 #define ADJUST_MODE_CAMERA 1
@@ -20,6 +21,10 @@
 #define ADJUST_MODE_VIEWPORT 4
 #define ADJUST_MODE_MASK 5
 #define ADJUST_MODE_LOCKED 6
+
+#define TEXTURE_MODE_NONE 0
+#define TEXTURE_MODE_COMPOSITE 1
+#define TEXTURE_MODE_VIDEO 2
 
 class ModelMapper {
 public:
@@ -56,7 +61,7 @@ public:
     //save camera data to json and meshes to .ply files
     void saveCameras();
     //add video texture to model
-    void addVideoTexture(int _meshNum, string videoTexture);
+    void addCompositeTexture();
     
     
     //---------CAMERA SETTINGS
@@ -93,10 +98,16 @@ public:
     
     //---------VIDEO PLAYER
     vector<ofQTKitPlayer> player;
+    vector<ofTexture> texture;
+    vector<Composite> compositeTexture;
     
     float mouseTimer;
     bool bDrawGui;
     bool bShiftPressed;
     float moveModifier;
+    bool bDrawWireframe;
+    int textureMode;
+    
+    
     
 };
