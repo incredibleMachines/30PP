@@ -104,6 +104,7 @@ void ModelMapper::draw(){
 }
 
 void ModelMapper::addVideoTexture(int _meshNum, string videoTexture){
+    
     //QT Kit Video Player instantion
     player[_meshNum].setPixelFormat(OF_PIXELS_RGBA);
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;

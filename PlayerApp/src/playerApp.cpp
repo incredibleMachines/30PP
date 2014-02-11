@@ -12,7 +12,7 @@
  */
 
 //--- constants
-#define MAPPER_DEBUG 0
+#define MAPPER_DEBUG 1
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -33,13 +33,11 @@ void playerApp::setup(){
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
-    map.setup(4,0);
-//    map.addVideoTexture("Bonus_waves.mov");
     
 //    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
     map.setup(4,0,2);
-    map.addVideoTexture(0,"mapping test_02/tex/Test Map_02.mov");
-    map.addVideoTexture(1,"mapping test_02/tex/Test Map_02.mov");
+    map.addVideoTexture(0,"mapping test_04/tex/Test Map_02.mov");
+    map.addVideoTexture(1,"mapping test_04/tex/Test Map_02.mov");
 }
 
 //--------------------------------------------------------------
@@ -51,8 +49,8 @@ void playerApp::update(){
     if(eventsInited || MAPPER_DEBUG){   // we're good to go, follow standard operating procedures
         
         //everything
+            map.update();
         
-        map.update();
 
     }
 }
