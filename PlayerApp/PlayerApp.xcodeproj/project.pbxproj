@@ -89,13 +89,6 @@
 		5D95092D59E7A34C9DB7823E /* Server.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Server.cpp; path = ../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src/Server.cpp; sourceTree = SOURCE_ROOT; };
 		69668FDE141262BC3C6CA929 /* jsoncpp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = jsoncpp.cpp; path = ../../../addons/ofxLibwebsockets/libs/jsoncpp/jsoncpp.cpp; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		D303E82518A57AB0009F395A /* mapping test_04.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.c4d"; sourceTree = "<group>"; };
-		D303E82618A57AB0009F395A /* mapping test_04.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "mapping test_04.dae"; sourceTree = "<group>"; };
-		D303E82718A57AB0009F395A /* mapping test_04.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.fbx"; sourceTree = "<group>"; };
-		D303E82818A57AB0009F395A /* mapping test_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "mapping test_04.obj"; sourceTree = "<group>"; };
-		D303E82918A57AB0009F395A /* mapping test_04.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.stl"; sourceTree = "<group>"; };
-		D303E82A18A57AB0009F395A /* mapping_test_04.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapping_test_04.mtl; sourceTree = "<group>"; };
-		D303E82C18A57AB0009F395A /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
 		D31EC67B18A9A47800B8F882 /* ImageFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageFile.cpp; sourceTree = "<group>"; };
 		D31EC67C18A9A47800B8F882 /* ImageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFile.h; sourceTree = "<group>"; };
 		D31EC67D18A9A47800B8F882 /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = "<group>"; };
@@ -122,6 +115,13 @@
 		D31EC6A418A9A6AB00B8F882 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		D31EC6A518A9A6AB00B8F882 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		D31EC6A618A9A6AB00B8F882 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		D31EC6AB18A9AA5100B8F882 /* mapping test_04.c4d */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.c4d"; sourceTree = "<group>"; };
+		D31EC6AC18A9AA5100B8F882 /* mapping test_04.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "mapping test_04.dae"; sourceTree = "<group>"; };
+		D31EC6AD18A9AA5100B8F882 /* mapping test_04.fbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.fbx"; sourceTree = "<group>"; };
+		D31EC6AE18A9AA5100B8F882 /* mapping test_04.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "mapping test_04.stl"; sourceTree = "<group>"; };
+		D31EC6AF18A9AA5100B8F882 /* mapping_test_04.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapping_test_04.mtl; sourceTree = "<group>"; };
+		D31EC6B018A9AA5100B8F882 /* mapping_test_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapping_test_04.obj; sourceTree = "<group>"; };
+		D31EC6B218A9AA5100B8F882 /* Test_Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Test_Map_02.mov; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D3BB512418A9771500FCEFD8 /* Massing.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Massing.obj; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
@@ -310,39 +310,17 @@
 			name = "3rd party frameworks";
 			sourceTree = "<group>";
 		};
-		D303E82418A57AB0009F395A /* mapping test_04 */ = {
-			isa = PBXGroup;
-			children = (
-				D303E82518A57AB0009F395A /* mapping test_04.c4d */,
-				D303E82618A57AB0009F395A /* mapping test_04.dae */,
-				D303E82718A57AB0009F395A /* mapping test_04.fbx */,
-				D303E82818A57AB0009F395A /* mapping test_04.obj */,
-				D303E82918A57AB0009F395A /* mapping test_04.stl */,
-				D303E82A18A57AB0009F395A /* mapping_test_04.mtl */,
-				D303E82B18A57AB0009F395A /* tex */,
-			);
-			path = "mapping test_04";
-			sourceTree = "<group>";
-		};
-		D303E82B18A57AB0009F395A /* tex */ = {
-			isa = PBXGroup;
-			children = (
-				D303E82C18A57AB0009F395A /* Test Map_02.mov */,
-			);
-			path = tex;
-			sourceTree = "<group>";
-		};
 		D31EC67118A9A47800B8F882 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				D31EC68618A9A47800B8F882 /* main.cpp */,
+				D31EC68D18A9A47800B8F882 /* playerApp.h */,
+				D31EC68C18A9A47800B8F882 /* playerApp.cpp */,
 				D31EC69F18A9A6AB00B8F882 /* Events */,
 				D31EC69A18A9A63200B8F882 /* Compositor */,
 				D31EC67A18A9A47800B8F882 /* Files */,
 				D31EC68118A9A47800B8F882 /* Handlers */,
-				D31EC68618A9A47800B8F882 /* main.cpp */,
 				D31EC68718A9A47800B8F882 /* ModelMapper */,
-				D31EC68C18A9A47800B8F882 /* playerApp.cpp */,
-				D31EC68D18A9A47800B8F882 /* playerApp.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -405,12 +383,34 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		D31EC6AA18A9AA5100B8F882 /* mapping_test_04 */ = {
+			isa = PBXGroup;
+			children = (
+				D31EC6AB18A9AA5100B8F882 /* mapping test_04.c4d */,
+				D31EC6AC18A9AA5100B8F882 /* mapping test_04.dae */,
+				D31EC6AD18A9AA5100B8F882 /* mapping test_04.fbx */,
+				D31EC6AE18A9AA5100B8F882 /* mapping test_04.stl */,
+				D31EC6AF18A9AA5100B8F882 /* mapping_test_04.mtl */,
+				D31EC6B018A9AA5100B8F882 /* mapping_test_04.obj */,
+				D31EC6B118A9AA5100B8F882 /* tex */,
+			);
+			path = mapping_test_04;
+			sourceTree = "<group>";
+		};
+		D31EC6B118A9AA5100B8F882 /* tex */ = {
+			isa = PBXGroup;
+			children = (
+				D31EC6B218A9AA5100B8F882 /* Test_Map_02.mov */,
+			);
+			path = tex;
+			sourceTree = "<group>";
+		};
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D31EC6AA18A9AA5100B8F882 /* mapping_test_04 */,
 				D3BB512518A9859C00FCEFD8 /* settings.json */,
 				D3BB512418A9771500FCEFD8 /* Massing.obj */,
-				D303E82418A57AB0009F395A /* mapping test_04 */,
 				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
 			);
 			name = data;

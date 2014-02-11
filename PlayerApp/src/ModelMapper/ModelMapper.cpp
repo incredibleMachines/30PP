@@ -460,7 +460,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
-            reload.loadModel("mapping test_04/mapping test_04.obj");
+            reload.loadModel("mapping_test_04/mapping_test_04.obj");
             for(int i=0; i<numMeshes;i++){
                 cameras[cameraSelect].mesh[i]=reload.getMesh(i);
             }
