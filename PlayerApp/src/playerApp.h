@@ -4,10 +4,10 @@
 #include "ofMain.h"
 
 //30PP
-#include "ModelMapper.h"
-#include "SocketHandler.h"
-#include "Event.h"
-#include "Definitions.h"
+#include "ModelMapper/ModelMapper.h"
+#include "Handlers/SocketHandler.h"
+#include "Events/Event.h"
+#include "Events/Definitions.h"
 
 
 class playerApp : public ofBaseApp {

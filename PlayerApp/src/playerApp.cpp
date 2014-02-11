@@ -12,7 +12,7 @@
  */
 
 //--- constants
-#define MAPPER_DEBUG 1
+#define MAPPER_DEBUG 0
 
 //--------------------------------------------------------------
 void playerApp::setup(){
