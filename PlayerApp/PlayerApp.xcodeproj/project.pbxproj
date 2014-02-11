@@ -13,6 +13,7 @@
 		A78C77753D562AE8F0E928ED /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF52649DEB8D25CA011EB41 /* Connection.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		C6C3882A0B0872D1485F3874 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EE5E38D74C62B19279B65BC7 /* Client.cpp */; };
+		E2631CB018A9A00800DEFBC1 /* EventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2631CAE18A9A00800DEFBC1 /* EventHandler.cpp */; };
 		E285694418A42C6B0068B4AB /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285694018A42C6B0068B4AB /* Camera.cpp */; };
 		E285694518A42C6B0068B4AB /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285694218A42C6B0068B4AB /* ModelMapper.cpp */; };
 		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
@@ -120,6 +121,8 @@
 		D3A8F09E18A43C3800DB961F /* Test Map_02.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "Test Map_02.mov"; sourceTree = "<group>"; };
 		D3BB512418A9771500FCEFD8 /* Massing.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Massing.obj; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		E2631CAE18A9A00800DEFBC1 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventHandler.cpp; sourceTree = "<group>"; };
+		E2631CAF18A9A00800DEFBC1 /* EventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandler.h; sourceTree = "<group>"; };
 		E285694018A42C6B0068B4AB /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E285694118A42C6B0068B4AB /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		E285694218A42C6B0068B4AB /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
@@ -618,6 +621,8 @@
 				E2FEFA1B18A2DC4F00C09106 /* playerApp.h */,
 				E2FEFA2F18A2DDC400C09106 /* SocketHandler.cpp */,
 				E2FEFA3018A2DDC400C09106 /* SocketHandler.h */,
+				E2631CAE18A9A00800DEFBC1 /* EventHandler.cpp */,
+				E2631CAF18A9A00800DEFBC1 /* EventHandler.h */,
 				E285694618A42C720068B4AB /* ModelMapper */,
 				E2FEFA2D18A2DC7E00C09106 /* Events */,
 				E2FEFA2E18A2DCB400C09106 /* Files */,
@@ -729,6 +734,7 @@
 				E2FEFA2918A2DC4F00C09106 /* Scene.cpp in Sources */,
 				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
 				E2FEFA2418A2DC4F00C09106 /* Asset.cpp in Sources */,
+				E2631CB018A9A00800DEFBC1 /* EventHandler.cpp in Sources */,
 				E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
 				E2FEFA3118A2DDC400C09106 /* SocketHandler.cpp in Sources */,

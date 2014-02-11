@@ -33,16 +33,13 @@ void playerApp::setup(){
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
-<<<<<<< HEAD
     map.setup(4,0);
-    map.addVideoTexture("Bonus_waves.mov");
+//    map.addVideoTexture("Bonus_waves.mov");
     
 //    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
-=======
     map.setup(4,0,2);
     map.addVideoTexture(0,"mapping test_02/tex/Test Map_02.mov");
     map.addVideoTexture(1,"mapping test_02/tex/Test Map_02.mov");
->>>>>>> fd6ca34c1b1d7802d4d5924bdd08e19b5cec7693
 }
 
 //--------------------------------------------------------------
