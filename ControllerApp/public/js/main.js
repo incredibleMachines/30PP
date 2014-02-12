@@ -61,7 +61,6 @@ $(document).ready(function(){
 	
 	
 	$("button.event-view").click(function(e){
-		alert()
 		var link = $(this).parents('form').attr('action');
 		//console.log(link);
 		//find form slug direct page
