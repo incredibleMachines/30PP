@@ -11,7 +11,7 @@ exports.add = function(_Database){
 
 	return function(req,res){
 		
-		/*********************************************************************************** / 
+		/**************************************************************************************** / 
 		 *
 		 *	Sample post: 
 		 *
@@ -46,11 +46,77 @@ exports.add = function(_Database){
 		
 		var content = files.content; //our form name for the file
 		
-		// TO DO: handle a new location 
-		delete post.new_location;
+		// TO DO: handle a new location
+		if(post.new_location != ''){
+			//check if the location exists already
+			post.new_location = post.new_location.toLowerCase();
+			//this only checks for the literal match of the word.
+			_Database.queryCollection('locations',{address:post.new_location},function(_e,_doc){
+				if(!_e){
+					//console.log(_doc)
+					//check the length of the returned object
+					if(_doc.length>0){
+						console.log('Location Match');
+
+						delete post.new_location;
+						post.location = _doc[0]._id;
+						handleFile(content,post,_Database,req,res);
+					}else{
+						console.log('No Location Match');
+						_Database.add('locations',{address:post.new_location},function(__e,__loc){
+							delete post.new_location;
+							post.location = __loc._id;
+							handleFile(content,post,_Database,req,res);
+							
+						})
+					}
+				}else{
+					res.jsonp(500,{error: 'Location Query Error'})
+				}
+			})
+			
+		}else{
+			//no new location
+			delete post.new_location;
+			
+			//make our location be a mongoID Object
+			post.location = _Database.makeMongoID(post.location);
+			handleFile(content,post,_Database,req,res);
+		}
 		
+		//delete post.new_location;
 		
-		//check the content type of the file
+	} //end return function(req,res)
+}
+
+exports.single = function(_Database){
+
+	return function(req,res){
+	
+		res.render('events/index', { current: req.url, title: 'Single Asset', page_slug: 'files-single'  });
+	}
+}
+exports.update = function(_Database){
+
+	return function(req,res){
+		res.jsonp({message:'update'});
+		//res.render('events/index', { current: req.url, title: 'add event' });
+	}
+}
+exports.delete = function(_Database){
+
+	return function(req,res){
+		res.jsonp({message:'delete'});
+		//res.render('events/index', { current: req.url, title: 'add event' });
+	}
+}
+//content = form file submission titled content
+//post = post data from req
+//req = our route request
+//res = our server response
+
+function handleFile(content,post,_Database,req,res){
+			//check the content type of the file
 		if(content.headers['content-type'].indexOf('image')>=0){
 			console.log('IMAGE')
 			post.type=2;
@@ -81,33 +147,11 @@ exports.add = function(_Database){
 			utils.deleteFile(content.path ,function(e){
 				if(e) res.jsonp(500,{error: 'Unaccepted File Type: '+content.headers['content-type'], status: 'Unresolved' }) //unresolved means that the tmp file is still lurking in our directory
 				else  res.jsonp(500,{error: 'Unaccepted File Type: '+content.headers['content-type'], status: 'Resolved'})
-			})
+			}) //end deleteFile
 			
-		}
-	}
+		} //if(content.headers['content-type']
 }
 
-exports.single = function(_Database){
-
-	return function(req,res){
-	
-		res.render('events/index', { current: req.url, title: 'Single Asset', page_slug: 'files-single'  });
-	}
-}
-exports.update = function(_Database){
-
-	return function(req,res){
-		res.jsonp({message:'update'});
-		//res.render('events/index', { current: req.url, title: 'add event' });
-	}
-}
-exports.delete = function(_Database){
-
-	return function(req,res){
-		res.jsonp({message:'delete'});
-		//res.render('events/index', { current: req.url, title: 'add event' });
-	}
-}
 
 //_post= the json obj
 //__Database = _Database
