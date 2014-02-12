@@ -11,10 +11,10 @@ exports.index = function(_Database){
 	 	//retrieve all events
 	 	_Database.getAll('events',function(err, _events){
 	 		//error handling needs to happen
-	 		_Database.getAll('assets',function(err,_assets){
-		 		res.render('events/index', { current: req.url, title: 'Events', page_slug: 'events-index', events: _events, assets: _assets } );
+	 		
+		 	res.render('events/index', { current: req.url, title: 'Events', page_slug: 'events-index', events: _events } );
 
-	 		})
+	 		
 	 	});
 	}
 }
@@ -65,24 +65,38 @@ exports.single = function(_Database){
 					_Database.formatScenes(doc._id, doc.scenes, function(err,_scenes){
 						if(!err){
 							 _Database.getAll('files',function(_e,_files){
-								 if(!_e) res.render('events/single', {current: req.url, title: doc.title, page_slug: 'events-single', event: doc, files:_files, error: null});
-								 else res.render('events/single', {current: req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event: doc, files:[], error: _e})
+								 if(!_e){ 
+								 	_Database.getAll('locations',function(__e,_locations){
+									 	if(!__e) res.render('events/single', {current: req.url, title: doc.title, page_slug: 'events-single', event: doc, files:_files, locations:_locations, error: null});
+									 	else res.render('events/single', {current: req.url, title: 'Get Locations Event Error', page_slug: 'events-single error', event: doc, files:[],locations:[], error: _e})
+								 	})
+								 	
+								 
+								 }else{ 
+								 	res.render('events/single', {current: req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event: doc, files:[],locations:[], error: _e})
+								 }
 							 })
 							 
 						}else{ 
-							res.render('events/single', {current: req.url, title: 'Bind Scenes Event Error', page_slug: 'events-single error', event: [], files:[], error: err})
+							res.render('events/single', {current: req.url, title: 'Bind Scenes Event Error', page_slug: 'events-single error', event: [], files:[],locations:[], error: err})
 						}
 					})		 
 				}else{ //we have no scenes yet!
 					
 					_Database.getAll('files',function(_e,_files){
-						if(!_e) res.render('events/single',{current:req.url, title:doc.title, page_slug:'events-single', event: doc, files: _files, error: null});
-						else res.render('events/single',{current:req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event:doc,files:[],error:_e})
+						if(!_e){
+							_Database.getAll('locations',function(__e,_locations){
+									 	if(!__e) res.render('events/single', {current: req.url, title: doc.title, page_slug: 'events-single', event: doc, files:_files, locations:_locations, error: null});
+									 	else res.render('events/single', {current: req.url, title: 'Get Locations Event Error', page_slug: 'events-single error', event: doc, files:[],locations:[], error: _e})
+							})
+						}else{ 
+							res.render('events/single',{current:req.url, title: 'Get Files Event Error', page_slug: 'events-single error', event:doc,files:[],locations:[],error:_e})
+						}
 					})
 					
 				}
 			}else{ 
-				res.render('events/single', {current: req.url, title: 'Find Event Error', page_slug: 'events-single error', event: [], files:[], error: e})
+				res.render('events/single', {current: req.url, title: 'Find Event Error', page_slug: 'events-single error', event: [], files:[],locations:[], error: e})
 			}
 		})
 		
@@ -92,14 +106,14 @@ exports.single = function(_Database){
 exports.delete = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'delete'});
+		res.jsonp({message:'delete - not implimented yet.'});
 	}
 }
 
 exports.update = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'update'});
+		res.jsonp({message:'update - not implimented yet.'});
 		//res.render('events/index', { title: 'add event' });
 	}
 }
