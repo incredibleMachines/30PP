@@ -57,6 +57,9 @@ exports.getAll=function(_type,_cb){
 		else _cb(e);
 	})
 }
+exports.queryCollection=function(_type,_query,_cb){
+	queryCollection(_type,_query,_cb);
+}
 
 //_type = collection name
 //_query = your formatted mongodb query
