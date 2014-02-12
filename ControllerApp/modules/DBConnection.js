@@ -1,3 +1,5 @@
+//Overarching Summary
+
 var MongoClient = require('mongodb').MongoClient,
 	Server = require('mongodb').Server,
 	mongo = new MongoClient(new Server('localhost', 27017)),
@@ -8,7 +10,8 @@ var database,
 	collection = {};
 
 
-//make a class of Mongo connect
+//make a class of Mongo connect 
+//ghetto constructor
 exports.MongoConnect = function(){
 	
 	mongo.open(function(err,mongo){
@@ -17,9 +20,12 @@ exports.MongoConnect = function(){
 		database = mongo.db('30_PP');
 		//setup collection connections
 
-		collection.assets = database.collection('assets');
-		collection.events = database.collection('events');
-		collection.users  = database.collection('users');
+		collection.assets    = database.collection('assets');
+		collection.events    = database.collection('events');
+		collection.users     = database.collection('users');
+		collection.scenes    = database.collection('scenes');
+		collection.files 	 = database.collection('files');
+		collection.locations = database.collection('locations');
 		
 	})
 
@@ -27,7 +33,7 @@ exports.MongoConnect = function(){
 
 //_doc = mongo document to add
 //_type = collection name
-//_cb = callback() 
+//_cb = callback(err,db_document{}) 
 
 //returns mongo Document inserted
 exports.add= function(_type,_doc,_cb){
@@ -50,6 +56,38 @@ exports.getAll=function(_type,_cb){
 		if(!e) _cb(null,_data);
 		else _cb(e);
 	})
+}
+exports.queryCollection=function(_type,_query,_cb){
+	queryCollection(_type,_query,_cb);
+}
+
+//_type = collection name
+//_query = your formatted mongodb query
+//_cb = callback(err,collection[])
+//returns mongodb Collection as an Array
+function queryCollection(_type, _query, _cb){
+	
+	collection[_type].find(_query).toArray(function(e,_data){
+	
+		if(!e) _cb(null,_data);
+		else _cb(e);
+	})
+
+	
+}
+
+//remove a document
+//_type = collection name
+//_what = collection query 
+//_cb = callback(e)
+
+exports.remove = function(_type,_what,_cb){
+	
+	collection[_type].remove(_what,function(e){
+		if(!e) _cb(null)
+		else _cb(e)
+	})
+	
 }
 
 //update a document 
@@ -81,6 +119,68 @@ exports.updateById=function(_type,_id,_updateObj,_cb){
 	
 	
 }
+//scenes=mongodb array of scenes
+//_cb= callback(err,_scenes[])
+exports.formatScenes = function(_event_id,_scenes,_cb){
+
+		//get all scenes in an event
+		queryCollection('scenes', {event_id: makeMongoID(_event_id)}, function(e, docs){
+			//console.log(doc);
+			if(!e){
+				var scene_counter = 0;
+				_scenes.forEach(function(scene_id, i){
+					console.log(scene_id);
+					docs.forEach(function(doc,j){
+
+						if(scene_id.toString() == doc._id.toString()){
+							//console.log('match');
+							console.log()
+							console.log('Single Scene')
+							console.log(doc);
+							console.log()
+							
+							var asset_counter=0;
+							if(doc.assets.length>0){
+								doc.assets.forEach(function(asset,k){
+									Object.keys(asset).forEach(function(key){
+										console.log(asset[key])
+										
+										getDocumentByID('assets',asset[key],function(e,_asset){
+											asset_counter++;
+											docs[j].assets[k][key] = _asset;
+											if(asset_counter == doc.assets.length){
+												console.log('here')
+												_scenes[i]=docs[j]
+												scene_counter++;
+												if(scene_counter==_scenes.length){
+													//callback
+													_cb(null,_scenes)
+												}
+											}
+										})
+									})
+									
+								})
+							}else{
+
+								_scenes[i]= docs[j]
+								scene_counter++;
+								if(scene_counter==_scenes.length){
+									_cb(null,_scenes)
+								}
+							}
+						}
+					})
+
+				})
+				
+				//_cb(null,scenes);
+			}else{
+				_cb(err)
+			}
+		})
+	
+}
 
 //get all events and assets formatted for init command
 //async function which parses all events and assets and reorders them and sends them back to the socket
@@ -96,7 +196,7 @@ exports.formatInit=function(_cb){
 						var asset_counter = 0;
 						event.assets.forEach(function(asset,j){
 							//console.log(j+' :: '+asset);
-							returnDocumentByID('assets', asset,  function(e,_doc){
+							getDocumentByID('assets', asset,  function(e,_doc){
 								//console.log(_doc)
 								if(!e){
 									_events[i].assets[j] = _doc;
@@ -138,12 +238,26 @@ exports.formatInit=function(_cb){
 		}
 	});	
 }
+//get a mongo document by collection and slug string
+//_type = collection type
+//_slug = single slug
+//_cb = callback(err,_document)
+exports.getDocumentBySlug = function(_type,_slug,_cb){
+	collection[_type].findOne({slug:_slug},function(e,_doc){
+		if(!e)_cb(null,_doc);
+		else _cb(e);
+	})
+}
+//making global might not be necessary
+exports.getDocumentByID= function(_type,__id,_cb){
+	getDocumentByID(_type,__id,_cb);
+}
 
 //get a mongo document by collection and string id 
 //_type = collection type
 //_id = mongodb id as string
 //_cb = callback(err,_document)
-function returnDocumentByID(_type,__id,_cb){
+function getDocumentByID(_type,__id,_cb){
 	collection[_type].findOne({_id:makeMongoID(__id)},function(e,_doc){
 		//does error handling happen here?
 		if(!e) _cb(null,_doc)
@@ -151,8 +265,23 @@ function returnDocumentByID(_type,__id,_cb){
 	})
 	
 }
+//making global
+exports.makeMongoID=function(_id){
+	return makeMongoID(_id);
+}
+//create a mongoID Function
 function makeMongoID(__id){
 	//TODO:
-	//check for character sizing. must be 12?
-	return new BSON.ObjectID(__id.toString());
+	//check for character sizing. must be 24?
+	//console.log("Make MongoID Request");
+	//console.log(typeof __id);
+	if(typeof __id == "object") return __id;
+	if(typeof __id == "string" && __id.length == 24) return new BSON.ObjectID(__id.toString());
+	else return '';
 }
+
+
+
+
+
+

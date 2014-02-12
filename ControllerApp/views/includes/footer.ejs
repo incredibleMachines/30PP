@@ -1,12 +1,51 @@
   </section>
   <!-- Modals -->
-  <% include ../includes/modals/new_event %>
-  <% include ../includes/modals/new_asset %>
+  <% /* Only Including the Modals we need for specific pages */ %>
+  <% /* Event Index Page */ %>
+  <% if(page_slug == 'events-index'){ %>
+  	<% include ../includes/modals/new_event %>	
+  <% } %>
+  <% /* Event Single Page */ %>
+  <% if(page_slug == 'events-single' ){ %>
+  	<% include ../includes/modals/new_scene %> 
+  	<% include ../includes/modals/new_asset %>
+  <% }%>
+  <% /* Any Assets Page */ %>
+  <% if(page_slug.indexOf('assets')>=0){ %>
+	<% include ../includes/modals/new_asset %>
+  <%}%>
 
   <!-- Javscripts -->
   <script src='/js/vendor/jquery-2.0.3.min.js'></script>
   <script src='/js/vendor/bootstrap.min.js'></script>
+  <script src='/js/vendor/bootstrap-select.min.js'></script>
+  <!-- For Development only-->
+  <script src='/js/vendor/holder.js'></script>
+  <!-- TO BE MINIFIED -->
   <script src='/js/main.js'></script>
-  
+  <% /* Custom JS Loading */%>
+  <% if(page_slug == 'events-index'){ %>
+  	<% if(events.length ==0){ %>
+  	<script>
+	  	$(document).ready(function(){
+		  	$('#new_event_modal').modal('show')
+	  	})
+  	</script>
+  	<% } %>
+  <% } %>
+  <% if(page_slug == 'events-single' ){ %>
+  	<script src='/js/sceneController.js'></script>
+  	<script>
+  	$(document).ready(function(){
+  		<% /*  */ %>
+	  	var sceneControl = new SceneController(<%-JSON.stringify(event.scenes)%>,function(){});
+	  		  		
+
+	  	<% if(event.scenes.length == 0){ %>
+	  	$('#new_scene_modal').modal('show');
+	  	<% } %>
+	 });
+  	</script>
+  <% }%>
   </body>
 </html>
