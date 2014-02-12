@@ -10,19 +10,41 @@
 
 #include "ofMain.h"
 #include "../Files/TextFile.h"
+#include "../Files/ImageFile.h"
+#include "../Files/VideoFile.h"
+#include "../Events/Scene.h"
+#include "../Events/Asset.h"
+
+#define SCENE_T_I_BOTH 0
+
+#define MODEL_LEFT 0
+#define MODEL_SCULPTURE 1
+#define MODEL_WALL 2
 
 class Composite  {
 public:
-    void setup();
+    void setup(int _meshNum);
+    void loadScene(Scene _scene);
     void update();
     void bind();
     void unbind();
+    void drawFbo();
+    void initScene();
     
     ofQTKitPlayer background;
-    ofImage image1;
 
     ofFbo drawSurface;
-    TextFile textFile;
+    vector<TextFile *> textFiles;
+    vector<ImageFile> imageFiles;
+    vector<VideoFile> videoFiles;
+    Scene currentScene;
+    
     int textX;
+    int type;
+    int meshNum;
+    
+    float timer;
+    
+    bool bFinished;
 };
 

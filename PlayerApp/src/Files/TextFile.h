@@ -16,15 +16,15 @@ public:
     TextFile(string _text, ofVec2f _coords);
     
     void update();
-    void setup();
     void setup(string _text);
+
     void draw();
     
     
     string textString;
     ofVec2f coords;
     
-    ofTrueTypeFont ttFont;
+    ofTrueTypeFont * ttFont;
     ofVboMesh text;
     
 };

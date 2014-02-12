@@ -13,6 +13,7 @@
 class ImageFile {
     
 public:
+    ImageFile();
     ImageFile(string _filepath, string _caption, ofVec2f _coords);
     
     void update();

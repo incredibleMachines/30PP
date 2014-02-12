@@ -176,33 +176,41 @@ sendFakeInit(socket)
 	//--- fakeAssets
 	var fakeAsset1 = {};
 	fakeAsset1.title = 'asset one';
-	fakeAsset1.link = 'URI://localhost/documents/media/file.mpg';
+	fakeAsset1.link = 'fingers.mov';
 	fakeAsset1.type = 1;
-	fakeAsset1.caption = "Dr. Chang's";
+	fakeAsset1.zone = 0;
+	fakeAsset1.caption = 'Dr. Changs';
 	fakeAsset1.location = fakeLocation1;
 	
 	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset2.title = 'asset two';
-	fakeAsset1.type = 1;
-	fakeAsset1.caption = "Dr. Chang's";
-	fakeAsset2.link = 'URI://localhost/documents/media/file2.mpg';
+	fakeAsset2.type = 1;
+	fakeAsset2.zone = 0;
+	fakeAsset2.caption = 'Dr. Changs';
+	fakeAsset2.link = 'fingers.mov';
 	fakeAsset2.location = fakeLocation2;
 
 	var fakeAsset3 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset3.title = 'asset three';
-	fakeAsset3.link = 'URI://localhost/documents/media/file3.mpg';
+	fakeAsset3.type = 1;
+	fakeAsset3.zone = 0;
+	fakeAsset3.link = 'fingers.mov';
+	fakeAsset3.caption = 'Dr. Changs';
 	fakeAsset3.location = fakeLocation3;
 
 	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset4.title = 'asset four';
 	fakeAsset4.type = 2;
-	fakeAsset4.link = 'URI://localhost/documents/media/file4.png';
+	fakeAsset4.link = 'Calypso_0604.jpg';
+	fakeAsset4.zone=1;
+	fakeAsset4.caption="balls";
 	fakeAsset4.location = fakeLocation4;
 
 	var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset5.title = 'asset four';
 	fakeAsset5.type = 0;
-	fakeAsset5.link = 'URI://localhost/documents/media/file4.png';
+	fakeAsset5.zone=1;
+	fakeAsset5.caption='balls';
 	fakeAsset5.location = fakeLocation1;
 	
 	//--- fakeScenes
@@ -213,13 +221,13 @@ sendFakeInit(socket)
 	fakeScene1.created_at = "01-29-2014";
 	fakeScene1.last_edited = "01-30-2014";
 
-	var fakeScene2 = JSON.parse(JSON.stringify(fakeScene1));
+	var fakeScene2 = {};
 	fakeScene2.title = "scene 2";
 	fakeScene2.type = 2;
 	fakeScene2.assets = [fakeAsset5];
 	fakeScene2.last_edited = "02-15-2014";
 
-	var fakeScene3 = JSON.parse(JSON.stringify(fakeScene1));
+	var fakeScene3 = {};
 	fakeScene3.title = "scene 3";
 	fakeScene3.type = 0;
 	fakeScene3.assets = [fakeAsset4, fakeAsset2];
@@ -228,7 +236,7 @@ sendFakeInit(socket)
 	//--- fakeEvents
 	var fakeEvent1 = {};
 	fakeEvent1.title = "restaurants"; 
-	fakeEvent1.type = "intro";
+	fakeEvent1.type = "sales";
 	fakeEvent1.created_at = "01-20-2014";
 	fakeEvent1.scenes = [fakeScene1, fakeScene2];
 
@@ -240,7 +248,7 @@ sendFakeInit(socket)
 
 	var fakeEvent3 = {};
 	fakeEvent3.title = "event3";
-	fakeEvent3.type = "outro";
+	fakeEvent3.type = "sales";
 	fakeEvent3.created_at = "02-18-2014";
 	fakeEvent3.scenes = [fakeScene2, fakeScene3, fakeScene1, fakeScene2];
 

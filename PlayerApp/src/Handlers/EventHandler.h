@@ -9,6 +9,7 @@
 #include "ofMain.h"
 #include "../Events/Event.h"
 #include "ofxLibwebsockets.h"
+#include "../Compositor/Composite.h"
 
 
 class EventHandler {
@@ -22,5 +23,7 @@ public:
     //void fadeOutEvent(ofxLibwebsockets::Event &args); //TODO
    
     
-    vector <Event> * allEvents;
+    vector <Event> allEvents;
+    
+    bool eventsInited;
 };

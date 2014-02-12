@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
+#include "../Events/Scene.h"
 #include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS - DO NOT CHANGE
@@ -31,6 +32,7 @@ public:
     void setup(int _numCams);
     void setup(int _numCams, int _guiCam);
     void setup(int _numCams, int _guiCam, int _numMeshes);
+    void setup(int _numCams, int _guiCam, vector<int> _whichMeshes);
     void update();
     void draw();
     
@@ -107,6 +109,8 @@ public:
     float moveModifier;
     bool bDrawWireframe;
     int textureMode;
+    
+    vector<int> whichMeshes;
     
     
     

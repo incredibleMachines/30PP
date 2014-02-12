@@ -7,6 +7,7 @@
 #pragma once
 #include "ofMain.h"
 #include "Scene.h"
+#include "Scene.h"
 #include "ofxLibwebsockets.h"
 
 // Event class

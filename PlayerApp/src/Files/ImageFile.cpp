@@ -20,11 +20,19 @@
 
 //--------------------------------------------------------------
 
+ImageFile::ImageFile(){
+    
+}
+
+//--------------------------------------------------------------
+
 ImageFile::ImageFile(string _filepath, string _caption, ofVec2f _coords){
     
     filePath = _filepath;
     caption = _caption; //might be null
     coords = _coords;
+    
+    img.allocate(500,500, OF_IMAGE_COLOR);
     
     img.loadImage(filePath);
     
@@ -45,6 +53,5 @@ void ImageFile::update(){
 
 //--------------------------------------------------------------
 void ImageFile::draw(){
-    
     img.draw(coords);
 }

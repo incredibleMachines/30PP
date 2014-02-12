@@ -37,7 +37,7 @@ Event::Event(Json::Value thisEvent){
     Json::Value scenes = thisEvent.get("scenes", "scene object not found");
     
     for (int i=0; i < numScenes; i++){
-        Scene thisScene = * new Scene(scenes[i]);
+        Scene thisScene = Scene(scenes[i]);
         eScenes.push_back(thisScene);
     }
 }

@@ -12,6 +12,7 @@
 class VideoFile {
     
 public:
+    VideoFile();
     VideoFile(string _filepath, string _caption, ofVec2f _coords);
     
     void update();

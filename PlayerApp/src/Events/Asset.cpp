@@ -19,6 +19,12 @@
 
 #include "Asset.h"
 
+
+//--------------------------------------------------------------
+Asset::Asset(){
+    
+}
+
 //--------------------------------------------------------------
 Asset::Asset(Json::Value thisAsset){
     
@@ -58,7 +64,7 @@ Asset::Asset(Json::Value thisAsset){
         //--- file pathing!
         // NOTE: this path is relative to the 30PP folder, meaning
         // finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:
-        finalFilePath = "../../../";
+//        finalFilePath = "../../../";
         finalFilePath += aFilePath; //append URI to base file path (30PP root folder)
         cout<<"complete asset filepath: "<< finalFilePath << endl;  //print out completed file path
     }
@@ -78,7 +84,7 @@ Asset::Asset(Json::Value thisAsset){
             aCoords = ofVec2f(450, 65);
         break;
         default: //wtf
-            aCoords = ofVec2f(0,0);
+            aCoords = ofVec2f(500,500);
         break;
     }
     
@@ -88,17 +94,20 @@ Asset::Asset(Json::Value thisAsset){
     switch (aFileType){
 
         case 0:  //--- TEXT
-            txtFile = new TextFile(aCaption, aCoords);                    //TODO: uncomment
-            txtFile->setup();
+            txtFile=new TextFile(aCaption,ofVec2f(200,200));
         break;
+            
         case 1:  //--- VIDEO
-            //vidFile = new VideoFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
+            txtFile=new TextFile(aCaption,ofVec2f(200,200));
+            //TODO: uncomment
         break;
         case 2:  //--- IMAGE
-            //imgFile = new ImageFile(finalFilePath, aCaption, aCoords);    //TODO: uncomment
-        break;
+            txtFile=new TextFile(aCaption,ofVec2f(200,200));
+            break;
         default: //wtf case
-            ;
+            txtFile=new TextFile(aCaption,ofVec2f(500,600));
+            break;
+            
     }
     
 }
@@ -108,37 +117,9 @@ Asset::Asset(Json::Value thisAsset){
 //--------------------------------------------------------------
 void Asset::update(){
     
-    switch (aType){
-        case 0:  //TEXT
-            txtFile->update();
-        break;
-        case 1:  //VIDEO
-            //vidFile->update();
-        break;
-        case 2:  //IMAGE
-            //imgFile->update();
-        break;
-        default: //wtf case
-            //wtf
-        break;
-    }
 }
 
 //--------------------------------------------------------------
 void Asset::draw(){
-    
-    switch (aType){
-        case 0:  //TEXT
-            txtFile->draw();
-        break;
-        case 1:  //VIDEO
-            //vidFile->draw();
-        break;
-        case 2:  //IMAGE
-            //imgFile->draw();
-        break;
-        default: //wtf case
-            ;
-    }
-    
+
 }

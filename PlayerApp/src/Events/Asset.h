@@ -26,11 +26,11 @@ class Location {
 class Asset {
     
     public:
+    Asset();
         Asset(Json::Value thisAsset);
         void update();
         void draw();
-    
-        int aType;          // assetType
+        int aType;      // assetType
         int aZone;          // dictates coordinates
         ofVec2f aCoords;    // dicated by aZone (ID int)
         string aCaption;

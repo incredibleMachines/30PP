@@ -15,6 +15,7 @@
 class Scene {
     
     public:
+        Scene();
         Scene(Json::Value thisScene);
         void update();
         void draw();

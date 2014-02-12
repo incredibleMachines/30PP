@@ -60,7 +60,7 @@ void SocketHandler::update(){
     else {
         
         //--- events NOT inited yet, let's try to init
-        if (!((playerApp*)ofGetAppPtr())->eventsInited){
+        if (!eventHandler.eventsInited){
             if(sec && reconnectFlag){ // attempt request init cmd once every 2 secs
 
                 //--- send INIT_REQUEST to controller app
@@ -115,7 +115,6 @@ void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
     cout <<">>> raw message:\n" << args.message << endl;
     cout <<"======================== END SOCKET MESSAGE ========================"<<endl;
     cout <<"\n>>> thisCmd = "<< thisCmd << endl;
-    
     eventHandler.processEvent(thisCmd, args);
 
 }
@@ -134,7 +133,7 @@ void SocketHandler::drawDebugInfo(){
         //--- connected msg
         ofSetColor(0,255,20);
         ofDrawBitmapString("CONNECTED", 140, ofGetHeight()-50);
-        if(((playerApp*)ofGetAppPtr())->eventsInited){
+        if(eventHandler.eventsInited){
             ofDrawBitmapString("+ EVENTS INITED", 220, ofGetHeight()-50);
         } else {
             ofSetColor(255, 0, 20);

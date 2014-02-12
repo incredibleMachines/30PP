@@ -17,9 +17,19 @@ void ModelMapper::setup(int _numCams, int _guiCam){
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
+    vector<int> _whichMeshes;
+    _whichMeshes.push_back(0);
+    _whichMeshes.push_back(1);
+    _whichMeshes.push_back(2);
+    setup(_numCams,_guiCam,_whichMeshes);
+}
+
+void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
+    
     numCams=_numCams;
     guiCam=_guiCam;
-    numMeshes=_numMeshes;
+    numMeshes=_whichMeshes.size();
+    whichMeshes=_whichMeshes;
     
     //set default variable values
     cameraSelect=1;
@@ -61,6 +71,10 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     for(int i=0;i<numMeshes;i++){
         Composite tempComposite;
         compositeTexture.push_back(tempComposite);
+    }
+    
+    for(int i=0;i<compositeTexture.size();i++){
+        compositeTexture[i].setup(whichMeshes[i]);
     }
 }
 
@@ -107,9 +121,6 @@ void ModelMapper::draw(){
 
 void ModelMapper::addCompositeTexture(){
     textureMode=TEXTURE_MODE_COMPOSITE;
-    for(int i=0; i<numMeshes;i++){
-        compositeTexture[i].setup();
-    }
 }
 
 void ModelMapper::keyPressed(ofKeyEventArgs& args){
@@ -474,9 +485,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
-            reload.loadModel("mapping_test_04/mapping_test_04.obj");
+            reload.loadModel("Mapping_test_06/Mapping_test_06.obj");
             for(int i=0; i<numMeshes;i++){
-                cameras[cameraSelect].mesh[i]=reload.getMesh(i);
+                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
             }
             cout<<"Reloaded Model"<<endl;
             break;
@@ -729,7 +740,7 @@ void ModelMapper:: setupCameras() {
             vector<ofMesh>meshes;
             for(int j=0; j<numMeshes;j++){
                 ofMesh tempMesh;
-                string loader="mesh_"+ofToString(i)+"_"+ofToString(j)+".ply";
+                string loader="mesh_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
                 tempMesh.load(loader);
                 meshes.push_back(tempMesh);
             }
@@ -790,7 +801,7 @@ void ModelMapper:: saveCameras() {
         //save warped mesh objects
         for(int j=0;j<numMeshes;j++){
             string meshname;
-            meshname="mesh_"+ofToString(i)+"_"+ofToString(j)+".ply";
+            meshname="mesh_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
             cameras[i].mesh[j].save(meshname);
         }
     }
@@ -934,14 +945,12 @@ void ModelMapper:: drawCameras() {
         
         for(int j=0;j<numMeshes;j++){
 
-
                 compositeTexture[j].bind();
             
                 ofSetColor(255,255,255);
                 //Draw mesh
                 cameras[i].mesh[j].drawFaces();
                 
-
                 compositeTexture[j].unbind();
 
                 //DRAW MESH WIREFRAME
@@ -1127,3 +1136,4 @@ void ModelMapper::updateMasks(){
             }
         }
 }
+

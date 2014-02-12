@@ -24,6 +24,7 @@
 EventHandler::EventHandler(){
     
     //allEvents = &((playerApp*)ofGetAppPtr())->events;
+    eventsInited = false;
     
 }
 
@@ -74,17 +75,16 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
     cout<<"\t>>--------------START ALL EVENT INIT--------------<<"<<endl<<endl;
     
     for (int e=0; e<numEvents; e++) {
-        Event thisEvent = * new Event (args.json["events"].get(e, "did not find 1 complete event"));
+        Event thisEvent = Event(args.json["events"].get(e, "did not find 1 complete event"));
         cout<<endl;
-        ((playerApp*)ofGetAppPtr())->events.push_back(thisEvent);
-        //allEvents->push_back(thisEvent);
+//        ((playerApp*)ofGetAppPtr())->events.push_back(thisEvent);
+        allEvents.push_back(thisEvent);
     }
-    
     cout<<"\t>>--------------END END EVENT INIT--------------<<"<<endl;
     
     // set eventsInited true
-    ((playerApp*)ofGetAppPtr())->eventsInited = true;
-
+//    ((playerApp*)ofGetAppPtr())->eventsInited = true;
+    eventsInited = true;
 }
 
 

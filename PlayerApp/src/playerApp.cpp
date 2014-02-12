@@ -32,11 +32,14 @@ void playerApp::setup(){
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     //--- modelMapper setup
-    
-//    ttFont.loadFont("fonts/nobel_reg.ttf", 18);
 
-    map.setup(4,0,2);
-    map.addCompositeTexture();
+        masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
+
+    vector<int> _meshesLoad;
+    _meshesLoad.push_back(1);
+    _meshesLoad.push_back(2);
+    _meshesLoad.push_back(4);
+    map.setup(4,0,_meshesLoad);
 }
 
 //--------------------------------------------------------------
@@ -45,12 +48,17 @@ void playerApp::update(){
     //--- manage sockets, connect/reconnect as needed
     if(!MAPPER_DEBUG) socketHandler.update();
     
-    if(eventsInited || MAPPER_DEBUG){   // we're good to go, follow standard operating procedures
+    if(socketHandler.eventHandler.eventsInited || MAPPER_DEBUG){   // we're good to go, follow standard operating procedures
         
         //everything
-            map.update();
-        
-
+        for(int i=0;i<map.compositeTexture.size();i++){
+        {
+            if(map.compositeTexture[i].bFinished==true){
+                map.compositeTexture[i].loadScene(socketHandler.eventHandler.allEvents[0].eScenes[0]);
+            }
+        }
+        map.update();
+    }
     }
 }
 
@@ -59,14 +67,15 @@ void playerApp::draw(){
     
     socketHandler.drawDebugInfo(); //on screen socket debuggin
     
-    if(eventsInited || MAPPER_DEBUG){ //we're good to go, follow SOP
+    if(socketHandler.eventHandler.eventsInited || MAPPER_DEBUG){ //we're good to go, follow SOP
         
         //everything
+        
         map.draw();
 
     }
     ofSetColor(255);
-//    ttFont.drawString("TESTETSTTEST", 50, 150);
+
 }
 
 //--------------------------------------------------------------
@@ -81,7 +90,7 @@ void playerApp::keyPressed(int key){
         
     }
     else if (key == '.'){
-        string test = events[0].eScenes[1].sTitle;
+        string test = socketHandler.eventHandler.allEvents[0].eScenes[1].sTitle;
         cout<< "event 0: scene 1: "+test<<endl;
     }
 }

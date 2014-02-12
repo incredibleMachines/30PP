@@ -27,14 +27,12 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
-    vector <Event> events;
-    
     SocketHandler socketHandler;
     
-    bool eventsInited;
+//    bool eventsInited;
     
     ModelMapper map;
     
-//    ofTrueTypeFont ttFont;//testing
+    ofTrueTypeFont masterFont;//testing
     
 };

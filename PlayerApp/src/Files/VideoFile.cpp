@@ -18,6 +18,10 @@ This is the object that will hold a VIDEO File for any Asset that requires one.
 #include "VideoFile.h"
 
 //--------------------------------------------------------------
+VideoFile::VideoFile(){
+    
+}
+
 
 VideoFile::VideoFile(string _filepath, string _caption, ofVec2f _coords){
     

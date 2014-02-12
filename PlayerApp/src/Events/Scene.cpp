@@ -18,6 +18,10 @@
 #include "Scene.h"
 
 //--------------------------------------------------------------
+Scene::Scene(){
+}
+
+//--------------------------------------------------------------
 Scene::Scene(Json::Value thisScene){
     
     //--- print entire raw scene
@@ -37,7 +41,7 @@ Scene::Scene(Json::Value thisScene){
 
     //--- populate this scene's assets vector
     for (int i=0; i<numAssets; i++){
-        Asset thisAsset = * new Asset(assets[i]);
+        Asset thisAsset = Asset(assets[i]);
         sAssets.push_back(thisAsset);
     }
 }
