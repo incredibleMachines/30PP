@@ -50,10 +50,11 @@ function SceneController(_scenes){
 				});
 				
 				$('.scene-view .scene-zone_type').val(currentScene.zone_type);
+				$('.scene-view .scene-scene_type').val(currentScene.scene_type);
 				$('.scene-view .scene-text').val(currentScene.text);
 				
 				//setup the correct zones to go with the scene we are viewing
-				createAssets(currentScene.zone_type)
+				createAssets(currentScene.zone_type);
 				
 			
 			}
