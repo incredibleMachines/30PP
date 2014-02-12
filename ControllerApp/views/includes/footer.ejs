@@ -19,18 +19,20 @@
   <script src='/js/vendor/jquery-2.0.3.min.js'></script>
   <script src='/js/vendor/bootstrap.min.js'></script>
   <script src='/js/vendor/bootstrap-select.min.js'></script>
-  <script>
-  //enable bootstrap select mod
-  //http://silviomoreto.github.io/bootstrap-select/3/
-  $(document).ready(function(){
-	  //$('select').selectpicker();
-  })
-  </script>
   <!-- For Development only-->
   <script src='/js/vendor/holder.js'></script>
   <!-- TO BE MINIFIED -->
   <script src='/js/main.js'></script>
   <% /* Custom JS Loading */%>
+  <% if(page_slug == 'events-index'){ %>
+  	<% if(events.length ==0){ %>
+  	<script>
+	  	$(document).ready(function(){
+		  	$('#new_event_modal').modal('show')
+	  	})
+  	</script>
+  	<% } %>
+  <% } %>
   <% if(page_slug == 'events-single' ){ %>
   	<script src='/js/sceneController.js'></script>
   	<script>
