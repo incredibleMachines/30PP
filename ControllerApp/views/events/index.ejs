@@ -1,79 +1,69 @@
+<%/* EVENTS INDEX PAGE */%>
 <% include ../includes/header %>
-
-    <h2><%= title %> <small>Total: <%= events.length%></small></h2>
+<section class="<%= page_slug %>">
+	<header class="row">
+	    <h1 class="col-md-11"><%= title %> <small>Total: <%= events.length%></small></h1>
+		<section class="col-md-1">
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_event_modal">+</button>
+			<p><small>New Event</small></p>
+		</section>
+	</header>
     <section class='current_events'>
-    <table class="table table-hover">
-    	<thead>
-	    	<tr>
-	    		<th>+</th>
-		    	<th>#</th>
-		    	<th>Title</th>
-		    	<th>Animation Type</th>
-		    	<th>Duration</th>
-		    	<th>Total Assets</th>
-				<th>Actions</th>
-	    	</tr>
-    	</thead>
-    	<tbody>
-	    <% events.forEach(function(event,i){ %>
-	    	<tr>
-	    		<form method="post" action="/events/<%=event.slug%>">
-	    			<td><input type="checkbox"></td>
-		    		<td><strong><%= i %></strong></td>
-					<td><input type="text" name="title" value="<%=event.title%>"></td>
-					<td class="row">
-						<select name="anim_type">
-						<% for(var i =0; i<4;i++){ %>
-							<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Animation <%= i %></option>
-						<% }%>
-						</select>
-					</td>
-					<td>
-						<input type="range" value="<%= event.duration %>" class="range duration" step="1" min="3" max="300"  name="duration" >
-					    <input type="text" value="<%= event.duration %> seconds" class="input-sm duration_view" name="duration_view" >
-					</td>
-					<td>&nbsp;<%=event.assets.length%>&nbsp;&nbsp;
-						<div class="btn-group">
-							<button type="button" class="btn btn-default btn-xs new-assets" data-event_id="<%=event._id %>" data-toggle="modal" data-target="#new_asset_modal">+</button>
-							<button type="button" class="btn btn-default btn-xs view-asset">View&nbsp;
-							<span class="caret"></span>
-							</button>
-						</div>
-					</td>
-					<td>
-						<!-- Split button -->
-						<div class="btn-group">
-						  <button type="button" class="btn btn-default btn-xs edit-event">							
-						  	<span class="caret"></span>
-						  	&nbsp;Edit
-						  </button>
-						  <button type="button" class="btn btn-default btn-xs update-event">Update</button>
-						  <button type="button" class="btn btn-default btn-xs delete-event">Delete</button>
-						</div>
-					</td>
-	    		</form>
-	    			
-	    		</div>
-	    	</tr>
-	    	<tr id="<%=event._id %>" class="event-row">
-	    		<td colspan="7">
-	    			<section class="event-details" style="width: 40%;">
-						<form method="post" action="/events/<%=event.slug%>">
-								<input class="form-control" type="text" name="title" value="<%=event.title%>"/>
-								<select name="anim_type" class="form-control">
+		<div class="panel panel-default">
+		  <!-- Our Events Table  -->
+		  <div class="panel-heading">
+		  	<ul class="event row panel-title" >
+		  		<li class="col-md-1 panel-title">+</li>
+		  		<li class="col-md-3 panel-title">Title</li>
+		  		<li class="col-md-2 panel-title">Event Type</li>
+		  		<li class="col-md-1 panel-title">Duration</li>
+		  		<li class="col-md-3 panel-title">Scenes</li>
+		  		<li class="col-md-2 panel-title">Actions</li>
+		  	</ul>
+		  </div><!-- .panel-heading -->
+		
+		  <!-- Table body -->
+		  <ul class="list-group">
+		  	<% events.forEach(function(event,i){ %>
+		    <li class="list-group-item">
+			    	<ul class="event row" >
+			    		<form class="event <%=event.slug%>" method="post" action="/events/<%=event.slug%>">
+							<li class="col-md-1">
+								<input type="checkbox" >
+							</li>
+							<li class="col-md-3">						
+								<input class="form-control" type="text" name="title" value="<%=event.title%>">
+							</li>
+							<li class="col-md-2">
+								<select name="anim_type" class="form-control show-tick">
 									<% for(var i =0; i<4;i++){ %>
-									<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Animation <%= i %></option>
+										<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Event Type <%= i %></option>
 									<% }%>
 								</select>
-								<input type="range" value="<%= event.duration %>" class="form-control range duration" step="1" min="3" max="300"  name="duration" />
-								<input type="text" value="<%= event.duration %> seconds" class="form-control input-sm duration_view" name="duration_view" />
+							</li>
+							<li class="col-md-1"><%= event.duration %> </li>
+							<li class="col-md-3">
+								&nbsp;<%=event.scenes.length%>&nbsp;&nbsp;
+								<div class="btn-group">
+									<% if(event.scenes.length ==0){ %>
+									<button type="button" class="btn btn-danger btn-xs event-view">Add&nbsp;Scenes&nbsp;&raquo;</button>
+									<% }else{ %>
+									<button type="button" class="btn btn-default btn-xs event-view">View&nbsp;&&nbsp;Edit&nbsp;&raquo;</button>
+									<% } %>
+								</div>
+							</li>
+							<li class="col-md-2">
+								<div class="btn-group">
+									  <button type="button" class="btn btn-default btn-xs event-update">Update</button>
+									  <button type="button" class="btn btn-default btn-xs event-delete">Delete</button>
+								</div>
+							</li>
 						</form>
-	    			</section>
-				</td>
-	    	</tr>
-	    <% }) //end events.forEach %>
-    	</tbody>
-    </table>
+					</ul>
+		    </li>
+		    <% }) //end events.forEach %>
+		  </ul><!-- ul.list-group -->
+	</div>
     </section>
-   
+</section> <!-- .<%= page_slug %> -->   
 <% include ../includes/footer %>

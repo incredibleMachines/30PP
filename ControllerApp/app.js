@@ -16,7 +16,8 @@ var path = require('path');
  */
  
 var events = require('./routes/events');
-var assets = require('./routes/assets');
+var files = require('./routes/files');
+var scenes = require('./routes/scenes');
 
 /**
  * Custom Modules
@@ -88,15 +89,30 @@ app.post('/events', events.add(Database));
 app.get('/events/:slug',events.single(Database));
 app.post('/events/:slug', events.update(Database));
 app.delete('/events/:slug', events.delete(Database));
+app.post('/events/:slug/delete',events.delete(Database))
  
 app.get('/events/:slug/test',events.emitOne(Database,WebSocket._socket));
 
 //asset handling pages
-app.post('/assets', assets.add(Database));
-app.get('/assets/:slug', assets.single(Database));
-app.post('/assets/:slug', assets.update(Database));
-app.delete('/assets/:slug', assets.delete(Database));
+app.get('/files', files.index(Database));
+app.post('/files', files.add(Database));
+app.get('/files/:slug', files.single(Database));
+app.post('/files/:slug', files.update(Database));
+app.delete('/files/:slug', files.delete(Database));
+app.post('files/:slug/delete',files.delete(Database));
 
+//scene handling
+
+app.post('/scenes',scenes.add(Database));
+app.post('/scenes/reorder',scenes.reorder(Database));
+app.post('/scenes/:id',scenes.update(Database));
+app.delete('/scenes/:id',scenes.delete(Database));
+app.post('/scenes/:id/delete',scenes.delete(Database));
+/*
+//location handling
+app.post('/locations',locations.add(Database));
+app.post('/locations/:slug',locations.update(Database));
+*/
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port '.grey + app.get('port').toString().cyan);

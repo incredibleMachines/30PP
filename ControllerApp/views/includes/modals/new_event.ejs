@@ -12,28 +12,12 @@
 				    </section>
 				    <section class="form-group">
 					    <label for="title">Animation Type</label>
-						<select class="form-control" name="anim_type">
+							<select class="form-control" name="anim_type">
 							<% for(var i =0; i<4;i++){ %>
 								<option value="anim_<%= i %>">Animation <%= i %></option>
 							<% }%>
 						</select>
 						<p class="help-block">Select the animation type.</p>
-				    </section>
-				    <section class="form-group">
-					    <label for="title">Select Assets</label>
-						<select multiple class="form-control" name="assets">
-							<% // add dynamic loading of assets %>
-							<% for(var i =0; i<assets.length;i++){ %>
-								<option value="<%= assets[i]._id %>"><%= assets[i].title %></option>
-							<% }%>
-						</select>
-						<p class="help-block">Select assets for this event.</p>
-						<button type="button" class="btn btn-default btn-info btn-xs">Add New Asset</button>
-				    </section>
-				    <section class="form-group">
-					    <label for="title">Event Duration</label>
-					    <input type="range" value="35" class="form-control range" step="1" min="3" max="300"  id="duration" name="duration" >
-					    <input type="text" value="35 seconds" class="form-control input-sm" name="duration_view" id="duration_view">
 				    </section>
 				</form>
 				<div class="modal-footer">
@@ -42,4 +26,4 @@
 				</div>
 	    	</section>
     	</section>
-</section>
+</section><!-- #new_event_modal .new_event .modal .fade-->

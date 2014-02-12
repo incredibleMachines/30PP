@@ -13,11 +13,56 @@ input:focus {
   outline: 0;
 }
 section.new_event {
-  width: 40%;
+  width: 100%;
   padding: 10px 5% 30px;
   margin: 0 auto;
 }
+/* Event */
+ul.event {
+  display: inline;
+  position: relative;
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+ul.event li {
+  position: relative;
+  display: inline;
+  padding: 2px 5px;
+  font-weight: bold;
+}
+/* Location Select */
+select.location {
+  text-transform: capitalize;
+}
 /* BOOTSTRAP MODS */
+/* Remove stupid blue borders in bootstrap!*/
+/* This handles all inputs and selects */
+textarea:focus,
+select:focus,
+button:focus,
+.btn:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  border-color: none !important;
+  box-shadow: none !important;
+  outline: 0 none !important;
+}
 /* HTML5 Range Finder Styling w. form-control*/
 .form-control.range {
   height: 4px;

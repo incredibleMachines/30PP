@@ -17,7 +17,7 @@ $(document).ready(function(){
 	*/
 		
 		//submit modal
-		
+		//Submitting a form from the footer of a modal using bootstrap
 		$("button.modal-submit").click(function(e){
 			
 			//traverse dom tree to modal body (which is our FORM html Element) to sumbit
@@ -54,6 +54,33 @@ $(document).ready(function(){
 				$(this).parent().siblings(".content-text").hide();
 			}
 		});
+		
+	/*
+	** Event Actions
+	*/
 	
+	
+	$("button.event-view").click(function(e){
+		var link = $(this).parents('form').attr('action');
+		//console.log(link);
+		//find form slug direct page
+		window.location.replace(link);
+	});
+	$("button.event-update").click(function(e){
+		e.preventDefault();
+		$(this).parents('form').submit();
+	});
+	$("button.event-delete").click(function(e){
+	
+		if(confirm("You are about to Delete this Event, Proceed?")){
+		
+			var path = $(this).parents('form').attr('action')+"/delete";
+			$(this).parents('form').attr('action',path);
+			$(this).parents('form').submit();
+			
+		}else{
+			e.preventDefault();
+		}
+	});
 });
 
