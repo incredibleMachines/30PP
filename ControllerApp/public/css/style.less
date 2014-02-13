@@ -1,3 +1,5 @@
+/* General */
+
 body {
   padding-top: 70px;
 }
@@ -30,20 +32,57 @@ ul.event{
 	margin: 0;
 	padding: 0;
 	text-align: left;
+
 	li{
 		position: relative;
 		display: inline;
-		padding: 2px 5px;
+		padding: 2px 15px;
 		font-weight: bold;
 	}
 
-	
+	li.scene-num {
+		font-size: 22px;
+		line-height: 0px;
+		font-weight: normal;
+		}
 }
 
 /* Location Select */
 
 select.location {
 	text-transform: capitalize;
+}
+
+/* Single Event */
+.panel-title {
+	line-height: 30px;
+
+	small {
+		float: right;
+		font-size: 75%;
+		color: #333;
+		margin-top: 2px;
+
+		button {
+			margin: -2px 0 0 5px;
+		}
+
+	}
+}
+
+#scene-contents.row {
+	margin: 0px;
+	padding-top: 20px;
+}
+
+#scene-data .btn-group {
+	float: left;
+	width: 100%;
+
+	button {
+		width: 40%;
+		clear: both;
+	}
 }
 
 
@@ -64,6 +103,188 @@ outline: 0 none !important;}
 	background: #202020;
 	padding: 0;
 	margin: 10px 0;
-	
-	
 }
+
+.navbar-default {
+	padding-right: 15px;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
+	color: #0084ff;
+}
+
+header.single-event-head {
+	position: fixed;
+
+	h3 {
+		margin: 0px;
+	}
+}
+
+header .duration-header {
+	clear: both;
+}
+
+
+
+label {
+	font-size: 12px;
+}
+
+.thumbnail {
+	margin-bottom: 10px;
+}
+
+.panel-default	{
+	border-bottom: 1px solid #999;
+
+}
+
+.events-single {
+	aside {
+		position: fixed;
+		margin-top: 70px;
+		overflow-y: scroll;
+		height: 640px;
+	}
+	.scene-view {
+		float: right;
+	}
+}
+
+.asset-single {
+	border-bottom: 1px solid #ccc;
+	padding: 20px 0;
+	margin-bottom: 20px;
+}
+
+.asset-single:last-child {
+	border-bottom: none;
+}
+
+li.list-group-item .btn-group-vertical .btn-xs {
+	padding: 3px 7px;
+}
+
+.panel-default header.scene-detail-head {
+	background-color: #fff;
+}
+
+.btn-xs {
+	padding: 6px 15px;
+}
+
+.btn-default {
+	border: 1px solid #999;
+}
+
+.btn-default:hover {
+	background-color: #e7e7e7;
+}
+
+.add-btn {
+	float: right;
+	width: 156px;
+	padding-top: 10px;
+
+	.navbar-btn {
+		float: left;
+	}
+	p {
+		float: left;
+		margin: 15px 0 0 10px;
+	}
+}
+
+/* ADD SCENES buttons */
+
+.btn-danger {
+	border: 1px solid #0084ff;
+ 	background-color: #fff;
+ 	color: #0084ff;	
+}
+
+.btn-danger:hover {
+ 	border: 1px solid #0084ff;
+ 	background-color: #bddfff;
+ 	color: #0084ff;
+}
+
+
+/* SAVE buttons */
+.btn-group .btn.green {
+	border: 1px solid #04bd5f;
+ 	background-color: #fff;
+ 	color: #04bd5f;	
+}
+
+.btn-group .btn:hover.green {
+	border: 1px solid #04bd5f;
+ 	background-color: #bcffdd;
+}
+
+/* DELETE buttons */
+
+.btn-group .btn.red {
+	border: 1px solid #ff4800;
+ 	background-color: #fff;
+ 	color: #ff4800;
+}
+
+.btn-group .btn:hover.red {
+	border: 1px solid #ff4800;
+ 	background-color: #ffcebd;
+}
+
+.asset-image button {
+	border: 1px solid #ff4800;
+ 	background-color: #fff;
+ 	color: #ff4800;
+}
+
+.asset-image button:hover {
+	border: 1px solid #ff4800;
+ 	background-color: #ffcebd;
+ 	color: #ff4800;
+}
+
+
+/* Scene Sub-nav */
+
+.btn-link {
+	color: #0084ff;
+}
+
+.btn-link:hover, .btn-link:focus {
+	color: #333;
+	text-decoration: none;
+}
+
+.btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default[disabled].active, fieldset[disabled] .btn-default.active {
+	border: 1px solid #ccc;
+
+	.caret {
+		color: #ccc;
+	}
+}
+
+/* Scene Details buttons */
+
+.btn-group-vertical .btn-xs {
+	padding: 6px 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

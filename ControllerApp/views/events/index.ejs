@@ -2,10 +2,10 @@
 <% include ../includes/header %>
 <section class="<%= page_slug %>">
 	<header class="row">
-	    <h1 class="col-md-11"><%= title %> <small>Total: <%= events.length%></small></h1>
-		<section class="col-md-1">
+	    <h1 class="col-md-6"><%= title %> <small>Total: <%= events.length%></small></h1>
+		<section class="col-md-6 add-btn">
 			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_event_modal">+</button>
-			<p><small>New Event</small></p>
+			<p><small>Add New Event</small></p>
 		</section>
 	</header>
     <section class='current_events'>
@@ -13,11 +13,11 @@
 		  <!-- Our Events Table  -->
 		  <div class="panel-heading">
 		  	<ul class="event row panel-title" >
-		  		<li class="col-md-1 panel-title">+</li>
-		  		<li class="col-md-3 panel-title">Title</li>
+		  		<!--<li class="col-md-1 panel-title">+</li>-->
+		  		<li class="col-md-4 panel-title">Title</li>
 		  		<li class="col-md-2 panel-title">Event Type</li>
-		  		<li class="col-md-1 panel-title">Duration</li>
-		  		<li class="col-md-3 panel-title">Scenes</li>
+		  		<li class="col-md-2 panel-title">Duration</li>
+		  		<li class="col-md-2 panel-title">Scenes</li>
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
@@ -28,10 +28,10 @@
 		    <li class="list-group-item">
 			    	<ul class="event row" >
 			    		<form class="event <%=event.slug%>" method="post" action="/events/<%=event.slug%>">
-							<li class="col-md-1">
+							<!--<li class="col-md-1">
 								<input type="checkbox" >
-							</li>
-							<li class="col-md-3">						
+							</li>-->
+							<li class="col-md-4">						
 								<input class="form-control" type="text" name="title" value="<%=event.title%>">
 							</li>
 							<li class="col-md-2">
@@ -41,8 +41,8 @@
 									<% }%>
 								</select>
 							</li>
-							<li class="col-md-1"><%= event.duration %> </li>
-							<li class="col-md-3">
+							<li class="col-md-2"><%= event.duration %> </li>
+							<li class="col-md-2 scene-num">
 								&nbsp;<%=event.scenes.length%>&nbsp;&nbsp;
 								<div class="btn-group">
 									<% if(event.scenes.length ==0){ %>
@@ -54,8 +54,8 @@
 							</li>
 							<li class="col-md-2">
 								<div class="btn-group">
-									  <button type="button" class="btn btn-default btn-xs event-update">Update</button>
-									  <button type="button" class="btn btn-default btn-xs event-delete">Delete</button>
+									  <button type="button" class="btn btn-default btn-xs event-update green">Update</button>
+									  <button type="button" class="btn btn-default btn-xs event-delete red">Delete</button>
 								</div>
 							</li>
 						</form>
