@@ -1,4 +1,25 @@
-/* General */
+/* BOOTSTRAP MODS */
+/* Remove stupid blue borders in bootstrap!*/
+/* This handles all inputs and selects */
+
+textarea:focus, select:focus, button:focus, .btn:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus{   
+border-color: none !important;
+box-shadow: none !important;
+outline: 0 none !important;}
+
+/* HTML5 Range Finder Styling w. form-control*/
+.form-control.range{
+	
+	height: 4px;
+	font-size: 0;
+	line-height: 0;
+	border-radius: 2px;
+	background: #202020;
+	padding: 0;
+	margin: 10px 0;
+}
+
+/*-------------- GENERAL -------------- */
 
 body {
   padding-top: 70px;
@@ -21,7 +42,15 @@ section.new_event{
 	margin: 0 auto;
 }
 
-/* Event */
+.navbar-default {
+	padding-right: 15px;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
+	color: #0084ff;
+}
+
+/* -------------- EVENT -------------- */
 
 ul.event{
 	
@@ -47,15 +76,16 @@ ul.event{
 		}
 }
 
-/* Location Select */
+/* -------------- Location Select -------------- */
 
 select.location {
 	text-transform: capitalize;
 }
 
-/* Single Event */
+/* -------------- Single Event -------------- */
 .panel-title {
 	line-height: 30px;
+	font-size: 14px;
 
 	small {
 		float: right;
@@ -67,6 +97,20 @@ select.location {
 			margin: -2px 0 0 5px;
 		}
 
+	}
+}
+
+.scene-detail-head {
+	.scene-title {
+		font-weight: bold;
+	}
+}
+
+.panel-default{
+	border: none;
+
+	.panel-heading {
+		border-color: #999;
 	}
 }
 
@@ -86,46 +130,19 @@ select.location {
 }
 
 
-/* BOOTSTRAP MODS */
-/* Remove stupid blue borders in bootstrap!*/
-/* This handles all inputs and selects */
-textarea:focus, select:focus, button:focus, .btn:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus{   
-border-color: none !important;
-box-shadow: none !important;
-outline: 0 none !important;}
-/* HTML5 Range Finder Styling w. form-control*/
-.form-control.range{
-	
-	height: 4px;
-	font-size: 0;
-	line-height: 0;
-	border-radius: 2px;
-	background: #202020;
-	padding: 0;
-	margin: 10px 0;
-}
-
-.navbar-default {
-	padding-right: 15px;
-}
-
-.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
-	color: #0084ff;
-}
-
 header.single-event-head {
 	position: fixed;
 
 	h3 {
 		margin: 0px;
+		padding-left: 0px; 
 	}
 }
 
 header .duration-header {
 	clear: both;
+	padding-left: 0px; 
 }
-
-
 
 label {
 	font-size: 12px;
@@ -135,17 +152,15 @@ label {
 	margin-bottom: 10px;
 }
 
-.panel-default	{
-	border-bottom: 1px solid #999;
-
-}
 
 .events-single {
 	aside {
 		position: fixed;
 		margin-top: 70px;
 		overflow-y: scroll;
-		height: 640px;
+		height: 670px;
+		border-bottom: 1px solid #ccc;
+		padding: 15px 0;
 	}
 	.scene-view {
 		float: right;
@@ -170,6 +185,66 @@ li.list-group-item .btn-group-vertical .btn-xs {
 	background-color: #fff;
 }
 
+
+/* -------------- FILE LIBRARY --------------*/
+
+.event {
+	.file-title, .file-location {
+		input {
+			margin-bottom: 10px;
+		}
+		p {
+			float: left;
+			clear: both;
+			font-size: 12px;
+			font-weight: normal;
+		}
+	}
+}
+
+.file-location{
+	select {
+		margin-bottom: 10px;
+	}
+}
+
+.asset-scene-list {
+	width: 100%;
+	min-height: 140px;
+	overflow-y: scroll;
+	border: 1px solid #ccc;
+
+	ul {
+		padding: 10px;
+		li {
+			padding: 0;
+
+			a {
+				font-size: 13px;
+				line-height: 14px;
+				font-weight: normal;
+				cursor: pointer;
+				color: #0084ff;
+				text-decoration: none;
+			}
+
+			a:hover{
+				text-decoration: none;
+				color: #333;
+			}
+		}
+	}
+}
+
+
+
+
+/* -------------- BUTTONS -------------- */
+
+.btn, .btn-sm, .btn-xs {
+	border-radius: 17px;
+}
+
 .btn-xs {
 	padding: 6px 15px;
 }
@@ -184,7 +259,7 @@ li.list-group-item .btn-group-vertical .btn-xs {
 
 .add-btn {
 	float: right;
-	width: 156px;
+	width: 176px;
 	padding-top: 10px;
 
 	.navbar-btn {
@@ -196,7 +271,24 @@ li.list-group-item .btn-group-vertical .btn-xs {
 	}
 }
 
-/* ADD SCENES buttons */
+.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
+	border-radius: 17px;
+	margin-right: 10px;
+}
+
+.btn-group>.btn:last-child:not(:first-child), .btn-group>.dropdown-toggle:not(:first-child) {
+	border-radius: 17px;
+}
+
+.btn-group-vertical>.btn:last-child:not(:first-child) {
+	border-bottom-left-radius: 17px;
+}
+
+.btn-group-vertical>.btn:first-child:not(:last-child) {
+	border-top-right-radius: 17px;
+}
+
+/* -------------- Add Scenes --------------*/
 
 .btn-danger {
 	border: 1px solid #0084ff;
@@ -211,7 +303,8 @@ li.list-group-item .btn-group-vertical .btn-xs {
 }
 
 
-/* SAVE buttons */
+/* -------------- Save -------------- */
+
 .btn-group .btn.green {
 	border: 1px solid #04bd5f;
  	background-color: #fff;
@@ -223,7 +316,7 @@ li.list-group-item .btn-group-vertical .btn-xs {
  	background-color: #bcffdd;
 }
 
-/* DELETE buttons */
+/* -------------- Delete -------------- */
 
 .btn-group .btn.red {
 	border: 1px solid #ff4800;
@@ -249,7 +342,7 @@ li.list-group-item .btn-group-vertical .btn-xs {
 }
 
 
-/* Scene Sub-nav */
+/* -------------- Scene Sub-Nav -------------- */
 
 .btn-link {
 	color: #0084ff;
@@ -267,8 +360,6 @@ li.list-group-item .btn-group-vertical .btn-xs {
 		color: #ccc;
 	}
 }
-
-/* Scene Details buttons */
 
 .btn-group-vertical .btn-xs {
 	padding: 6px 10px;
