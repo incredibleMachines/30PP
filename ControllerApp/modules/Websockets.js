@@ -48,7 +48,7 @@ function parseCommand(_json){
 
 		switch(_json.command){
 			case 'init':
-				sendFakeInit();
+				sendPlayerInit()
 			break;
 
 			case 'go':
@@ -71,7 +71,7 @@ function sendPlayerInit(){
 		if(!e) var resp = {command: 'init', events: _events};
 		else  var resp = {'command':'error', 'error': 'Database Error: '+JSON.stringify(e)};
 		
-		//console.log(JSON.stringify(resp));
+		console.log(JSON.stringify(resp));
 		_socket.send(JSON.stringify(resp));
 		
 	});
