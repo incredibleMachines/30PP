@@ -11,6 +11,15 @@
 					    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
 				    </section>
 				    <section class="form-group">
+						<label for="scene_type">Scene Type</label>
+						<select class="form-control scene-scene_type" name="scene_type" id="scene_type">
+							<%for(var i=0; i<4;i++){%>
+								<option value="<%=i%>">Scene Type <%= i %></option>
+							<%}%>
+						</select>
+						<p class="help-block">Select a scene type.</p>
+					</section>
+				    <section class="form-group">
 					    <label for="zone_type">Zone Type</label>
 							<select class="form-control" name="zone_type">
 							<% for(var i =0; i<4;i++){ %>

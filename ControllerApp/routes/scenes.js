@@ -14,7 +14,8 @@ exports.add = function(_Database){
 		**	Sample post: 
 		**	{ event_id: '52eae3259e23ff4905ca5d31',
 		**	  title: '',
-		**	  zone_type: 'zone_0',
+		**	  scene_type: '0',
+		**	  zone_type: '0',
 		**	  text: '' }
 		**
 		*/
@@ -62,7 +63,8 @@ exports.update = function(_Database){
 		/* *************************************
 		** Sample Post:
 		**	{ 	title: 'New Sample Scene',
-		**		zone_type: 'zone_2',
+		**		scene_type: '0',
+		**		zone_type: '2',	
 		**		text: 'dsfdsfdsfsdfsd',
 		**		assets: 
 		**				[ 	{ file: '52f0319eb45e28f90d5fd2c3', zone: 'zone_1', caption: '' },

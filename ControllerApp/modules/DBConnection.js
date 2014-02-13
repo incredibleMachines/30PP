@@ -119,9 +119,16 @@ exports.updateById=function(_type,_id,_updateObj,_cb){
 	
 	
 }
-//scenes=mongodb array of scenes
+//_event_id=the event we are formatting
+//_scenes=mongodb array of scenes
 //_cb= callback(err,_scenes[])
 exports.formatScenes = function(_event_id,_scenes,_cb){
+	formatScenes(_event_id,_scenes,_cb);
+}
+//_event_id=the event we are formatting
+//_scenes=mongodb array of scenes
+//_cb= callback(err,_scenes[])
+function formatScenes(_event_id,_scenes,_cb){
 
 		//get all scenes in an event
 		queryCollection('scenes', {event_id: makeMongoID(_event_id)}, function(e, docs){
@@ -138,28 +145,29 @@ exports.formatScenes = function(_event_id,_scenes,_cb){
 							console.log('Single Scene')
 							console.log(doc);
 							console.log()
-							
+
 							var asset_counter=0;
 							if(doc.assets.length>0){
 								doc.assets.forEach(function(asset,k){
 									Object.keys(asset).forEach(function(key){
 										console.log(asset[key])
-										
+
 										getDocumentByID('assets',asset[key],function(e,_asset){
-											asset_counter++;
-											docs[j].assets[k][key] = _asset;
-											if(asset_counter == doc.assets.length){
-												console.log('here')
-												_scenes[i]=docs[j]
-												scene_counter++;
-												if(scene_counter==_scenes.length){
-													//callback
-													_cb(null,_scenes)
+											formatAsset(_asset,function(__asset){
+												asset_counter++;
+												docs[j].assets[k][key] = __asset;
+												if(asset_counter == doc.assets.length){
+													_scenes[i]=docs[j]
+													scene_counter++;
+													if(scene_counter==_scenes.length){
+														//callback
+														_cb(null,_scenes)
+													}
 												}
-											}
+											});
 										})
 									})
-									
+
 								})
 							}else{
 
@@ -173,14 +181,15 @@ exports.formatScenes = function(_event_id,_scenes,_cb){
 					})
 
 				})
-				
+
 				//_cb(null,scenes);
 			}else{
 				_cb(err)
 			}
 		})
-	
+
 }
+
 
 //get all events and assets formatted for init command
 //async function which parses all events and assets and reorders them and sends them back to the socket
@@ -192,36 +201,17 @@ exports.formatInit=function(_cb){
 				var events_counter = 0;
 				_events.forEach(function(event,i){
 					//console.log(i+' :: '+JSON.stringify(event))
-					if(event.assets.length>0){
-						var asset_counter = 0;
-						event.assets.forEach(function(asset,j){
-							//console.log(j+' :: '+asset);
-							getDocumentByID('assets', asset,  function(e,_doc){
-								//console.log(_doc)
-								if(!e){
-									_events[i].assets[j] = _doc;
-									asset_counter++;
-									if(asset_counter == event.assets.length){
-										events_counter++;
-									}
-									if(events_counter == _events.length){
-										console.log("  Formatted Event Object  ".green.inverse)
-										//console.log(_events)
-										//connect to our socket and send the data to everyone
-										_cb(null,_events);
-									}
-								}else{
-									//Handle Error
-									console.error(e);
-									_cb(e);
-								}
-							})
+					if(event.scenes.length>0){
+						formatScenes(event._id,event.scenes,function(_err,_scenes){
+							_events[i].scenes=_scenes;
+							events_counter++;
+							if(events_counter==_events.length) _cb(null,_events)
 						})
 					}else{ //no assets
 						   //console.log('EVENTS['+i+'] Contains No Assets');
 						   events_counter++;
 						   if(events_counter==_events.length){
-					   		//edge case - out last event doesn't have any assets
+					   		//edge case - our last event doesn't have any assets
 					   		 _cb(null,_events); 
 						   }
 					}
@@ -280,7 +270,29 @@ function makeMongoID(__id){
 	else return '';
 }
 
+//format asset
 
+function formatAsset(_asset,cb){
+	console.log('formatting asset: '+JSON.stringify(_asset));
+	if(_asset.file!=''){
+		getDocumentByID('files',_asset.file,function(e,_file){
+			if(_file.location!=''){
+				getDocumentByID('locations',_file.location,function(_e,_loc){
+					_file.location = _loc;
+					_asset.file=_file;
+					cb(_asset)
+				})
+			}else{
+				_asset.file=_file;
+				cb(_asset)
+			}
+		})
+	}else{
+		
+		cb(_asset)
+	}
+	
+}
 
 
 
