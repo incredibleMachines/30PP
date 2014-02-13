@@ -14,14 +14,10 @@ class ImageFile {
     
 public:
     ImageFile();
-    ImageFile(string _filepath, string _caption, ofVec2f _coords);
+    ImageFile(string _filepath);
     
     void update();
     void draw();
-    
-    string filePath;
-    string caption;
-    ofVec2f coords;
-    
+        
     ofImage img;
 };

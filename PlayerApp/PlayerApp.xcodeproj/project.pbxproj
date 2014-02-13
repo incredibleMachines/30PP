@@ -26,6 +26,7 @@
 		D31EC6A818A9A6AB00B8F882 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A318A9A6AB00B8F882 /* Event.cpp */; };
 		D31EC6A918A9A6AB00B8F882 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A518A9A6AB00B8F882 /* Scene.cpp */; };
 		D38507F018AA79E400DAF9E7 /* Composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D38507EE18AA79E400DAF9E7 /* Composite.cpp */; };
+		D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D39E973018AC3289004C7001 /* SceneContent.cpp */; };
 		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
 		E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */; };
 		E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */; };
@@ -129,6 +130,9 @@
 		D396C71C18ABDC3600F82857 /* Mapping_test_06.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mapping_test_06.stl; sourceTree = "<group>"; };
 		D396C71D18ABDC3600F82857 /* UV_SCULPT_02h264.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_SCULPT_02h264.mov; sourceTree = "<group>"; };
 		D396C71E18ABDF0A00F82857 /* Mapping_test_06.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Mapping_test_06.obj; sourceTree = "<group>"; };
+		D39E973018AC3289004C7001 /* SceneContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneContent.cpp; sourceTree = "<group>"; };
+		D39E973118AC3289004C7001 /* SceneContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneContent.h; sourceTree = "<group>"; };
+		D39E973318AC33C5004C7001 /* Chow_texture_test.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Chow_texture_test.mov; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D3BB512418A9771500FCEFD8 /* Massing.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Massing.obj; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
@@ -372,6 +376,8 @@
 			children = (
 				D38507EE18AA79E400DAF9E7 /* Composite.cpp */,
 				D38507EF18AA79E400DAF9E7 /* Composite.h */,
+				D39E973018AC3289004C7001 /* SceneContent.cpp */,
+				D39E973118AC3289004C7001 /* SceneContent.h */,
 			);
 			path = Compositor;
 			sourceTree = "<group>";
@@ -426,6 +432,7 @@
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D39E973318AC33C5004C7001 /* Chow_texture_test.mov */,
 				D396C71918ABDC3600F82857 /* Mapping_test_06 */,
 				D38507FD18AAA57800DAF9E7 /* Calypso_0604.jpg */,
 				D38507FC18AAA56F00DAF9E7 /* Ancient_baths 0024.jpg */,
@@ -679,6 +686,7 @@
 			files = (
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
+				D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */,
 				E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
 				E285698218A42E8C0068B4AB /* ofxAssimpTexture.cpp in Sources */,

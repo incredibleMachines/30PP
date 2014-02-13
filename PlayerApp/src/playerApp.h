@@ -7,7 +7,9 @@
 #include "ModelMapper/ModelMapper.h"
 #include "Handlers/SocketHandler.h"
 #include "Events/Event.h"
+#include "Events/Scene.h"
 #include "Events/Definitions.h"
+#include "Compositor/SceneContent.h"
 
 
 class playerApp : public ofBaseApp {
@@ -35,4 +37,11 @@ public:
     
     ofTrueTypeFont masterFont;//testing
     
+    vector <string> allImages;
+    
+    bool bTriggered;
+    
+    vector<SceneContent> contentBuffer;
+    int count;
+    int numMesh;
 };

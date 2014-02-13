@@ -18,12 +18,7 @@
 */
 
 #include "Asset.h"
-
-
-//--------------------------------------------------------------
-Asset::Asset(){
-    
-}
+#include "playerApp.h"
 
 //--------------------------------------------------------------
 Asset::Asset(Json::Value thisAsset){
@@ -32,6 +27,7 @@ Asset::Asset(Json::Value thisAsset){
     aType           = thisAsset.get("type","no asset type found").asInt();
     aZone           = thisAsset.get("zone","no asset zone found").asInt();
     aCaption        = thisAsset.get("caption","null").asString();
+    aFilePath       = thisAsset.get("link","no file path found").asString();
     
     // NOTE: might move these to file class
     aLoc.address    = thisAsset.get("location","no asset location found").get("address","no asset loc address found").asString();
@@ -40,35 +36,14 @@ Asset::Asset(Json::Value thisAsset){
     
     cout<<"\t\t\t>> assetType: "<<aType<<"\t\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\taZone: "<<aZone<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
     
-    
-    //--- check to see if there is a file in this asset
+    //--- file pathing!
+    // NOTE: this path is relative to the 30PP folder, meaning
+    // finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:
+//    finalFilePath = "../../../";
+//    finalFilePath += aFilePath; //append URI to base file path (30PP root folder)
+//    cout<<"complete asset filepath: "<< finalFilePath << endl;  //print out completed file path
+//
 
-    if (!thisAsset.get("file", 0).isInt() ) {   // found a file !!
-        
-        cout<<" FILE FOUND IN THIS ASSET "<< endl;
-        cout << thisAsset.get("file", "no asset file found").type() <<endl;
-        
-        //--- pull out and store JSON 'file' object in aFile
-        aFile           = thisAsset.get("file","NO asset FILE FOUND WHAT LASTCHECKFAILED?!");
-        
-        //--- pull out all aFile metadata
-        aFileMongoId    = aFile.get("_id","no file _id found").asString();
-        aFileTitle      = aFile.get("title","no file title found").asString();
-        aFileText       = aFile.get("text","no file text found").asString();
-        aFileType       = aFile.get("type","no file type found").asDouble();
-        aFileCreatedAt  = aFile.get("created_at","no file created_at found").asString();
-        aFileLoc.address= aFile.get("location","no file location found").get("address","no file loc addr found").asString();
-        aFileLoc.title  = aFile.get("location","no file location found").get("title","no file loc title found").asString();
-        aFilePath       = aFile.get("path","no file path found").asString();
-        
-        //--- file pathing!
-        // NOTE: this path is relative to the 30PP folder, meaning
-        // finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:
-//        finalFilePath = "../../../";
-        finalFilePath += aFilePath; //append URI to base file path (30PP root folder)
-        cout<<"complete asset filepath: "<< finalFilePath << endl;  //print out completed file path
-    }
-    
     
     //--- assign asset coordinates by zoneID
     switch (aZone){
@@ -91,28 +66,11 @@ Asset::Asset(Json::Value thisAsset){
     //TODO: check fileType and assign asset dimensions (w,h) based on this. add w,h to constructor of file
     
     //--- now create the correct type of asset file
-    switch (aFileType){
-
-        case 0:  //--- TEXT
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-        break;
-            
-        case 1:  //--- VIDEO
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-            //TODO: uncomment
-        break;
-        case 2:  //--- IMAGE
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-            break;
-        default: //wtf case
-            txtFile=new TextFile(aCaption,ofVec2f(500,600));
-            break;
+    switch (aType){
             
     }
     
 }
-
-
 
 //--------------------------------------------------------------
 void Asset::update(){

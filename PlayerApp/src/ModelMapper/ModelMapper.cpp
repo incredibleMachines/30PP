@@ -74,7 +74,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     }
     
     for(int i=0;i<compositeTexture.size();i++){
-        compositeTexture[i].setup(whichMeshes[i]);
+        compositeTexture[i].setup();
     }
 }
 
@@ -946,11 +946,13 @@ void ModelMapper:: drawCameras() {
         for(int j=0;j<numMeshes;j++){
 
                 compositeTexture[j].bind();
+
             
                 ofSetColor(255,255,255);
                 //Draw mesh
                 cameras[i].mesh[j].drawFaces();
-                
+            
+            
                 compositeTexture[j].unbind();
 
                 //DRAW MESH WIREFRAME

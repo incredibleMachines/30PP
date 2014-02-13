@@ -169,99 +169,106 @@ sendFakeInit(socket)
 	fakeLocation3.title = "location3";
 	fakeLocation3.address = "1 Ludlow Rd, NY NY";
 
-	var fakeLocation4 = {};
-	fakeLocation4.title = "location4";
-	fakeLocation4.address = "810 York Rd, NY NY";
+	// var fakeLocation4 = {};
+	// fakeLocation4.title = "location4";
+	// fakeLocation4.address = "810 York Rd, NY NY";
 
 	//--- fakeAssets
 	var fakeAsset1 = {};
 	fakeAsset1.title = 'asset one';
-	fakeAsset1.link = 'fingers.mov';
-	fakeAsset1.type = 1;
-	fakeAsset1.zone = 0;
-	fakeAsset1.caption = 'Dr. Changs';
+	fakeAsset1.link = 'Calypso_0604.jpg';
+	fakeAsset1.type = 2;
+	fakeAsset1.zone = 2;
+	fakeAsset1.caption = 'Photo';
 	fakeAsset1.location = fakeLocation1;
 	
 	var fakeAsset2 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset2.title = 'asset two';
 	fakeAsset2.type = 1;
 	fakeAsset2.zone = 0;
-	fakeAsset2.caption = 'Dr. Changs';
+	fakeAsset2.caption = 'Video';
 	fakeAsset2.link = 'fingers.mov';
 	fakeAsset2.location = fakeLocation2;
 
 	var fakeAsset3 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset3.title = 'asset three';
-	fakeAsset3.type = 1;
-	fakeAsset3.zone = 0;
-	fakeAsset3.link = 'fingers.mov';
-	fakeAsset3.caption = 'Dr. Changs';
+	fakeAsset3.type = 0;
+	fakeAsset3.zone = 2;
+	fakeAsset3.caption = 'TEXT';
 	fakeAsset3.location = fakeLocation3;
 
 	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
-	fakeAsset4.title = 'asset four';
-	fakeAsset4.type = 2;
-	fakeAsset4.link = 'Calypso_0604.jpg';
-	fakeAsset4.zone=1;
-	fakeAsset4.caption="balls";
-	fakeAsset4.location = fakeLocation4;
+	fakeAsset3.title = 'asset three';
+	fakeAsset3.type = 2;
+	fakeAsset3.zone = 1;
+	fakeAsset3.link = 'Ancient_baths 0024.jpg';
+	fakeAsset3.caption = 'Photo2';
+	fakeAsset3.location = fakeLocation3;
 
-	var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
-	fakeAsset5.title = 'asset four';
-	fakeAsset5.type = 0;
-	fakeAsset5.zone=1;
-	fakeAsset5.caption='balls';
-	fakeAsset5.location = fakeLocation1;
+	// var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
+	// fakeAsset4.title = 'asset four';
+	// fakeAsset4.type = 2;
+	// fakeAsset4.link = 'Calypso_0604.jpg';
+	// fakeAsset4.zone=1;
+	// fakeAsset4.caption="balls";
+	// fakeAsset4.location = fakeLocation4;
+
+	// var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
+	// fakeAsset5.title = 'asset four';
+	// fakeAsset5.type = 0;
+	// fakeAsset5.zone=1;
+	// fakeAsset5.caption='balls';
+	// fakeAsset5.location = fakeLocation1;
 	
 	//--- fakeScenes
 	var fakeScene1 = {};
 	fakeScene1.title = "scene 1";
 	fakeScene1.type = 1;
-	fakeScene1.assets = [fakeAsset1, fakeAsset2, fakeAsset4];
+	fakeScene1.assets = [fakeAsset1, fakeAsset2, fakeAsset3];
 	fakeScene1.created_at = "01-29-2014";
 	fakeScene1.last_edited = "01-30-2014";
 
-	var fakeScene2 = {};
-	fakeScene2.title = "scene 2";
-	fakeScene2.type = 2;
-	fakeScene2.assets = [fakeAsset5];
-	fakeScene2.last_edited = "02-15-2014";
+	// var fakeScene2 = {};
+	// fakeScene2.title = "scene 2";
+	// fakeScene2.type = 2;
+	// fakeScene2.assets = [fakeAsset5];
+	// fakeScene2.last_edited = "02-15-2014";
 
-	var fakeScene3 = {};
-	fakeScene3.title = "scene 3";
-	fakeScene3.type = 0;
-	fakeScene3.assets = [fakeAsset4, fakeAsset2];
-	fakeScene3.last_edited = "03-30-2014";
+	// var fakeScene3 = {};
+	// fakeScene3.title = "scene 3";
+	// fakeScene3.type = 0;
+	// fakeScene3.assets = [fakeAsset4, fakeAsset2];
+	// fakeScene3.last_edited = "03-30-2014";
 
 	//--- fakeEvents
 	var fakeEvent1 = {};
 	fakeEvent1.title = "restaurants"; 
 	fakeEvent1.type = "sales";
 	fakeEvent1.created_at = "01-20-2014";
-	fakeEvent1.scenes = [fakeScene1, fakeScene2];
+	fakeEvent1.scenes = [fakeScene1];
 
-	var fakeEvent2 = {};
-	fakeEvent2.title = "nightlife";
-	fakeEvent2.type = "sales";
-	fakeEvent2.created_at = "01-21-2014";
-	fakeEvent2.scenes = [fakeScene3, fakeScene1, fakeScene2];
+	// var fakeEvent2 = {};
+	// fakeEvent2.title = "nightlife";
+	// fakeEvent2.type = "sales";
+	// fakeEvent2.created_at = "01-21-2014";
+	// fakeEvent2.scenes = [fakeScene3, fakeScene1, fakeScene2];
 
-	var fakeEvent3 = {};
-	fakeEvent3.title = "event3";
-	fakeEvent3.type = "sales";
-	fakeEvent3.created_at = "02-18-2014";
-	fakeEvent3.scenes = [fakeScene2, fakeScene3, fakeScene1, fakeScene2];
+	// var fakeEvent3 = {};
+	// fakeEvent3.title = "event3";
+	// fakeEvent3.type = "sales";
+	// fakeEvent3.created_at = "02-18-2014";
+	// fakeEvent3.scenes = [fakeScene2, fakeScene3, fakeScene1, fakeScene2];
 
-	var fakeEvent4 = {};
-	fakeEvent4.title = "event4";
-	fakeEvent4.type = "sales";
-	fakeEvent4.created_at = "02-21-2014";
-	fakeEvent4.scenes = [fakeScene2, fakeScene3, fakeScene1];
+	// var fakeEvent4 = {};
+	// fakeEvent4.title = "event4";
+	// fakeEvent4.type = "sales";
+	// fakeEvent4.created_at = "02-21-2014";
+	// fakeEvent4.scenes = [fakeScene2, fakeScene3, fakeScene1];
 
 	//--- fakePutItAllTogetherNow
 	var fakeData = {};
 	fakeData.command = 'init';
-	fakeData.events = [fakeEvent1, fakeEvent2, fakeEvent3, fakeEvent4];
+	fakeData.events = [fakeEvent1];
 
 function sendFakeInit(__socket){
 	

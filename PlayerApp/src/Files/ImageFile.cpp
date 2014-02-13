@@ -26,32 +26,19 @@ ImageFile::ImageFile(){
 
 //--------------------------------------------------------------
 
-ImageFile::ImageFile(string _filepath, string _caption, ofVec2f _coords){
+ImageFile::ImageFile(string _filepath){
     
-    filePath = _filepath;
-    caption = _caption; //might be null
-    coords = _coords;
+    img.loadImage(_filepath);
     
-    img.allocate(500,500, OF_IMAGE_COLOR);
-    
-    img.loadImage(filePath);
-    
-    if (caption.length() > 1){
-        
-        //TODO: create a TextFile, set a flag to also update the image file going forward.
-        
-    }
     
 }
 
 //--------------------------------------------------------------
 void ImageFile::update(){
     
-    //update coords as per animations here, if any
-    
 }
 
 //--------------------------------------------------------------
 void ImageFile::draw(){
-    img.draw(coords);
+    img.draw(0,0);
 }

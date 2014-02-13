@@ -10,7 +10,6 @@
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
 #include "../Files/VideoFile.h"
-#include "../Files/ImageFile.h"
 #include "../Files/TextFile.h"
 
 
@@ -26,7 +25,6 @@ class Location {
 class Asset {
     
     public:
-    Asset();
         Asset(Json::Value thisAsset);
         void update();
         void draw();
@@ -48,8 +46,6 @@ class Asset {
         Location aFileLoc;
         string finalFilePath;
     
-        VideoFile * vidFile; //pointers so as to not allocate any memory when not needed
-        ImageFile * imgFile;
         TextFile * txtFile;
     
         int width;  //future?
