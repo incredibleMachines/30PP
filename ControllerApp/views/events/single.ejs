@@ -45,6 +45,15 @@
 									<input type="text"  class="scene-title <%=event.scenes[0].slug %> form-control" name="title" id="title" value="<%= event.scenes[0].title %>">
 								</section>
 								<section class="form-group">
+									<label for="scene_type">Scene Type</label>
+									<select class="form-control scene-scene_type <%=event.scenes[0].slug%>" name="scene_type" id="scene_type">
+										<%for(var i=0; i<4;i++){%>
+											<option <%if(event.scenes[0].scene_type == i){ %> selected <%}%> value="<%=i%>">Scene Type <%= i %></option>
+										<%}%>
+									</select>
+									<p class="help-block">Select a scene type.</p>
+								</section>
+								<section class="form-group">
 									<label for="zone_type">Zone Type</label>
 									<select  class="form-control show-tick scene-zone_type <%=event.scenes[0].slug %>" name="zone_type" id="zone_type">
 										<% for(var i = 0; i< 4; i++){ %>
