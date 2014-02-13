@@ -169,9 +169,9 @@ sendFakeInit(socket)
 	fakeLocation3.title = "location3";
 	fakeLocation3.address = "1 Ludlow Rd, NY NY";
 
-	// var fakeLocation4 = {};
-	// fakeLocation4.title = "location4";
-	// fakeLocation4.address = "810 York Rd, NY NY";
+	var fakeLocation4 = {};
+	fakeLocation4.title = "location4";
+	fakeLocation4.address = "810 York Rd, NY NY";
 
 	//--- fakeAssets
 	var fakeAsset1 = {};
@@ -190,14 +190,8 @@ sendFakeInit(socket)
 	fakeAsset2.link = 'fingers.mov';
 	fakeAsset2.location = fakeLocation2;
 
-	var fakeAsset3 = JSON.parse(JSON.stringify(fakeAsset1));
-	fakeAsset3.title = 'asset three';
-	fakeAsset3.type = 0;
-	fakeAsset3.zone = 2;
-	fakeAsset3.caption = 'TEXT';
-	fakeAsset3.location = fakeLocation3;
 
-	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
+	var fakeAsset3 = JSON.parse(JSON.stringify(fakeAsset1));
 	fakeAsset3.title = 'asset three';
 	fakeAsset3.type = 2;
 	fakeAsset3.zone = 1;
@@ -205,20 +199,29 @@ sendFakeInit(socket)
 	fakeAsset3.caption = 'Photo2';
 	fakeAsset3.location = fakeLocation3;
 
-	// var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
-	// fakeAsset4.title = 'asset four';
-	// fakeAsset4.type = 2;
-	// fakeAsset4.link = 'Calypso_0604.jpg';
-	// fakeAsset4.zone=1;
-	// fakeAsset4.caption="balls";
-	// fakeAsset4.location = fakeLocation4;
+	var fakeAsset4 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset4.title = 'asset four';
+	fakeAsset4.type = 2;
+	fakeAsset4.link = 'City_Hall_0287.jpg';
+	fakeAsset4.zone=1;
+	fakeAsset4.caption="balls";
+	fakeAsset4.location = fakeLocation4;
 
-	// var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
-	// fakeAsset5.title = 'asset four';
-	// fakeAsset5.type = 0;
-	// fakeAsset5.zone=1;
-	// fakeAsset5.caption='balls';
-	// fakeAsset5.location = fakeLocation1;
+	var fakeAsset5 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset5.title = 'asset four';
+	fakeAsset5.type = 1;
+	fakeAsset5.zone=2;
+	fakeAsset5.link = 'Chow_texture_test_2.mov';
+	fakeAsset5.caption='balls';
+	fakeAsset5.location = fakeLocation1;
+
+	var fakeAsset6 = JSON.parse(JSON.stringify(fakeAsset1));
+	fakeAsset6.title = 'asset four';
+	fakeAsset6.type = 2;
+	fakeAsset6.link = 'Blaue_gans.jpg';
+	fakeAsset6.zone=0;
+	fakeAsset6.caption="balls";
+	fakeAsset6.location = fakeLocation4;
 	
 	//--- fakeScenes
 	var fakeScene1 = {};
@@ -228,11 +231,11 @@ sendFakeInit(socket)
 	fakeScene1.created_at = "01-29-2014";
 	fakeScene1.last_edited = "01-30-2014";
 
-	// var fakeScene2 = {};
-	// fakeScene2.title = "scene 2";
-	// fakeScene2.type = 2;
-	// fakeScene2.assets = [fakeAsset5];
-	// fakeScene2.last_edited = "02-15-2014";
+	var fakeScene2 = {};
+	fakeScene2.title = "scene 2";
+	fakeScene2.type = 1;
+	fakeScene2.assets = [fakeAsset4,fakeAsset5,fakeAsset6];
+	fakeScene2.last_edited = "02-15-2014";
 
 	// var fakeScene3 = {};
 	// fakeScene3.title = "scene 3";
@@ -245,7 +248,7 @@ sendFakeInit(socket)
 	fakeEvent1.title = "restaurants"; 
 	fakeEvent1.type = "sales";
 	fakeEvent1.created_at = "01-20-2014";
-	fakeEvent1.scenes = [fakeScene1];
+	fakeEvent1.scenes = [fakeScene1,fakeScene2];
 
 	// var fakeEvent2 = {};
 	// fakeEvent2.title = "nightlife";

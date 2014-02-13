@@ -9,6 +9,7 @@
 #pragma once
 #include "ofMain.h"
 #include "../Events/Scene.h"
+#include "ZoneTypes.h"
 
 class SceneContent  {
 public:
@@ -19,6 +20,7 @@ public:
         public:
             ofImage image;
             ofVec2f coords;
+            bool fullScreen=false;
     };
     
     class TextContent{
@@ -31,6 +33,7 @@ public:
         public:
             ofVideoPlayer video;
             ofVec2f coords;
+            bool fullScreen=false;
     };
     
     class meshScene{
@@ -44,5 +47,6 @@ public:
     
     ofTrueTypeFont * ttFont;
     Scene * scene;
+    int currentMesh;
     
 };

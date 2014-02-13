@@ -9,8 +9,6 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxLibwebsockets.h"
-#include "../Files/VideoFile.h"
-#include "../Files/TextFile.h"
 
 
 // Location object
@@ -45,8 +43,6 @@ class Asset {
         string aFileCreatedAt;
         Location aFileLoc;
         string finalFilePath;
-    
-        TextFile * txtFile;
     
         int width;  //future?
         int height; //future?

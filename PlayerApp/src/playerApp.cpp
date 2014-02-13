@@ -25,6 +25,7 @@ void playerApp::setup(){
     ofEnableNormalizedTexCoords();
     ofBackground(0, 0, 0);
     ofDisableSeparateSpecularLight();
+    ofEnableAntiAliasing();
 
     ofSetWindowTitle("30PP Player");
     
@@ -35,11 +36,13 @@ void playerApp::setup(){
 
     masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
 
-    numMesh=3;
+    numMesh=2;
     vector<int> _meshesLoad;
-    _meshesLoad.push_back(1);
-    _meshesLoad.push_back(2);
-    _meshesLoad.push_back(4);
+    _meshesLoad.push_back(0);
+        _meshesLoad.push_back(1);
+//    _meshesLoad.push_back(1);
+//    _meshesLoad.push_back(2);
+//    _meshesLoad.push_back(4);
     map.setup(4,0,_meshesLoad);
     
     bTriggered=false;
@@ -82,10 +85,12 @@ void playerApp::keyPressed(int key){
     if (key == 'i'){ // will happen in socketHandler.update() automatically when ready
         socketHandler.sendSocketCmd(INIT_REQ);
     }
+    
     else if (key == 'o'){ // will happen in socketHandler.update() automatically when ready
         socketHandler.sendSocketCmd(GO_REQ);
         
     }
+    
     else if (key == '.'){
         string test = socketHandler.eventHandler.allEvents[0].eScenes[1].sTitle;
         cout<< "event 0: scene 1: "+test<<endl;
@@ -100,9 +105,21 @@ void playerApp::keyPressed(int key){
                 contentBuffer.push_back(tempContent);
             }
         }
+        count=0;
         for(int i=0;i<numMesh;i++){
-            map.compositeTexture[i].loadScene(contentBuffer[0].fullScene[i]);
+            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
         }
+    }
+    
+    else if (key== '='){
+        count++;
+        if(count>contentBuffer.size()-1){
+            count=0;
+        }
+        for(int i=0;i<numMesh;i++){
+            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+        }
+        
     }
 }
 

@@ -9,9 +9,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "../Files/TextFile.h"
-#include "../Files/ImageFile.h"
-#include "../Files/VideoFile.h"
 #include "../Events/Scene.h"
 #include "../Events/Asset.h"
 #include "SceneContent.h"
@@ -33,6 +30,7 @@ public:
     void initScene();
     
     ofQTKitPlayer background;
+    ofImage bgImage;
 
     ofFbo drawSurface;
     
