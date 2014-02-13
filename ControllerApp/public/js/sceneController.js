@@ -73,7 +73,7 @@ function SceneController(_scenes){
 	function createAssets(_val){
 		
 			//TO DO Populate all the assets!
-			console.log(currentScene.assets.length)
+			//console.log(currentScene.assets.length)
 			//clone our original asset (store it in the Browsers Memory)
 			var asset = $('article.asset-single-0').clone();
 			
@@ -104,7 +104,7 @@ function SceneController(_scenes){
 				//update the class structure
 				$(newAsset).removeClass('asset-single-0').addClass('asset-single-'+i);
 				
-				$(newAsset).find('select.asset-file').attr('name','assets['+i+'][file]')
+				$(newAsset).find('select.asset-file').attr('name','assets['+i+'][file]').addClass('')
 				$(newAsset).find('select.asset-file option:selected').removeAttr('selected');
 
 				$(newAsset).find('textarea.asset-caption').attr('name','assets['+i+'][caption]').html('');
@@ -120,31 +120,25 @@ function SceneController(_scenes){
 					else $(newAsset).find('select.asset-zone').append('<option value="'+j+'" >Zone '+(j+1)+'</option>');
 				}
 				
+				//append the data into our holder
+				$('#asset-data').append(newAsset);	
+			}
+			
+			for(var i =0; i <assetNum; i++){
 				if(typeof currentScene.assets[i] !== 'undefined'){ //check if we have a corresponding asset
 					console.log(i+" :: "+JSON.stringify(currentScene.assets[i]));
   					//iterate through the asset
 					Object.keys(currentScene.assets[i]).forEach(function(key){
 						//make sure that our index's match
-						if(parseInt(key)==i){
-							$(newAsset).find('select.asset-file option[value="'+currentScene.assets[i][key].file+'"]').attr('selected','selected');
-							$(newAsset).find('textarea.asset-caption').html(currentScene.assets[i][key].caption);			
-	
-						}
+
+						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file+'"]').attr('selected','selected');
+						$('.asset-single-'+key).find('textarea.asset-caption').html(currentScene.assets[i][key].caption);			
 					})
-/*
-					Object.keys(currentScene.assets[i]).forEach(function(key){
-						$(newAsset).find('select.asset-file option[value="'+currentScene.assets[i][key]+'"]').attr('selected','selected');
-					})
-*/
-					
-					//$(newAsset).find('select.asset-file').val()
+
 
 				}else{
 					console.log(i+' undefined ')
 				}
-				
-				//append the data into our holder
-				$('#asset-data').append(newAsset);	
 			}
 		
 	}
