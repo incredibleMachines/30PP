@@ -100,6 +100,11 @@ void playerApp::keyPressed(int key){
         contentBuffer.clear();
         for (int i=0;i<socketHandler.eventHandler.allEvents.size();i++){
             for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){
+                
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[0].aCaption << endl; //first zone
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[1].aCaption << endl; //second zone
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[2].aCaption << endl; //third zone
+                
                 SceneContent tempContent;
                 tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
                 contentBuffer.push_back(tempContent);

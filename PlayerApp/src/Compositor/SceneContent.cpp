@@ -20,9 +20,14 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
         currentMesh=scene->sAssets[i].aZone;
         ttFont = &((playerApp*)ofGetAppPtr())->masterFont;
         vector<ofTTFCharacter> shapes = ttFont->getStringAsPoints(scene->sAssets[i].aCaption);
+        
+        cout << scene->sAssets[i].aCaption << endl;
+        
         // load a vector<ofTTFCharacter> into an ofMesh
         
         TextContent tempText;
+        
+        cout << "shapes.size(): "<< shapes.size() << endl;
         
         for(int j = 0; j < shapes.size(); j++) {
             ofMesh cur = shapes[j].getTessellation();
@@ -32,8 +37,10 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
             for(int k = 0; k < cur.getIndices().size(); k++) {
                 tempText.text.addIndex(indexOffset + cur.getIndices()[k]);
             }
-            fullScene[currentMesh].txt.push_back(tempText);
+
         }
+        fullScene[currentMesh].txt.push_back(tempText);
+        
         
             if(scene->sAssets[i].aType==2){
                 ImageContent tempImage;

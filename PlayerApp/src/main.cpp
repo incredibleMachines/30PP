@@ -7,8 +7,8 @@ int main( ){
 
     ofAppGLFWWindow window;
     window.setMultiDisplayFullscreen(true);
-//    ofSetupOpenGL(&window,500,500,OF_WINDOW);//OF_FULLSCREEN);
-    ofSetupOpenGL(&window,1920,1080,OF_FULLSCREEN);//OF_FULLSCREEN);
+//    ofSetupOpenGL(&window,500,500,OF_WINDOW);
+    ofSetupOpenGL(&window,1920,1080,OF_FULLSCREEN);
     ofRunApp(new playerApp);
 
 }

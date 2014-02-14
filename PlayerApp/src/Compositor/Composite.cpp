@@ -64,35 +64,35 @@ void Composite::drawFbo(){
 
     bool bFullScreen=false;
     
-//    if(bLoaded==true){
-//        
-//        ofPushMatrix();
-//        
-//        ofTranslate(200,200);
-//        for(int i=0; i<currentScene->txt.size();i++){
-//            currentScene->txt[i].text.draw();
-//        }
-//        
-//        ofPopMatrix();
-//        
-//        ofPushMatrix();
-//    
-//        for(int i=0; i<currentScene->img.size();i++){
-//            currentScene->img[i].image.draw(0,0);
-//            if(currentScene->img[i].fullScreen==true){
-//                bFullScreen=true;
-//            }
-//        }
-//        
-//        ofPopMatrix();
-//        
-//        for(int i=0; i<currentScene->vid.size();i++){
-//            currentScene->vid[i].video.draw(0,0);
-//            if(currentScene->vid[i].fullScreen==true){
-//                bFullScreen=true;
-//            }
-//        }
-//    }
+    if(bLoaded==true){
+        
+        ofPushMatrix();
+        
+        ofTranslate(200,200);
+        for(int i=0; i<currentScene->txt.size();i++){
+            currentScene->txt[i].text.draw();
+        }
+        
+        ofPopMatrix();
+        
+        ofPushMatrix();
+    
+        for(int i=0; i<currentScene->img.size();i++){
+            currentScene->img[i].image.draw(0,0);
+            if(currentScene->img[i].fullScreen==true){
+                bFullScreen=true;
+            }
+        }
+        
+        ofPopMatrix();
+        
+        for(int i=0; i<currentScene->vid.size();i++){
+            currentScene->vid[i].video.draw(0,0);
+            if(currentScene->vid[i].fullScreen==true){
+                bFullScreen=true;
+            }
+        }
+    }
     
     if(bFullScreen==false){
 //        background.draw(0,0);
