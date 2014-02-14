@@ -1,10 +1,10 @@
-<%/* ASSET INDEX PAGE */%>
+<%/* FILES INDEX PAGE */%>
 <% include ../includes/header %>
 <section class="<%= page_slug %>">
 	<header class="row">
 	    <h1 class="col-md-6"><% /* need title */ %><small>Total: <% /* need assets length */ %></small></h1>
 		<section class="col-md-6 add-btn">
-			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_event_modal">+</button>
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">+</button>
 			<p><small>Upload New Asset</small></p>
 		</section>
 	</header>
@@ -24,12 +24,13 @@
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% /* begin for loop */ %>
+		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
 			    	<ul class="event row" >
-			    		<form class="event <% /* need file.slug */ %>" method="post" action="/events/<% /* need file.slug */ %>">
+			    		<form class="file <% /* need file.slug */ %>" method="post" action="/files/<% /* need file.slug */ %>">
 
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
-								<input class="form-control" type="text" name="title" value="<% /* need file.title */ %>">
+								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
 								<p>File type: ____</p>
 								<p>Size: ____</p>
 							</li>
@@ -40,10 +41,12 @@
 								<button type="button" class="btn btn-default btn-sm">Replace</button>
 							</li>
 							<li class="col-md-2 file-location"> <!-- LOCATION -->
-								<select name="anim_type" class="form-control show-tick">
+								<select name="location" class="form-control show-tick">
+									<% locations.forEach(function(_loc,j){ %>
 									<% /* begin for loop */ %>
-										<option> <% /* need dropdown menu stuff */ %></option>
+										<option value="<%= _loc._id %>"> <%=_loc.address /* need dropdown menu stuff */ %></option>
 									<% /* end for loop */ %>
+									<% }) %>
 								</select>
 								<p>Don't see the location here?</p>
 								<button type="button" class="btn btn-default btn-sm blue">Enter an Address</button>
@@ -67,6 +70,7 @@
 						</form>
 					</ul>
 		    </li>
+		    <% }) %>
 		    <% /* end for loop */ %>
 		  </ul><!-- ul.list-group -->
 	</div>
