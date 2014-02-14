@@ -162,7 +162,7 @@
 												<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
 													<option value="">No File</option>
 													<% for(var j = 0; j< files.length; j++){ %>
-														<% if(files[j]._id.toString() == asset[key].file.toString()){ %>
+														<% if(files[j]._id.toString() == asset[key].file._id){ %>
 														<option value="<%=files[j]._id%>" selected ><%=files[j].title%></option>
 														<% }else{ %>
 														<option value="<%= files[j]._id %>"><%= files[j].title %></option>
