@@ -39,16 +39,46 @@ void EventHandler::processEvent(string command, ofxLibwebsockets::Event &args){
         initEvents(args);
     }
     
-    //--- start an event
+    //--- start sales event
     else if (thisCmd == SALES_CMD){
         cout << ">>> received SALES_CMD: " << thisCmd << endl;
         salesEvent(args);
     }
     
-    //--- outro
-    else if (thisCmd == OUTRO_CMD){
-        cout << ">>> received OUTRO_CMD: " << thisCmd << endl;
-        //outroEvent(args); <-- TODO
+    //--- sales single
+    else if (thisCmd == SALES_SING_CMD){
+        cout << ">>> received SALES_SING_CMD: " << thisCmd << endl;
+        //TODO: method
+    }
+    
+    //--- ambient
+    else if (thisCmd == AMBIENT_CMD){
+        cout << ">>> received AMBIENT_CMD: " << thisCmd << endl;
+        //TODO: method
+    }
+    
+    //--- ambient single
+    else if (thisCmd == AMBIENT_SING_CMD){
+        cout << ">>> received AMBIENT_SINGLE_CMD: " << thisCmd << endl;
+        //TODO: method
+    }
+    
+    //--- pause
+    else if (thisCmd == PAUSE_CMD){
+        cout << ">>> received PAUSE_CMD: " << thisCmd << endl;
+        //TODO: method
+    }
+    
+    //--- resume
+    else if (thisCmd == RESUME_CMD){
+        cout << ">>> received RESUME_CMD: " << thisCmd << endl;
+        //TODO: method
+    }
+    
+    //--- end
+    else if (thisCmd == END_CMD){
+        cout << ">>> received END_CMD: " << thisCmd << endl;
+        //TODO: method
     }
     
     //--- ERROR

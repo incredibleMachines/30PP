@@ -18,6 +18,7 @@ var path = require('path');
 var events = require('./routes/events');
 var files = require('./routes/files');
 var scenes = require('./routes/scenes');
+var api = require('./routes/api')
 
 /**
  * Custom Modules
@@ -108,6 +109,15 @@ app.post('/scenes/reorder',scenes.reorder(Database));
 app.post('/scenes/:id',scenes.update(Database));
 app.delete('/scenes/:id',scenes.delete(Database));
 app.post('/scenes/:id/delete',scenes.delete(Database));
+
+//api handling
+app.get('/api', api.index(Database));
+app.get('/api/pause', api.pause(WebSocket))
+app.get('/api/resume',api.resume(WebSocket))
+app.get('/api/end', api.end(WebSocket))
+app.get('/api/:slug', api.sendSlug(Database, WebSocket))
+
+
 /*
 //location handling
 app.post('/locations',locations.add(Database));
