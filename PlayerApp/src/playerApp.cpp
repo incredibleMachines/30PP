@@ -18,14 +18,12 @@
 void playerApp::setup(){
     
     //setup GL context
-	ofSetVerticalSync(true);
+    ofEnableAntiAliasing();
+    ofEnableDepthTest();
     ofSetFrameRate(60);
-	ofEnableSmoothing();
-	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
     ofBackground(0, 0, 0);
     ofDisableSeparateSpecularLight();
-    ofEnableAntiAliasing();
 
     ofSetWindowTitle("30PP Player");
     
@@ -34,7 +32,7 @@ void playerApp::setup(){
     
     //--- modelMapper setup
 
-    masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
+    masterFont.loadFont("Nobel_book.ttf",64,true, true, true);
 
     numMesh=3;
     vector<int> _meshesLoad;
@@ -98,12 +96,7 @@ void playerApp::keyPressed(int key){
     else if(key == '0'){
         contentBuffer.clear();
         for (int i=0;i<socketHandler.eventHandler.allEvents.size();i++){
-            for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){
-                
-                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[0].aCaption << endl; //first zone
-                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[1].aCaption << endl; //second zone
-                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[2].aCaption << endl; //third zone
-                
+            for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){                
                 SceneContent tempContent;
                 tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
                 contentBuffer.push_back(tempContent);

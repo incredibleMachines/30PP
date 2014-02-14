@@ -941,19 +941,19 @@ void ModelMapper:: drawCameras() {
 
         if(adjustMode!=ADJUST_MODE_LOCKED||i!=guiCam){
         //Begin camera object
+            
         cameras[i].camera.begin(cameras[i].viewport);
         
 
         for(int j=0;j<numMeshes;j++){
 
                 compositeTexture[j].bind();
-
             
                 ofSetColor(255,255,255);
                 //Draw mesh
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
             
+            
+
                 cameras[i].mesh[j].drawFaces();
             
             
@@ -970,6 +970,7 @@ void ModelMapper:: drawCameras() {
 
         //End camera object
         cameras[i].camera.end();
+            
         }
         else{
             ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
