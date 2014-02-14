@@ -9,11 +9,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "../Files/TextFile.h"
-#include "../Files/ImageFile.h"
-#include "../Files/VideoFile.h"
 #include "../Events/Scene.h"
 #include "../Events/Asset.h"
+#include "SceneContent.h"
 
 #define SCENE_T_I_BOTH 0
 
@@ -23,8 +21,8 @@
 
 class Composite  {
 public:
-    void setup(int _meshNum);
-    void loadScene(Scene _scene);
+    void setup(int MeshNum);
+    void loadScene(SceneContent::meshScene &_scene);
     void update();
     void bind();
     void unbind();
@@ -32,12 +30,9 @@ public:
     void initScene();
     
     ofQTKitPlayer background;
+    ofImage bgImage;
 
     ofFbo drawSurface;
-    vector<TextFile *> textFiles;
-    vector<ImageFile> imageFiles;
-    vector<VideoFile> videoFiles;
-    Scene currentScene;
     
     int textX;
     int type;
@@ -46,5 +41,9 @@ public:
     float timer;
     
     bool bFinished;
+    bool bLoaded;
+    bool bPlaying;
+    
+    SceneContent::meshScene * currentScene;
 };
 

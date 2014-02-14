@@ -7,7 +7,6 @@
 #pragma once
 #include "ofMain.h"
 #include "Scene.h"
-#include "Scene.h"
 #include "ofxLibwebsockets.h"
 
 // Event class
@@ -26,6 +25,8 @@ public:
     string eCreatedAt;
     
     vector <Scene> eScenes; //vector of all scenes for this event
+    
+    int numScenes;
     
 private:
     

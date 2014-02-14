@@ -14,24 +14,35 @@ void Composite::setup(int _meshNum){
     meshNum=_meshNum;
     background.setPixelFormat(OF_PIXELS_RGBA);
 	ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
-    background.loadMovie("Mapping_test_06/UV_SCULPT_02h264.mov", decodeMode);
+    background.loadMovie("UV_Sculpture_SexyMap.mov", decodeMode);
     background.play();
-    drawSurface.allocate(background.getWidth(),background.getHeight(),GL_RGBA);
+    bgImage.loadImage("mapping_test/mesh_"+ofToString(meshNum)+".jpg");
+    drawSurface.allocate(bgImage.getWidth(),bgImage.getHeight(),GL_RGBA);
+//    drawSurface.allocate(background.getWidth(),background.getHeight(),GL_RGBA);
+    cout<<"SETUP"<<endl;
     bFinished=true;
+    bLoaded=false;
+    bPlaying=false;
+    drawSurface.getTextureReference().setTextureMinMagFilter(GL_NEAREST,GL_NEAREST);
 }
 
 void Composite::update(){
-        background.update();
-    for(int i=0;i<videoFiles.size();i++){
-        
-    }
+    background.update();
     textX++;
     drawFbo();
-//    if(ofGetElapsedTimeMillis()-timer>5000)
-//    {
-//        bFinished=true;
-//    }
     
+        if(bLoaded==true){
+            for(int i=0; i<currentScene->vid.size();i++){
+                if(!currentScene->vid[i].video.isPlaying()){
+                    currentScene->vid[i].video.play();
+                }
+                else{
+                    if(currentScene->vid[i].video.isPlaying()){
+                        currentScene->vid[i].video.update();
+                    }
+                }
+            }
+        }
 }
 
 void Composite::bind(){
@@ -51,39 +62,57 @@ void Composite::drawFbo(){
     drawSurface.begin();
     ofClear(0, 0, 0,255);
     ofSetColor(255,255,255);
-    ofCircle(800,300,20);
-    
-    ofPushMatrix();
 
-    for(int i=0; i<textFiles.size();i++){
-        textFiles[i]->draw();
+    bool bFullScreen=false;
+    
+    if(bLoaded==true){
+        
+        ofPushMatrix();
+        
+        ofTranslate(200,200);
+        for(int i=0; i<currentScene->txt.size();i++){
+            currentScene->txt[i].text.draw();
+        }
+        
+        ofPopMatrix();
+        
+        ofPushMatrix();
+    
+        for(int i=0; i<currentScene->img.size();i++){
+            currentScene->img[i].image.draw(0,0);
+            if(currentScene->img[i].fullScreen==true){
+                bFullScreen=true;
+            }
+        }
+        
+        ofPopMatrix();
+        
+        for(int i=0; i<currentScene->vid.size();i++){
+            currentScene->vid[i].video.draw(0,0);
+            if(currentScene->vid[i].fullScreen==true){
+                bFullScreen=true;
+            }
+        }
     }
     
-    ofPopMatrix();
+    if(meshNum==1){
+        background.draw(0,0);
+
+    }
+    bgImage.draw(0,0);
     
-    background.draw(0,0);
     
     drawSurface.end();
-    
     ofEnableNormalizedTexCoords();
     ofDisableAlphaBlending();
 }
 
-void Composite::loadScene(Scene _scene){
-    bFinished==false;
-    
-    //QT Kit Video Player instantion
-    timer=ofGetElapsedTimeMillis();
-    currentScene=_scene;
-    initScene();
+void Composite::loadScene(SceneContent::meshScene &_currentScene){
+    currentScene = &_currentScene;
+    bLoaded=true;
+    bPlaying=false;
 }
 
 void Composite::initScene(){
-    textFiles.clear();
-    imageFiles.clear();
-    videoFiles.clear();
-    for(int i=0;i<currentScene.sAssets.size();i++){
-        TextFile * tempText=currentScene.sAssets[i].txtFile;
-        textFiles.push_back(tempText);
-    }
+
 }

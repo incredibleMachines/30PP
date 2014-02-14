@@ -65,6 +65,8 @@ public:
     //add video texture to model
     void addCompositeTexture();
     
+    void setReloadMesh(string _reloadMesh);
+    
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -112,6 +114,6 @@ public:
     
     vector<int> whichMeshes;
     
-    
+    string reloadMesh;
     
 };

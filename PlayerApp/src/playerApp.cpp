@@ -12,7 +12,7 @@
  */
 
 //--- constants
-#define MAPPER_DEBUG 0
+#define MAPPER_DEBUG 1
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -25,6 +25,7 @@ void playerApp::setup(){
     ofEnableNormalizedTexCoords();
     ofBackground(0, 0, 0);
     ofDisableSeparateSpecularLight();
+    ofEnableAntiAliasing();
 
     ofSetWindowTitle("30PP Player");
     
@@ -33,13 +34,20 @@ void playerApp::setup(){
     
     //--- modelMapper setup
 
-        masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
+    masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
 
+    numMesh=3;
     vector<int> _meshesLoad;
-    _meshesLoad.push_back(1);
     _meshesLoad.push_back(2);
+    _meshesLoad.push_back(3);
     _meshesLoad.push_back(4);
     map.setup(4,0,_meshesLoad);
+    map.setReloadMesh("mapping_test/Mapping test_07_02.obj");
+    
+    bTriggered=false;
+    
+    cout<<"EVENTS: "<<socketHandler.eventHandler.allEvents.size()<<endl;
+    
 }
 
 //--------------------------------------------------------------
@@ -50,15 +58,7 @@ void playerApp::update(){
     
     if(socketHandler.eventHandler.eventsInited || MAPPER_DEBUG){   // we're good to go, follow standard operating procedures
         
-        //everything
-        for(int i=0;i<map.compositeTexture.size();i++){
-        {
-            if(map.compositeTexture[i].bFinished==true){
-                map.compositeTexture[i].loadScene(socketHandler.eventHandler.allEvents[0].eScenes[0]);
-            }
-        }
-        map.update();
-    }
+            map.update();
     }
 }
 
@@ -83,15 +83,47 @@ void playerApp::keyPressed(int key){
     
     if (key == 'i'){ // will happen in socketHandler.update() automatically when ready
         socketHandler.sendSocketCmd(INIT_REQ);
-        
     }
+    
     else if (key == 'o'){ // will happen in socketHandler.update() automatically when ready
         socketHandler.sendSocketCmd(GO_REQ);
         
     }
+    
     else if (key == '.'){
         string test = socketHandler.eventHandler.allEvents[0].eScenes[1].sTitle;
         cout<< "event 0: scene 1: "+test<<endl;
+    }
+    
+    else if(key == '0'){
+        contentBuffer.clear();
+        for (int i=0;i<socketHandler.eventHandler.allEvents.size();i++){
+            for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){
+                
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[0].aCaption << endl; //first zone
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[1].aCaption << endl; //second zone
+                cout << socketHandler.eventHandler.allEvents[i].eScenes[j].sAssets[2].aCaption << endl; //third zone
+                
+                SceneContent tempContent;
+                tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
+                contentBuffer.push_back(tempContent);
+            }
+        }
+        count=0;
+        for(int i=0;i<numMesh;i++){
+            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+        }
+    }
+    
+    else if (key== '='){
+        count++;
+        if(count>contentBuffer.size()-1){
+            count=0;
+        }
+        for(int i=0;i<numMesh;i++){
+            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+        }
+        
     }
 }
 
