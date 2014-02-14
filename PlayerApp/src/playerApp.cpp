@@ -12,7 +12,7 @@
  */
 
 //--- constants
-#define MAPPER_DEBUG 0
+#define MAPPER_DEBUG 1
 
 //--------------------------------------------------------------
 void playerApp::setup(){
@@ -36,14 +36,13 @@ void playerApp::setup(){
 
     masterFont.loadFont("Nobel_book.ttf",32,true, true, true);
 
-    numMesh=2;
+    numMesh=3;
     vector<int> _meshesLoad;
-    _meshesLoad.push_back(0);
-        _meshesLoad.push_back(1);
-//    _meshesLoad.push_back(1);
-//    _meshesLoad.push_back(2);
-//    _meshesLoad.push_back(4);
+    _meshesLoad.push_back(2);
+    _meshesLoad.push_back(3);
+    _meshesLoad.push_back(4);
     map.setup(4,0,_meshesLoad);
+    map.setReloadMesh("mapping_test/Mapping test_07_02.obj");
     
     bTriggered=false;
     

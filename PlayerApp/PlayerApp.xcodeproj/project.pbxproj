@@ -135,6 +135,11 @@
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D3BB512418A9771500FCEFD8 /* Massing.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Massing.obj; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3BE79C818AD8A550030E92F /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
+		D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Mapping test_07_02.obj"; sourceTree = "<group>"; };
+		D3BE79CA18AD8A550030E92F /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
+		D3BE79CB18AD8A550030E92F /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
+		D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_Sculpture_SexyMap.mov; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -437,6 +442,8 @@
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */,
+				D3BE79C718AD8A550030E92F /* mapping_test */,
 				D31E43E918AD5D0200AC688E /* WALL_MAP_02 */,
 				D31E43E618AD5BC800AC688E /* WALL OUT */,
 				D31E43E418AD23C500AC688E /* Chow_texture_test_2.mov */,
@@ -453,6 +460,17 @@
 			);
 			name = data;
 			path = bin/data;
+			sourceTree = "<group>";
+		};
+		D3BE79C718AD8A550030E92F /* mapping_test */ = {
+			isa = PBXGroup;
+			children = (
+				D3BE79C818AD8A550030E92F /* mesh_0.jpg */,
+				D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */,
+				D3BE79CA18AD8A550030E92F /* mesh_1.jpg */,
+				D3BE79CB18AD8A550030E92F /* mesh_2.jpg */,
+			);
+			path = mapping_test;
 			sourceTree = "<group>";
 		};
 		E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */ = {

@@ -74,7 +74,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     }
     
     for(int i=0;i<compositeTexture.size();i++){
-        compositeTexture[i].setup();
+        compositeTexture[i].setup(i);
     }
 }
 
@@ -485,7 +485,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             //reset mesh to default dae or obj file
         case 'R':
             ofxAssimpModelLoader reload;
-            reload.loadModel("WALL_MAP_02/WALL OUT_02.obj");
+            reload.loadModel(reloadMesh);
             for(int i=0; i<numMeshes;i++){
                 cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
             }
@@ -943,6 +943,7 @@ void ModelMapper:: drawCameras() {
         //Begin camera object
         cameras[i].camera.begin(cameras[i].viewport);
         
+
         for(int j=0;j<numMeshes;j++){
 
                 compositeTexture[j].bind();
@@ -950,6 +951,9 @@ void ModelMapper:: drawCameras() {
             
                 ofSetColor(255,255,255);
                 //Draw mesh
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+            
                 cameras[i].mesh[j].drawFaces();
             
             
@@ -1137,5 +1141,9 @@ void ModelMapper::updateMasks(){
             cameras[i].drawMasks[j].setStrokeWidth(1);
             }
         }
+}
+
+void ModelMapper::setReloadMesh(string _reloadMesh){
+    reloadMesh=_reloadMesh;
 }
 

@@ -21,7 +21,7 @@
 
 class Composite  {
 public:
-    void setup();
+    void setup(int MeshNum);
     void loadScene(SceneContent::meshScene &_scene);
     void update();
     void bind();
