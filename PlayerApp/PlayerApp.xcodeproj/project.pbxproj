@@ -109,7 +109,7 @@
 		D31EC68D18A9A47800B8F882 /* playerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playerApp.h; sourceTree = "<group>"; };
 		D31EC6A018A9A6AB00B8F882 /* Asset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Asset.cpp; sourceTree = "<group>"; };
 		D31EC6A118A9A6AB00B8F882 /* Asset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
-		D31EC6A218A9A6AB00B8F882 /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
+		D31EC6A218A9A6AB00B8F882 /* EventTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTypes.h; sourceTree = "<group>"; };
 		D31EC6A318A9A6AB00B8F882 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		D31EC6A418A9A6AB00B8F882 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		D31EC6A518A9A6AB00B8F882 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
@@ -401,7 +401,7 @@
 				D31EC6A618A9A6AB00B8F882 /* Scene.h */,
 				D31EC6A018A9A6AB00B8F882 /* Asset.cpp */,
 				D31EC6A118A9A6AB00B8F882 /* Asset.h */,
-				D31EC6A218A9A6AB00B8F882 /* Definitions.h */,
+				D31EC6A218A9A6AB00B8F882 /* EventTypes.h */,
 			);
 			path = Events;
 			sourceTree = "<group>";

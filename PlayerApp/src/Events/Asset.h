@@ -16,6 +16,7 @@ class Location {
     public:
         string address;
         string title;
+        string _id;
 };
 
 
@@ -31,18 +32,19 @@ class Asset {
         ofVec2f aCoords;    // dicated by aZone (ID int)
         string aCaption;
         string aTitle;      // might move
-        Location aLoc;      // might move
+    
+    
     
         //--- Vars for a File, if found
         Json::Value aFile;  // assetFile JSON
         string aFilePath;   // rest comes in aFile JSON obj
         string aFileTitle;
         string aFileText;
-        string aFileMongoId;
+        string aFile_id;
         int aFileType;
         string aFileCreatedAt;
         Location aFileLoc;
-        string finalFilePath;
+    
     
         int width;  //future?
         int height; //future?

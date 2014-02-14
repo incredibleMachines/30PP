@@ -8,7 +8,7 @@
 #include "Handlers/SocketHandler.h"
 #include "Events/Event.h"
 #include "Events/Scene.h"
-#include "Events/Definitions.h"
+#include "Events/EventTypes.h"
 #include "Compositor/SceneContent.h"
 
 
