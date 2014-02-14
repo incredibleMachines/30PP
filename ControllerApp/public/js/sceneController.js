@@ -130,9 +130,11 @@ function SceneController(_scenes){
   					//iterate through the asset
 					Object.keys(currentScene.assets[i]).forEach(function(key){
 						//make sure that our index's match
-
-						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file+'"]').attr('selected','selected');
+						//console.log($('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]'))
+						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]').attr('selected','selected');
 						$('.asset-single-'+key).find('textarea.asset-caption').html(currentScene.assets[i][key].caption);			
+						//doesnt' load image from filepath express.js doesn't know about .assets
+						//$('.asset-single-'+key).find('.asset-image .thumbnail img').attr('src',currentScene.assets[i][key].file.path);
 					})
 
 

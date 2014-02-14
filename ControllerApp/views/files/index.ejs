@@ -1,3 +1,79 @@
-<%/* ASSET INDEX PAGE */%>
+<%/* FILES INDEX PAGE */%>
 <% include ../includes/header %>
+<section class="<%= page_slug %>">
+	<header class="row">
+	    <h1 class="col-md-6"><% /* need title */ %><small>Total: <% /* need assets length */ %></small></h1>
+		<section class="col-md-6 add-btn">
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">+</button>
+			<p><small>Upload New Asset</small></p>
+		</section>
+	</header>
+    <section class='current_events'>
+		<div class="panel panel-default">
+		  <!-- Our Events Table  -->
+		  <div class="panel-heading">
+		  	<ul class="event row panel-title" >
+		  		<li class="col-md-3 panel-title">Title</li>
+		  		<li class="col-md-3 panel-title">Media</li>
+		  		<li class="col-md-2 panel-title">Location</li>
+		  		<li class="col-md-2 panel-title">Appears in:</li>
+		  		<li class="col-md-2 panel-title">Actions</li>
+		  	</ul>
+		  </div><!-- .panel-heading -->
+		
+		  <!-- Table body -->
+		  <ul class="list-group">
+		  	<% /* begin for loop */ %>
+		  	<% files.forEach(function(_file,i){%>
+		    <li class="list-group-item">
+			    	<ul class="event row" >
+			    		<form class="file <% /* need file.slug */ %>" method="post" action="/files/<% /* need file.slug */ %>">
+
+							<li class="col-md-3 file-title"> <!-- TITLE -->						
+								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
+								<p>File type: ____</p>
+								<p>Size: ____</p>
+							</li>
+							<li class="col-md-3"> <!-- MEDIA -->
+								<a href="#" class="thumbnail">
+									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+								</a>
+								<button type="button" class="btn btn-default btn-sm">Replace</button>
+							</li>
+							<li class="col-md-2 file-location"> <!-- LOCATION -->
+								<select name="location" class="form-control show-tick">
+									<% locations.forEach(function(_loc,j){ %>
+									<% /* begin for loop */ %>
+										<option value="<%= _loc._id %>"> <%=_loc.address /* need dropdown menu stuff */ %></option>
+									<% /* end for loop */ %>
+									<% }) %>
+								</select>
+								<p>Don't see the location here?</p>
+								<button type="button" class="btn btn-default btn-sm blue">Enter an Address</button>
+							</li>
+							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
+								<div class="asset-scene-list">
+									<ul>
+										<% /* begin for loop*/ %>
+											<li><a>test scene name</a></li>
+											<li><a><% /* need event.scene.title */ %></a></li>
+										<% /* end for loop */ %>
+									</ul>
+								</div>
+							</li>
+							<li class="col-md-2"> <!-- UPDATE DELTE BTNS -->
+								<div class="btn-group">
+									  <button type="button" class="btn btn-default btn-xs event-update green">Update</button>
+									  <button type="button" class="btn btn-default btn-xs event-delete red">Delete</button>
+								</div>
+							</li>
+						</form>
+					</ul>
+		    </li>
+		    <% }) %>
+		    <% /* end for loop */ %>
+		  </ul><!-- ul.list-group -->
+	</div>
+    </section>
+</section> <!-- .<%= page_slug %> -->   
 <% include ../includes/footer %>
