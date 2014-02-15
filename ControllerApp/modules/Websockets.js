@@ -2,12 +2,13 @@ var colors = require('colors')
 var WebSocketServer = require('ws').Server;
 var _socket; 
 var _Database;
-var _socket_status = false;
+var _socket_status;
 
 
 exports.Connect = function(_port,_Db){
 	_Database = _Db; //setup our global _db Connection when we load our socket
 	ofSocket = new WebSocketServer({port:_port})
+	_socket_status = false;
 	ofSocket.on('connection',function(socket){
 		_socket = socket;
 		_socket_status = true;
@@ -35,7 +36,7 @@ exports.Connect = function(_port,_Db){
 			
 		})
 		
-		socket.on('disconnect',function(msg){
+		socket.on('close',function(msg){
 			console.log('Socket Disconnected'.cyan);
 			_socket_status=false;
 		})
@@ -43,10 +44,12 @@ exports.Connect = function(_port,_Db){
 }
 
 //a reference object to our single websocket connection
-exports.socket =  _socket;
+exports.socket = function(cb){ cb(_socket) };
+
 
 //a status check for the socket
-exports.status = _socket_status;
+exports.status = function(cb){ cb(_socket_status)}
+
 
 function parseCommand(_json){
 

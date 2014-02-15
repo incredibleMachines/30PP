@@ -249,6 +249,10 @@ li.list-group-item .btn-group-vertical .btn-xs {
 	padding: 6px 15px;
 }
 
+.btn-xs.edit-upload {
+	padding: 0 0 0 10px;
+}
+
 .btn-default {
 	border: 1px solid #999;
 }
@@ -305,10 +309,15 @@ li.list-group-item .btn-group-vertical .btn-xs {
 
 /* -------------- Save -------------- */
 
-.btn-group .btn.green {
+.btn.green {
 	border: 1px solid #04bd5f;
  	background-color: #fff;
  	color: #04bd5f;	
+}
+
+.btn:hover.green {
+	border: 1px solid #04bd5f;
+ 	background-color: #bcffdd;
 }
 
 .btn-group .btn:hover.green {
@@ -365,11 +374,51 @@ li.list-group-item .btn-group-vertical .btn-xs {
 	padding: 6px 10px;
 }
 
+/* -------------- MODALS -------------- */
 
+.modal-dialog {
+	width: 500px;
+}
 
+.modal-header {
+	border-bottom: 1px solid #999;
+	padding: 15px 15px 15px 35px;
+}
 
+.modal-content {
+	h3 {
+		margin-top: 10px;
+		margin-bottom: 0;
+	}
+}
 
+.form-group {
+	margin-bottom: 20px;
+}
 
+.modal-footer {
+	clear: both;
+
+	button {
+		float: left;
+	}
+}
+
+/* -------------- Upload Asset -------------- */
+
+.content-upload {
+	.form-control {
+		border: none;
+		-webkit-box-shadow:none;
+		box-shadow: none;
+		padding: 5px 0 0 0;
+		font-size: 11px;
+	}
+}
+
+.form-control.location {
+	margin-bottom: 20px;
+}
 
 
 

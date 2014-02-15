@@ -112,10 +112,10 @@ app.post('/scenes/:id/delete',scenes.delete(Database));
 
 //api handling
 app.get('/api', api.index(Database));
-app.get('/api/pause', api.pause(WebSocket))
-app.get('/api/resume',api.resume(WebSocket))
-app.get('/api/end', api.end(WebSocket))
-app.get('/api/:slug', api.sendSlug(Database, WebSocket))
+app.get('/api/control/:ctrl', api.control(WebSocket))
+app.get('/api/play/ambient',api.sendEvents('ambient',Database,WebSocket))
+app.get('/api/play/sales',api.sendEvents('sales',Database,WebSocket))
+app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))
 
 
 /*

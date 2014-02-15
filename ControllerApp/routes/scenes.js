@@ -50,6 +50,7 @@ exports.reorder = function(_Database){
 	return function(req,res){
 		var post = req.body;
 		console.log(req.body);
+		res.jsonp({message:'reorder not implimented yet'})
 		
 	}
 	
@@ -115,7 +116,8 @@ exports.update = function(_Database){
 										console.log('Something is different')
 										var updateObj = {$set: {file: _Database.makeMongoID(post.assets[parseInt(key)].file), 
 																caption: post.assets[parseInt(key)].caption, 
-																zone: post.assets[parseInt(key)].zone }
+																zone: post.assets[parseInt(key)].zone
+																}
 														}
 										_Database.updateById('assets',_asset._id, updateObj, function(e){
 											cbCounter++;
@@ -153,7 +155,7 @@ exports.update = function(_Database){
 										temp[index]=_asset._id;
 										assetholder.push(temp)
 										if(cb_counter == post.assets.length){
-											var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
+											var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 											_Database.updateById('scenes',scene_id,updateObj,function(e){
 												if(!e) res.jsonp({success:'success'})
 												else res.jsonp(500,{error:_err})
@@ -175,7 +177,7 @@ exports.update = function(_Database){
 									temp[index]=_asset._id;
 									assetholder.push(temp)
 									if(cb_counter == post.assets.length){
-										var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
+										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 										_Database.updateById('scenes',scene_id,updateObj,function(e){
 											if(!e) res.jsonp({success:'success'})
 											else res.jsonp(500,{error:_err})
@@ -212,7 +214,7 @@ exports.update = function(_Database){
 									
 									if(diffCount==diff){
 									console.log(_scene.assets)
-									var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+									var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 									_Database.updateById('scenes', scene_id, updateObj,function(e){
 										if(!e) res.jsonp({success:'success'})
 										else res.jsonp(500,{error:_err})
@@ -256,7 +258,7 @@ exports.update = function(_Database){
 													temp[index]=_asset._id;
 													_scene.assets.push(temp)
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
 															if(!e) res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
@@ -277,7 +279,7 @@ exports.update = function(_Database){
 													temp[index]=_asset._id;
 													_scene.assets.push(temp)
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
 															if(!e) res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
@@ -303,7 +305,7 @@ exports.update = function(_Database){
 												   _asset.zone == post.assets[parseInt(key)].zone ){
 													cb_counter++;
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
 															if(!e) res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
@@ -319,7 +321,7 @@ exports.update = function(_Database){
 													_Database.updateById('assets',_asset._id, updateObj, function(e){
 														cb_counter++;
 														if(cb_counter == post.assets.length){
-															var updateObj = {$set: {title: post.title, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+															var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 															_Database.updateById('scenes',scene_id,updateObj,function(e){
 																if(!e) res.jsonp({success:'success'})
 																else res.jsonp(500,{error:_err})
@@ -353,7 +355,7 @@ exports.update = function(_Database){
 exports.delete = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'delete'});
+		res.jsonp({message:'delete not implimented yet'});
 		//res.render('events/index', { current: req.url, title: 'add event' });
 	}
 }
@@ -367,7 +369,7 @@ function addAsset(__a,__Database, post, assetholder, index,cb_counter,res){
 		assetholder.push(temp)
 		if(cb_counter == post.assets.length){
 			console.log(assetholder)
-			var updateObj = {$set: {assets:assetholder}}
+			var updateObj = {$set: {assets:assetholder, last_edited: new Date()}}
 			__Database.updateById('scenes',scene_id,updateObj,function(e){
 				if(!e) res.jsonp({success:'success'})
 				else res.jsonp(500,{error:_err})
