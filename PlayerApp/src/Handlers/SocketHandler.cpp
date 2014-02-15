@@ -5,6 +5,7 @@
 //  Created by Joseph Saavedra on 2/5/14.
 //
 //
+
 /*
  
  SocketHandler class. handles all socket communications with controllerApp. Also handles all of the Event Init request and kickoff.
@@ -30,6 +31,8 @@ SocketHandler::SocketHandler(){
 //--------------------------------------------------------------
 void SocketHandler::setup(int port, bool verboseMode){
     
+    //----------SETUP WEBSOCKETS INFO
+    
     socketOptions = ofxLibwebsockets::defaultClientOptions();
     socketOptions.port = port;
     socketConnected = socketClient.connect(socketOptions);
@@ -43,12 +46,13 @@ void SocketHandler::update(){
     
     bool sec = ofGetUnixTime() % 2; //which second are we on
     
+    //----------CHECK AND MAKE CONNECTION
     
-    //--- we're NOT connected to controllerApp ! let's try to connect
+    //we're NOT connected to controllerApp ! let's try to connect
     if(!socketConnected){
         if(sec && reconnectFlag){  // attempt reconnect once every 2 secs
             
-            //--- attempt to Client.connect()
+            //attempt to Client.connect()
             connectSocket();
             
             reconnectFlag = 0;
@@ -56,14 +60,14 @@ void SocketHandler::update(){
     }
     
     
-    //--- socket IS connected
+    //socket IS connected
     else {
         
-        //--- events NOT inited yet, let's try to init
+        //events NOT inited yet, let's try to init
         if (!eventHandler.eventsInited){
             if(sec && reconnectFlag){ // attempt request init cmd once every 2 secs
 
-                //--- send INIT_REQUEST to controller app
+                //send INIT_REQUEST to controller app
                 sendSocketCmd(INIT_REQ);
                 
                 reconnectFlag = 0;
@@ -71,7 +75,7 @@ void SocketHandler::update(){
         }
         
         
-        //--- we are connected AND all eventsInited
+        //we are connected AND all eventsInited
         else {
             if(sec && reconnectFlag){
                 
@@ -122,7 +126,11 @@ void SocketHandler::onMessage(ofxLibwebsockets::Event &args){
 //--------------------------------------------------------------
 void SocketHandler::drawDebugInfo(){
     
-    //--- draw some info
+    //----------SHOW DEBUG TEXT
+    
+    //TODO:Make this controlled by ModelMapper Debug status
+    
+    //draw some info
     ofBackground(0);
     
     if (!socketConnected){ // socket not connected !

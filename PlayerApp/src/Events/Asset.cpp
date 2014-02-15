@@ -12,8 +12,6 @@
  methods:
  
     - constructer pulls out all metadata from asset JSON object, including type, zone, caption, and file. If file object exists, pulls all metadata at this moment. At most, only ever 1 file per asset is possible, so makes sense to do this here.
-    - update() updates this asset. will only ever contain 1 type of file. (if it has an img or video AND ALSO has text, TextFile is generated and updated from the VideoFile or ImageFile class. This is determined by checking the caption
-    - draw() draws this asset.
  
 */
 
@@ -96,14 +94,4 @@ Asset::Asset(Json::Value thisAsset){
 //            
 //    }
     
-}
-
-//--------------------------------------------------------------
-void Asset::update(){
-    
-}
-
-//--------------------------------------------------------------
-void Asset::draw(){
-
 }

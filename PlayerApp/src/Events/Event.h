@@ -14,8 +14,6 @@ class Event {
 public:
     
     Event(Json::Value thisEvent);
-    void update();
-    void draw();
     
     string eCommand;
     string eTitle;

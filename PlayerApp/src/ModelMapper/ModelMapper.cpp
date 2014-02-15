@@ -6,17 +6,39 @@
 //
 //
 
+/*
+ModelMapper class. This class loads meshes into user-defined number of cameras. Each camera's position and orientation can be set individually, as can all vertices on each cameras meshes. Masks can be added to each camera. All gui text drawn in this class.
+ 
+ methods
+ - setup() pass mesh and camera data into ModelMapper. add listeners for key and mouse presses. create texture vetex with blank data
+ - setupCameras() load camera and mask data from JSON settings file. Create Camera objects.
+ - update() update textures and set guicam to be identical to selected camera
+ - draw() trigger various drawing functions
+ - drawGuiText() draw gui text, dependent on ADJUST_MODE
+ - drawCameras() wrap meshes in their designated textures and draw out to all monitors
+ - drawHighlights() draw on-screen highlights for selected mesh and mask vertices
+ - drawMasks() draw ofPath for all masks
+ - saveCameras() save camera data to JSON settings file and mesh data to ply files
+ -setReloadMesh(string) pass in filepath to dae or obj file for reset mesh
+ */
+
 #include "ModelMapper.h"
 
 void ModelMapper::setup(int _numCams){
+    
+    //pass through defaults
     setup(_numCams,0,1);
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam){
+    
+    //pass through with defaults
     setup(_numCams,_guiCam,1);
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
+    
+    //pass through with defaults
     vector<int> _whichMeshes;
     _whichMeshes.push_back(0);
     _whichMeshes.push_back(1);
@@ -26,27 +48,40 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
 
 void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
+    //----------SETUP GLOBALS
+    
     numCams=_numCams;
     guiCam=_guiCam;
     numMeshes=_whichMeshes.size();
     whichMeshes=_whichMeshes;
     
     //set default variable values
+    //camera settings
     cameraSelect=1;
+    adjustMode=ADJUST_MODE_CAMERA;
+    
+    //mouse settings
     bMouseDown=false;
     clickThreshold=4;
-    adjustMode=ADJUST_MODE_CAMERA;
+    //for checking for double click on mask creation
+    mouseTimer=ofGetElapsedTimeMillis();
+    
+    //mask settings
     bNewMask=false;
     bDrawingMask=false;
+    //for checking for double click on mask creation
     mouseTimer=ofGetElapsedTimeMillis();
     bMaskPoint=false;
+    
+    //draw settings
     bDrawGui=true;
+    bDrawWireframe=false;
+    
+    //adjustment settings
     bShiftPressed=false;
     moveModifier=.1;
-    bDrawWireframe=false;
-    textureMode=TEXTURE_MODE_NONE;
     
-    //load JSON
+    //----------LOAD SETTINGS JSON
     
     ofBuffer buffer = ofBufferFromFile("settings.json");
     
@@ -60,6 +95,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
     
+    //----------SETUP LISTENERS
+    
     //Event Listeners for key and mouse events
     ofAddListener(ofEvents().keyPressed,this,&ModelMapper::keyPressed);
     ofAddListener(ofEvents().keyReleased,this,&ModelMapper::keyReleased);
@@ -67,6 +104,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofAddListener(ofEvents().mouseDragged,this,&ModelMapper::mouseDragged);
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
+    
+    //----------SETUP TEXTURE MESHES
     
     for(int i=0;i<numMeshes;i++){
         Composite tempComposite;
@@ -79,12 +118,14 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
 }
 
 void ModelMapper::update(){
-    //update video texture
+    
+    //update textures
     for(int i=0;i<numMeshes;i++){
         compositeTexture[i].update();
     }
     
-    //update gui camera to display selected camera
+    //update gui camera to display selected camera graphics
+    
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
@@ -96,22 +137,22 @@ void ModelMapper::update(){
 
 void ModelMapper::draw(){
 
-    //DRAW CAMERAS, MESHES AND TEXTURES
+    //----------DRAW CAMERAS, MESHES, TEXTURES
     
     drawCameras();
     
-    //DRAW MESH POINT SELECTION HIGHLIGHTS
+    //----------DRAW MESH POINT SELECTION HIGHLIGHTS
     ofPushStyle();
 	glDepthFunc(GL_ALWAYS);
     drawHighlights();
     glDepthFunc(GL_LESS);
 	ofPopStyle();
     
-    //DRAW MASKS
+    //----------DRAW MASKS
     
     drawMasks();
     
-    //DRAW GUI
+    //----------DRAW GUI
     
     if(bDrawGui==true){
         drawGuiText();
@@ -119,14 +160,11 @@ void ModelMapper::draw(){
     
 }
 
-void ModelMapper::addCompositeTexture(){
-    textureMode=TEXTURE_MODE_COMPOSITE;
-}
-
 void ModelMapper::keyPressed(ofKeyEventArgs& args){
     switch(args.key){
             
-        //Select Active Camera
+        //----------SELECT ACTIVE CAMERA
+            
         case '1':
             cameraSelect=1;
             cameras[guiCam].masks=cameras[cameraSelect].masks;
@@ -145,13 +183,16 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
             updateMasks();
             break;
-            
+        
+        //----------MODIFY ADJUSTMENTS
+        
         case OF_KEY_SHIFT:
             bShiftPressed=true;
             moveModifier=1;
             break;
             
-        //Select adjust mode
+        //----------SELECT ADJUST MODE
+            
         case 'c':
             if(adjustMode!=ADJUST_MODE_LOCKED){
                 bDrawGui=true;
@@ -174,24 +215,33 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
-        //Adjustments to camera position and orientation, viewport alignment, or mesh position depending on mode
+        //----------MAKE ADJUSTMENTS
+            
         case OF_KEY_UP:
+            //Move Camera Position
             if(adjustMode==ADJUST_MODE_CAMERA){
                 cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,moveModifier,0));
                 
             }
+            
+            //Adjust Camera Orientation
             else if(adjustMode==ADJUST_MODE_LOOK_AT){
                 ofQuaternion yRot(0, ofVec3f(0,1,0));
                 ofQuaternion xRot(moveModifier, ofVec3f(1,0,0));
                 ofQuaternion zRot(0, ofVec3f(0,0,1));
                 cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
             }
+            
+            //Adjust Viewport Position for Active Camera
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
                 cameras[cameraSelect].viewport.y-=(moveModifier*10);
                 
             }
             
+            //Adjust Entire Mask Position
             else if(adjustMode==ADJUST_MODE_MASK){
+                
+                //Adjust Entire Mask Position
                 if(bMaskPoint==false){
                     if(cameras[cameraSelect].highlightMask!=-1){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].getVertices();
@@ -201,6 +251,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                         cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask]=ofPolyline(vertices);
                     }
                 }
+                
+                //Adjust Mask Point Position
                 else{
                     for(int i=0;i<cameras[cameraSelect].masks.size();i++){
                         vector<ofPoint> vertices=cameras[cameraSelect].masks[i].getVertices();
@@ -217,10 +269,13 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                      cameras[cameraSelect].masks[i]=ofPolyline(vertices);
                     }
                 }
+                
+                //Redraw Mask ofPolylines to ofPaths
                 updateMasks();
                 
             }
-
+            
+            //Adjust Mesh Point Positions
             else if(adjustMode==ADJUST_MODE_MESH){
                 for(int i=0;i<moveVertices.size();i++){
                     for(int j=0;j<moveVertices[i].size();j++){
@@ -388,6 +443,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 }
             }
             break;
+            
+        //A/Z Adjust Camera Z-Position, Z-Orientation and Mesh Z-Position
         case 'z':
         case 'Z':
             if(adjustMode==ADJUST_MODE_CAMERA){
@@ -430,12 +487,15 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
-            //save camera settings to json and meshes to ply files
+       //----------SAVE CAMERA AND MESH ADJUSTMENTS
+            
         case 's':
             saveCameras();
             break;
             
-            //add new mask to selected camera
+        
+        //----------CREATE NEW MASK
+            
         case 'm':
             if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
                 cameras[cameraSelect].addMask();
@@ -444,6 +504,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 updateMasks();
             }
             break;
+        
+        //----------DELETE SELECTED MASK
             
         case OF_KEY_BACKSPACE:
             if(adjustMode==ADJUST_MODE_MASK){
@@ -456,13 +518,17 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 updateMasks();
             }
             break;
+        
+        //----------TOGGLE GUI DRAW
             
         case 'g':
             if(adjustMode!=ADJUST_MODE_LOCKED){
                 bDrawGui=!bDrawGui;
             }
             break;
-            
+        
+        //----------TRIGGER ADJUST_MODE_LOCKED
+        
         case ' ':
             if(adjustMode!=ADJUST_MODE_LOCKED){
                 bDrawGui=false;
@@ -475,6 +541,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
         
+        //----------TOGGLE MESH WIREFRAME DRAW
             
         case 'w':
             if(adjustMode!=ADJUST_MODE_LOCKED){
@@ -482,8 +549,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
-            //reset mesh to default dae or obj file
+        //----------RELOAD MESH
+        
         case 'R':
+            //reset mesh to passed through file path to .dae or .obj file
             ofxAssimpModelLoader reload;
             reload.loadModel(reloadMesh);
             for(int i=0; i<numMeshes;i++){
@@ -496,6 +565,8 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
 
 void ModelMapper::keyReleased(ofKeyEventArgs& args){
     
+    //----------TOGGLE SHIFT MODIFIER
+    //TODO: there HAS to be a better way to do this with GLFW, this is very unreliable
     switch(args.key){
         case OF_KEY_SHIFT:
             bShiftPressed=false;
@@ -507,19 +578,24 @@ void ModelMapper::keyReleased(ofKeyEventArgs& args){
 }
 
 void ModelMapper::mouseDragged(ofMouseEventArgs& args){
-    //set up select rectangle
+
+    //----------SETUP SELECT RECTEANGLE
+    
     selectRect=ofRectangle(mouseDown,ofVec2f(args.x,args.y));
     
+    //----------SELECT MESH ADJUSTMENT POINTS
     
     if(adjustMode==ADJUST_MODE_MESH){
-
+        
+        //clear point vector
         moveVertices.clear();
         
-        //determine vertices inside drag box
+        //TODO: add shift-drag to deselect functionality?
         for(int i=0;i<numMeshes;i++)
         {
             vector<meshVertex> tempVector;
             
+            //determine vertices inside drag box on camera viewport
             for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
                 ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
                 if(selectRect.inside(cur)) {
@@ -541,6 +617,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                 }
             }
             
+            //push stored points into vector (to enable shift select command)
             if(tempVertices.size()>0){
                 for(int j=0;j < tempVertices[i].size();j++){
                     tempVector.push_back(tempVertices[i][j]);
@@ -553,17 +630,22 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
         
     }
     
-    if(adjustMode==ADJUST_MODE_MASK){
+    //----------SELECT MASK ADJUSTMENT POINTS
+    
+    else if(adjustMode==ADJUST_MODE_MASK){
+        
         //clear selected vertex vector
         maskVertices.clear();
         
-        //set up local variables for determining nearest
+        //set up local variables for determining nearest point
         ofVec3f nearestVertex;
         int nearestIndex = 0;
         float drawNearest=false;
         
+        //select nearest points
+        //TODO: make work on camera screen? will anyone ever use this? either way, make this and mesh vertices the same
+        //TODO: add shift select funcitonality. add shift-drag to deselect functionality?
         for(int i=0;i<cameras[cameraSelect].masks.size();i++){
-            
             vector<ofPoint> vertices = cameras[cameraSelect].masks[i].getVertices();
             float nearestDistance = clickThreshold;
             
@@ -587,6 +669,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ModelMapper::mousePressed(ofMouseEventArgs& args){
+    
     //determine whether to begin drawing draw box for mouseDragged()
     if(bMouseDown==false){
         selectRect=ofRectangle(0,0,0,0);
@@ -596,8 +679,8 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     bMaskPoint=false;
 
     if(adjustMode==ADJUST_MODE_MESH){
-        //clear selected vertex vector
         
+        //clear selected vertex vector
         if(bShiftPressed==false){
             tempVertices.clear();
         }
@@ -635,6 +718,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 }
             }
             
+            //shift-click vector of save selected points
             if(tempVertices.size()>0){
                 for(int j=0;j < tempVertices[i].size();j++){
                     tempVector.push_back(tempVertices[i][j]);
@@ -650,6 +734,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     else if (adjustMode==ADJUST_MODE_MASK){
         maskVertices.clear();
         
+        //add new mask point
         if(bDrawingMask==true){
             if(ofGetElapsedTimeMillis()-mouseTimer>250){
                 mouseTimer=ofGetElapsedTimeMillis();
@@ -661,6 +746,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                    cameras[cameraSelect].masks[cameras[cameraSelect].highlightMask].lineTo(mouse);
                 }
             }
+            //double-click to finish mask
             else{
                 if(bNewMask==true){
                     bNewMask=false;
@@ -676,40 +762,42 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
         }
         
         else{
-                //set up local variables for determining nearest
-                ofVec3f nearestVertex;
-                int nearestIndex = 0;
-                float drawNearest=false;
+            //set up local variables for determining nearest
+            ofVec3f nearestVertex;
+            int nearestIndex = 0;
+            float drawNearest=false;
             
+            //select mask points
             for(int i=0;i<cameras[cameraSelect].masks.size();i++){
-                    
-                    vector<ofPoint> vertices = cameras[cameraSelect].masks[i].getVertices();
-                    float nearestDistance = clickThreshold;
-                    
-                    //parse through all vertices to determine nearest, if exists
-                    for(int j = 0; j < vertices.size(); j++) {
-                        ofVec3f cur = vertices[j];
-                        float distance = cur.distance(mouse);
-                        if(distance < nearestDistance) {
-                            bMaskPoint=true;
-                            maskVertex tempVert;
-                            tempVert.vertex=cur;
-                            tempVert.maskIndex=i;
-                            tempVert.vertexIndex=j;
-                            maskVertices.push_back(tempVert);
-                        }
+                vector<ofPoint> vertices = cameras[cameraSelect].masks[i].getVertices();
+                float nearestDistance = clickThreshold;
+                
+                //parse through all vertices to determine nearest, if exists
+                for(int j = 0; j < vertices.size(); j++) {
+                    ofVec3f cur = vertices[j];
+                    float distance = cur.distance(mouse);
+                    if(distance < nearestDistance) {
+                        bMaskPoint=true;
+                        maskVertex tempVert;
+                        tempVert.vertex=cur;
+                        tempVert.maskIndex=i;
+                        tempVert.vertexIndex=j;
+                        maskVertices.push_back(tempVert);
                     }
-                    
-                    //draw nearest highlight circle on both gui camera and selected camera
-                    ofNoFill();
-                    ofSetLineWidth(2);
-                    if(drawNearest==true){
-                        ofSetColor(ofColor::yellow);
-                        ofCircle(nearestVertex, 4);
-                    }
+                }
+                
+                //draw nearest highlight circle on both gui camera and selected camera
+                ofNoFill();
+                ofSetLineWidth(2);
+                if(drawNearest==true){
+                    ofSetColor(ofColor::yellow);
+                    ofCircle(nearestVertex, 4);
+                }
             }
+            
             if(drawNearest==false){
                 bool bInside=false;
+                //select mask
                 for(int i=0;i<cameras[cameraSelect].masks.size();i++){
                     ofPolyline poly=cameras[cameraSelect].masks[i];
                     if(poly.inside(mouse)){
@@ -734,9 +822,14 @@ void ModelMapper::mouseReleased(ofMouseEventArgs& args){
 
 
 void ModelMapper:: setupCameras() {
+    
+    //----------SETUP CAMERAS FROM JSON
+    
     for(int i=0; i<numCams;i++){
         if (settings["cameras"].size()>i){
             Camera tempCam;
+            
+            //load Meshes from ply files
             vector<ofMesh>meshes;
             for(int j=0; j<numMeshes;j++){
                 ofMesh tempMesh;
@@ -744,11 +837,14 @@ void ModelMapper:: setupCameras() {
                 tempMesh.load(loader);
                 meshes.push_back(tempMesh);
             }
+            
+            //load Camera data from JSON
             ofVec3f pos = ofVec3f(settings["cameras"][i]["pos"]["x"].asFloat(), settings["cameras"][i]["pos"]["y"].asFloat(), settings["cameras"][i]["pos"]["z"].asFloat());
             ofQuaternion rot = ofQuaternion(settings["cameras"][i]["orientation"]["x"].asFloat(), settings["cameras"][i]["orientation"]["y"].asFloat(), settings["cameras"][i]["orientation"]["z"].asFloat(), settings["cameras"][i]["orientation"]["w"].asFloat());
             ofVec3f viewPos = ofVec3f(settings["cameras"][i]["viewPos"]["x"].asFloat(),settings["cameras"][i]["viewPos"]["y"].asFloat());
             ofVec3f viewSize = ofVec3f(settings["cameras"][i]["viewSize"]["x"].asFloat(),settings["cameras"][i]["viewSize"]["y"].asFloat());
             
+            //load mask polyines from JSON vertex points
             vector<ofPolyline> tempMasks;
             for(int j=0;j<settings["cameras"][i]["mask"].size();j++){
                 vector<ofPoint> vertices;
@@ -763,6 +859,8 @@ void ModelMapper:: setupCameras() {
             meshes.clear();
         }
     }
+    
+    //draw mask ofPaths from Polylines
     updateMasks();
 
 }
@@ -770,7 +868,7 @@ void ModelMapper:: setupCameras() {
 void ModelMapper:: saveCameras() {
     for(int i=0; i<numCams;i++){
         
-        //SAVE CAMERA DATA
+        //----------SAVE CAMERA DATA
         
         //Camera position
         settings["cameras"][i]["pos"]["x"]=cameras[i].camera.getGlobalPosition().x;
@@ -787,6 +885,7 @@ void ModelMapper:: saveCameras() {
         settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
         settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
         
+        //mask vertices
         settings["cameras"][i]["mask"].clear();
         for(int j=0;j<cameras[i].masks.size();j++){
             vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
@@ -796,7 +895,7 @@ void ModelMapper:: saveCameras() {
             }
         }
         
-        //SAVE INDIVIDUAL MESH
+        //----------SAVE INDIVIDUAL MESH
         
         //save warped mesh objects
         for(int j=0;j<numMeshes;j++){
@@ -806,12 +905,13 @@ void ModelMapper:: saveCameras() {
         }
     }
     
-    //SAVE JSON SETTINGS DOCUMENT
+    //----------SAVE JSON SETTINGS DOCUMENT
     
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
 		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
-	} else {
+	}
+    else {
         Json::StyledWriter writer;
         file << writer.write(settings) << endl;
         cout<<"settings.json SAVED";
@@ -936,42 +1036,40 @@ void ModelMapper:: drawGuiText() {
 
 void ModelMapper:: drawCameras() {
     for(int i = 0; i < numCams; i++){
-        
-        //CREATE AND POPULATE CAMERA
 
         if(adjustMode!=ADJUST_MODE_LOCKED||i!=guiCam){
+
+        //CREATE AND POPULATE CAMERA
+        
         //Begin camera object
-            
         cameras[i].camera.begin(cameras[i].viewport);
         
-
         for(int j=0;j<numMeshes;j++){
-
-                compositeTexture[j].bind();
             
+            //Wrap Composite Fbo around mesh
+            compositeTexture[j].bind();
+            ofSetColor(255,255,255);
+        
+            //draw mesh
+            cameras[i].mesh[j].drawFaces();
+        
+            compositeTexture[j].unbind();
+            
+            //draw mesh wireframe
+            if(bDrawWireframe==true){
                 ofSetColor(255,255,255);
-                //Draw mesh
-            
-            
-
-                cameras[i].mesh[j].drawFaces();
-            
-            
-                compositeTexture[j].unbind();
-
-                //DRAW MESH WIREFRAME
-                
-                if(bDrawWireframe==true){
-                    ofSetColor(255,255,255);
-                    ofSetLineWidth(2);
-                    cameras[i].mesh[j].drawWireframe();
-                }
+                ofSetLineWidth(2);
+                cameras[i].mesh[j].drawWireframe();
             }
 
+        }
+            
         //End camera object
         cameras[i].camera.end();
             
         }
+        
+        //ADJUST_MODE_LOCKED guiCam text
         else{
             ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
         }
@@ -979,8 +1077,6 @@ void ModelMapper:: drawCameras() {
 }
 
 void ModelMapper::drawHighlights() {
-    
-    //DRAW SELECT BOX
     
     //draw drag and select box, set in mouseDragged()
     if(bMouseDown==true){
@@ -992,10 +1088,9 @@ void ModelMapper::drawHighlights() {
     
     if(adjustMode==ADJUST_MODE_MESH){
         
-        //DRAW NEAREST VERTEX
+        //----------DRAW NEAREST VERTEX
         
         //determine nearest vertex and highlight yellow, if within clickThreshold distance of vertex
-        
         for(int i=0;i<numMeshes;i++){
             //set up local variables for determining nearest
             ofVec3f nearestVertex;
@@ -1024,7 +1119,7 @@ void ModelMapper::drawHighlights() {
                 ofCircle(cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(nearestIndex),cameras[cameraSelect].viewport),4);
             }
             
-            //DRAW SELECTED VERTICES
+            //----------DRAW SELECTED VERTICES
             
             //draw selected circles on all vertices selected by clicking or via drag box on both gui camera and selected camera, set in mousePressed() and mouseDragged()
             ofSetColor(255,0,0);
@@ -1049,7 +1144,7 @@ void ModelMapper::drawHighlights() {
     
     if(adjustMode==ADJUST_MODE_MASK){
         
-        //DRAW NEAREST VERTEX
+        //-----------DRAW NEAREST VERTEX
         
         //determine nearest vertex and highlight yellow, if within clickThreshold distance of vertex
         
@@ -1097,9 +1192,14 @@ void ModelMapper::drawHighlights() {
 }
 
 void ModelMapper::drawMasks(){
+    
+    //draw mask ofPaths
+    
     for(int i = 0; i < numCams; i++){
         for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
             ofSetColor(0,0,0);
+            
+            //turn on outlines if adjusting
             if(adjustMode==ADJUST_MODE_MASK){
                 cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
                 if(i==cameraSelect||i==guiCam){
@@ -1122,6 +1222,10 @@ void ModelMapper::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ModelMapper::updateMasks(){
+    
+    //----------CREATE PATH(S)
+    
+    //parse through mask polylines and create paths from them. only do when updating so drawing uses less memory
     for(int i=0;i<numCams;i++){
         for(int j=0;j<cameras[i].drawMasks.size();j++){
             vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
@@ -1145,6 +1249,8 @@ void ModelMapper::updateMasks(){
 }
 
 void ModelMapper::setReloadMesh(string _reloadMesh){
+    
+    //pass through reload mesh file path
     reloadMesh=_reloadMesh;
 }
 

@@ -108,12 +108,13 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
         Event thisEvent = Event(args.json["events"].get(e, "did not find 1 complete event"));
         cout<<endl;
 //        ((playerApp*)ofGetAppPtr())->events.push_back(thisEvent);
+        
+        //Load events into vectors. this is the info we'll be using in SceneContent
         allEvents.push_back(thisEvent);
     }
     cout<<"\t>>--------------END END EVENT INIT--------------<<"<<endl;
     
     // set eventsInited true
-//    ((playerApp*)ofGetAppPtr())->eventsInited = true;
     eventsInited = true;
 }
 

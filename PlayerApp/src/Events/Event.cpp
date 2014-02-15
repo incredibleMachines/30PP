@@ -11,8 +11,7 @@
  
  methods:
     - constructor pulls all data about this event out. Creates a JSON obj for scenes. Runs through array and populates vector <eScenes>
-    - update() will update the appropriate scene for this event in the proper order, for proper amount of time
-    - draw() will draw the appropriate scene...
+ 
  */
 
 #include "Event.h"
@@ -40,19 +39,4 @@ Event::Event(Json::Value thisEvent){
         Scene thisScene = Scene(scenes[i]);
         eScenes.push_back(thisScene);
     }
-}
-
-
-//--------------------------------------------------------------
-void Event::update(){ //might make sense
-    
-    //TODO: update scenes 1 at a time, in order, for proper amount of time
-
-}
-
-
-//--------------------------------------------------------------
-void Event::draw(){ //might make sense
-
-    //TODO: draw scenes 1 at time, in order, for proper amount of time
 }

@@ -4,7 +4,7 @@
 //
 //  Created by IncredibleMachines on 2/13/14.
 //
-//
+//  ZoneTypes: Lookup for all types and animations of scenes and zones. TODO: fill all this in, load from JSON
 
 #pragma once
 

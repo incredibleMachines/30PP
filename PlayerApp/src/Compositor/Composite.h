@@ -13,37 +13,35 @@
 #include "../Events/Asset.h"
 #include "SceneContent.h"
 
-#define SCENE_T_I_BOTH 0
-
-#define MODEL_LEFT 0
-#define MODEL_SCULPTURE 1
-#define MODEL_WALL 2
-
 class Composite  {
 public:
     void setup(int MeshNum);
-    void loadScene(SceneContent::meshScene &_scene);
     void update();
+    
+    //----------CUSTOM FUNCTIONS
+    //load new content
+    void loadScene(SceneContent::meshScene &_scene);
+    //bind and unbind texturereference wrappers
     void bind();
     void unbind();
+    //create Fbo for wrapping around mesh in ModelMapper
     void drawFbo();
-    void initScene();
     
+    //----------FBO Texture
+    //testing - fixed video object
     ofQTKitPlayer background;
+    //UV Texture for tex coordinates, calibration
     ofImage bgImage;
-
+    //Fbo for actual draw texture
     ofFbo drawSurface;
-    
-    int textX;
-    int type;
+    //mesh to assign this Fbo to
     int meshNum;
-    
-    float timer;
-    
+    //loading variable checks
     bool bFinished;
     bool bLoaded;
     bool bPlaying;
     
+    //pointer to content for this scene and mesh - from playerApp
     SceneContent::meshScene * currentScene;
 };
 
