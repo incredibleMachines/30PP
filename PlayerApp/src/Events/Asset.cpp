@@ -18,57 +18,56 @@
 */
 
 #include "Asset.h"
-
-
-//--------------------------------------------------------------
-Asset::Asset(){
-    
-}
+#include "playerApp.h"
 
 //--------------------------------------------------------------
 Asset::Asset(Json::Value thisAsset){
     
-    //--- pull out all asset metadata
-    aType           = thisAsset.get("type","no asset type found").asInt();
-    aZone           = thisAsset.get("zone","no asset zone found").asInt();
+    //--- get the zone #. it is the same as the member name.
+    string assetZone = thisAsset.getMemberNames()[0];
+    aZone           = ofToInt(assetZone);
+    //cout << "assetZone: " << aZone << endl;
+    
+    //--- pull out the core of this asset object
+    thisAsset = thisAsset.get(assetZone, "did not find asset #"+assetZone);
+    //cout << "thisAsset: "<< thisAsset << endl;
+    
+    //--- ready to go, pull out rest of asset metadata
     aCaption        = thisAsset.get("caption","null").asString();
+    aType           = thisAsset.get("type","no asset type found").asInt();
+    //aTitle          = thisAsset.get("title","no asset title found").asString(); //title is now in file{}
     
-    // NOTE: might move these to file class
-    aLoc.address    = thisAsset.get("location","no asset location found").get("address","no asset loc address found").asString();
-    aLoc.title      = thisAsset.get("location","no asset location found").get("title","no asset loc title found").asString();
-    aTitle          = thisAsset.get("title","no asset title found").asString();
+    cout<<"\t\t\t>> assetType: "<<aType<<"\taCaption: "<<aCaption<<"\taZone: "<<aZone<<endl;
     
-    cout<<"\t\t\t>> assetType: "<<aType<<"\t\tassetTitle: "<<aTitle<<"\taCaption: "<<aCaption<<"\taZone: "<<aZone<<"\tLoc.title: "<<aLoc.title<<"\tLoc.address: "<<aLoc.address<<endl;
+    //--- get File
+    aFile           = thisAsset.get("file", "did not find any file in this asset");
+    //cout << "thisFile: "<< aFile << endl;
     
-    
-    //--- check to see if there is a file in this asset
-
-    if (!thisAsset.get("file", 0).isInt() ) {   // found a file !!
+    if (aFile.isObject()){
         
-        cout<<" FILE FOUND IN THIS ASSET "<< endl;
-        cout << thisAsset.get("file", "no asset file found").type() <<endl;
-        
-        //--- pull out and store JSON 'file' object in aFile
-        aFile           = thisAsset.get("file","NO asset FILE FOUND WHAT LASTCHECKFAILED?!");
-        
-        //--- pull out all aFile metadata
-        aFileMongoId    = aFile.get("_id","no file _id found").asString();
-        aFileTitle      = aFile.get("title","no file title found").asString();
-        aFileText       = aFile.get("text","no file text found").asString();
-        aFileType       = aFile.get("type","no file type found").asDouble();
-        aFileCreatedAt  = aFile.get("created_at","no file created_at found").asString();
-        aFileLoc.address= aFile.get("location","no file location found").get("address","no file loc addr found").asString();
-        aFileLoc.title  = aFile.get("location","no file location found").get("title","no file loc title found").asString();
+        //--- ready to go, pull out all file metadata
+        aFileTitle      = aFile.get("title", "no file title found").asString();
+        aFileLoc.address = aFile.get("location", "no file location found").get("address", "no file loc address found").asString();
+        aFileLoc._id    = aFile.get("location", "no file location found").get("_id", "no file loc _id found").asString();
         aFilePath       = aFile.get("path","no file path found").asString();
-        
-        //--- file pathing!
-        // NOTE: this path is relative to the 30PP folder, meaning
-        // finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:
-//        finalFilePath = "../../../";
-        finalFilePath += aFilePath; //append URI to base file path (30PP root folder)
-        cout<<"complete asset filepath: "<< finalFilePath << endl;  //print out completed file path
-    }
+        aFileType       = aFile.get("type","no file path found").asInt();
+        aFileCreatedAt  = aFile.get("created_at", "no file created at found").asString();
+        aFile_id        = aFile.get("_id", "no file _id found").asString();
+        cout<<"\t\t\t\t>> fileTitle: "<< aFileTitle << "\tfilePath: "<< aFilePath << "\tfileType: "<< aFileType << "\tfileType: "<< aFileType;
+    }   else cout<<"\t\t\t\t>>No file found in this asset"<< endl;
     
+    
+
+
+    
+    //--- file pathing!
+    /* NOTE: this path is relative to the 30PP folder, meaning
+    finalFilePath begins as pointing to: User/..../openFrameworks/apps/30PP/  like so:  */
+    
+    aFilePath = "../../../" + aFilePath; //append URI to base file path (30PP root folder)
+    cout<<"complete asset filepath: "<< aFilePath << endl;  //print out completed file path
+
+
     
     //--- assign asset coordinates by zoneID
     switch (aZone){
@@ -80,9 +79,11 @@ Asset::Asset(Json::Value thisAsset){
         case 1:
             aCoords = ofVec2f(210, 350);
         break;
+            
         case 2:
             aCoords = ofVec2f(450, 65);
         break;
+            
         default: //wtf
             aCoords = ofVec2f(500,500);
         break;
@@ -91,28 +92,11 @@ Asset::Asset(Json::Value thisAsset){
     //TODO: check fileType and assign asset dimensions (w,h) based on this. add w,h to constructor of file
     
     //--- now create the correct type of asset file
-    switch (aFileType){
-
-        case 0:  //--- TEXT
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-        break;
-            
-        case 1:  //--- VIDEO
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-            //TODO: uncomment
-        break;
-        case 2:  //--- IMAGE
-            txtFile=new TextFile(aCaption,ofVec2f(200,200));
-            break;
-        default: //wtf case
-            txtFile=new TextFile(aCaption,ofVec2f(500,600));
-            break;
-            
-    }
+//    switch (aType){
+//            
+//    }
     
 }
-
-
 
 //--------------------------------------------------------------
 void Asset::update(){

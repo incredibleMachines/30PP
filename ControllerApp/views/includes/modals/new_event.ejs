@@ -4,8 +4,8 @@
 	    	<div class="modal-header">	
 		    	<h3>Add New Event</h3>
 		    	</div>
-		    	
-			    <form class="modal-body" role="form" action="/events" method="post" oninput="duration_view.value=duration.value+' seconds'">
+		 
+			    <form class="modal-body" role="form" action="/events" method="post">
 				    <section class="form-group col-md-8">
 					    <label for="title">Event Title</label>
 					    <input type="text" class="form-control" id="title" name="title" placeholder="Give your event a title">
@@ -13,11 +13,10 @@
 				    <section class="form-group col-md-8">
 					    <label for="title">Animation Type</label>
 							<select class="form-control" name="anim_type">
-							<% for(var i =0; i<4;i++){ %>
-								<option value="anim_<%= i %>">Animation <%= i %></option>
-							<% }%>
-						</select>
-						<!--<p class="help-block">Select the animation type.</p>-->
+									<option value="sales">Sales</option>
+									<option value="ambient">Ambient</option>
+							</select>
+						<p class="help-block">Select the animation type.</p>
 				    </section>
 				</form>
 				<div class="modal-footer">

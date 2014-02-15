@@ -36,9 +36,8 @@
 							</li>
 							<li class="col-md-2">
 								<select name="anim_type" class="form-control show-tick">
-									<% for(var i =0; i<4;i++){ %>
-										<option <% if(event.anim_type ==="anim_"+i){%> selected <%}%> value="anim_<%= i %>">Event Type <%= i %></option>
-									<% }%>
+									<option <% if(event.anim_type === "sales"){%> selected <%}%> value="sales">Sales</option>
+									<option <% if(event.anim_type === "ambient"){%> selected <%}%> value="ambient">Ambient</option>
 								</select>
 							</li>
 							<li class="col-md-2"><%= event.duration %> </li>

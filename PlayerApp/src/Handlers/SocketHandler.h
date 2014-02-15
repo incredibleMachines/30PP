@@ -14,7 +14,7 @@
 //30PP
 #include "EventHandler.h"
 #include "../Events/Event.h"
-#include "../Events/Definitions.h"
+#include "../Events/EventTypes.h"
 
 
 class SocketHandler{
