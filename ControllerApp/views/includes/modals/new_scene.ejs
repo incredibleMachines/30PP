@@ -6,37 +6,37 @@
 			</div><!-- .modal-header -->
 			<form class="modal-body" role="form" action="/scenes" method="post">
 					<input type="hidden" name="event_id" value="<%=event._id %>"/>
-					<section class="form-group">
+					<section class="form-group col-md-8">
 					    <label for="title">Scene Title</label>
-					    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title">
+					    <input type="text" class="form-control" id="title" name="title" placeholder="Give your scene a title">
 				    </section>
-				    <section class="form-group">
+				    <section class="form-group col-md-8">
 						<label for="scene_type">Scene Type</label>
 						<select class="form-control scene-scene_type" name="scene_type" id="scene_type">
 							<%for(var i=0; i<4;i++){%>
 								<option value="<%=i%>">Scene Type <%= i %></option>
 							<%}%>
 						</select>
-						<p class="help-block">Select a scene type.</p>
+						<!--<p class="help-block">Select a scene type.</p>-->
 					</section>
-				    <section class="form-group">
+				    <section class="form-group col-md-8">
 					    <label for="zone_type">Zone Type</label>
 							<select class="form-control" name="zone_type">
 							<% for(var i =0; i<4;i++){ %>
 								<option value="<%= i %>">Zone <%= i %></option>
 							<% }%>
 						</select>
-						<p class="help-block">Select a zone type.</p>
+						<!--<p class="help-block">Select a zone type.</p>-->
 				    </section>
-				    <section class="form-group">
+				    <section class="form-group col-md-12">
 					    <label for="text">On-Screen Text</label>
-					    <textarea class="form-control" name="text"></textarea>
-					    <p class="help-block">Add text to display during scene (optional)</p>
+					    <textarea class="form-control" name="text" placeholder ="Add text to display during scene (optional)"></textarea>
+					    <!--<p class="help-block">Add text to display during scene (optional)</p>-->
 				    </section>
 			</form><!-- .modal-body -->
 			<div class="modal-footer">
+				<button class="btn btn-primary modal-submit green" type="button">Submit</button>
 				<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-				<button class="btn btn-primary modal-submit" type="button">Submit</button>
 			</div><!-- .modal-footer-->
 		</section><!-- .modal-content -->
 	</section><!-- .modal-dialog -->
