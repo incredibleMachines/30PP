@@ -16,9 +16,7 @@ class Scene {
     
     public:
         Scene(Json::Value thisScene);
-        void update();
-        void draw();
-        
+    
         int sZoneType;
         string sTitle;
         string sText;

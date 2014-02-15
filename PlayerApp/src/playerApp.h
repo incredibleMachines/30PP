@@ -29,19 +29,32 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     
+    //----------WEBSOCKETS
+    
+    //SocketHandler object iniates parsing of all content instructions
     SocketHandler socketHandler;
     
-//    bool eventsInited;
+    //----------MODELS + CAMERAS
     
+    //ModelMapper object contains all cameras, meshes, and textures
     ModelMapper map;
     
-    ofTrueTypeFont masterFont;//testing
+    //----------GLOBAL FONT
     
-    vector <string> allImages;
+    //single ofTrueTypeFont instance for creating ofVboMesh objects for all text loaded via SocketHandler and EventHandler
+    ofTrueTypeFont masterFont;
     
-    bool bTriggered;
+    //---------CONTENT BUFFER
     
+    //contentBuffer contains all loaded videos, images, and text Vbos for display on models
     vector<SceneContent> contentBuffer;
+
+    //count of current SceneContent to load from buffer
     int count;
+    
+    //total number of meshes to be loaded
     int numMesh;
+    
+    //testing - signals that we have successfully "triggered" and init and content load event
+    bool bTriggered;
 };

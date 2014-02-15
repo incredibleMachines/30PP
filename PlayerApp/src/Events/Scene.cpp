@@ -11,8 +11,6 @@
  
  methods:
     - constructor: pulls all metadata associated with a Scene including the zone arrangement type. Populates a vector of Asset objects, that are associated with this particular Scene.
-    - update() iterates through all Assets of this scene and updates all every time it's called
-    - draw() iterates through all Assets, draws them.
 */
 
 #include "Scene.h"
@@ -39,21 +37,5 @@ Scene::Scene(Json::Value thisScene){
     for (int i=0; i<numAssets; i++){
         Asset thisAsset = Asset(assets[i]);
         sAssets.push_back(thisAsset);
-    }
-}
-
-//--------------------------------------------------------------
-void Scene::update(){
-    
-    for (int i=0; i<sAssets.size(); i++) {
-        //sAssets[i].update();   //TODO: uncomment!
-    }
-}
-
-//--------------------------------------------------------------
-void Scene::draw(){
-    
-    for (int i=0; i<sAssets.size(); i++) {
-        //sAssets[i].draw();    //TODO: uncomment!
     }
 }

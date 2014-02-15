@@ -15,7 +15,7 @@
 #include "../Events/Scene.h"
 #include "../Compositor/Composite.h"
 
-//--------INTERNAL TYPE DEFS - DO NOT CHANGE
+//--------INTERNAL TYPE DEFS
 #define ADJUST_MODE_CAMERA 1
 #define ADJUST_MODE_LOOK_AT 2
 #define ADJUST_MODE_MESH 3
@@ -23,16 +23,13 @@
 #define ADJUST_MODE_MASK 5
 #define ADJUST_MODE_LOCKED 6
 
-#define TEXTURE_MODE_NONE 0
-#define TEXTURE_MODE_COMPOSITE 1
-#define TEXTURE_MODE_VIDEO 2
-
 class ModelMapper {
 public:
-    void setup(int _numCams);
-    void setup(int _numCams, int _guiCam);
-    void setup(int _numCams, int _guiCam, int _numMeshes);
-    void setup(int _numCams, int _guiCam, vector<int> _whichMeshes);
+    //overloaded setup allowing different data to be passed
+    void setup(int _numCams); //defaults gui cam to [0], num Meshes to 1
+    void setup(int _numCams, int _guiCam); //defaults num Meshes to 1
+    void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
+    void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
     void update();
     void draw();
     
@@ -43,10 +40,31 @@ public:
     void mouseReleased(ofMouseEventArgs& args);
     void mouseMoved(ofMouseEventArgs& args);
     
+    //----------GLOBAL VARIABLES
+    //number of cameras, passed in setup
     int numCams;
+    //which camera is guiCam, passed in setup
     int guiCam;
+    //how many meshes to draw, passed in setup or calculated by .size() of vector passed in setup
     int numMeshes;
+    
+    //mouse variables, to deal with weirdness of using mouseX/Y with custom event listeneres
     ofVec2f mouse;
+    
+    //switch for drawing GUI info
+    bool bDrawGui;
+    //switch for drawing mesh wireframes
+    bool bDrawWireframe;
+    //swith for shift key modifier
+    bool bShiftPressed;
+    //value of move commands (modified by shift key)
+    float moveModifier;
+
+    //holder for mesh filepath
+    string reloadMesh;
+    //holder for which meshes to reload from above filepath
+    vector<int> whichMeshes;
+    
     
     //---------CUSTOM FUNCTIONS
     //drawGuiText draws information on user settings on GUI_CAMERA Screen only
@@ -62,11 +80,8 @@ public:
     void setupCameras();
     //save camera data to json and meshes to .ply files
     void saveCameras();
-    //add video texture to model
-    void addCompositeTexture();
-    
+    //sets file path for mesh to reload
     void setReloadMesh(string _reloadMesh);
-    
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -93,6 +108,7 @@ public:
     };
     vector<maskVertex> maskVertices;
     bool bNewMask, bDrawingMask, bMaskPoint;
+    float mouseTimer;
     
     //---------HIGHLIGHT SETTINGS
     bool bMouseDown;
@@ -100,20 +116,6 @@ public:
     ofRectangle selectRect;
     float clickThreshold;
     
-    //---------VIDEO PLAYER
-    vector<ofQTKitPlayer> player;
-    vector<ofTexture> texture;
+    //----------TEXTURE SETTINGS
     vector<Composite> compositeTexture;
-    
-    float mouseTimer;
-    bool bDrawGui;
-    bool bShiftPressed;
-    float moveModifier;
-    bool bDrawWireframe;
-    int textureMode;
-    
-    vector<int> whichMeshes;
-    
-    string reloadMesh;
-    
 };

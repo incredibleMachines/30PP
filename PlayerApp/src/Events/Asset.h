@@ -25,15 +25,11 @@ class Asset {
     
     public:
         Asset(Json::Value thisAsset);
-        void update();
-        void draw();
         int aType;      // assetType
         int aZone;          // dictates coordinates
         ofVec2f aCoords;    // dicated by aZone (ID int)
         string aCaption;
         string aTitle;      // might move
-    
-    
     
         //--- Vars for a File, if found
         Json::Value aFile;  // assetFile JSON

@@ -6,12 +6,21 @@
 //
 //
 
+/*
+ Camera class. This class hold ofEasyCam object and mask polyline and path objects for each camera/monitor.
+ 
+ methods
+ - setup() pass camera data, mask polylines, and mesh data from ModelMapper JSON loader
+ - addMask() create new mask object
+ */
+
+
 #include "Camera.h"
 
 //--------------------------------------------------------------
 void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks){
     
-    //load variables into camera, viewport and mesh objects
+    //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
     
     camera.setGlobalPosition(_pos);
     camera.setGlobalOrientation(_orientation);
@@ -33,6 +42,8 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
 }
 
 void Camera::addMask(){
+    
+    //add blank mask to Camera
     ofPolyline tempMask;
     ofPath tempDrawMask;
     masks.push_back(tempMask);
