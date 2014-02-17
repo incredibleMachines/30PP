@@ -110,7 +110,14 @@ exports.update = function(_Database){
 									   _asset.caption == post.assets[parseInt(key)].caption && 
 									   _asset.zone == post.assets[parseInt(key)].zone ){
 										cbCounter++;
-										if(cbCounter==_scene.assets.length) res.jsonp({success:'success'})
+										if(cbCounter==_scene.assets.length){
+										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
+											_Database.updateById('scenes',scene_id,updateObj,function(e){
+												if(!e) res.jsonp({success:'success'})
+												else res.jsonp(500,{error:_err})
+											})	
+										} 
+										//res.jsonp({success:'success'})
 										console.log('Everything is the same');
 									}else{
 										console.log('Something is different')
@@ -121,7 +128,14 @@ exports.update = function(_Database){
 														}
 										_Database.updateById('assets',_asset._id, updateObj, function(e){
 											cbCounter++;
-											if(cbCounter==_scene.assets.length) res.jsonp({success:'success'})
+											if(cbCounter==_scene.assets.length){
+												var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
+												_Database.updateById('scenes',scene_id,updateObj,function(e){
+													if(!e) res.jsonp({success:'success'})
+													else res.jsonp(500,{error:_err})
+												})	
+											} 
+											//res.jsonp({success:'success'})
 										})
 									}
 								}//END if(!err)
