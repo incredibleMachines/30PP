@@ -22,7 +22,7 @@ Scene::Scene(Json::Value thisScene){
     //cout<< "SCENE RECEIVED: "<<thisScene.toStyledString()<<endl;
     
     //--- pull out JSON scene data
-    sZoneType       = thisScene.get("type", "no scene type found").asInt();
+    sZoneType       = thisScene.get("zone_type", "no scene type found").asInt();
     sTitle          = thisScene.get("title", "no scene title found").asString();
     sText           = thisScene.get("text", "no scene text found").asString();
     sCreatedAt      = thisScene.get("created_at", "no scene created_at").asString();

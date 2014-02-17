@@ -16,6 +16,10 @@ public:
     
     void load(Scene * scene, int _numMeshes);
     
+    void loadText(int i);
+    void loadImage(int i);
+    void loadVideo(int i);
+    
     //----------CONTENT ORGANIZATION
     
     //Content structs for Image, Text, and Video
@@ -43,6 +47,7 @@ public:
         vector<VideoContent> vid;
         vector<ImageContent> img;
         vector<TextContent> txt;
+        int sceneType;
     };
     
     //variable identifying which mesh to load into
@@ -55,5 +60,8 @@ public:
     
     //pointer to font for creating ofVboMeshes
     ofTrueTypeFont * ttFont;
+    
+    Scene * scene;
+    int numMesh;
     
 };

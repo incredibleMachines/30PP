@@ -36,6 +36,7 @@ void Composite::setup(int _meshNum){
     bFinished=true;
     bLoaded=false;
     bPlaying=false;
+    textPos=ofVec2f(0,200);
 }
 
 void Composite::update(){
@@ -48,18 +49,34 @@ void Composite::update(){
     //TODO make video textures load correctly, switch them to ofQTKitPlayer
     //TODO
     
-//        if(bLoaded==true){
-//            for(int i=0; i<currentScene->vid.size();i++){
-//                if(!currentScene->vid[i].video.isPlaying()){
-//                    currentScene->vid[i].video.play();
-//                }
-//                else{
-//                    if(currentScene->vid[i].video.isPlaying()){
-//                        currentScene->vid[i].video.update();
-//                    }
-//                }
-//            }
-//        }
+
+    if(currentScene->sceneType==0){
+        if(meshNum==2){
+            pos.x=0;
+            pos.y=0;
+        }
+        
+        else if(meshNum==0){
+            pos.x=-2850;
+            pos.y=0;
+        }
+        
+        else if(meshNum==1){
+            pos.x=-1800;
+            pos.y=400;
+        }
+    }
+    
+    else{
+        pos.x=0;
+        pos.y=0;
+    }
+    
+    textPos.x+=5;
+    
+    if(textPos.x>4000){
+        textPos.x=0;
+    }
     
         drawFbo();
 }
@@ -104,11 +121,11 @@ void Composite::drawFbo(){
         ofPushMatrix();
         
         //TODO: this should be determined programatically by animation JSON
-        ofTranslate(200,200);
+        ofTranslate(pos+textPos);
         for(int i=0; i<currentScene->txt.size();i++){
             currentScene->txt[i].text.draw();
         }
-    
+        
         ofPopMatrix();
 
         
@@ -117,13 +134,16 @@ void Composite::drawFbo(){
         ofPushMatrix();
         
         //TODO: this should be determined programatically by animation JSON
-        ofTranslate(0,0);
+        ofTranslate(pos);
         
+//        cout<<currentScene->img.size()<<endl;
         for(int i=0; i<currentScene->img.size();i++){
-            currentScene->img[i].image.draw(0,0,currentScene->img[i].image.getWidth()/2,currentScene->img[i].image.getHeight()/2);
+            currentScene->img[i].image.draw(0,0);
         }
 
         ofPopMatrix();
+        
+
     
         //TODO: draw video textures
 //        for(int i=0; i<currentScene->vid.size();i++){

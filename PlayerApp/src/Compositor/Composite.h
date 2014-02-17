@@ -27,7 +27,7 @@ public:
     //create Fbo for wrapping around mesh in ModelMapper
     void drawFbo();
     
-    //----------FBO Texture
+    //----------FBO TEXTURE
     //testing - fixed video object
     ofQTKitPlayer background;
     //UV Texture for tex coordinates, calibration
@@ -40,6 +40,8 @@ public:
     bool bFinished;
     bool bLoaded;
     bool bPlaying;
+    ofVec2f pos;
+    ofVec2f textPos;
     
     //pointer to content for this scene and mesh - from playerApp
     SceneContent::meshScene * currentScene;

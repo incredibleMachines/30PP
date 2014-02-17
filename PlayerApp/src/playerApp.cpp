@@ -39,11 +39,11 @@ void playerApp::setup(){
     masterFont.loadFont("Nobel_book.ttf",64,true, true, true);
 
     //Load mesh vector to select which meshes within obj to use
-    numMesh=3;
     vector<int> _meshesLoad;
     _meshesLoad.push_back(2);
     _meshesLoad.push_back(3);
     _meshesLoad.push_back(4);
+    numMesh=_meshesLoad.size();
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
     map.setup(4,0,_meshesLoad);
@@ -53,6 +53,7 @@ void playerApp::setup(){
     
     //testing - set manual trigger to false
     bTriggered=false;
+
     
 }
 
@@ -113,13 +114,23 @@ void playerApp::keyPressed(int key){
         for (int i=0;i<socketHandler.eventHandler.allEvents.size();i++){
             for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){                
                 SceneContent tempContent;
-                tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
+                if(socketHandler.eventHandler.allEvents[i].eScenes[j].sZoneType==0){
+                    tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],1);
+                }
+                else{
+                    tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
+                }
                 contentBuffer.push_back(tempContent);
             }
         }
         count=0;
         for(int i=0;i<numMesh;i++){
-            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+            if(contentBuffer[count].numMesh==1){
+                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[0]);
+            }
+            else{
+                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+            }
         }
     }
     
@@ -128,9 +139,15 @@ void playerApp::keyPressed(int key){
         count++;
         if(count>contentBuffer.size()-1){
             count=0;
-        }
+        }        
+        
         for(int i=0;i<numMesh;i++){
-            map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+            if(contentBuffer[count].numMesh==1){
+                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[0]);
+            }
+            else{
+                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+            }
         }
         
     }
