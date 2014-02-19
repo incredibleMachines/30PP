@@ -20,7 +20,7 @@ public:
     
     //----------CUSTOM FUNCTIONS
     //load new content
-    void loadScene(SceneContent::meshScene &_scene);
+    void loadScene(SceneContent::meshScene * _scene);
     //bind and unbind texturereference wrappers
     void bind();
     void unbind();

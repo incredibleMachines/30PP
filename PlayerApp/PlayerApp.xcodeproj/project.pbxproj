@@ -87,9 +87,6 @@
 		5D95092D59E7A34C9DB7823E /* Server.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Server.cpp; path = ../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src/Server.cpp; sourceTree = SOURCE_ROOT; };
 		69668FDE141262BC3C6CA929 /* jsoncpp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = jsoncpp.cpp; path = ../../../addons/ofxLibwebsockets/libs/jsoncpp/jsoncpp.cpp; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		D30888A018AC918100ABE8BC /* Blaue_gans.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Blaue_gans.jpg; sourceTree = "<group>"; };
-		D30888A118AC919100ABE8BC /* City_Hall_0287.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = City_Hall_0287.jpg; sourceTree = "<group>"; };
-		D31E43E418AD23C500AC688E /* Chow_texture_test_2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Chow_texture_test_2.mov; sourceTree = "<group>"; };
 		D31E43E518AD257D00AC688E /* ZoneTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZoneTypes.h; sourceTree = "<group>"; };
 		D31EC68218A9A47800B8F882 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventHandler.cpp; sourceTree = "<group>"; };
 		D31EC68318A9A47800B8F882 /* EventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandler.h; sourceTree = "<group>"; };
@@ -111,9 +108,6 @@
 		D31EC6A618A9A6AB00B8F882 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		D38507EE18AA79E400DAF9E7 /* Composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Composite.cpp; sourceTree = "<group>"; };
 		D38507EF18AA79E400DAF9E7 /* Composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Composite.h; sourceTree = "<group>"; };
-		D38507F918AA922000DAF9E7 /* fingers.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = fingers.mov; sourceTree = "<group>"; };
-		D38507FC18AAA56F00DAF9E7 /* Ancient_baths 0024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Ancient_baths 0024.jpg"; sourceTree = "<group>"; };
-		D38507FD18AAA57800DAF9E7 /* Calypso_0604.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Calypso_0604.jpg; sourceTree = "<group>"; };
 		D39E973018AC3289004C7001 /* SceneContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneContent.cpp; sourceTree = "<group>"; };
 		D39E973118AC3289004C7001 /* SceneContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneContent.h; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -122,7 +116,6 @@
 		D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Mapping test_07_02.obj"; sourceTree = "<group>"; };
 		D3BE79CA18AD8A550030E92F /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
 		D3BE79CB18AD8A550030E92F /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
-		D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_Sculpture_SexyMap.mov; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -373,14 +366,7 @@
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
-				D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */,
 				D3BE79C718AD8A550030E92F /* mapping_test */,
-				D31E43E418AD23C500AC688E /* Chow_texture_test_2.mov */,
-				D30888A118AC919100ABE8BC /* City_Hall_0287.jpg */,
-				D30888A018AC918100ABE8BC /* Blaue_gans.jpg */,
-				D38507FD18AAA57800DAF9E7 /* Calypso_0604.jpg */,
-				D38507FC18AAA56F00DAF9E7 /* Ancient_baths 0024.jpg */,
-				D38507F918AA922000DAF9E7 /* fingers.mov */,
 				D3BB512518A9859C00FCEFD8 /* settings.json */,
 				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
 			);

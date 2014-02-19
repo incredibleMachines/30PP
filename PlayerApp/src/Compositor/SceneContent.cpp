@@ -20,7 +20,6 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
     cout<<numMesh<<endl;
     
     for(int i=0;i<_numMeshes;i++){
-        tempMesh.sceneType=scene->sZoneType;
         fullScene.push_back(tempMesh);
     }
     
@@ -31,13 +30,13 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
         //assign Asset to mesh. TODO: make this a look-up of which zone goes with which mesh
         
         currentMesh=scene->sAssets[i].aZone;
+        cout<<currentMesh<<endl;
         
         loadText(i);
         
         //if fileType is image, load images
-        cout<<scene->sAssets[i].aFileType<<endl;
         if(scene->sAssets[i].aFileType==2){
-            cout<<"image"<<endl;
+            cout<<"loaded image"<<endl;
             ImageContent tempImage;
             tempImage.image.loadImage(scene->sAssets[i].aFilePath);
             if(currentMesh<ZONE_FULL_SCREEN){
@@ -47,13 +46,11 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
         }
         
         //if fileType is video, load video. TODO: make this ofQTKitPlayer instead of ofVideoPlayer, solve .play() on this content
-        else if(scene->sAssets[i].aFileType){
-            VideoContent tempVid;
-            tempVid.video.loadMovie(scene->sAssets[i].aFilePath);
-            if(currentMesh<ZONE_FULL_SCREEN){
-                tempVid.fullScreen=true;
-            }
+        else if(scene->sAssets[i].aFileType==1){
+            cout<<"loaded video"<<endl;
+            ofVideoPlayer tempVid;
             fullScene[currentMesh].vid.push_back(tempVid);
+            fullScene[currentMesh].vid[fullScene[currentMesh].vid.size()-1].loadMovie(scene->sAssets[i].aFilePath);
         }
     }
 }

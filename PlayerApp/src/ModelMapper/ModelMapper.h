@@ -23,6 +23,9 @@
 #define ADJUST_MODE_MASK 5
 #define ADJUST_MODE_LOCKED 6
 
+#define MESH_MASS 0
+#define MESH_DETAIL 1
+
 class ModelMapper {
 public:
     //overloaded setup allowing different data to be passed
@@ -60,11 +63,6 @@ public:
     //value of move commands (modified by shift key)
     float moveModifier;
 
-    //holder for mesh filepath
-    string reloadMesh;
-    //holder for which meshes to reload from above filepath
-    vector<int> whichMeshes;
-    
     
     //---------CUSTOM FUNCTIONS
     //drawGuiText draws information on user settings on GUI_CAMERA Screen only
@@ -81,7 +79,9 @@ public:
     //save camera data to json and meshes to .ply files
     void saveCameras();
     //sets file path for mesh to reload
-    void setReloadMesh(string _reloadMesh);
+    void setMassMesh(string _reloadMesh);
+    //sets file path for detailed mesh
+    void setDetailMesh(string _reloadMesh);
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -98,6 +98,13 @@ public:
     };
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
+    //holder for mesh filepaths
+    string detailMesh;
+    string massMesh;
+    int meshType;
+    //holder for which meshes to reload from above filepath
+    vector<int> whichMeshes;
+    
 
     //---------MASK SETTINGS
     class maskVertex{

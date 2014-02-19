@@ -14,13 +14,6 @@
 //--------------------------------------------------------------
 void Composite::setup(int _meshNum){
     
-
-    //testing - loading a single video texture directly from file
-//    background.setPixelFormat(OF_PIXELS_RGBA);
-//    ofQTKitDecodeMode decodeMode = OF_QTKIT_DECODE_TEXTURE_ONLY;
-//    background.loadMovie("UV_Sculpture_SexyMap.mov", decodeMode);
-//    background.play();
-
     //----------TEXTURE SETUP
     
     //assign this texture to a specific mesh in ModelMapper
@@ -30,7 +23,7 @@ void Composite::setup(int _meshNum){
     bgImage.loadImage("mapping_test/mesh_"+ofToString(meshNum)+".jpg");
     
     //setup Fbo (width, height, type, depth sample) currently set to use .maxSamples method of fbo to query graphics card on number of samples possible.
-    drawSurface.allocate(bgImage.getWidth(),bgImage.getHeight(),GL_RGB,drawSurface.maxSamples());
+    drawSurface.allocate(bgImage.getWidth(),bgImage.getHeight(),GL_RGB,8);
     
     //set status variables
     bFinished=true;
@@ -41,44 +34,29 @@ void Composite::setup(int _meshNum){
 
 void Composite::update(){
     
-    //testing - update background QTKitPlayer object
-//    background.update();
-    
     //--------UPDATE VIDEO TEXTURES
     
     //TODO make video textures load correctly, switch them to ofQTKitPlayer
-    //TODO
     
-
-    if(currentScene->sceneType==0){
-        if(meshNum==2){
-            pos.x=0;
-            pos.y=0;
+    if(bPlaying==false&&bLoaded==true){
+        if(currentScene->vid.size()!=0){
+            for(int i=0; i<currentScene->vid.size();i++){
+                currentScene->vid[i].play();
+            }
         }
+        bPlaying=true;
+    }
+    if(bPlaying==true){
         
-        else if(meshNum==0){
-            pos.x=-2850;
-            pos.y=0;
-        }
-        
-        else if(meshNum==1){
-            pos.x=-1800;
-            pos.y=400;
+        for(int i=0; i<currentScene->vid.size();i++){
+            currentScene->vid[i].update();
         }
     }
     
-    else{
-        pos.x=0;
-        pos.y=0;
-    }
+    pos.x=0;
+    pos.y=0;
     
-    textPos.x+=5;
-    
-    if(textPos.x>4000){
-        textPos.x=0;
-    }
-    
-        drawFbo();
+    drawFbo();
 }
 
 void Composite::bind(){
@@ -108,11 +86,6 @@ void Composite::drawFbo(){
     ofClear(0, 0, 0,255);
     ofSetColor(255,255,255);
 
-    //testing - only draw video on sculpture mesh
-//    if(meshNum==1){
-//        background.draw(0,0);
-//    }
-
     //check to make sure content has loaded before drawing
     if(bLoaded==true){
         
@@ -135,8 +108,6 @@ void Composite::drawFbo(){
         
         //TODO: this should be determined programatically by animation JSON
         ofTranslate(pos);
-        
-//        cout<<currentScene->img.size()<<endl;
         for(int i=0; i<currentScene->img.size();i++){
             currentScene->img[i].image.draw(0,0);
         }
@@ -146,9 +117,13 @@ void Composite::drawFbo(){
 
     
         //TODO: draw video textures
-//        for(int i=0; i<currentScene->vid.size();i++){
-//            currentScene->vid[i].video.draw(0,0);
-//        }
+        ofPushMatrix();
+        ofTranslate(pos);
+        for(int i=0; i<currentScene->vid.size();i++){
+            cout<<"video width:"<< currentScene->vid[i].getMoviePath()<<endl;
+            currentScene->vid[i].draw(0,0);
+        }
+        ofPopMatrix();
     }
     
     drawSurface.end();
@@ -158,10 +133,10 @@ void Composite::drawFbo(){
     ofDisableAlphaBlending();
 }
 
-void Composite::loadScene(SceneContent::meshScene &_currentScene){
+void Composite::loadScene(SceneContent::meshScene * _currentScene){
     
     //reference meshScene for this scene, this mesh - passed by playerApp
-    currentScene = &_currentScene;
+    currentScene = _currentScene;
     bLoaded=true;
     bPlaying=false;
 }

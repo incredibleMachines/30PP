@@ -48,6 +48,8 @@ public:
     
     //contentBuffer contains all loaded videos, images, and text Vbos for display on models
     vector<SceneContent> contentBuffer;
+    int bufferSize;
+    int bBuffer;
 
     //count of current SceneContent to load from buffer
     int count;

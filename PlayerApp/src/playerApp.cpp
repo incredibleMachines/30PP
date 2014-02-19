@@ -14,7 +14,7 @@
 //--- constants
 #define MAPPER_DEBUG 0
 
-//--------------------------------------------------------------
+    //--------------------------------------------------------------
 void playerApp::setup(){
     
     //----------OF GL SETUP
@@ -49,11 +49,13 @@ void playerApp::setup(){
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setReloadMesh("mapping_test/Mapping test_07_02.obj");
+    map.setMassMesh("mapping_test/Mapping test_07_02.obj");
     
     //testing - set manual trigger to false
     bTriggered=false;
-
+    bBuffer=false;
+    
+    bufferSize=6;
     
 }
 
@@ -110,26 +112,21 @@ void playerApp::keyPressed(int key){
     
     //manually trigger all event content loading into contentBuffer
     else if(key == '0'){
+        
         contentBuffer.clear();
-        for (int i=0;i<socketHandler.eventHandler.allEvents.size();i++){
-            for(int j=0;j<socketHandler.eventHandler.allEvents[i].eScenes.size();j++){                
-                SceneContent tempContent;
-                if(socketHandler.eventHandler.allEvents[i].eScenes[j].sZoneType==0){
-                    tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],1);
-                }
-                else{
-                    tempContent.load(&socketHandler.eventHandler.allEvents[i].eScenes[j],numMesh);
-                }
-                contentBuffer.push_back(tempContent);
-            }
-        }
         count=0;
-        for(int i=0;i<numMesh;i++){
-            if(contentBuffer[count].numMesh==1){
-                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[0]);
+        int tempCount=0;
+
+        if(bBuffer==false){
+            for (int i=0;i<socketHandler.eventHandler.allScenes.size();i++){
+                    SceneContent tempContent;
+                    tempContent.load(&socketHandler.eventHandler.allScenes[i],numMesh);
+                    contentBuffer.push_back(tempContent);
+                tempCount++;
             }
-            else{
-                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+        
+            for(int i=0;i<numMesh;i++){
+                map.compositeTexture[i].loadScene(&contentBuffer[0].fullScene[i]);
             }
         }
     }
@@ -137,20 +134,40 @@ void playerApp::keyPressed(int key){
     //manually switch to next scene. TODO: toss out previous contentBuffer, free memory
     else if (key== '='){
         count++;
-        if(count>contentBuffer.size()-1){
+        if(count>=socketHandler.eventHandler.allScenes.size()){
             count=0;
-        }        
-        
-        for(int i=0;i<numMesh;i++){
-            if(contentBuffer[count].numMesh==1){
-                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[0]);
-            }
-            else{
-                map.compositeTexture[i].loadScene(contentBuffer[count].fullScene[i]);
+        }
+        if(bBuffer==true){
+            contentBuffer.erase(contentBuffer.begin());
+            int tempCount;
+                if(count+bufferSize+1<socketHandler.eventHandler.allEvents.size()){
+                    tempCount=count+bufferSize+1;
+                }
+                else{
+                    tempCount=0;
+                    
+                }
+            SceneContent tempContent;
+                    if(socketHandler.eventHandler.allScenes[tempCount].sZoneType==0){
+                        tempContent.load(&socketHandler.eventHandler.allScenes[tempCount],1);
+                    }
+                    else{
+                        tempContent.load(&socketHandler.eventHandler.allScenes[tempCount],numMesh);
+                    }
+                    contentBuffer.push_back(tempContent);
+            for(int i=0;i<numMesh;i++){
+                    map.compositeTexture[i].loadScene(&contentBuffer[0].fullScene[i]);
             }
         }
-        
+        else{
+            for(int i=0;i<numMesh;i++){
+                map.compositeTexture[i].loadScene(&contentBuffer[count].fullScene[i]);
+            }
+            
+        }
     }
+    
+    
 }
 
 

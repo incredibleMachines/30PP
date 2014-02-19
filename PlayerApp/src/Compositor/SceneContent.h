@@ -34,20 +34,13 @@ public:
             ofVboMesh text;
             ofVec2f coords;
     };
-    class VideoContent{
-        public:
-            ofVideoPlayer video;
-            ofVec2f coords;
-            bool fullScreen=false;
-    };
    
     //content struct of vectors of the above structs for a single mesh. TODO: decide whether this should be by mesh or one huge texture for all meshes
     class meshScene{
     public:
-        vector<VideoContent> vid;
+        vector<ofVideoPlayer> vid;
         vector<ImageContent> img;
         vector<TextContent> txt;
-        int sceneType;
     };
     
     //variable identifying which mesh to load into

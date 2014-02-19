@@ -25,5 +25,7 @@ public:
     
     vector <Event> allEvents;
     
+    vector <Scene> allScenes;
+    
     bool eventsInited;
 };
