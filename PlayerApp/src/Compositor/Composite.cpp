@@ -16,20 +16,75 @@ void Composite::setup(int _meshNum){
     
     //----------TEXTURE SETUP
     
+    //setup mipmapping GL context
+    ofEnableAntiAliasing();
+    ofDisableArbTex();
+    
     //assign this texture to a specific mesh in ModelMapper
     meshNum=_meshNum;
-    
-    //load UV map for this mesh to get texture coordinates
-    bgImage.loadImage("mapping_test/mesh_"+ofToString(meshNum)+".jpg");
-    
-    //setup Fbo (width, height, type, depth sample) currently set to use .maxSamples method of fbo to query graphics card on number of samples possible.
-    drawSurface.allocate(bgImage.getWidth(),bgImage.getHeight(),GL_RGB,8);
     
     //set status variables
     bFinished=true;
     bLoaded=false;
     bPlaying=false;
     textPos=ofVec2f(0,200);
+    
+    //load our non-MipMapper texture for comparison
+    ofLoadImage(drawNoMip, "mapping_test/mesh_"+ofToString(meshNum)+".jpg");
+    
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    
+    //load pixel data to set our mipmapper texture
+    ofPixels pix;
+	bool loaded = ofLoadImage(pix, "mapping_test/mesh_"+ofToString(meshNum)+".jpg");
+    
+    //allocate texture
+    drawSurface.allocate(pix.getWidth(), pix.getHeight(), ofGetGlInternalFormat(pix) );
+
+    ofTextureData& texData = drawSurface.texData;
+    
+    //save format and type as globals
+    glFormat=ofGetGlFormat(pix);
+    glType=ofGetGlType(pix);
+    
+    //special case for texture type - we will always be using GL_2D but just in case
+    if (texData.textureTarget == GL_TEXTURE_RECTANGLE_ARB){
+        texData.tex_t = pix.getWidth();
+        texData.tex_u = pix.getHeight();
+    } else {
+        texData.tex_t = (float)(pix.getWidth()) / (float)texData.tex_w;
+        texData.tex_u = (float)(pix.getHeight()) / (float)texData.tex_h;
+    }
+    
+    //set our pixel source to determine mip map texel size
+    ofSetPixelStorei(pix.getWidth(),pix.getBytesPerChannel(),pix.getNumChannels());
+    
+    //create texture
+    glGenTextures(1, &texData.textureID);
+    
+    //bind texture
+    glBindTexture(texData.textureTarget, texData.textureID);
+    
+    //setup mipmaps
+    glTexImage2D(texData.textureTarget, 0, texData.glTypeInternal, pix.getWidth(), pix.getHeight(), 0, ofGetGlFormat(pix), ofGetGlType(pix), pix.getPixels());
+    glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+    
+    //set environment, not using currenty but just incase we change our env elsewhere
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    
+    //enable GL_TEXTURE_2D
+    glEnable(  texData.textureTarget);
+    
+    //create mipmaps
+    glGenerateMipmap(texData.textureTarget);
+    
+    //set params, GL_LINEAR_MIPMAP_LINER is trilinear which means greatest quality
+    glTexParameteri( texData.textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri( texData.textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    
+    //anisotropy unblurs our mip maps, basically sets "how much" we want antialias with higher param being less blur
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+    glDisable( texData.textureTarget );
 }
 
 void Composite::update(){
@@ -50,87 +105,76 @@ void Composite::update(){
         
         for(int i=0; i<currentScene->vid.size();i++){
             currentScene->vid[i].update();
+            if(currentScene->vid[i].isFrameNew()){
+                    createTexture();
+            }
         }
     }
     
     pos.x=0;
     pos.y=0;
     
-    drawFbo();
+
 }
 
 void Composite::bind(){
-    drawSurface.getTextureReference().bind();
+    drawSurface.bind();
     
 }
 
 void Composite::unbind(){
-    drawSurface.getTextureReference().unbind();
+    drawSurface.unbind();
     
 }
 
-void Composite::drawFbo(){
+void Composite::createTexture(){
     
     
     //----------CREATE TEXTURE
-    
-    //setup GL draw state for Fbo Texture
-    ofDisableNormalizedTexCoords();
-    ofEnableAlphaBlending();
-    
-    
-    //drawFbo to reder buffer
-    drawSurface.begin();
-    
-    //necessary to avoid video glitching at the start of all Fbos
-    ofClear(0, 0, 0,255);
+
     ofSetColor(255,255,255);
+
+
+
 
     //check to make sure content has loaded before drawing
     if(bLoaded==true){
         
-        //----------DRAW TEXT(S)
+        //save current frame pixel data to a pixel array for loading into glTexImage2D
+        unsigned char * pix=currentScene->vid[0].getPixels();
         
-        ofPushMatrix();
-        
-        //TODO: this should be determined programatically by animation JSON
-        ofTranslate(pos+textPos);
-        for(int i=0; i<currentScene->txt.size();i++){
-            currentScene->txt[i].text.draw();
-        }
-        
-        ofPopMatrix();
-
-        
-        //----------DRAW IMAGE(S)
-        
-        ofPushMatrix();
-        
-        //TODO: this should be determined programatically by animation JSON
-        ofTranslate(pos);
-        for(int i=0; i<currentScene->img.size();i++){
-            currentScene->img[i].image.draw(0,0);
-        }
-
-        ofPopMatrix();
-        
-
+        //set other glTexImage2D variables
+        int width=currentScene->vid[0].getWidth();
+        int height=currentScene->vid[0].getHeight();
+        int pixelFormat=currentScene->vid[0].getPixelFormat();
     
-        //TODO: draw video textures
-        ofPushMatrix();
-        ofTranslate(pos);
-        for(int i=0; i<currentScene->vid.size();i++){
-            cout<<"video width:"<< currentScene->vid[i].getMoviePath()<<endl;
-            currentScene->vid[i].draw(0,0);
-        }
-        ofPopMatrix();
+        //pair with current texture
+        ofTextureData& texData = drawSurface.texData;
+        
+        //bind texture
+        glBindTexture(texData.textureTarget, texData.textureID);
+        
+        //setup mipmap context
+        glTexImage2D(texData.textureTarget, 0, glFormat, drawSurface.getWidth(), drawSurface.getHeight(), 0, glFormat, glType, pix);
+        glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+        
+        //environment, in case we change elsewhere
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        
+        //enable GL_TEXTURE_2D
+        glEnable(  texData.textureTarget);
+        
+        //make mipmaps - REQUIRES GL to be post-3.0
+        glGenerateMipmap(texData.textureTarget);
+        
+        //set quality - GL_LINEAR_MIPMAP_LINEAR is highest, trilinear
+        glTexParameteri( texData.textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri( texData.textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        
+        //set amount of anisotropic filtering - this undoes the blur of the mipmapping relative to camera
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
+        glDisable( texData.textureTarget );
     }
-    
-    drawSurface.end();
-    
-    //reset GL Context to default;
-    ofEnableNormalizedTexCoords();
-    ofDisableAlphaBlending();
 }
 
 void Composite::loadScene(SceneContent::meshScene * _currentScene){

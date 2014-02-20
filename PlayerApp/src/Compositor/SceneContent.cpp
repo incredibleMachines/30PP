@@ -17,7 +17,6 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
     meshScene tempMesh;
     numMesh=_numMeshes;
     
-    cout<<numMesh<<endl;
     
     for(int i=0;i<_numMeshes;i++){
         fullScene.push_back(tempMesh);
@@ -30,55 +29,11 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
         //assign Asset to mesh. TODO: make this a look-up of which zone goes with which mesh
         
         currentMesh=scene->sAssets[i].aZone;
-        cout<<currentMesh<<endl;
         
-        loadText(i);
-        
-        //if fileType is image, load images
-        if(scene->sAssets[i].aFileType==2){
-            cout<<"loaded image"<<endl;
-            ImageContent tempImage;
-            tempImage.image.loadImage(scene->sAssets[i].aFilePath);
-            if(currentMesh<ZONE_FULL_SCREEN){
-                tempImage.fullScreen=true;
-            }
-            fullScene[currentMesh].img.push_back(tempImage);
-        }
-        
-        //if fileType is video, load video. TODO: make this ofQTKitPlayer instead of ofVideoPlayer, solve .play() on this content
-        else if(scene->sAssets[i].aFileType==1){
-            cout<<"loaded video"<<endl;
+        if(scene->sAssets[i].aFileType==1){
             ofVideoPlayer tempVid;
             fullScene[currentMesh].vid.push_back(tempVid);
             fullScene[currentMesh].vid[fullScene[currentMesh].vid.size()-1].loadMovie(scene->sAssets[i].aFilePath);
         }
     }
-}
-
-void SceneContent::loadText(int i){
-    //TODO - add if to determine whether we want to load text all
-    //create ofVboMesh of text - Always do this
-    ttFont = &((playerApp*)ofGetAppPtr())->masterFont;
-    vector<ofTTFCharacter> shapes = ttFont->getStringAsPoints(scene->sAssets[i].aCaption);
-    TextContent tempText;
-    for(int j = 0; j < shapes.size(); j++) {
-        ofMesh cur = shapes[j].getTessellation();
-        tempText.text.setMode(cur.getMode());
-        int indexOffset = tempText.text.getVertices().size();
-        tempText.text.addVertices(cur.getVertices());
-        for(int k = 0; k < cur.getIndices().size(); k++) {
-            tempText.text.addIndex(indexOffset + cur.getIndices()[k]);
-        }
-        
-    }
-    fullScene[currentMesh].txt.push_back(tempText);
-
-}
-
-void SceneContent::loadImage(int i){
-    
-}
-
-void SceneContent::loadVideo(int i){
-    
 }

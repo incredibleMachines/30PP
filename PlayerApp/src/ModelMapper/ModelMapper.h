@@ -104,6 +104,7 @@ public:
     int meshType;
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
+            ofPlanePrimitive plane;
     
 
     //---------MASK SETTINGS
@@ -125,4 +126,5 @@ public:
     
     //----------TEXTURE SETTINGS
     vector<Composite> compositeTexture;
+    bool bMipMap;
 };

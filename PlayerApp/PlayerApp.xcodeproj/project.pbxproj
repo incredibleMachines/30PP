@@ -108,11 +108,19 @@
 		D31EC6A618A9A6AB00B8F882 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		D38507EE18AA79E400DAF9E7 /* Composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Composite.cpp; sourceTree = "<group>"; };
 		D38507EF18AA79E400DAF9E7 /* Composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Composite.h; sourceTree = "<group>"; };
+		D399DA5A18B586F80089B345 /* mesh_mass_0_2.ply */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_mass_0_2.ply; sourceTree = "<group>"; };
+		D399DA5C18B58E020089B345 /* mesh_0_test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0_test.jpg; sourceTree = "<group>"; };
 		D39E973018AC3289004C7001 /* SceneContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneContent.cpp; sourceTree = "<group>"; };
 		D39E973118AC3289004C7001 /* SceneContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneContent.h; sourceTree = "<group>"; };
+		D3A08A6918B69BC5007D882F /* Mapping_test_A.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mapping_test_A.obj; sourceTree = "<group>"; };
+		D3A08A6A18B69BC5007D882F /* mesh_1_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1_weird.jpg; sourceTree = "<group>"; };
+		D3A08A6B18B69BC5007D882F /* MASTER WALL_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "MASTER WALL_01.jpg"; sourceTree = "<group>"; };
+		D3A08A6C18B69BC5007D882F /* mesh_0_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0_weird.jpg; sourceTree = "<group>"; };
+		D3A08A6D18B69BC5007D882F /* mesh_2_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2_weird.jpg; sourceTree = "<group>"; };
+		D3A08A6E18B69C95007D882F /* Mapping_test_B.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mapping_test_B.obj; sourceTree = "<group>"; };
+		D3A08A6F18B6A920007D882F /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
-		D3BE79C818AD8A550030E92F /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
 		D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Mapping test_07_02.obj"; sourceTree = "<group>"; };
 		D3BE79CA18AD8A550030E92F /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
 		D3BE79CB18AD8A550030E92F /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
@@ -366,6 +374,7 @@
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D399DA5A18B586F80089B345 /* mesh_mass_0_2.ply */,
 				D3BE79C718AD8A550030E92F /* mapping_test */,
 				D3BB512518A9859C00FCEFD8 /* settings.json */,
 				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
@@ -377,7 +386,14 @@
 		D3BE79C718AD8A550030E92F /* mapping_test */ = {
 			isa = PBXGroup;
 			children = (
-				D3BE79C818AD8A550030E92F /* mesh_0.jpg */,
+				D3A08A6F18B6A920007D882F /* mesh_0.jpg */,
+				D3A08A6E18B69C95007D882F /* Mapping_test_B.obj */,
+				D3A08A6918B69BC5007D882F /* Mapping_test_A.obj */,
+				D3A08A6A18B69BC5007D882F /* mesh_1_weird.jpg */,
+				D3A08A6B18B69BC5007D882F /* MASTER WALL_01.jpg */,
+				D3A08A6C18B69BC5007D882F /* mesh_0_weird.jpg */,
+				D3A08A6D18B69BC5007D882F /* mesh_2_weird.jpg */,
+				D399DA5C18B58E020089B345 /* mesh_0_test.jpg */,
 				D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */,
 				D3BE79CA18AD8A550030E92F /* mesh_1.jpg */,
 				D3BE79CB18AD8A550030E92F /* mesh_2.jpg */,

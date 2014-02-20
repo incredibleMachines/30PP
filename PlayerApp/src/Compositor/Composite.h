@@ -25,7 +25,7 @@ public:
     void bind();
     void unbind();
     //create Fbo for wrapping around mesh in ModelMapper
-    void drawFbo();
+    void createTexture();
     
     //----------FBO TEXTURE
     //testing - fixed video object
@@ -33,7 +33,8 @@ public:
     //UV Texture for tex coordinates, calibration
     ofImage bgImage;
     //Fbo for actual draw texture
-    ofFbo drawSurface;
+    ofTexture drawSurface;
+    ofTexture drawNoMip;
     //mesh to assign this Fbo to
     int meshNum;
     //loading variable checks
@@ -45,5 +46,9 @@ public:
     
     //pointer to content for this scene and mesh - from playerApp
     SceneContent::meshScene * currentScene;
+    
+    //globals for storing info about our UV map at setup
+    int glFormat;
+    int glType;
 };
 

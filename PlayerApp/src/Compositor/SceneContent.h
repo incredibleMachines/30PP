@@ -21,26 +21,12 @@ public:
     void loadVideo(int i);
     
     //----------CONTENT ORGANIZATION
-    
-    //Content structs for Image, Text, and Video
-    class ImageContent{
-        public:
-            ofImage image;
-            ofVec2f coords;
-            bool fullScreen=false;
-    };
-    class TextContent{
-        public:
-            ofVboMesh text;
-            ofVec2f coords;
-    };
+
    
     //content struct of vectors of the above structs for a single mesh. TODO: decide whether this should be by mesh or one huge texture for all meshes
     class meshScene{
     public:
         vector<ofVideoPlayer> vid;
-        vector<ImageContent> img;
-        vector<TextContent> txt;
     };
     
     //variable identifying which mesh to load into
@@ -50,9 +36,6 @@ public:
     vector<meshScene> fullScene;
     
     //----------POINTERS
-    
-    //pointer to font for creating ofVboMeshes
-    ofTrueTypeFont * ttFont;
     
     Scene * scene;
     int numMesh;

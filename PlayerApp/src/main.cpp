@@ -6,20 +6,25 @@
 //========================================================================
 int main( ){
 
-    ofAppGLFWWindow window;
+    ofAppGLFWWindow* win = new ofAppGLFWWindow;
 
     //GLFW GL SETUP
     //Don't seem to affect the FBO textures as these have their own GL settings but leaving them in for now as reference
     
-    window.setMultiDisplayFullscreen(true);
-    window.setDoubleBuffering(true);
-    window.setVerticalSync(true);
-    window.setDepthBits(8);
-    window.setColorBits(8,8,8);
-    window.setNumSamples(8);
-    window.setStencilBits(8);
+    win->setMultiDisplayFullscreen(true);
+//    win->setDoubleBuffering(true);
+//    win->setVerticalSync(true);
+//    win->setDepthBits(8);
+//    win->setColorBits(8,8,8);
+//    win->setNumSamples(8);
+//    win->setStencilBits(8);
+    
+    win->setNumSamples(4);
+    win->setOpenGLVersion(4,4);
+    ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
 
-    ofSetupOpenGL(&window,1920,1080,OF_FULLSCREEN);
+    ofSetupOpenGL(win,1920,1080,OF_FULLSCREEN);
+
 
     ofRunApp(new playerApp);
 }

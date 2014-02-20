@@ -19,15 +19,19 @@ void playerApp::setup(){
     
     //----------OF GL SETUP
     //Many of these seem to have no effect in GLFW but leaving in for now
-    
-    ofSetVerticalSync(true);
-    ofEnableAntiAliasing;
+//    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    // glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+//    ofSetVerticalSync(true);
+//    ofEnableAntiAliasing;
     ofEnableDepthTest();
+//    ofEnableSmoothing();
     ofSetFrameRate(60);
     ofEnableNormalizedTexCoords();
-    ofDisableSeparateSpecularLight();
+//    ofDisableSeparateSpecularLight();
     ofBackground(0, 0, 0);
     ofSetWindowTitle("30PP Player");
+    
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     
     //----------SOCKET SETUP
     
@@ -53,9 +57,9 @@ void playerApp::setup(){
     
     //testing - set manual trigger to false
     bTriggered=false;
-    bBuffer=false;
+    bBuffer=true;
     
-    bufferSize=6;
+    bufferSize=2;
     
 }
 
@@ -70,6 +74,7 @@ void playerApp::update(){
         //Update Everything
             map.update();
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -113,52 +118,56 @@ void playerApp::keyPressed(int key){
     //manually trigger all event content loading into contentBuffer
     else if(key == '0'){
         
+        //clear contentBuffer
         contentBuffer.clear();
-        count=0;
-        int tempCount=0;
-
-        if(bBuffer==false){
-            for (int i=0;i<socketHandler.eventHandler.allScenes.size();i++){
-                    SceneContent tempContent;
-                    tempContent.load(&socketHandler.eventHandler.allScenes[i],numMesh);
-                    contentBuffer.push_back(tempContent);
-                tempCount++;
-            }
+        count=bufferSize;
         
-            for(int i=0;i<numMesh;i++){
-                map.compositeTexture[i].loadScene(&contentBuffer[0].fullScene[i]);
-            }
+        //fill buffer with content
+        for (int i=0;i<bufferSize;i++){
+                SceneContent tempContent;
+                tempContent.load(&socketHandler.eventHandler.allScenes[i],numMesh);
+                contentBuffer.push_back(tempContent);
+        }
+        
+        //draw first buffer item
+        for(int i=0;i<numMesh;i++){
+            map.compositeTexture[i].loadScene(&contentBuffer[0].fullScene[i]);
         }
     }
     
     //manually switch to next scene. TODO: toss out previous contentBuffer, free memory
     else if (key== '='){
         count++;
-        if(count>=socketHandler.eventHandler.allScenes.size()){
+        
+        //loop at end of content
+        if(count>socketHandler.eventHandler.allScenes.size()-1){
             count=0;
         }
+        
         if(bBuffer==true){
+            
+            //parse through item to drop and close all videos
+            for(int i=0;i<contentBuffer[0].fullScene.size();i++){
+                for(int j=0;j<contentBuffer[0].fullScene[i].vid.size();j++){
+                    contentBuffer[0].fullScene[i].vid[j].close();
+                }
+            }
+            
+            //drop just played item
             contentBuffer.erase(contentBuffer.begin());
-            int tempCount;
-                if(count+bufferSize+1<socketHandler.eventHandler.allEvents.size()){
-                    tempCount=count+bufferSize+1;
-                }
-                else{
-                    tempCount=0;
-                    
-                }
+            
+            //push new item into content buffer
             SceneContent tempContent;
-                    if(socketHandler.eventHandler.allScenes[tempCount].sZoneType==0){
-                        tempContent.load(&socketHandler.eventHandler.allScenes[tempCount],1);
-                    }
-                    else{
-                        tempContent.load(&socketHandler.eventHandler.allScenes[tempCount],numMesh);
-                    }
+            tempContent.load(&socketHandler.eventHandler.allScenes[count],numMesh);
                     contentBuffer.push_back(tempContent);
+            
+            //play first item in content bfufer
             for(int i=0;i<numMesh;i++){
                     map.compositeTexture[i].loadScene(&contentBuffer[0].fullScene[i]);
             }
+            cout<<"loaded scene: "<<count<<endl;
         }
+        
         else{
             for(int i=0;i<numMesh;i++){
                 map.compositeTexture[i].loadScene(&contentBuffer[count].fullScene[i]);

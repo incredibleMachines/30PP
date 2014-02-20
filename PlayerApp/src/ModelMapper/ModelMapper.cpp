@@ -50,6 +50,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //----------SETUP GLOBALS
     
+    plane.set(1024,1024);
+
     numCams=_numCams;
     guiCam=_guiCam;
     numMeshes=_whichMeshes.size();
@@ -81,6 +83,9 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //adjustment settings
     bShiftPressed=false;
     moveModifier=.1;
+    
+    //texture settings
+    bMipMap=true;
     
     //----------LOAD SETTINGS JSON
     
@@ -494,6 +499,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             saveCameras();
             break;
             
+        case 'p':
+            bMipMap=!bMipMap;
+            break;
+            
         
         //----------CREATE NEW MASK
             
@@ -849,9 +858,11 @@ void ModelMapper:: setupCameras() {
                 string loader;
                 if(meshType==MESH_DETAIL){
                     loader="mesh_detail_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+                    
                 }
                 else if(meshType==MESH_MASS){
-                    string loader="mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply");
+                    cout<<loader<<endl;
                 }
                 tempMesh.load(loader);
                 meshes.push_back(tempMesh);
@@ -1069,24 +1080,27 @@ void ModelMapper:: drawCameras() {
         //Begin camera object
         cameras[i].camera.begin(cameras[i].viewport);
         
+
+            
         for(int j=0;j<numMeshes;j++){
             
-            //Wrap Composite Fbo around mesh
-            compositeTexture[j].bind();
-            if(compositeTexture[j].bLoaded){
-                cout<<compositeTexture[j].currentScene->vid[0].getMoviePath()<<endl;
-            }
+            //Wrap Composite Fbo around mesh]
+            if(bMipMap) compositeTexture[j].drawSurface.bind();
+            else compositeTexture[j].drawNoMip.bind();
+
             ofSetColor(255,255,255);
+
+            cameras[i].mesh[j].draw();
         
-            //draw mesh
-            cameras[i].mesh[j].drawFaces();
-        
-            compositeTexture[j].unbind();
+//            cout<<ofGetUsingArbTex()<<endl;
+            if(bMipMap) compositeTexture[j].drawSurface.unbind();
+            else compositeTexture[j].drawNoMip.unbind();
             
             //draw mesh wireframe
             if(bDrawWireframe==true){
                 ofSetColor(255,255,255);
                 ofSetLineWidth(2);
+//                plane.drawWireframe();
                 cameras[i].mesh[j].drawWireframe();
             }
 
@@ -1101,7 +1115,11 @@ void ModelMapper:: drawCameras() {
         else{
             ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
         }
+        
+
     }
+//    ofDisableNormalizedTexCoords();
+//    compositeTexture[0].drawSurface.draw(0,0);
 }
 
 void ModelMapper::drawHighlights() {
