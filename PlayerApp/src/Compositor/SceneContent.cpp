@@ -14,26 +14,35 @@ void SceneContent::load(Scene * _scene, int _numMeshes){
     
     scene=_scene;
     //create vector for all meshes
-    meshScene tempMesh;
     numMesh=_numMeshes;
     
     
     for(int i=0;i<_numMeshes;i++){
-        fullScene.push_back(tempMesh);
+        fullScene.push_back(new ofxAVFVideoPlayer());
     }
     
     //----------LOAD CONTENT
     
-    for(int i=0;i<scene->sAssets.size();i++){
+    for(int i=0;i<2;i++){
         
-        //assign Asset to mesh. TODO: make this a look-up of which zone goes with which mesh
+        //assign Asset to mesh
         
         currentMesh=scene->sAssets[i].aZone;
         
+        cout<<"loading mesh: "<<currentMesh<<endl;
+        
         if(scene->sAssets[i].aFileType==1){
-            ofVideoPlayer tempVid;
-            fullScene[currentMesh].vid.push_back(tempVid);
-            fullScene[currentMesh].vid[fullScene[currentMesh].vid.size()-1].loadMovie(scene->sAssets[i].aFilePath);
+            cout<<"loading mesh: "<<currentMesh<<endl;
+            cout<<"total mesh: "<<fullScene.size()<<endl;
+//            fullScene[currentMesh]->setPixelFormat(OF_PIXELS_RGBA);
+            fullScene[currentMesh]->loadMovie(scene->sAssets[i].aFilePath);
+            fullScene[currentMesh]->setLoopState(OF_LOOP_NORMAL);
         }
     }
+}
+
+void SceneContent::update(){
+//    for(int i=0;i<fullScene.size();i++){
+//        fullScene[i].update();
+//    }
 }

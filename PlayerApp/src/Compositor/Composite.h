@@ -12,6 +12,7 @@
 #include "../Events/Scene.h"
 #include "../Events/Asset.h"
 #include "SceneContent.h"
+#include "ofxAVFVideoPlayer.h"
 
 class Composite  {
 public:
@@ -20,7 +21,7 @@ public:
     
     //----------CUSTOM FUNCTIONS
     //load new content
-    void loadScene(SceneContent::meshScene * _scene);
+    void loadScene(ofxAVFVideoPlayer * _vid);
     //bind and unbind texturereference wrappers
     void bind();
     void unbind();
@@ -45,10 +46,14 @@ public:
     ofVec2f textPos;
     
     //pointer to content for this scene and mesh - from playerApp
-    SceneContent::meshScene * currentScene;
+    ofxAVFVideoPlayer * vid;
+    ofxAVFVideoPlayer loader;
     
     //globals for storing info about our UV map at setup
     int glFormat;
     int glType;
+    
+    bool bSetup;
+    
 };
 

@@ -22,8 +22,13 @@
 		D31EC6A718A9A6AB00B8F882 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A018A9A6AB00B8F882 /* Asset.cpp */; };
 		D31EC6A818A9A6AB00B8F882 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A318A9A6AB00B8F882 /* Event.cpp */; };
 		D31EC6A918A9A6AB00B8F882 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A518A9A6AB00B8F882 /* Scene.cpp */; };
+		D37596C518B7A68400FD8F45 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37596C418B7A68300FD8F45 /* CoreMedia.framework */; };
+		D37596C718B7A69300FD8F45 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37596C618B7A69300FD8F45 /* QuartzCore.framework */; };
+		D37596C918B7A69C00FD8F45 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37596C818B7A69C00FD8F45 /* AVFoundation.framework */; };
 		D38507F018AA79E400DAF9E7 /* Composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D38507EE18AA79E400DAF9E7 /* Composite.cpp */; };
 		D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D39E973018AC3289004C7001 /* SceneContent.cpp */; };
+		D3EE9AF218B7AD8D008AFED8 /* ofxAVFVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D37596F118B7A8D000FD8F45 /* ofxAVFVideoPlayer.mm */; };
+		D3EE9AF318B7AD8D008AFED8 /* ofxAVFVideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D37596F318B7A8D000FD8F45 /* ofxAVFVideoRenderer.m */; };
 		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
 		E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */; };
 		E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */; };
@@ -106,24 +111,35 @@
 		D31EC6A418A9A6AB00B8F882 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		D31EC6A518A9A6AB00B8F882 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		D31EC6A618A9A6AB00B8F882 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		D37596C418B7A68300FD8F45 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = /System/Library/Frameworks/CoreMedia.framework; sourceTree = "<absolute>"; };
+		D37596C618B7A69300FD8F45 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
+		D37596C818B7A69C00FD8F45 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		D37596CB18B7A8D000FD8F45 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		D37596ED18B7A8D000FD8F45 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		D37596EE18B7A8D000FD8F45 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
+		D37596F018B7A8D000FD8F45 /* ofxAVFVideoPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAVFVideoPlayer.h; sourceTree = "<group>"; };
+		D37596F118B7A8D000FD8F45 /* ofxAVFVideoPlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAVFVideoPlayer.mm; sourceTree = "<group>"; };
+		D37596F218B7A8D000FD8F45 /* ofxAVFVideoRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAVFVideoRenderer.h; sourceTree = "<group>"; };
+		D37596F318B7A8D000FD8F45 /* ofxAVFVideoRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofxAVFVideoRenderer.m; sourceTree = "<group>"; };
 		D38507EE18AA79E400DAF9E7 /* Composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Composite.cpp; sourceTree = "<group>"; };
 		D38507EF18AA79E400DAF9E7 /* Composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Composite.h; sourceTree = "<group>"; };
-		D399DA5A18B586F80089B345 /* mesh_mass_0_2.ply */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_mass_0_2.ply; sourceTree = "<group>"; };
-		D399DA5C18B58E020089B345 /* mesh_0_test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0_test.jpg; sourceTree = "<group>"; };
 		D39E973018AC3289004C7001 /* SceneContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneContent.cpp; sourceTree = "<group>"; };
 		D39E973118AC3289004C7001 /* SceneContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneContent.h; sourceTree = "<group>"; };
-		D3A08A6918B69BC5007D882F /* Mapping_test_A.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mapping_test_A.obj; sourceTree = "<group>"; };
-		D3A08A6A18B69BC5007D882F /* mesh_1_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1_weird.jpg; sourceTree = "<group>"; };
-		D3A08A6B18B69BC5007D882F /* MASTER WALL_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "MASTER WALL_01.jpg"; sourceTree = "<group>"; };
-		D3A08A6C18B69BC5007D882F /* mesh_0_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0_weird.jpg; sourceTree = "<group>"; };
-		D3A08A6D18B69BC5007D882F /* mesh_2_weird.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2_weird.jpg; sourceTree = "<group>"; };
-		D3A08A6E18B69C95007D882F /* Mapping_test_B.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = Mapping_test_B.obj; sourceTree = "<group>"; };
-		D3A08A6F18B6A920007D882F /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
-		D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Mapping test_07_02.obj"; sourceTree = "<group>"; };
-		D3BE79CA18AD8A550030E92F /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
-		D3BE79CB18AD8A550030E92F /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
+		D3EE9AF518B7C4F7008AFED8 /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
+		D3EE9AF618B7C4F7008AFED8 /* mesh_B.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_B.obj; sourceTree = "<group>"; };
+		D3EE9AF718B7C4F7008AFED8 /* mesh_A.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_A.obj; sourceTree = "<group>"; };
+		D3EE9AF818B7C4F7008AFED8 /* MASTER WALL_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "MASTER WALL_01.jpg"; sourceTree = "<group>"; };
+		D3EE9AF918B7C4F7008AFED8 /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
+		D3EE9AFA18B7C4F7008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
+		D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
+		D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_1.png; sourceTree = "<group>"; };
+		D3EE9AFE18B7D00D008AFED8 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
+		D3EE9B0018B7D00D008AFED8 /* mesh_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_0.png; sourceTree = "<group>"; };
+		D3EE9B0118B7D6C7008AFED8 /* mesh_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_1.mov; sourceTree = "<group>"; };
+		D3EE9B0218B7D6C7008AFED8 /* mesh_0.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_0.mov; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -200,6 +216,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D37596C718B7A69300FD8F45 /* QuartzCore.framework in Frameworks */,
+				D37596C518B7A68400FD8F45 /* CoreMedia.framework in Frameworks */,
+				D37596C918B7A69C00FD8F45 /* AVFoundation.framework in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -273,6 +292,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				D37596CA18B7A8D000FD8F45 /* ofxAVFVideoPlayer */,
 				E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */,
 				AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */,
 			);
@@ -371,10 +391,34 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		D37596CA18B7A8D000FD8F45 /* ofxAVFVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D37596CB18B7A8D000FD8F45 /* .gitignore */,
+				D37596ED18B7A8D000FD8F45 /* LICENSE.txt */,
+				D37596EE18B7A8D000FD8F45 /* readme.md */,
+				D37596EF18B7A8D000FD8F45 /* src */,
+			);
+			name = ofxAVFVideoPlayer;
+			path = ../../../addons/ofxAVFVideoPlayer;
+			sourceTree = "<group>";
+		};
+		D37596EF18B7A8D000FD8F45 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				D37596F018B7A8D000FD8F45 /* ofxAVFVideoPlayer.h */,
+				D37596F118B7A8D000FD8F45 /* ofxAVFVideoPlayer.mm */,
+				D37596F218B7A8D000FD8F45 /* ofxAVFVideoRenderer.h */,
+				D37596F318B7A8D000FD8F45 /* ofxAVFVideoRenderer.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
-				D399DA5A18B586F80089B345 /* mesh_mass_0_2.ply */,
+				D3EE9AFB18B7D00D008AFED8 /* mesh */,
+				D3EE9AF418B7C4F7008AFED8 /* 02_20_14 */,
 				D3BE79C718AD8A550030E92F /* mapping_test */,
 				D3BB512518A9859C00FCEFD8 /* settings.json */,
 				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
@@ -386,19 +430,35 @@
 		D3BE79C718AD8A550030E92F /* mapping_test */ = {
 			isa = PBXGroup;
 			children = (
-				D3A08A6F18B6A920007D882F /* mesh_0.jpg */,
-				D3A08A6E18B69C95007D882F /* Mapping_test_B.obj */,
-				D3A08A6918B69BC5007D882F /* Mapping_test_A.obj */,
-				D3A08A6A18B69BC5007D882F /* mesh_1_weird.jpg */,
-				D3A08A6B18B69BC5007D882F /* MASTER WALL_01.jpg */,
-				D3A08A6C18B69BC5007D882F /* mesh_0_weird.jpg */,
-				D3A08A6D18B69BC5007D882F /* mesh_2_weird.jpg */,
-				D399DA5C18B58E020089B345 /* mesh_0_test.jpg */,
-				D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */,
-				D3BE79CA18AD8A550030E92F /* mesh_1.jpg */,
-				D3BE79CB18AD8A550030E92F /* mesh_2.jpg */,
 			);
 			path = mapping_test;
+			sourceTree = "<group>";
+		};
+		D3EE9AF418B7C4F7008AFED8 /* 02_20_14 */ = {
+			isa = PBXGroup;
+			children = (
+				D3EE9AF518B7C4F7008AFED8 /* mesh_2.jpg */,
+				D3EE9AF618B7C4F7008AFED8 /* mesh_B.obj */,
+				D3EE9AF718B7C4F7008AFED8 /* mesh_A.obj */,
+				D3EE9AF818B7C4F7008AFED8 /* MASTER WALL_01.jpg */,
+				D3EE9AF918B7C4F7008AFED8 /* mesh_0.jpg */,
+				D3EE9AFA18B7C4F7008AFED8 /* mesh_1.jpg */,
+			);
+			path = 02_20_14;
+			sourceTree = "<group>";
+		};
+		D3EE9AFB18B7D00D008AFED8 /* mesh */ = {
+			isa = PBXGroup;
+			children = (
+				D3EE9B0118B7D6C7008AFED8 /* mesh_1.mov */,
+				D3EE9B0218B7D6C7008AFED8 /* mesh_0.mov */,
+				D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */,
+				D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */,
+				D3EE9AFE18B7D00D008AFED8 /* mesh.obj */,
+				D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */,
+				D3EE9B0018B7D00D008AFED8 /* mesh_0.png */,
+			);
+			path = mesh;
 			sourceTree = "<group>";
 		};
 		E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */ = {
@@ -523,6 +583,9 @@
 		E45BE5980E8CC70C009D7055 /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D37596C818B7A69C00FD8F45 /* AVFoundation.framework */,
+				D37596C618B7A69300FD8F45 /* QuartzCore.framework */,
+				D37596C418B7A68300FD8F45 /* CoreMedia.framework */,
 				BBAB23CA13894EDB00AA2426 /* 3rd party frameworks */,
 				BBAB23C913894ECA00AA2426 /* system frameworks */,
 			);
@@ -639,6 +702,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3EE9AF218B7AD8D008AFED8 /* ofxAVFVideoPlayer.mm in Sources */,
+				D3EE9AF318B7AD8D008AFED8 /* ofxAVFVideoRenderer.m in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
 				D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */,
@@ -689,6 +754,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -705,6 +771,7 @@
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
 					../../../addons/ofxLibwebsockets/src,
+					../../../addons/ofxAVFVideoPlayer/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -718,7 +785,7 @@
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx10.8;
 			};
 			name = Debug;
 		};
@@ -737,6 +804,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -753,6 +821,7 @@
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
 					../../../addons/ofxLibwebsockets/src,
+					../../../addons/ofxAVFVideoPlayer/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -766,7 +835,7 @@
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx10.8;
 			};
 			name = Release;
 		};
@@ -778,8 +847,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxSyphon/libs/Syphon/lib/osx,
-					/Users/chris/oF/080/addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -789,73 +856,8 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_18)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_19)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_20)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_21)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_22)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_23)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_24)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_25)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_26)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_27)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_28)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_29)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_30)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_31)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_32)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_33)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_34)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_35)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_36)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_37)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_38)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_39)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_40)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_41)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_42)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_43)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_44)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_45)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_46)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_47)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_48)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx10.8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -868,8 +870,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxSyphon/libs/Syphon/lib/osx,
-					/Users/chris/oF/080/addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -878,73 +878,8 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_18)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_19)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_20)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_21)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_22)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_23)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_24)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_25)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_26)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_27)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_28)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_29)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_30)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_31)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_32)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_33)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_34)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_35)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_36)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_37)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_38)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_39)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_40)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_41)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_42)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_43)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_44)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_45)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_46)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_47)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_48)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx10.8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

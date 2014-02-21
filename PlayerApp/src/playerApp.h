@@ -50,6 +50,7 @@ public:
     vector<SceneContent> contentBuffer;
     int bufferSize;
     int bBuffer;
+    int bContentLoaded;
 
     //count of current SceneContent to load from buffer
     int count;
