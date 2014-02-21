@@ -45,7 +45,8 @@ exports.add = function(_Database){
 		
 		_Database.add('events', post, function(err, doc){
 			
-			if(!err) res.jsonp(doc)
+			//if(!err) res.jsonp(doc)
+			if(!err) res.redirect('/');
 			else res.jsonp(500,err);
 		})
 		//res.render('events/index', { title: 'Event Added', page_slug: 'event-index event-added',events:[] });
@@ -106,15 +107,27 @@ exports.single = function(_Database){
 exports.delete = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'delete - not implimented yet.'});
+		//res.jsonp({message:'test test test'});
+        _Database.remove('events', {slug:req.params.slug}, function(e){
+			 if(e) res.jsonp(500,{error:e});
+			 else res.redirect('/events');
+		});
 	}
 }
 
 exports.update = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'update - not implimented yet.'});
-		//res.render('events/index', { title: 'add event' });
+		//console.log(req);
+		//console.log(req.body);
+/* 		sample:
+		{ title: 'event 1', anim_type: 'ambient' }  */
+		var post = req.body;
+ 		var updateObj = {$set: {title: post.title, anim_type: post.anim_type}}; //  last_edited: new Date()
+ 		_Database.update('events',{slug:req.params.slug}, updateObj, function(e){
+			if(!e) res.redirect('/events');
+			else res.jsonp(500,{error:e});
+		});
 	}
 }
 

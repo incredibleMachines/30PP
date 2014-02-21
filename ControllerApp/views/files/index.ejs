@@ -38,7 +38,8 @@
 								<a href="#" class="thumbnail">
 									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
 								</a>
-								<button type="button" class="btn btn-default btn-sm">Replace</button>
+								<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>
+								<%/*<button type="button" class="btn btn-default btn-sm">Replace</button> */%>
 							</li>
 							<li class="col-md-2 file-location"> <!-- LOCATION -->
 								<select name="location" class="form-control show-tick">
@@ -48,7 +49,7 @@
 									<% /* end for loop */ %>
 									<% }) %>
 								</select>
-								<p>Don't see the location here?</p>
+								<p>Dont see the location here?</p>
 								<button type="button" class="btn btn-default btn-sm blue">Enter an Address</button>
 							</li>
 							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->

@@ -96,10 +96,11 @@ exports.remove = function(_type,_what,_cb){
 //_updateObj = the update operation which needs to take place
 exports.update=function(_type,_what,_updateObj,_cb){
 	
-	collection[_type].update(_what,_updateObj,true,true,function(e){
+	collection[_type].update(_what,_updateObj,true,function(e){
 		//needs to be tested and finished
-	})
-	
+		if(!e) _cb(null);
+		else _cb(e)
+	});
 }
 //update a document by providing a mongodb ID string
 //_type = collection name
@@ -114,10 +115,7 @@ exports.updateById=function(_type,_id,_updateObj,_cb){
 	collection[_type].update({_id: makeMongoID(_id)},_updateObj,true,function(e){
 		if(!e) _cb(null);
 		else _cb(e)
-		
 	})
-	
-	
 }
 //_event_id=the event we are formatting
 //_scenes=mongodb array of scenes
