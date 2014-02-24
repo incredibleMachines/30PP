@@ -11,6 +11,7 @@
 	"ws" : "0.4.x",
 	"mongodb":"1.x",
     "less-middleware": "0.x",
-    "ejs": "*"
+    "ejs": "*",
+    "async":"*"
   }
 }
