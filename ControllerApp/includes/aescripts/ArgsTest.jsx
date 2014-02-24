@@ -1,0 +1,1 @@
+﻿//sample Javascript function with takes JSON and alerts it from AFTER Effectsfunction main(args){        alert(JSON.stringify(args))    return args;    }
