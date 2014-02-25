@@ -123,7 +123,7 @@ exports.update = function(_Database){
 /* 		sample:
 		{ title: 'event 1', anim_type: 'ambient' }  */
 		var post = req.body;
- 		var updateObj = {$set: {title: post.title, anim_type: post.anim_type}}; //  last_edited: new Date()
+ 		var updateObj = {$set: {title: post.title, anim_type: post.anim_type, last_edited: new Date()}}; //  last_edited: new Date()
  		_Database.update('events',{slug:req.params.slug}, updateObj, function(e){
 			if(!e) res.redirect('/events');
 			else res.jsonp(500,{error:e});

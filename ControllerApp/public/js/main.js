@@ -82,5 +82,24 @@ $(document).ready(function(){
 			e.preventDefault();
 		}
 	});
+	
+	/*
+	** Event Single Actions
+	*/
+	
+	$("button.scene-delete").click(function(e){
+	
+		var path = $(this).parents('form').attr('action')+"/delete";		
+		
+		if(confirm("You are about to Delete this Scene, Proceed?")){
+	
+			$(this).parents('form').attr('action',path);
+			$(this).parents('form').submit();
+
+		}
+		//console.log(path);
+	
+	});
+	
 });
 

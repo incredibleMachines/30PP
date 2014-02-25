@@ -28,7 +28,6 @@ exports.MongoConnect = function(){
 		collection.locations = database.collection('locations');
 		
 	})
-
 }
 
 //_doc = mongo document to add
@@ -80,14 +79,12 @@ function queryCollection(_type, _query, _cb){
 //_type = collection name
 //_what = collection query 
 //_cb = callback(e)
-
 exports.remove = function(_type,_what,_cb){
 	
 	collection[_type].remove(_what,function(e){
 		if(!e) _cb(null)
 		else _cb(e)
 	})
-	
 }
 
 //update a document 
@@ -102,6 +99,7 @@ exports.update=function(_type,_what,_updateObj,_cb){
 		else _cb(e)
 	});
 }
+
 //update a document by providing a mongodb ID string
 //_type = collection name
 //_id = string as mongo id

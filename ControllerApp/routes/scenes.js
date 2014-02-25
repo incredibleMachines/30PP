@@ -366,11 +366,45 @@ exports.update = function(_Database){
 		//res.render('events/index', { current: req.url, title: 'add event' });
 	}
 }
+
+
 exports.delete = function(_Database){
 
+
+
 	return function(req,res){
-		res.jsonp({message:'delete not implimented yet'});
-		//res.render('events/index', { current: req.url, title: 'add event' });
+/* 		console.log(req.params); */
+//		console.log(req.body);
+
+		_Database.getDocumentByID('scenes', req.params.id, function(e, doc){
+			
+			if(e) res.jsonp(500,{error:e});
+
+			else {
+				_Database.update('events', {_id: doc.event_id}, {$pull: {scenes: doc._id } }, function(_e){
+
+					if(_e) res.jsonp(500,{error:_e});
+					
+					else {
+						_Database.remove('scenes', {_id: doc._id }, function(__e){
+				
+						if(__e) res.jsonp(500,{error:__e});
+						
+			 			else{
+				 		
+				 			_Database.getDocumentByID('events', doc.event_id, function(___e, _doc){
+					 		
+							if(___e) res.jsonp(500,{error:___e});
+							else res.redirect('/events/'+_doc.slug);	
+						
+							});	
+						}			
+					});
+				
+				  }
+			});
+		}
+		});
 	}
 }
 

@@ -18,7 +18,7 @@ var path = require('path');
 var events = require('./routes/events');
 var files = require('./routes/files');
 var scenes = require('./routes/scenes');
-var api = require('./routes/api')
+var api = require('./routes/api');
 
 /**
  * Custom Modules
