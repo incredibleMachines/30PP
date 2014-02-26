@@ -128,8 +128,8 @@ app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))
 //this route quits AfterEffects
 app.get('/AfterEffects/close',function(req,res){
 	
-	AfterEffects.exit(function(e){
-		if(!e) res.jsonp({result: "After Effects Closed"})
+	AfterEffects.exit(function(e,stdout){
+		if(!e) res.jsonp({result: "After Effects Closed",stdout:stdout})
 		else res.jsonp(500,{error: e })
 
 	});
@@ -137,24 +137,24 @@ app.get('/AfterEffects/close',function(req,res){
 })
 //this route opens AfterEffects
 app.get('/AfterEffects/open',function(req,res){
-	AfterEffects.init(function(e){
-		if(!e) res.jsonp({result: "After Effects Opened"})
+	AfterEffects.init(function(e, stdout){
+		if(!e) res.jsonp({result: "After Effects Opened",stdout:stdout})
 		else res.jsonp(500,{error: e })
 	})
 	
 })
 //open a file in AE 
 app.get('/AfterEffects/open/:file',function(req,res){
-	AfterEffects.open('/Users/chris/Desktop/Template_Test_Folder_3/Template_Test.aep',function(e){ 
-		if(!e) res.jsonp({result:'After Effects Opened File.'})
+	AfterEffects.open('/Users/chris/Desktop/Template_Test_Folder_3/Template_Test.aep',function(e,stdout){ 
+		if(!e) res.jsonp({result:'After Effects Opened File.',stdout:stdout})
 		else res.jsonp(500,{error:e})
 	}) 
 })
 //open run a jsx funtion
 app.get('/AfterEffects/script/:file',function(req,res){
-	var functionCall = "main("+JSON.stringify({stuff:'more', _this: 'this', ish: 'things' })+")";
-	AfterEffects.runScriptFunction('ArgsTest.jsx',functionCall,function(e){
-		if(!e) res.jsonp({result:'After Effects Ran Script'})
+	var functionCall = "updateAndRender("+JSON.stringify({stuff:'more', _this: 'this', ish: 'things' })+")";
+	AfterEffects.runScriptFunction('updateAndRender.jsx',functionCall,function(e,stdout){
+		if(!e) res.jsonp({result:'After Effects Ran Script', stdout: stdout})
 		else res.jsonp(500,{error:e})
 	}) 
 	

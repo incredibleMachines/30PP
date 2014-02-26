@@ -1,8 +1,13 @@
-var util = require('util');
-var exec = require('child_process').exec;
-var fs = require('fs');
-var async = require('async');
-var AFTEREFFECTS;
+var util 	= require('util'),
+	exec	= require('child_process').exec, 
+	fs		= require('fs'), 
+	async 	= require('async');
+	
+//NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
+var AFTEREFFECTS, 
+	bRendering = false,
+	bOpen = false,
+	currentFile;
 
 /*
 	
@@ -14,8 +19,29 @@ var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
 
 //notes:
 
-//After Effects Object for handling and processing AE Scripts ETC.
-//All communication is handled between APPLE SCRIPTS AND AEScripts
+// After Effects Object for handling and processing AE Scripts ETC.
+// All communication is handled between APPLE SCRIPTS AND AEScripts
+
+
+/* //SAMPLE OBJECT TO REPLACE TEXT AND IMAGES and RENDER OUT the videos
+var sample = {
+	file: "/Users/chris/oF/080/apps/30PP/ControllerApp/includes/aeprojects/Seamless_L-R/Seamless_L-R.aep",
+	modifications: {	//modifications key specifies the composition names in the AE file to be modified and the updated image to be replaced.
+						Source_Text: 	"So much new text is here now!", 
+						Source_Image1: 	"/Users/chris/Desktop/images/image2.jpg",
+						Source_Image2: 	"/Users/chris/Desktop/images/image5.jpg"
+	},
+    output_options:{		// output_options key specifies the composition names in the AE file to render - as well as the root folder and file name for its render location
+                            UV_L: "/Users/chris/Desktop/filename_1",
+                            UV_R: "/Users/chris/Desktop/filename_1", 
+                            UV_LR: "/Users/chris/Desktop/filename_1",
+                            //UV_S: "/Users/chris/Desktop/filename_1"
+     }
+}
+*/
+
+
+
 
 
 /** Depreciated **/
@@ -32,47 +58,68 @@ var AERunDoScript = { begin: "osascript -e 'tell application \"Adobe After Effec
 //spin up after effects from commandline applescript
 exports.init = function(cb){
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AEInit.scpt";
-	AFTEREFFECTS = exec(script,function(err,stout,stderr){
+	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
+						bOpen = true; 
 						if(err) console.error(err)
 						cb(err)
 						})
 	
 }
-//the jsx script to load;
-//the jsx function to call as a string
-//the callback
+//_script = the jsx script to load;
+//_call = the jsx function to call as a string containing the JSON Object of the result
+//example -- see sample json reference above
+
+//script = 'updateAndRenderBasic.jsx'
+
+//_call = 'updateAndRenderBasic('+JSON.stringify(sample)+')' 
+
+//_cb = callback(err, stdout)
+
+
 exports.runScriptFunction = function(_script,_call,_cb){
 
 	
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/"+_script+"' '"+_call+"'";
 	//console.log(script)
 	
-	AFTEREFFECTS = exec(script,function(err,stout,stderr){
+	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 						if(err) console.error(err)
-						_cb(err)
+						_cb(err,stdout)
 						})
 }
-
+//file = (string) file to open in AE
+//callback = cb(err,stdout)
 exports.open = function(file,cb){
-	/* var script = "osascript -e 'tell application \"Adobe After Effects CC\"' -e 'open \"/Users/chris/IncredibleMachines/Dropbox/30PP/AE_Architecture/Template_test_Folder_3/Template_test.aep\"' -e 'end tell'"; */
+/* var script = "osascript -e 'tell application \"Adobe After Effects CC\"' -e 'open \"/Users/chris/IncredibleMachines/Dropbox/30PP/AE_Architecture/Template_test_Folder_3/Template_test.aep\"' -e 'end tell'"; */
 
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AEOpenFile.scpt '"+file+"' "
-
-	AFTEREFFECTS = exec(script,function(err,stout,stderr){
-		if(err)console.error(err)
-		cb(err)	
-	})
+	currentFile = file;
+	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
+							bOpen = true;
+							if(err) console.error(err);
+							cb(err,stdout);
+							})
 }
 
+//close after effects
+// callback  = cb(err,stdout)
 exports.exit = function(cb){
 
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/quitWithoutSaving.jsx' 'quitWithoutSaving()'";
-	AFTEREFFECTS = exec(script,function(err,stout,stderr){
+	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
+						bOpen = false;
 						if(err)console.error(err)
-						cb(err)
+						cb(err,stdout)
 						})
 }
 
+exports.getCurrentFile = function(){
+	return currentFile;
+}
+
+exports.isOpen = function(){
+	return bOpen;
+}
 
 //data to render as an array[]
 //render options
@@ -126,7 +173,7 @@ function createMovie(data,cb){
 				cb(e)
 			}else{
 				//execute script via cli
-				child = exec(makeScript(),function(err,stout,stderr){
+				child = exec(makeScript(),function(err,stdout,stderr){
 					if(err){
 						console.error(err)
 						cb(e);	

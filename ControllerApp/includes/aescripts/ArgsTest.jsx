@@ -1,1 +1,1 @@
-﻿//sample Javascript function with takes JSON and alerts it from AFTER Effectsfunction main(args){        alert(JSON.stringify(args))    return args;    }
+﻿//sample Javascript function with takes JSON and alerts it from AFTER Effectsfunction main(args){        //$.writeln(JSON.stringify(args))    alert(JSON.stringify(args));    //system.callSystem('yo')    return 'success'    }//main({"things":"thangs"})
