@@ -33,10 +33,16 @@ exports.add = function(_Database){
 			 	var update_obj = {$push: {scenes: doc._id }};
 			 	_Database.updateById('events', post.event_id, update_obj,function(e){
 			 	
-		 			if(!e) res.jsonp(doc)
-		 			else res.jsonp(500,err)
+		 			if(!e){
+		 				//query to get the event slug
+		 				_Database.getDocumentByID('events', doc.event_id, function(_e, _doc){
+							if(_e) res.jsonp(500,{error:_e});
+							else res.redirect('/events/'+_doc.slug);	
+				 		});
+		 			} 
+		 			else res.jsonp(500,err);
 		 			
-			 	})
+			 	});
 			 
 			 }else{ 
 			 	//report error with 500 status
