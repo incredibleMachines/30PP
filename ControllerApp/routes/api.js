@@ -103,7 +103,7 @@ exports.control = function(_Websocket){
 					_Websocket.socket(function(socket){ //access the websocket async
 						//console.log(socket)
 						socket.send(JSON.stringify({command: control}))
-						res.jsonp({success:'Sent Command: '+control})
+						res.jsonp({success:'Sent Command '+control})
 	
 					})
 				}else{
@@ -135,7 +135,7 @@ exports.sendSingle = function(_Database, _Websocket){
 								_Websocket.socket(function(socket){
 									socket.send(JSON.stringify(socketCommand))
 									res.jsonp(socketCommand)
-									//res.jsonp({success: 'Sent '+_type+' Event'})
+									//res.jsonp({success: 'Sent '+_type+' Event '+_event.title})
 								})
 							}else{
 								res.jsonp({error:'PlayerApp Not Connected'})	
