@@ -28,7 +28,9 @@ var api = require('./routes/api');
 var WebSocket = require('./modules/Websockets');
 var Database = require('./modules/DBConnection');
 var Folders = require('./modules/FolderStructure');
+var AfterEffects = require('./modules/AfterEffects')
 
+//AfterEffects.init(function(e){});
 /** 
  *	File Checking 	
  *
@@ -116,6 +118,52 @@ app.get('/api/control/:ctrl', api.control(WebSocket))
 app.get('/api/play/ambient',api.sendEvents('ambient',Database,WebSocket))
 app.get('/api/play/sales',api.sendEvents('sales',Database,WebSocket))
 app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))
+
+
+//Imaginary Routes 
+//for testing or things that would be great to have.
+
+//ALPHA ALPHA ALPHA Mostly just for faster testing and scaffolding, but could be fun in the future
+
+//this route quits AfterEffects
+app.get('/AfterEffects/close',function(req,res){
+	
+	AfterEffects.exit(function(e,stdout){
+		if(!e) res.jsonp({result: "After Effects Closed",stdout:stdout})
+		else res.jsonp(500,{error: e })
+
+	});
+
+})
+//this route opens AfterEffects
+app.get('/AfterEffects/open',function(req,res){
+	AfterEffects.init(function(e, stdout){
+		if(!e) res.jsonp({result: "After Effects Opened",stdout:stdout})
+		else res.jsonp(500,{error: e })
+	})
+	
+})
+//open a file in AE 
+app.get('/AfterEffects/open/:file',function(req,res){
+	AfterEffects.open('/Users/chris/Desktop/Template_Test_Folder_3/Template_Test.aep',function(e,stdout){ 
+		if(!e) res.jsonp({result:'After Effects Opened File.',stdout:stdout})
+		else res.jsonp(500,{error:e})
+	}) 
+})
+//open run a jsx funtion
+app.get('/AfterEffects/script/:file',function(req,res){
+	var functionCall = "updateAndRender("+JSON.stringify({stuff:'more', _this: 'this', ish: 'things' })+")";
+	AfterEffects.runScriptFunction('updateAndRender.jsx',functionCall,function(e,stdout){
+		if(!e) res.jsonp({result:'After Effects Ran Script', stdout: stdout})
+		else res.jsonp(500,{error:e})
+	}) 
+	
+})
+
+
+//implimentation wishlist
+app.get('/PlayerApp/close',function(req,res){res.jsonp(404,null)})
+app.get('/PlayerApp/open',function(req,res){res.jsonp(404,null)})
 
 
 /*
