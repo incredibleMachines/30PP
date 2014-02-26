@@ -119,7 +119,10 @@ exports.update = function(_Database){
 										if(cbCounter==_scene.assets.length){
 										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
 											_Database.updateById('scenes',scene_id,updateObj,function(e){
-												if(!e) res.jsonp({success:'success'})
+												if(!e){
+													redirectByEventId(res,_Database,_scene.event_id);
+													//res.jsonp({success:'success'})	
+												} 
 												else res.jsonp(500,{error:_err})
 											})	
 										} 
@@ -137,7 +140,8 @@ exports.update = function(_Database){
 											if(cbCounter==_scene.assets.length){
 												var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
 												_Database.updateById('scenes',scene_id,updateObj,function(e){
-													if(!e) res.jsonp({success:'success'})
+													if(!e) redirectByEventId(res,_Database,_scene.event_id);
+													// res.jsonp({success:'success'})
 													else res.jsonp(500,{error:_err})
 												})	
 											} 
@@ -177,7 +181,8 @@ exports.update = function(_Database){
 										if(cb_counter == post.assets.length){
 											var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 											_Database.updateById('scenes',scene_id,updateObj,function(e){
-												if(!e) res.jsonp({success:'success'})
+												if(!e) redirectByEventId(res,_Database,_scene.event_id);
+												// res.jsonp({success:'success'})
 												else res.jsonp(500,{error:_err})
 											})
 										}
@@ -199,7 +204,10 @@ exports.update = function(_Database){
 									if(cb_counter == post.assets.length){
 										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 										_Database.updateById('scenes',scene_id,updateObj,function(e){
-											if(!e) res.jsonp({success:'success'})
+											if(!e){
+												redirectByEventId(res,_Database,_scene.event_id);
+												// res.jsonp({success:'success'})
+											}
 											else res.jsonp(500,{error:_err})
 										})
 									}
@@ -236,7 +244,8 @@ exports.update = function(_Database){
 									console.log(_scene.assets)
 									var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 									_Database.updateById('scenes', scene_id, updateObj,function(e){
-										if(!e) res.jsonp({success:'success'})
+										if(!e) redirectByEventId(res,_Database,_scene.event_id);
+										// res.jsonp({success:'success'})
 										else res.jsonp(500,{error:_err})
 									})
 									
@@ -280,7 +289,8 @@ exports.update = function(_Database){
 													if(cb_counter == post.assets.length){
 														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) res.jsonp({success:'success'})
+															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
 													}
@@ -301,7 +311,8 @@ exports.update = function(_Database){
 													if(cb_counter == post.assets.length){
 														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) res.jsonp({success:'success'})
+															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
 													}
@@ -327,7 +338,8 @@ exports.update = function(_Database){
 													if(cb_counter == post.assets.length){
 														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) res.jsonp({success:'success'})
+															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
 													}
@@ -343,7 +355,8 @@ exports.update = function(_Database){
 														if(cb_counter == post.assets.length){
 															var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 															_Database.updateById('scenes',scene_id,updateObj,function(e){
-																if(!e) res.jsonp({success:'success'})
+																if(!e) redirectByEventId(res,_Database,_scene.event_id);
+																// res.jsonp({success:'success'})
 																else res.jsonp(500,{error:_err})
 															})
 														}
@@ -412,6 +425,15 @@ exports.delete = function(_Database){
 		}
 		});
 	}
+}
+
+
+function redirectByEventId(res, _Database, eventId){
+	/* function to get the event-slug by eventId */
+	_Database.getDocumentByID('events', eventId, function(_e, _doc){
+		if(_e) res.jsonp(500,{error:_e});
+		else res.redirect('/events/'+_doc.slug);	
+	});
 }
 
 function addAsset(__a,__Database, post, assetholder, index,cb_counter,res){
