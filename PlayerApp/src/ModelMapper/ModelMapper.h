@@ -12,8 +12,7 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
-#include "../Events/Scene.h"
-#include "../Compositor/Composite.h"
+//#include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS
 #define ADJUST_MODE_CAMERA 1
@@ -33,7 +32,7 @@ public:
     void setup(int _numCams, int _guiCam); //defaults num Meshes to 1
     void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
     void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
-    void update();
+    void update(vector<ofTexture *> tex);
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
@@ -125,6 +124,8 @@ public:
     float clickThreshold;
     
     //----------TEXTURE SETTINGS
-    vector<Composite> compositeTexture;
+//    vector<Composite> compositeTexture;
     bool bMipMap;
+    
+    vector<ofTexture *> textures;
 };

@@ -110,28 +110,13 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofAddListener(ofEvents().mouseDragged,this,&ModelMapper::mouseDragged);
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
-    
-    //----------SETUP TEXTURE MESHES
-    
-    for(int i=0;i<numMeshes;i++){
-        Composite tempComposite;
-        compositeTexture.push_back(tempComposite);
-    }
-    
-    for(int i=0;i<compositeTexture.size();i++){
-        compositeTexture[i].setup(i);
-    }
+
 }
 
-void ModelMapper::update(){
-    
-    //update textures
-    for(int i=0;i<numMeshes;i++){
-        compositeTexture[i].update();
-    }
+void ModelMapper::update(vector<ofTexture *> tex){
     
     //update gui camera to display selected camera graphics
-    
+    textures=tex;
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
@@ -1084,17 +1069,13 @@ void ModelMapper:: drawCameras() {
             
         for(int j=0;j<numMeshes;j++){
             
-            //Wrap Composite Fbo around mesh]
-            if(bMipMap) compositeTexture[j].drawSurface.bind();
-            else compositeTexture[j].drawNoMip.bind();
+            textures[j]->bind();
 
             ofSetColor(255,255,255);
 
             cameras[i].mesh[j].draw();
         
-//            cout<<ofGetUsingArbTex()<<endl;
-            if(bMipMap) compositeTexture[j].drawSurface.unbind();
-            else compositeTexture[j].drawNoMip.unbind();
+            textures[j]->unbind();
             
             //draw mesh wireframe
             if(bDrawWireframe==true){
