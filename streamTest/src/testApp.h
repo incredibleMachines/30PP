@@ -4,7 +4,7 @@
 #include "VideoThread.h"
 
 #define NUM_VIDS 5
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 2
 
 class testApp : public ofBaseApp {
 
@@ -27,13 +27,13 @@ class testApp : public ofBaseApp {
 
     class videoLoader{
         public:
-            ofVideoPlayer * video;
+            ofVideoPlayer video;
             VideoThread thread;
             bool loaded;
             bool setup;            
     };
     
-    vector<videoLoader *> contentBuffer;
+    videoLoader contentBuffer[BUFFER_SIZE];
     
     string filepaths[NUM_VIDS];
     
@@ -41,6 +41,8 @@ class testApp : public ofBaseApp {
     
     bool bFirst,bLoaded;
     ofTexture drawTex;
+    
+    float timer;
     
 };
 
