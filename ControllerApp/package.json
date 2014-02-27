@@ -12,6 +12,7 @@
 	"mongodb":"1.x",
     "less-middleware": "0.x",
     "ejs": "*",
-    "async":"*"
+    "async":"*",
+    "spawn-async":"*"
   }
 }
