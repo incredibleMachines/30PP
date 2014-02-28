@@ -44,5 +44,7 @@ class testApp : public ofBaseApp {
     
     float timer;
     
+    bool bContentLoaded, contentTriggered;
+    
 };
 

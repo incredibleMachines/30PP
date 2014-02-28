@@ -11,7 +11,7 @@
 void testApp::setup(){
 	ofBackground(255, 255, 255);
     
-    filepaths[0]="LeftWall_UV_2.mov";
+    filepaths[0]="UV_L_24fps_2.mov";
     filepaths[1]="LeftWall_UV_3.mov";
     filepaths[2]="LeftWall_UV_4.mov";
     filepaths[3]="LeftWall_UV_5.mov";
@@ -21,8 +21,11 @@ void testApp::setup(){
     load=0;
     bFirst=true;
     count=BUFFER_SIZE;
+    bContentLoaded=false;
+    contentTriggered=false;
     
-            drawTex.allocate(2000,720,GL_RGB);
+    
+    drawTex.allocate(2000,720,GL_RGB);
     
     
 	for(int i=0;i<BUFFER_SIZE;i++){
@@ -36,17 +39,38 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-
-    
-    if(contentBuffer[play].loaded==true){
-        contentBuffer[play].video.update();
-        drawTex.loadData(contentBuffer[play].video.getPixels(),2000,720,GL_RGB);
-        if(contentBuffer[play].video.isFrameNew()){
-//            cout<<contentBuffer[play].video.getCurrentFrame()<<endl;
-        }
+    if(contentTriggered==true){
+        if(bContentLoaded==false){
+            bool all=true;
+            for(int i=0;i<BUFFER_SIZE;i++){
+                if(contentBuffer[i].thread.bFinished==true){
+                    contentBuffer[i].loaded=true;
+                    contentBuffer[i].thread.bFinished=false;
+                    cout<<contentBuffer[i].thread.video.getMoviePath()<<endl;
+                    contentBuffer[i].thread.video.play();
+                    cout<<"loaded"<<endl;
+                }
+                else if(contentBuffer[i].loaded==false){
+                    all=false;
+                }
+            }
+            if(all==true){
+                cout<<"loaded ALL"<<endl;
+                bContentLoaded=true;
+            }
     }
     
-    if(contentBuffer[play].video.getCurrentFrame()==contentBuffer[play].video.getTotalNumFrames()&&contentBuffer[play].video.getCurrentFrame()!=0){
+    else{
+        if(contentBuffer[play].loaded==true){
+            contentBuffer[play].thread.lock();
+            contentBuffer[play].thread.video.update();
+            drawTex.loadData(contentBuffer[play].thread.video.getPixels(),2000,720,GL_RGB);
+            contentBuffer[play].thread.unlock();
+            }
+    
+
+    
+    if(contentBuffer[play].thread.video.getCurrentFrame()==contentBuffer[play].thread.video.getTotalNumFrames()&&contentBuffer[play].thread.video.getCurrentFrame()!=0){
         play++;
         if(play>BUFFER_SIZE-1){
             play=0;
@@ -58,14 +82,14 @@ void testApp::update(){
         }
         
         cout<<"switch"<<endl;
-        contentBuffer[play].video.setFrame(0);
+        contentBuffer[play].thread.video.setFrame(0);
         bFirst=false;
         bLoaded=false;
-        cout<<"playing: "<< contentBuffer[play].video.getMoviePath()<<endl;
+        cout<<"playing: "<< contentBuffer[play].thread.video.getMoviePath()<<endl;
     }
     
     if(bFirst==false){
-        if(contentBuffer[play].video.getCurrentFrame()>contentBuffer[play].video.getTotalNumFrames()/2&&bLoaded==false){
+        if(contentBuffer[play].thread.video.getCurrentFrame()>contentBuffer[play].thread.video.getTotalNumFrames()/2&&bLoaded==false){
 
                 contentBuffer[load].thread.bRun=true;
                 contentBuffer[load].thread.filepath=filepaths[count];
@@ -81,16 +105,15 @@ void testApp::update(){
         }
         
         else if(contentBuffer[load].thread.bFinished==true){
-            contentBuffer[load].thread.lock();
-            contentBuffer[load].video=contentBuffer[load].thread.video;
-            contentBuffer[load].thread.unlock();
-            contentBuffer[load].video.setLoopState(OF_LOOP_NORMAL);
-            contentBuffer[load].video.play();
+            contentBuffer[load].thread.video.play();
             contentBuffer[load].thread.bFinished=false;
+                contentBuffer[load].loaded=true;
             
             cout<<"loaded: "<<contentBuffer[load].video.getMoviePath()<<endl;
 //            contentBuffer[load].thread.stop();
         }
+    }
+           }
     }
 
 }
@@ -110,11 +133,11 @@ void testApp::keyPressed(int key){
     if(key=='0'){
         for(int i=0;i<BUFFER_SIZE;i++){
             if(contentBuffer[i].setup==false){
-                contentBuffer[i].thread.start();
                 contentBuffer[i].video.loadMovie(filepaths[i]);
-                contentBuffer[i].loaded=true;
-                contentBuffer[i].video.play();
-                contentBuffer[i].setup=true;
+                contentBuffer[i].thread.start();
+                contentBuffer[i].thread.filepath=filepaths[i];
+                contentBuffer[i].thread.bRun=true;
+                contentTriggered=true;
             }
         }
     }
