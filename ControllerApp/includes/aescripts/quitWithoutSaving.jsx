@@ -1,0 +1,1 @@
+﻿/* Simple Method of Quitting After Effects without saving any changes to the current project */    function quitWithoutSaving(){        //suppress dialogs within app        app.beginSuppressDialogs();        //assumes only one project is open,        var bClosed = app.project.close(CloseOptions.DO_NOT_SAVE_CHANGES)        app.quit();        return bClosed;    }

@@ -1,6 +1,6 @@
 /* A function to manipulate scenes on the front-end. 
 
-  _scenes = {OBJ} Takes a JSON Object of _scenes directly from scene render.
+  _scenes = function({OBJ}) Takes a JSON Object of _scenes directly from scene render.
   
   ** See views/includes/footer.ejs  **
 
