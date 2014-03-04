@@ -75,7 +75,8 @@
 - (BOOL)update;
 - (void)pixels:(unsigned char *)outbuf;
 
-- (void)initPlayer:(NSArray*)files;
+- (void)initArray:(NSArray*)files;
+- (void)initPlayer:(NSString*)string;
 - (void)makeActive;
 
 @end

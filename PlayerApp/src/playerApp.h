@@ -61,14 +61,16 @@ public:
     
     class meshContent{
     public:
-        ofAVFoundationPlayer loader;
+        ofAVQueuePlayer video;
         bool bSetup;
         int glType;
         int glFormat;
         int width;
         int height;
+        int frames;
+        bool loaded;
         unsigned char * pix;
-//        ofTextureData texData;
+        
     };
     
     vector<ofTexture *> meshTexture;
@@ -89,16 +91,7 @@ public:
     bool bFirstLoaded;
     bool bLoaded;
     
-    class videoObject {
-    public:
-        ofAVQueuePlayer video;
-        unsigned char * pixels;
-        int frames;
-        bool loaded;
-    };
-    
-    videoObject videoPlayer[MESH_NUM];
-    
+
     int frameCount;
     
 };

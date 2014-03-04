@@ -113,10 +113,6 @@
 		D37596C418B7A68300FD8F45 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = /System/Library/Frameworks/CoreMedia.framework; sourceTree = "<absolute>"; };
 		D37596C618B7A69300FD8F45 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		D37596C818B7A69C00FD8F45 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
-		D379BF0118C534C400ECB286 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
-		D379BF0318C535F800ECB286 /* mesh_2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_2.mov; sourceTree = "<group>"; };
-		D379BF0618C5364B00ECB286 /* mesh_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_1.mov; sourceTree = "<group>"; };
-		D379BF0718C5364B00ECB286 /* mesh_0.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_0.mov; sourceTree = "<group>"; };
 		D396844018C52F8A00709200 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		D396844218C52F9200709200 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D396844418C52F9700709200 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -128,19 +124,11 @@
 		D396845A18C5306500709200 /* ofAVQueuePlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVQueuePlayer.mm; sourceTree = "<group>"; };
 		D396845B18C5306500709200 /* ofAVQueueRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueueRenderer.h; sourceTree = "<group>"; };
 		D396845C18C5306500709200 /* ofAVQueueRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVQueueRenderer.m; sourceTree = "<group>"; };
-		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
-		D3EE9AF518B7C4F7008AFED8 /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
-		D3EE9AF618B7C4F7008AFED8 /* mesh_B.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_B.obj; sourceTree = "<group>"; };
-		D3EE9AF718B7C4F7008AFED8 /* mesh_A.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_A.obj; sourceTree = "<group>"; };
-		D3EE9AF818B7C4F7008AFED8 /* MASTER WALL_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "MASTER WALL_01.jpg"; sourceTree = "<group>"; };
-		D3EE9AF918B7C4F7008AFED8 /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
-		D3EE9AFA18B7C4F7008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
-		D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
-		D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_1.png; sourceTree = "<group>"; };
-		D3EE9AFE18B7D00D008AFED8 /* mesh_old.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_old.obj; sourceTree = "<group>"; };
-		D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
-		D3EE9B0018B7D00D008AFED8 /* mesh_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_0.png; sourceTree = "<group>"; };
+		D3DEC37918C61E09003E48C3 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3DEC37A18C61E09003E48C3 /* settings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0.mp4; sourceTree = "<group>"; };
+		D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0_0.mp4; sourceTree = "<group>"; };
+		D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1_0.mp4; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -394,51 +382,23 @@
 			path = ofxAVQueuePlayer;
 			sourceTree = "<group>";
 		};
-		D3A8F05A18A43ACB00DB961F /* data */ = {
+		D3DEC37718C61E09003E48C3 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				D3EE9AFB18B7D00D008AFED8 /* mesh */,
-				D3EE9AF418B7C4F7008AFED8 /* 02_20_14 */,
-				D3BE79C718AD8A550030E92F /* mapping_test */,
-				D3BB512518A9859C00FCEFD8 /* settings.json */,
-				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
+				D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */,
+				D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */,
+				D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */,
+				D3DEC37818C61E09003E48C3 /* mesh */,
+				D3DEC37A18C61E09003E48C3 /* settings.json */,
 			);
 			name = data;
 			path = bin/data;
 			sourceTree = "<group>";
 		};
-		D3BE79C718AD8A550030E92F /* mapping_test */ = {
+		D3DEC37818C61E09003E48C3 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
-			);
-			path = mapping_test;
-			sourceTree = "<group>";
-		};
-		D3EE9AF418B7C4F7008AFED8 /* 02_20_14 */ = {
-			isa = PBXGroup;
-			children = (
-				D3EE9AF518B7C4F7008AFED8 /* mesh_2.jpg */,
-				D3EE9AF618B7C4F7008AFED8 /* mesh_B.obj */,
-				D3EE9AF718B7C4F7008AFED8 /* mesh_A.obj */,
-				D3EE9AF818B7C4F7008AFED8 /* MASTER WALL_01.jpg */,
-				D3EE9AF918B7C4F7008AFED8 /* mesh_0.jpg */,
-				D3EE9AFA18B7C4F7008AFED8 /* mesh_1.jpg */,
-			);
-			path = 02_20_14;
-			sourceTree = "<group>";
-		};
-		D3EE9AFB18B7D00D008AFED8 /* mesh */ = {
-			isa = PBXGroup;
-			children = (
-				D379BF0318C535F800ECB286 /* mesh_2.mov */,
-				D379BF0618C5364B00ECB286 /* mesh_1.mov */,
-				D379BF0718C5364B00ECB286 /* mesh_0.mov */,
-				D379BF0118C534C400ECB286 /* mesh.obj */,
-				D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */,
-				D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */,
-				D3EE9AFE18B7D00D008AFED8 /* mesh_old.obj */,
-				D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */,
-				D3EE9B0018B7D00D008AFED8 /* mesh_0.png */,
+				D3DEC37918C61E09003E48C3 /* mesh.obj */,
 			);
 			path = mesh;
 			sourceTree = "<group>";
@@ -583,7 +543,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				D3A8F05A18A43ACB00DB961F /* data */,
+				D3DEC37718C61E09003E48C3 /* data */,
 				D396844418C52F9700709200 /* AVFoundation.framework */,
 				D396844218C52F9200709200 /* QuartzCore.framework */,
 				D396844018C52F8A00709200 /* CoreMedia.framework */,

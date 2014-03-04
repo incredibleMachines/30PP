@@ -78,7 +78,7 @@ public:
     float               getDuration();
     void nextVideo();
     
-    void initPlayer(string filepath[3]);
+    void initPlayer(string filepath);
     bool getFinished();
     
 protected:

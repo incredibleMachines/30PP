@@ -111,7 +111,167 @@
     }];
 }
 
--(void)initPlayer:(NSArray*)files{
+
+-(void)initArray:(NSArray*)files{
+    
+    NSLog(@"init");
+    _bLoading = NO;
+    _bLoaded = NO;
+    _bPaused = NO;
+    _bFinished = NO;
+    
+    _frameRate = 0.0;
+    _playbackRate = 1.0;
+    _bLoops = false;
+    
+    index=0;
+    
+    // Create and attach video output. 10.8 Only!!!
+    self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
+    [self.playerItemVideoOutput autorelease];
+    if (self.playerItemVideoOutput) {
+        [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
+    }
+    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
+    [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
+    //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
+    
+    
+    NSURL *url1=[NSURL fileURLWithPath:[[files objectAtIndex:0] stringByStandardizingPath]];
+    NSURL *url2=[NSURL fileURLWithPath:[[files objectAtIndex:1] stringByStandardizingPath]];
+    NSURL *url3=[NSURL fileURLWithPath:[[files objectAtIndex:2] stringByStandardizingPath]];
+    
+    
+    NSLog(@"Loading %@", [url1 absoluteString]);
+    NSLog(@"Loading %@", [url2 absoluteString]);
+    NSLog(@"Loading %@", [url3 absoluteString]);
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url1 options:nil];
+    NSString *tracksKey = @"tracks";
+    
+    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler: ^{
+        static const NSString *kItemStatusContext;
+        // Perform the following back on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // Check to see if the file loaded
+            NSError *error;
+            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+            
+            if (status == AVKeyValueStatusLoaded) {
+                
+                
+                AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+                _videoSize = [videoTrack naturalSize];
+                _currentTime = kCMTimeZero;
+                _duration = asset.duration;
+                _frameRate = [videoTrack nominalFrameRate];
+                
+                self.loadItem = [AVPlayerItem playerItemWithAsset:asset];
+                //                        [self.loadItem addOutput:self.playerItemVideoOutput];
+                
+                AVURLAsset *asset2 = [AVURLAsset URLAssetWithURL:url2 options:nil];
+                NSString *tracksKey2 = @"tracks";
+                
+                [asset2 loadValuesAsynchronouslyForKeys:@[tracksKey2] completionHandler: ^{
+                    
+                    // Perform the following back on the main thread
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        // Check to see if the file loaded
+                        NSError *error2;
+                        AVKeyValueStatus status2 = [asset2 statusOfValueForKey:tracksKey2 error:&error2];
+                        
+                        if (status2 == AVKeyValueStatusLoaded) {
+                            //                                _duration = CMTimeAdd(_duration,asset2.duration);
+                            
+                            self.loadItem1 = [AVPlayerItem playerItemWithAsset:asset2];
+                            //                                [self.loadItem1 addOutput:self.playerItemVideoOutput];
+                            
+                            AVURLAsset *asset3 = [AVURLAsset URLAssetWithURL:url3 options:nil];
+                            NSString *tracksKey3 = @"tracks";
+                            
+                            [asset3 loadValuesAsynchronouslyForKeys:@[tracksKey3] completionHandler: ^{
+                                
+                                // Perform the following back on the main thread
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    
+                                    // Check to see if the file loaded
+                                    NSError *error3;
+                                    AVKeyValueStatus status3 = [asset3 statusOfValueForKey:tracksKey3 error:&error3];
+                                    
+                                    if (status3 == AVKeyValueStatusLoaded) {
+                                        //                                            _duration = CMTimeAdd(_duration,asset3.duration);
+                                        
+                                        self.loadItem2 = [AVPlayerItem playerItemWithAsset:asset3];
+                                        //                                            [self.loadItem2 addOutput:self.playerItemVideoOutput];
+                                        
+                                        NSLog(@"create player");
+                                        
+                                        NSArray * loadArray=[NSArray arrayWithObjects:self.loadItem, self.loadItem1, self.loadItem2, nil];
+                                        
+                                        
+                                        self.qPlayer=[[AVQueuePlayer alloc] initWithItems:loadArray];
+                                        NSLog(@"PLAYER CREATED");;
+                                        
+                                        
+                                        //                                            [self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&kItemStatusContext];
+                                        
+                                        
+                                        // Notify this object when the player reaches the end
+                                        // This allows us to loop the video
+                                        [[NSNotificationCenter defaultCenter]
+                                         addObserver:self
+                                         selector:@selector(playerItemDidReachEnd:)
+                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                         object:[self.qPlayer currentItem]];
+                                        
+                                        [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
+                                        
+                                        //                                            CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
+                                        //
+                                        //                                            // Set the renderer output callback function
+                                        //                                            CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, self);
+                                        //
+                                        //
+                                        //                                            // Activate the display link
+                                        //                                            CVDisplayLinkStart(displayLink);
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    }
+                                    _bLoaded=YES;
+                                    _bLoading=NO;
+                                });
+                            }];
+                        }
+                    });
+                }];
+            }
+        });
+    }];
+    
+}
+
+
+- (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
+{
+    //	// There is no autorelease pool when this method is called
+    //	// because it will be called from a background thread.
+    //	// It's important to create one or app can leak objects.
+    //	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    ////	
+    ////	[self drawView];
+    //	
+    //	[pool release];
+	return kCVReturnSuccess;
+}
+
+
+-(void)initPlayer:(NSString *)string{
     
     NSLog(@"init");
         _bLoading = NO;
@@ -136,97 +296,57 @@
 //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
     
     
-    NSURL *url1=[NSURL fileURLWithPath:[[files objectAtIndex:0] stringByStandardizingPath]];
-    NSURL *url2=[NSURL fileURLWithPath:[[files objectAtIndex:1] stringByStandardizingPath]];
-    NSURL *url3=[NSURL fileURLWithPath:[[files objectAtIndex:2] stringByStandardizingPath]];
+    NSURL *url=[NSURL fileURLWithPath:[string stringByStandardizingPath]];
     
     
-        NSLog(@"Loading %@", [url1 absoluteString]);
-        NSLog(@"Loading %@", [url2 absoluteString]);
-        NSLog(@"Loading %@", [url3 absoluteString]);
-        
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url1 options:nil];
-        NSString *tracksKey = @"tracks";
-        
-        [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler: ^{
-                static const NSString *kItemStatusContext;
-                // Perform the following back on the main thread
-                dispatch_async(dispatch_get_main_queue(), ^{
+    NSLog(@"Loading %@", [url absoluteString]);
+
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    NSString *tracksKey = @"tracks";
+    
+    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler: ^{
+            static const NSString *kItemStatusContext;
+            // Perform the following back on the main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                // Check to see if the file loaded
+                NSError *error;
+                AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+                
+                if (status == AVKeyValueStatusLoaded) {
                     
-                    // Check to see if the file loaded
-                    NSError *error;
-                    AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
                     
-                    if (status == AVKeyValueStatusLoaded) {
-                        
-                        
-                        AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-                        _videoSize = [videoTrack naturalSize];
-                        _currentTime = kCMTimeZero;
-                        _duration = asset.duration;
-                        _frameRate = [videoTrack nominalFrameRate];
-                        
-                        self.loadItem = [AVPlayerItem playerItemWithAsset:asset];
-//                        [self.loadItem addOutput:self.playerItemVideoOutput];
-                        
-                        AVURLAsset *asset2 = [AVURLAsset URLAssetWithURL:url2 options:nil];
-                        NSString *tracksKey2 = @"tracks";
-                        
-                        [asset2 loadValuesAsynchronouslyForKeys:@[tracksKey2] completionHandler: ^{
-                        
-                            // Perform the following back on the main thread
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                
-                            // Check to see if the file loaded
-                            NSError *error2;
-                            AVKeyValueStatus status2 = [asset2 statusOfValueForKey:tracksKey2 error:&error2];
-                            
-                            if (status2 == AVKeyValueStatusLoaded) {
-//                                _duration = CMTimeAdd(_duration,asset2.duration);
-                                
-                                self.loadItem1 = [AVPlayerItem playerItemWithAsset:asset2];
-//                                [self.loadItem1 addOutput:self.playerItemVideoOutput];
-                                
-                                AVURLAsset *asset3 = [AVURLAsset URLAssetWithURL:url3 options:nil];
-                                NSString *tracksKey3 = @"tracks";
-                                
-                                [asset3 loadValuesAsynchronouslyForKeys:@[tracksKey3] completionHandler: ^{
-                                    
-                                    // Perform the following back on the main thread
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        
-                                        // Check to see if the file loaded
-                                        NSError *error3;
-                                        AVKeyValueStatus status3 = [asset3 statusOfValueForKey:tracksKey3 error:&error3];
-                                        
-                                        if (status3 == AVKeyValueStatusLoaded) {
-//                                            _duration = CMTimeAdd(_duration,asset3.duration);
-                                    
-                                            self.loadItem2 = [AVPlayerItem playerItemWithAsset:asset3];
-//                                            [self.loadItem2 addOutput:self.playerItemVideoOutput];
-                                            
-                                            NSLog(@"create player");
-                                            
-                                            NSArray * loadArray=[NSArray arrayWithObjects:self.loadItem, self.loadItem1, self.loadItem2, nil];
-                                            
-                                            
-                                            self.qPlayer=[[AVQueuePlayer alloc] initWithItems:loadArray];
-                                            NSLog(@"PLAYER CREATED");;
-                                            
-                                            
+                    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+                    _videoSize = [videoTrack naturalSize];
+                    _currentTime = kCMTimeZero;
+                    _duration = asset.duration;
+                    _frameRate = [videoTrack nominalFrameRate];
+                    
+                    self.loadItem = [AVPlayerItem playerItemWithAsset:asset];
+                    
+                    NSLog(@"create player");
+                    
+                    NSArray * loadArray=[NSArray arrayWithObjects:self.loadItem, nil];
+                    
+                    
+                    self.qPlayer=[[AVQueuePlayer alloc] initWithItems:loadArray];
+                    NSLog(@"PLAYER CREATED");;
+                    
+                    
 //                                            [self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&kItemStatusContext];
-                                            
-                                            
-                                            // Notify this object when the player reaches the end
-                                            // This allows us to loop the video
-                                            [[NSNotificationCenter defaultCenter]
-                                             addObserver:self
-                                             selector:@selector(playerItemDidReachEnd:)
-                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                             object:[self.qPlayer currentItem]];
-                                            
-                                            [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
-                                            
+                    
+                    
+                    // Notify this object when the player reaches the end
+                    // This allows us to loop the video
+                    [[NSNotificationCenter defaultCenter]
+                     addObserver:self
+                     selector:@selector(playerItemDidReachEnd:)
+                     name:AVPlayerItemDidPlayToEndTimeNotification
+                     object:[self.qPlayer currentItem]];
+                    
+                    [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
+                    
 //                                            CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
 //                                            
 //                                            // Set the renderer output callback function
@@ -236,51 +356,18 @@
 //                                            // Activate the display link
 //                                            CVDisplayLinkStart(displayLink);
 
-            
-                                            
-                                            
-                                            
 
-                                        }
-                                        _bLoaded=YES;
-                                        _bLoading=NO;
-                                    });
-                                }];
-                            }
-                        });
-                }];
-            }
-        });
-    }];
-    
+                    
+                    
+                    
+
+                }
+                _bLoaded=YES;
+                _bLoading=NO;
+            });
+        }];
+
 }
-
-
-- (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
-{
-//	// There is no autorelease pool when this method is called
-//	// because it will be called from a background thread.
-//	// It's important to create one or app can leak objects.
-//	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-////	
-////	[self drawView];
-//	
-//	[pool release];
-	return kCVReturnSuccess;
-}
-
-//// This is the renderer output callback function
-//static CVReturn DisplayLinkCallback(CVDisplayLinkRef displayLink,
-//									  const CVTimeStamp* now,
-//									  const CVTimeStamp* outputTime,
-//									  CVOptionFlags flagsIn,
-//									  CVOptionFlags* flagsOut,
-//									  void* displayLinkContext)
-//{
-//    CVReturn result = [(AVQueueRenderer*)displayLinkContext getFrameForTime:outputTime];
-//    return result;
-//}
-
 
 
 -(void) advanceVideo{

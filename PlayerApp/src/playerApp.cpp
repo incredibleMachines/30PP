@@ -21,7 +21,7 @@ void playerApp::setup(){
     ofSetVerticalSync(true);
     ofEnableDepthTest();
 //    ofEnableSmoothing();
-    ofSetFrameRate(60);
+    ofSetFrameRate(30);
     ofEnableNormalizedTexCoords();
     ofBackground(0, 0, 0);
     ofSetWindowTitle("30PP Player");
@@ -49,10 +49,10 @@ void playerApp::setup(){
     
     for(int i=0; i<MESH_NUM;i++){
         mesh[i].bSetup=false;
-        mesh[i].loader.setPixelFormat(OF_PIXELS_RGB);
-        mesh[i].loader.loadMovie("mesh/mesh_"+ofToString(i)+".mp4");
-        mesh[i].loader.play();
-        cout<<"loader"<<endl;
+        mesh[i].video.setPixelFormat(OF_PIXELS_RGB);
+        mesh[i].video.initPlayer(ofToString(i)+"_0.mp4");
+        mesh[i].video.play();
+        cout<<"playerApp init"<<endl;
     }
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
@@ -81,28 +81,14 @@ void playerApp::update(){
 //
     if(bContentLoaded==false){
         for(int i=0;i<MESH_NUM;i++){
-            mesh[i].loader.update();
-            if(mesh[i].loader.isLoaded()==true&&mesh[i].bSetup==false){
+            mesh[i].video.update();
+            if(mesh[i].video.isLoaded()==true&&mesh[i].bSetup==false){
                 cout<<"make first texture"<<endl;
-                mesh[i].loader.setFrame(2);
                 setupTexture(i);
                 mesh[i].bSetup=true;
             }
-        }
-    }
-    
-    else if(bContentLoaded==true){
-        for(int j=0;j<numMesh;j++){
-            videoPlayer[j].video.update();
-            if(videoPlayer[j].loaded==false){
-                if(videoPlayer[j].video.getLoadedState()==true){
-                videoPlayer[j].video.play();
-                videoPlayer[j].loaded=true;
-                cout<<"start playback"<<endl;
-                }
-            }
-            else{
-                createTexture(0,j);
+            else if(mesh[i].bSetup==true){
+                createTexture(0,i);
             }
         }
     }
@@ -155,21 +141,21 @@ void playerApp::keyPressed(int key){
     
     //manually trigger all event content loading into contentBuffer
     else if(key == '0'){
-        if(bContentLoaded==false){
-
-            count=0;
-            
-                for(int j=0;j<numMesh;j++){
-                    string frames[3];
-                    frames[0]="UV_"+ofToString(j)+"_0.mp4";
-                    frames[1]="UV_"+ofToString(j)+"_1.mp4";
-                    frames[2]="UV_"+ofToString(j)+"_2.mp4";
-                    videoPlayer[j].video.initPlayer(frames);
-                    videoPlayer[j].loaded=false;
-                }
-
-        bContentLoaded=true;
-        }
+//        if(bContentLoaded==false){
+//
+//            count=0;
+//            
+//                for(int j=0;j<numMesh;j++){
+//                    string frames[3];
+//                    frames[0]="UV_"+ofToString(j)+"_0.mp4";
+//                    frames[1]="UV_"+ofToString(j)+"_1.mp4";
+//                    frames[2]="UV_"+ofToString(j)+"_2.mp4";
+//                    mesh[j].video.initPlayer(frames);
+//                    mesh[j].loaded=false;
+//                }
+//
+//        bContentLoaded=true;
+//        }
     }
     
     //manually switch to next scene. TODO: toss out previous contentBuffer, free memory
@@ -223,41 +209,39 @@ void playerApp::dragEvent(ofDragInfo dragInfo){
 
 void::playerApp::setupTexture(int _i){
 
-            for(int i=0;i<MESH_NUM;i++){
                 meshTexture.push_back(new ofTexture());
-            }
 //          load pixel data to set our mipmapper texture
-//          mesh[_i].pix=new unsigned char[int(mesh[_i].loader.getWidth()*mesh[_i].loader.getHeight()*3)];
+//          mesh[_i].pix=new unsigned char[int(mesh[_i].video.getWidth()*mesh[_i].video.getHeight()*3)];
     
-            mesh[_i].pix=mesh[_i].loader.getPixels();
+            mesh[_i].pix=mesh[_i].video.getPixels();
             
             //allocate texture
-            meshTexture[_i]->allocate(mesh[_i].loader.getWidth(), mesh[_i].loader.getHeight(), ofGetGlFormat(mesh[_i].loader.getPixelsRef()) );
+            meshTexture[_i]->allocate(mesh[_i].video.getWidth(), mesh[_i].video.getHeight(), ofGetGlFormat(mesh[_i].video.getPixelsRef()) );
             
 //            mesh[_i].texData = meshTexture[_i]->texData;
 //
 //            //save format and type as globals
-            mesh[_i].glFormat=ofGetGlFormat(mesh[_i].loader.getPixelsRef());
-            mesh[_i].glType=ofGetGlType(mesh[_i].loader.getPixelsRef());
-            mesh[_i].width=mesh[_i].loader.getWidth();
-            mesh[_i].height=mesh[_i].loader.getHeight();
+            mesh[_i].glFormat=ofGetGlFormat(mesh[_i].video.getPixelsRef());
+            mesh[_i].glType=ofGetGlType(mesh[_i].video.getPixelsRef());
+            mesh[_i].width=mesh[_i].video.getWidth();
+            mesh[_i].height=mesh[_i].video.getHeight();
     
 //            cout<<"Format:"<<glFormat<<endl;
 //            cout<<"Type:"<<glType<<endl;
     
             //special case for texture type - we will always be using GL_2D but just in case
             if (meshTexture[_i]->texData.textureTarget == GL_TEXTURE_RECTANGLE_ARB){
-                meshTexture[_i]->texData.tex_t = mesh[_i].loader.getPixelsRef().getWidth();
-                meshTexture[_i]->texData.tex_u = mesh[_i].loader.getPixelsRef().getHeight();
+                meshTexture[_i]->texData.tex_t = mesh[_i].video.getPixelsRef().getWidth();
+                meshTexture[_i]->texData.tex_u = mesh[_i].video.getPixelsRef().getHeight();
             }
     
             else {
-                meshTexture[_i]->texData.tex_t = (float)(mesh[_i].loader.getPixelsRef().getWidth()) / (float)meshTexture[_i]->texData.tex_w;
-                meshTexture[_i]->texData.tex_u = (float)(mesh[_i].loader.getPixelsRef().getHeight()) / (float)meshTexture[_i]->texData.tex_h;
+                meshTexture[_i]->texData.tex_t = (float)(mesh[_i].video.getPixelsRef().getWidth()) / (float)meshTexture[_i]->texData.tex_w;
+                meshTexture[_i]->texData.tex_u = (float)(mesh[_i].video.getPixelsRef().getHeight()) / (float)meshTexture[_i]->texData.tex_h;
             }
             
             //set our pixel source to determine mip map texel size
-            ofSetPixelStorei(mesh[_i].loader.getPixelsRef().getWidth(),mesh[_i].loader.getPixelsRef().getBytesPerChannel(),mesh[_i].loader.getPixelsRef().getNumChannels());
+            ofSetPixelStorei(mesh[_i].video.getPixelsRef().getWidth(),mesh[_i].video.getPixelsRef().getBytesPerChannel(),mesh[_i].video.getPixelsRef().getNumChannels());
             
             //create texture
             glGenTextures(1, &meshTexture[_i]->texData.textureID);
@@ -266,7 +250,7 @@ void::playerApp::setupTexture(int _i){
             glBindTexture(meshTexture[_i]->texData.textureTarget, meshTexture[_i]->texData.textureID);
             
             //setup mipmaps
-            glTexImage2D(meshTexture[_i]->texData.textureTarget, 0, meshTexture[_i]->texData.glTypeInternal, mesh[_i].loader.getWidth(), mesh[_i].loader.getHeight(), 0, mesh[_i].glFormat, mesh[_i].glType, mesh[_i].pix);
+            glTexImage2D(meshTexture[_i]->texData.textureTarget, 0, meshTexture[_i]->texData.glTypeInternal, mesh[_i].video.getWidth(), mesh[_i].video.getHeight(), 0, mesh[_i].glFormat, mesh[_i].glType, mesh[_i].pix);
             glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
             
             //set environment, not using currenty but just incase we change our env elsewhere
@@ -286,21 +270,20 @@ void::playerApp::setupTexture(int _i){
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4);
             glDisable( meshTexture[_i]->texData.textureTarget );
             
-//            mesh[_i].loader.setPaused(true);
-            mesh[_i].loader.close();
+//            mesh[_i].video.setPaused(true);
+//            mesh[_i].video.close();
             mesh[_i].bSetup=true;
             cout<<"texture loaded"<<endl;
 }
 
 void playerApp::createTexture(int _i, int _j){
     
-    
     //----------CREATE TEXTURE
     
     ofSetColor(255,255,255);
     
         //save current frame pixel data to a pixel array for loading into glTexImage2D
-        mesh[_j].pix=videoPlayer[_j].video.getPixels();
+        mesh[_j].pix=mesh[_j].video.getPixels();
     
         //set other glTexImage2D variables
     
