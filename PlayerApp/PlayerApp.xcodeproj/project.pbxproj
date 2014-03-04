@@ -22,6 +22,13 @@
 		D31EC6A718A9A6AB00B8F882 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A018A9A6AB00B8F882 /* Asset.cpp */; };
 		D31EC6A818A9A6AB00B8F882 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A318A9A6AB00B8F882 /* Event.cpp */; };
 		D31EC6A918A9A6AB00B8F882 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A518A9A6AB00B8F882 /* Scene.cpp */; };
+		D379BF0818C5379900ECB286 /* ofAVFMovieRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D396845618C5306500709200 /* ofAVFMovieRenderer.m */; };
+		D379BF0918C5379900ECB286 /* ofAVFoundationPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D396845818C5306500709200 /* ofAVFoundationPlayer.mm */; };
+		D396844118C52F8A00709200 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844018C52F8A00709200 /* CoreMedia.framework */; };
+		D396844318C52F9200709200 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844218C52F9200709200 /* QuartzCore.framework */; };
+		D396844518C52F9700709200 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844418C52F9700709200 /* AVFoundation.framework */; };
+		D396845D18C5313000709200 /* ofAVQueuePlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D396845A18C5306500709200 /* ofAVQueuePlayer.mm */; };
+		D396845E18C5313000709200 /* ofAVQueueRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D396845C18C5306500709200 /* ofAVQueueRenderer.m */; };
 		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
 		E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */; };
 		E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */; };
@@ -106,10 +113,22 @@
 		D37596C418B7A68300FD8F45 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = /System/Library/Frameworks/CoreMedia.framework; sourceTree = "<absolute>"; };
 		D37596C618B7A69300FD8F45 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
 		D37596C818B7A69C00FD8F45 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		D379BF0118C534C400ECB286 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D379BF0318C535F800ECB286 /* mesh_2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_2.mov; sourceTree = "<group>"; };
+		D379BF0618C5364B00ECB286 /* mesh_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_1.mov; sourceTree = "<group>"; };
+		D379BF0718C5364B00ECB286 /* mesh_0.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_0.mov; sourceTree = "<group>"; };
+		D396844018C52F8A00709200 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		D396844218C52F9200709200 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D396844418C52F9700709200 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D396845518C5306500709200 /* ofAVFMovieRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVFMovieRenderer.h; sourceTree = "<group>"; };
+		D396845618C5306500709200 /* ofAVFMovieRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVFMovieRenderer.m; sourceTree = "<group>"; };
+		D396845718C5306500709200 /* ofAVFoundationPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVFoundationPlayer.h; sourceTree = "<group>"; };
+		D396845818C5306500709200 /* ofAVFoundationPlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVFoundationPlayer.mm; sourceTree = "<group>"; };
+		D396845918C5306500709200 /* ofAVQueuePlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueuePlayer.h; sourceTree = "<group>"; };
+		D396845A18C5306500709200 /* ofAVQueuePlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVQueuePlayer.mm; sourceTree = "<group>"; };
+		D396845B18C5306500709200 /* ofAVQueueRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueueRenderer.h; sourceTree = "<group>"; };
+		D396845C18C5306500709200 /* ofAVQueueRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVQueueRenderer.m; sourceTree = "<group>"; };
 		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		D3AC3C4F18BBC6E40032FEB1 /* VideoThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoThread.h; sourceTree = "<group>"; };
-		D3AC3C5218BBE4C70032FEB1 /* mesh_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_1.mov; sourceTree = "<group>"; };
-		D3AC3C5318BBE4C70032FEB1 /* mesh_0.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = mesh_0.mov; sourceTree = "<group>"; };
 		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
 		D3EE9AF518B7C4F7008AFED8 /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
 		D3EE9AF618B7C4F7008AFED8 /* mesh_B.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_B.obj; sourceTree = "<group>"; };
@@ -119,7 +138,7 @@
 		D3EE9AFA18B7C4F7008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
 		D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
 		D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_1.png; sourceTree = "<group>"; };
-		D3EE9AFE18B7D00D008AFED8 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3EE9AFE18B7D00D008AFED8 /* mesh_old.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh_old.obj; sourceTree = "<group>"; };
 		D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
 		D3EE9B0018B7D00D008AFED8 /* mesh_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mesh_0.png; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
@@ -198,6 +217,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D396844518C52F9700709200 /* AVFoundation.framework in Frameworks */,
+				D396844318C52F9200709200 /* QuartzCore.framework in Frameworks */,
+				D396844118C52F8A00709200 /* CoreMedia.framework in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -271,6 +293,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				D396845418C5306500709200 /* ofxAVQueuePlayer */,
 				E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */,
 				AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */,
 			);
@@ -313,7 +336,6 @@
 				D31EC68618A9A47800B8F882 /* main.cpp */,
 				D31EC68D18A9A47800B8F882 /* playerApp.h */,
 				D31EC68C18A9A47800B8F882 /* playerApp.cpp */,
-				D3AC3C4F18BBC6E40032FEB1 /* VideoThread.h */,
 				D31EC69F18A9A6AB00B8F882 /* Events */,
 				D31EC68118A9A47800B8F882 /* Handlers */,
 				D31EC68718A9A47800B8F882 /* ModelMapper */,
@@ -357,6 +379,21 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		D396845418C5306500709200 /* ofxAVQueuePlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D396845518C5306500709200 /* ofAVFMovieRenderer.h */,
+				D396845618C5306500709200 /* ofAVFMovieRenderer.m */,
+				D396845718C5306500709200 /* ofAVFoundationPlayer.h */,
+				D396845818C5306500709200 /* ofAVFoundationPlayer.mm */,
+				D396845918C5306500709200 /* ofAVQueuePlayer.h */,
+				D396845A18C5306500709200 /* ofAVQueuePlayer.mm */,
+				D396845B18C5306500709200 /* ofAVQueueRenderer.h */,
+				D396845C18C5306500709200 /* ofAVQueueRenderer.m */,
+			);
+			path = ofxAVQueuePlayer;
+			sourceTree = "<group>";
+		};
 		D3A8F05A18A43ACB00DB961F /* data */ = {
 			isa = PBXGroup;
 			children = (
@@ -393,11 +430,13 @@
 		D3EE9AFB18B7D00D008AFED8 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
-				D3AC3C5218BBE4C70032FEB1 /* mesh_1.mov */,
-				D3AC3C5318BBE4C70032FEB1 /* mesh_0.mov */,
+				D379BF0318C535F800ECB286 /* mesh_2.mov */,
+				D379BF0618C5364B00ECB286 /* mesh_1.mov */,
+				D379BF0718C5364B00ECB286 /* mesh_0.mov */,
+				D379BF0118C534C400ECB286 /* mesh.obj */,
 				D3EE9AFC18B7D00D008AFED8 /* mesh_1.jpg */,
 				D3EE9AFD18B7D00D008AFED8 /* mesh_1.png */,
-				D3EE9AFE18B7D00D008AFED8 /* mesh.obj */,
+				D3EE9AFE18B7D00D008AFED8 /* mesh_old.obj */,
 				D3EE9AFF18B7D00D008AFED8 /* mesh_0.jpg */,
 				D3EE9B0018B7D00D008AFED8 /* mesh_0.png */,
 			);
@@ -545,6 +584,9 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
 				D3A8F05A18A43ACB00DB961F /* data */,
+				D396844418C52F9700709200 /* AVFoundation.framework */,
+				D396844218C52F9200709200 /* QuartzCore.framework */,
+				D396844018C52F8A00709200 /* CoreMedia.framework */,
 				E4B69B5B0A3A1756003C02F2 /* PlayerAppDebug.app */,
 			);
 			sourceTree = "<group>";
@@ -645,6 +687,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D379BF0818C5379900ECB286 /* ofAVFMovieRenderer.m in Sources */,
+				D379BF0918C5379900ECB286 /* ofAVFoundationPlayer.mm in Sources */,
+				D396845D18C5313000709200 /* ofAVQueuePlayer.mm in Sources */,
+				D396845E18C5313000709200 /* ofAVQueueRenderer.m in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
 				E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */,
@@ -684,6 +730,7 @@
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH)";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -712,7 +759,7 @@
 					../../../addons/ofxLibwebsockets/src,
 					../../../addons/ofxAVFVideoPlayer/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -724,7 +771,7 @@
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
@@ -733,6 +780,7 @@
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH)";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -762,7 +810,7 @@
 					../../../addons/ofxLibwebsockets/src,
 					../../../addons/ofxAVFVideoPlayer/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -774,7 +822,7 @@
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
 					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
@@ -795,8 +843,9 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -817,8 +866,9 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -6,14 +6,15 @@
 //30PP
 #include "ModelMapper/ModelMapper.h"
 #include "Handlers/SocketHandler.h"
+#include "ofAVQueuePlayer.h"
+#include "ofAVFoundationPlayer.h"
 //#include "Events/Event.h"
 //#include "Events/Scene.h"
 #include "Events/EventTypes.h"
-#include "VideoThread.h"
 //#include "Compositor/SceneContent.h"
 
 #define BUFFER_SIZE 3
-#define MESH_NUM 2
+#define MESH_NUM 3
 
 class playerApp : public ofBaseApp {
 
@@ -60,14 +61,14 @@ public:
     
     class meshContent{
     public:
-        ofQTKitPlayer loader;
+        ofAVFoundationPlayer loader;
         bool bSetup;
         int glType;
         int glFormat;
         int width;
         int height;
         unsigned char * pix;
-        ofTextureData texData;
+//        ofTextureData texData;
     };
     
     vector<ofTexture *> meshTexture;
@@ -88,20 +89,15 @@ public:
     bool bFirstLoaded;
     bool bLoaded;
     
-    class videoLoader {
+    class videoObject {
     public:
-        VideoThread thread;
-//        ofQTKitPlayer * video;
-        vector<unsigned char *> pixels;
+        ofAVQueuePlayer video;
+        unsigned char * pixels;
         int frames;
+        bool loaded;
     };
     
-    class videoScene{
-    public:
-        vector<videoLoader * > mesh;
-    };
-    
-    vector<videoScene * > contentBuffer;
+    videoObject videoPlayer[MESH_NUM];
     
     int frameCount;
     
