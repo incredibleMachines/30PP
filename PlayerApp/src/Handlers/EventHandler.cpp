@@ -116,6 +116,12 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
     
     // set eventsInited true
     eventsInited = true;
+    
+    for(int i=0;i<allEvents.size();i++){
+        for(int j=0;j<allEvents[i].eScenes.size();j++){
+            allScenes.push_back(allEvents[i].eScenes[j]);
+        }
+    }
 }
 
 

@@ -9,7 +9,6 @@
 #include "ofMain.h"
 #include "../Events/Event.h"
 #include "ofxLibwebsockets.h"
-#include "../Compositor/Composite.h"
 
 
 class EventHandler {
@@ -24,6 +23,8 @@ public:
    
     
     vector <Event> allEvents;
+    
+    vector <Scene> allScenes;
     
     bool eventsInited;
 };
