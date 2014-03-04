@@ -331,7 +331,7 @@ void ofAVQueuePlayer::draw(float x, float y, float w, float h)
 //--------------------------------------------------------------
 float ofAVQueuePlayer::getWidth()
 {
-    NSLog(@"width %f",moviePlayer.width);
+//    NSLog(@"width %f",moviePlayer.width);
     return moviePlayer.width;
 }
 
@@ -384,23 +384,15 @@ bool ofAVQueuePlayer::getFinished(){
     return [moviePlayer bFinished];
 }
 
-void ofAVQueuePlayer::initPlayer(string filepath[3]){
+void ofAVQueuePlayer::initPlayer(string filepath){
     
     @autoreleasepool{
         NSLog(@"playerInit");
-        cout<<filepath[0]<<endl;
+
+            filepath = ofToDataPath(filepath, false);
         
-        for(int i=0; i<3;i++){
-            filepath[i] = ofToDataPath(filepath[i], false);
-        }
-        
-        NSString *string=[NSString stringWithUTF8String:filepath[0].c_str()];
-        NSString *string1=[NSString stringWithUTF8String:filepath[1].c_str()];
-        NSString *string2=[NSString stringWithUTF8String:filepath[2].c_str()];
-        NSLog(@"file1: %@",string);
-        NSArray *files=[NSArray arrayWithObjects:string, string1, string2, nil];
-        NSLog(@"arrayFile1: %@",[files objectAtIndex:0]);
+        NSString * string=[NSString stringWithUTF8String:filepath.c_str()];
         moviePlayer=[AVQueueRenderer alloc];
-        [moviePlayer initPlayer:files];
+        [moviePlayer initPlayer:string];
     }
 }
