@@ -61,6 +61,11 @@ exports.reorder = function(_Database){
 	}
 	
 }
+
+exports.newUpdate = function(_Database){
+	
+
+}
 exports.update = function(_Database){
 
 	return function(req,res){
@@ -94,33 +99,43 @@ exports.update = function(_Database){
 				if(_scene.assets.length == post.assets.length){
 					// the zone type has not changed
 					// update each asset and then the scene[asset]
-					console.log('Asset Totals Match')
+					console.log(' Asset Totals Match '.inverse)
 					var cbCounter =0;
+					var bNeedsRender = true;
 					_scene.assets.forEach(function(asset,index){
 						//iterate through each of the scenes from the db
 						
 						Object.keys(asset).forEach(function(key){
-							//this convoluted function server to replace for(key in asset)
+							//this convoluted function serves to replace for(key in asset)
 							//since we do not know the appropriate key names, all the time
 							//we must pull them via this native js operation.
 							//scene.assets = [{'0': ObjectId},{'1':ObjectId}] - where the key indicates the zone	
 						
 							//var value = asset[key];
-							console.log(key+" : "+asset[key])
+							//console.log(key+" : "+asset[key])
 							
 							_Database.getDocumentByID('assets',asset[key],function(err,_asset){
 								if(!err){
-									console.log(key+":"+JSON.stringify(_asset))
+									//console.log(key+":"+JSON.stringify(_asset))
 									//now we check if they items are the same or different.
 									if(_asset.file.toString() == post.assets[parseInt(key)].file.toString() && 
 									   _asset.caption == post.assets[parseInt(key)].caption && 
-									   _asset.zone == post.assets[parseInt(key)].zone ){
+									   _asset.zone_type == post.assets[parseInt(key)].zone_type &&
+									   _asset.title == post.assets[parseInt(key)].title ){
 										cbCounter++;
+										//bNeedsRender = false;
 										if(cbCounter==_scene.assets.length){
-										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
+										var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text}}
+																
 											_Database.updateById('scenes',scene_id,updateObj,function(e){
 												if(!e){
-													redirectByEventId(res,_Database,_scene.event_id);
+													redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 													//res.jsonp({success:'success'})	
 												} 
 												else res.jsonp(500,{error:_err})
@@ -130,6 +145,7 @@ exports.update = function(_Database){
 										console.log('Everything is the same');
 									}else{
 										console.log('Something is different')
+										bNeedsRender = true;
 										var updateObj = {$set: {file: _Database.makeMongoID(post.assets[parseInt(key)].file), 
 																caption: post.assets[parseInt(key)].caption, 
 																zone: post.assets[parseInt(key)].zone
@@ -138,9 +154,15 @@ exports.update = function(_Database){
 										_Database.updateById('assets',_asset._id, updateObj, function(e){
 											cbCounter++;
 											if(cbCounter==_scene.assets.length){
-												var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text}}
-												_Database.updateById('scenes',scene_id,updateObj,function(e){
-													if(!e) redirectByEventId(res,_Database,_scene.event_id);
+												var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text}}
+													_Database.updateById('scenes',scene_id,updateObj,function(e){
+													if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 													// res.jsonp({success:'success'})
 													else res.jsonp(500,{error:_err})
 												})	
@@ -156,16 +178,18 @@ exports.update = function(_Database){
 					//res.jsonp({hello:'world'})
 					
 				}else if(_scene.assets.length == 0 ){
-					console.log('No Scene Assets yet');
+					console.log('+++++++ No Scene Assets Yet ++++'.green.inverse);
 					//for each asset submitted create new asset, associate order in scene[asset]
 					var cb_counter = 0;
 					var assetholder = [];
+					bNeedsRender = true;
+
 					post.assets.forEach(function(asset,index){
-						 console.log(asset)
-						 console.log(index)
+						 //console.log(asset)
+						 //console.log(index)
 						 if(asset.file != ''){ //if the file string is populated
 							_Database.getDocumentByID('files',asset.file,function(err,_file){
-								console.log(_file)
+								//console.log(_file)
 								if(!err){
 									asset.type = _file.type;
 									asset.file = _file._id;
@@ -179,9 +203,17 @@ exports.update = function(_Database){
 										temp[index]=_asset._id;
 										assetholder.push(temp)
 										if(cb_counter == post.assets.length){
-											var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
+										var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:assetholder}}
+											//var updateObj = {$set: {title: post.title, last_edited: new Date(), render: bNeedsRender, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 											_Database.updateById('scenes',scene_id,updateObj,function(e){
-												if(!e) redirectByEventId(res,_Database,_scene.event_id);
+												if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 												// res.jsonp({success:'success'})
 												else res.jsonp(500,{error:_err})
 											})
@@ -195,17 +227,25 @@ exports.update = function(_Database){
 						}else{ //if there is no file ie caption only
 							asset.type = 0;
 							//addAsset(asset, _Database, post, assetholder, index, cb_counter, res)
-							
+							bNeedsRender = true;
 							_Database.add('assets',asset,function(_err,_asset){
 									cb_counter++;
 									var temp= {};
 									temp[index]=_asset._id;
 									assetholder.push(temp)
 									if(cb_counter == post.assets.length){
-										var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
+									var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:assetholder}}
+										//var updateObj = {$set: {title: post.title, last_edited: new Date(), render: bNeedsRender, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:assetholder}}
 										_Database.updateById('scenes',scene_id,updateObj,function(e){
 											if(!e){
-												redirectByEventId(res,_Database,_scene.event_id);
+												redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 												// res.jsonp({success:'success'})
 											}
 											else res.jsonp(500,{error:_err})
@@ -224,14 +264,15 @@ exports.update = function(_Database){
 					
 					//decide which we have extra of stored assets or incoming assets
 					//this means a zone type has changed.
+					bNeedsRender = true;
 					if(_scene.assets.length > post.assets.length){
 						//we need to remove an asset(s) so figure out which one(s)
 						console.log('Remove Assets');
 						var diff = _scene.assets.length-post.assets.length;
-						console.log('Diff: '+diff)
+						//console.log('Diff: '+diff)
 						var diffCount = 0;
 						for(var i = _scene.assets.length-1; i>=_scene.assets.length-diff; i--){							
-							console.log(_scene.assets[i])
+							//console.log(_scene.assets[i])
 							//remove asset from database
 							Object.keys(_scene.assets[i]).forEach(function(key){
 								_Database.remove('assets',_scene.assets[i][key],function(e){
@@ -242,9 +283,17 @@ exports.update = function(_Database){
 									
 									if(diffCount==diff){
 									console.log(_scene.assets)
-									var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+									var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:_scene.assets}}
+									//var updateObj = {$set: {title: post.title, last_edited: new Date(), render: bNeedsRender, slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
 									_Database.updateById('scenes', scene_id, updateObj,function(e){
-										if(!e) redirectByEventId(res,_Database,_scene.event_id);
+										if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 										// res.jsonp({success:'success'})
 										else res.jsonp(500,{error:_err})
 									})
@@ -263,17 +312,17 @@ exports.update = function(_Database){
 						var diff = post.assets.length-_scene.assets.length;
 						console.log(diff)
 						var cb_counter = 0;
-						
+						bNeedsRender = true;
 						post.assets.forEach(function(asset,index){
 								if(index>=post.assets.length-diff){
 									//check if the asset we are iterating on is a new asset or an old one
 									console.log('NEW ASSET'.inverse.green)
-									console.log(index);
-									console.log(asset);
+									//console.log(index);
+									//console.log(asset);
 									
 									if(asset.file != ''){ //if the file string is populated
 										_Database.getDocumentByID('files',asset.file,function(err,_file){
-											console.log(_file)
+											//console.log(_file)
 											if(!err){
 												asset.type = _file.type;
 												asset.file = _file._id;
@@ -287,9 +336,17 @@ exports.update = function(_Database){
 													temp[index]=_asset._id;
 													_scene.assets.push(temp)
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
-														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+														var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:_scene.assets}}
+															
+															_Database.updateById('scenes',scene_id,updateObj,function(e){
+															if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
@@ -309,9 +366,16 @@ exports.update = function(_Database){
 													temp[index]=_asset._id;
 													_scene.assets.push(temp)
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
-														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+														var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:_scene.assets}}
+															_Database.updateById('scenes',scene_id,updateObj,function(e){
+															if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
@@ -322,30 +386,41 @@ exports.update = function(_Database){
 								}else{
 									//this asset is already set and so we should check if we need to make an update to the asset
 									Object.keys(_scene.assets[index]).forEach(function(key){
-										console.log('OLD ASSET'.inverse)
-										console.log(index)
-										console.log(asset)
-										console.log(_scene.assets[index])
-										console.log(_scene.assets[index][key])
+										console.log(' OLD ASSET '.inverse)
+										//console.log(index)
+										//console.log(asset)
+										//console.log(_scene.assets[index])
+										//console.log(_scene.assets[index][key])
 										_Database.getDocumentByID('assets',_scene.assets[index][key],function(err,_asset){
 											if(!err){
-												console.log(key+":"+JSON.stringify(_asset))
+												//console.log(key+":"+JSON.stringify(_asset))
 												//now we check if they items are the same or different.
 												if(_asset.file.toString() == post.assets[parseInt(key)].file.toString() && 
 												   _asset.caption == post.assets[parseInt(key)].caption && 
-												   _asset.zone == post.assets[parseInt(key)].zone ){
+												   _asset.zone_type == post.assets[parseInt(key)].zone_type &&
+												   _asset.title == post.assets[parseInt(key)].title ){
+												   
+												   console.log(' +++ THIS ASSET HAS NO CHANGES +++ '.inverse.green);
+
 													cb_counter++;
 													if(cb_counter == post.assets.length){
-														var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+														var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:_scene.assets}}
 														_Database.updateById('scenes',scene_id,updateObj,function(e){
-															if(!e) redirectByEventId(res,_Database,_scene.event_id);
+															if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 															// res.jsonp({success:'success'})
 															else res.jsonp(500,{error:_err})
 														})
 													}
-													console.log('Everything is the same');
 												}else{
-													console.log('Something is different')
+													console.log(' +++ THIS ASSET HAS CHANGES +++ '.inverse.red)
+													bNeedsRender = true;
 													var updateObj = {$set: {file: _Database.makeMongoID(post.assets[parseInt(key)].file), 
 																			caption: post.assets[parseInt(key)].caption, 
 																			zone: post.assets[parseInt(key)].zone }
@@ -353,9 +428,16 @@ exports.update = function(_Database){
 													_Database.updateById('assets',_asset._id, updateObj, function(e){
 														cb_counter++;
 														if(cb_counter == post.assets.length){
-															var updateObj = {$set: {title: post.title, last_edited: new Date(), slug: utils.makeSlug(post.title), zone_type: post.zone_type, text: post.text, assets:_scene.assets}}
+															var updateObj = {$set: {title: post.title, 
+																last_edited: new Date(),
+																text_type: post.text_type, 
+																scene_type: post.scene_type, 
+																render: bNeedsRender, 
+																slug: utils.makeSlug(post.title), 
+																text: post.text,
+																assets:_scene.assets}}
 															_Database.updateById('scenes',scene_id,updateObj,function(e){
-																if(!e) redirectByEventId(res,_Database,_scene.event_id);
+																if(!e) redirectByEventIdToScene(res,_Database,_scene.event_id,_scene.slug);
 																// res.jsonp({success:'success'})
 																else res.jsonp(500,{error:_err})
 															})
@@ -427,7 +509,13 @@ exports.delete = function(_Database){
 	}
 }
 
-
+function redirectByEventIdToScene(res, _Database, eventId,sceneSlug){
+	/* function to get the event-slug by eventId */
+	_Database.getDocumentByID('events', eventId, function(_e, _doc){
+		if(_e) res.jsonp(500,{error:_e});
+		else res.redirect('/events/'+_doc.slug+'#'+sceneSlug);	
+	});
+}
 function redirectByEventId(res, _Database, eventId){
 	/* function to get the event-slug by eventId */
 	_Database.getDocumentByID('events', eventId, function(_e, _doc){
