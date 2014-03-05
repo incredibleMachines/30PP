@@ -27,6 +27,7 @@ exports.Connect = function(_port,_Db){
 					var message =JSON.parse(msg);
 				}catch(e){
 					_socket.send(JSON.stringify({'command':'error', 'error': 'json parse error'}));
+					console.error("WEBSOCKET COMMAND - JSON PARSE Error: "+e)
 				}
 				//console.log(message);
 				parseCommand(message);			
