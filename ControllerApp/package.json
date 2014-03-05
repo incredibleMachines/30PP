@@ -13,6 +13,7 @@
     "less-middleware": "0.x",
     "ejs": "*",
     "async":"*",
+    "underscore": "1.6.x",
     "spawn-async":"*"
   }
 }
