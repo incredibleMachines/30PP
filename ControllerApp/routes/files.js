@@ -6,8 +6,14 @@ exports.index = function(_Database){
 		_Database.getAll('files',function(e,_files){
 			if(!e){
 				_Database.getAll('locations',function(_e,_locations){
-					if(!_e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index',files: _files,locations:_locations,error:null });
-					else res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: _files,locations:null,error:'Return Locations Error' });
+					if(!_e){ 
+							_Database.getAll('assets',function(__e,_assets){
+								if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index',files: _files,assets:_assets,locations:_locations,error:null });
+								else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug: 'files-index error', file:_files,assets:null,locations:_locations,error:null })
+							})
+					}else{ 
+						res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: _files,assets: null, locations:null,error:'Return Locations Error' }); 
+					}
 				})	
 			}else{ 
 				res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: null,locations:null,error:'Return Files Error' })
@@ -131,10 +137,12 @@ function handleFile(content,post,_Database,req,res){
 			post.type=2;
 			
 			upload.image(req.files.content,function(img){
-				//console.log(img)
+				console.log(img)
 				
 				post.path = img.path;
 				post.created_at = new Date();
+				post.size = img.size;
+				post.type = img.type;
 				addNewFile(post,_Database,res);
 				
 			})
@@ -147,7 +155,8 @@ function handleFile(content,post,_Database,req,res){
 				
 				post.path = vid.path;
 				post.created_at = new Date();
-
+				post.size = vid.size;
+				post.type = vid.type;
 				addNewFile(post,_Database,res);
 
 			})
