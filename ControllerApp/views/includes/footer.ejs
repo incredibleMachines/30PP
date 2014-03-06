@@ -19,6 +19,7 @@
   <script src='/js/vendor/jquery-2.0.3.min.js'></script>
   <script src='/js/vendor/bootstrap.min.js'></script>
   <script src='/js/vendor/bootstrap-select.min.js'></script>
+  <script src='/js/vendor/underscore-1.6.0.min.js'></script>
   <!-- For Development only-->
   <script src='/js/vendor/holder.js'></script>
   <!-- TO BE MINIFIED -->
@@ -38,14 +39,18 @@
   	<script>
   	$(document).ready(function(){
   		<% /*  */ %>
-	  	var sceneControl = new SceneController(<%-JSON.stringify(event.scenes)%>,function(){});
-	  		  		
-
-	  	<% if(event.scenes.length == 0){ %>
+  		<% if(event.scenes.length == 0){ %>
 	  	$('#new_scene_modal').modal('show');
-	  	<% } %>
+	  	<% }else{ %>
+	  	var sceneControl = new SceneController(<%-JSON.stringify(event.scenes)%>,function(){});
+	  	<% } %>	  		
+
+	  	
 	 });
   	</script>
   <% }%>
+  <!-- EJS LOCALS DATA: FOR DEBUG 
+  	<%- JSON.stringify(locals) %> 
+  -->
   </body>
 </html>
