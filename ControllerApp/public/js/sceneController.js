@@ -389,6 +389,14 @@ function SceneController(_scenes){
 				}
 				if(title == "Sculpture" || title == "Single Wall"){
 					$(newAsset).find('select.asset-zone-type').parent().show()
+					$(newAsset).find('select.asset-zone-type').html("");
+					if(title == "Sculpture") {
+						$(newAsset).find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>");
+						}else if(title=="Single Wall"){
+						
+						$(newAsset).find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Text\">Multi Text</option>")	
+							
+						}
 				}else{
 					$(newAsset).find('select.asset-zone-type').parent().hide()
 				}
