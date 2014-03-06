@@ -16,6 +16,7 @@ var path = require('path');
  */
  
 var events = require('./routes/events');
+var renderer = require('./routes/renderer')
 var files = require('./routes/files');
 var scenes = require('./routes/scenes');
 var api = require('./routes/api');
@@ -58,6 +59,10 @@ WebSocket.Connect(8080,Database);
  */
 
 var app = express();
+
+//allow our local express files to use underscore
+app.locals._ = require('underscore');
+
  
 app.set('port', process.env.PORT || 3000);
 app.set('title', '30 Park Place Controller');
@@ -86,6 +91,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', events.index(Database));
 
+//event options
 app.get('/events', events.index(Database));
 app.post('/events', events.add(Database));
 
@@ -95,6 +101,10 @@ app.delete('/events/:slug', events.delete(Database));
 app.post('/events/:slug/delete',events.delete(Database))
  
 app.get('/events/:slug/test',events.emitOne(Database,WebSocket._socket));
+
+//render handling
+
+app.get('/renderqueue', renderer.index(Database));
 
 //asset handling pages
 app.get('/files', files.index(Database));

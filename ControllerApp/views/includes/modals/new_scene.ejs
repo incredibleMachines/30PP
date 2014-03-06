@@ -13,26 +13,30 @@
 				    <section class="form-group col-md-8">
 						<label for="scene_type">Scene Type</label>
 						<select class="form-control scene-scene_type" name="scene_type" id="scene_type">
-							<%for(var i=0; i<4;i++){%>
+						<% var arr = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
+							for(var i =0; i<arr.length; i++){ %>
+							 <option value="<%=i%>"><%=arr[i]%></option>
+							 <% }/* %>							
+							<%/*for(var i=0; i<4;i++){%>
 								<option value="<%=i%>">Scene Type <%= i %></option>
-							<%}%>
+							<%}*/%>
 						</select>
 						<!--<p class="help-block">Select a scene type.</p>-->
 					</section>
 				    <section class="form-group col-md-8">
-					    <label for="zone_type">Zone Type</label>
-							<select class="form-control" name="zone_type">
-							<% for(var i =0; i<4;i++){ %>
-								<option value="<%= i %>">Zone <%= i %></option>
-							<% }%>
+					    <label for="text_type">Text Options</label>
+							<select class="form-control" name="text_type">
+							<% for(var i = 0; i< 3; i++){ %>
+								<option value="<%=i%>"><% if(i == 0){ %> No <% } else if(i == 1){ %> Single <% } else if(i ==2){ %> Double <% } %> Text</option>
+							<% } %>
 						</select>
 						<!--<p class="help-block">Select a zone type.</p>-->
 				    </section>
-				    <section class="form-group col-md-12">
-					    <label for="text">On-Screen Text</label>
-					    <textarea class="form-control" name="text" placeholder ="Add text to display during scene (optional)"></textarea>
+				    <!-- <section class="form-group col-md-12"> -->
+					    <!-- <label for="text">On-Screen Text</label> -->
+					    <!-- <textarea class="form-control" name="text" placeholder ="Add text to display during scene (optional)"></textarea>-->
 					    <!--<p class="help-block">Add text to display during scene (optional)</p>-->
-				    </section>
+				    <!-- </section> -->
 			</form><!-- .modal-body -->
 			<div class="modal-footer">
 				<button class="btn btn-primary modal-submit green" type="button">Submit</button>

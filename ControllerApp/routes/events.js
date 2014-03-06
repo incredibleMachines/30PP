@@ -108,10 +108,31 @@ exports.delete = function(_Database){
 
 	return function(req,res){
 		//res.jsonp({message:'test test test'});
-        _Database.remove('events', {slug:req.params.slug}, function(e){
-			 if(e) res.jsonp(500,{error:e});
-			 else res.redirect('/events');
-		});
+		_Database.getDocumentBySlug('events', req.params.slug, function(e,doc){
+			var cb_counter = 0;
+			if(doc.scenes.length>0){
+				doc.scenes.forEach(function(scene){
+					
+					_Database.remove('scenes',{_id:scene},function(_e){
+						
+						cb_counter++;
+						if(cb_counter == doc.scenes.length){
+							_Database.remove('events', {slug:req.params.slug}, function(__e){
+								 if(e) res.jsonp(500,{error:__e});
+								 else res.redirect('/events');
+							});
+						}
+					})
+					
+				})
+				
+			}else{
+		        _Database.remove('events', {slug:req.params.slug}, function(_e){
+					 if(e) res.jsonp(500,{error:_e});
+					 else res.redirect('/events');
+				});
+			}
+		})
 	}
 }
 

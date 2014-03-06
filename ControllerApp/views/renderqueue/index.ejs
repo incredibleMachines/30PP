@@ -1,0 +1,66 @@
+<% /* RENDER QUEUE INDEX PAGE  */ %>
+<% include ../includes/header %>
+
+<% 
+	
+	//Page Vars
+	var SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
+	
+	//reobjectify our 
+	events = JSON.stringify(events);
+	events = JSON.parse(events)
+	
+	renderqueue = JSON.stringify(renderqueue)
+	renderqueue = JSON.parse(renderqueue)
+    					
+	
+%>
+<section class="<%= page_slug %>">
+
+	<header class="row">
+	    <h1 class="col-md-6">Render Queue <small>Total: <%= renderqueue.length%></small></h1>
+	    <section class="col-md-6 add-btn">
+			<button type="button" class="btn btn-default navbar-btn render-content" >Render Content</button>
+			
+		</section>
+	</header>
+    <section class='current_events'>
+    					
+		<div class="panel panel-default">
+		  <!-- Our Events Table  -->
+		  <div class="panel-heading">
+		  	<ul class="event row panel-title" >
+		  		<!--<li class="col-md-1 panel-title">+</li>-->
+		  		<li class="col-md-2 panel-title">Scene Title</li>
+		  		<li class="col-md-2 panel-title">Scene Type</li>
+		  		<li class="col-md-2 panel-title">Zone Type</li>
+		  		<li class="col-md-2 panel-title">Event Title</li>
+		  		<li class="col-md-2 panel-title">Assets</li>
+		  		<li class="col-md-2 panel-title">**?Actions?**</li>
+		  	</ul>
+		  </div><!-- .panel-heading -->
+		
+		  <!-- Table body -->
+		  <% if(renderqueue.length> 0){ %>
+		  <ul class="list-group">
+		  	<% renderqueue.forEach(function(queueItem,i){ %>
+		  		<% //get the event associated with out 
+		  		   var event = _.findWhere(events,{_id:queueItem.event_id}) %>
+		  		 <li class="list-group-item">
+		  		 <!-- <%- JSON.stringify(queueItem) %> -->
+		  		 <ul class="event row" >
+			  		 <li class="col-md-2"><%= queueItem.title%></li>
+			  		 <li class="col-md-2"><%= SCENE_TYPES[queueItem.scene_type] %></li>
+			  		 <li class="col-md-2"><%= queueItem.zone_type %></li>
+			  		 <li class="col-md-2"><a href="/events/<%=event.slug%>/#<%= queueItem.slug %>" ><%= event.title %></a></li>
+			  		 <li class="col-md-2">Total Assets: <%= queueItem.assets.length%></li>
+			  		 <li class="col-md-2">NaN</li>
+		  		 </ul>
+		  		 </li><!-- .list-group-item -->
+		  	<% }) %>
+		  </ul><!-- .list-group -->
+		  <% }else{ %>
+		  		<h3>No Items added to Queue.</h3>
+		  <% } %>
+</section><!--.<%= page_slug %> -->
+<% include ../includes/footer %>

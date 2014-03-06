@@ -30,16 +30,42 @@ exports.index = function(_Database){
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
 		_Database.queryCollection('events',{anim_type:'sales'},function(err,_sales){
 			var sales_counter = 0;
-			_sales.forEach(function(sale,i){
-				var temp = {};
-				temp[sale.title] = '/api/play/'+sale.slug;
-				structure.sales.play_single.push(temp);
-				sales_counter++;
-				if(sales_counter == _sales.length){
-					
-					_Database.queryCollection('events',{anim_type:'ambient'},function(err,_ambients){
+			//console.log(_sales);
+			//if we have sales content continue
+			if(_sales.length>0){
+				_sales.forEach(function(sale,i){
+					var temp = {};
+					temp[sale.title] = '/api/play/'+sale.slug;
+					structure.sales.play_single.push(temp);
+					sales_counter++;
+					if(sales_counter == _sales.length){
 						
-						var ambients_counter =0;
+						_Database.queryCollection('events',{anim_type:'ambient'},function(err,_ambients){
+							
+							var ambients_counter =0;
+							if(_ambients.length > 0){
+								_ambients.forEach(function(ambient,j){
+									var tempA = {};
+									tempA[ambient.title]='/api/play/'+ambient.slug;
+									structure.ambient.play_single.push(tempA);
+									ambients_counter++;
+									if(ambients_counter==_ambients.length){
+										
+										res.jsonp(structure)
+									}
+									
+								})	
+							}else{
+								res.jsonp(structure)
+							}
+						})
+					}
+				})
+			}else{ //we have no sales content - check for ambient content
+				_Database.queryCollection('events',{anim_type:'ambient'},function(err,_ambients){
+							
+					var ambients_counter =0;
+					if(_ambients.length > 0){
 						_ambients.forEach(function(ambient,j){
 							var tempA = {};
 							tempA[ambient.title]='/api/play/'+ambient.slug;
@@ -51,10 +77,11 @@ exports.index = function(_Database){
 							}
 							
 						})	
-						
-					})
-				}
-			})
+					}else{
+						res.jsonp(structure)
+					}
+				})
+			}
 		})
 	}
 }

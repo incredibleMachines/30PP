@@ -12,6 +12,8 @@
 	"mongodb":"1.x",
     "less-middleware": "0.x",
     "ejs": "*",
-    "async":"*"
+    "async":"*",
+    "underscore": "1.6.x",
+    "spawn-async":"*"
   }
 }
