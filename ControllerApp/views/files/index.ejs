@@ -1,11 +1,22 @@
 <%/* FILES INDEX PAGE */%>
 <% include ../includes/header %>
+
+<% 
+	
+	assets = JSON.stringify(assets)
+	assets = JSON.parse(assets)
+	
+	files = JSON.stringify(files)
+	files = JSON.parse(files)
+	
+	
+%>
+
 <section class="<%= page_slug %>">
 	<header class="row">
-	    <h1 class="col-md-6"><% /* need title */ %><small>Total: <% /* need assets length */ %></small></h1>
+	    <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1>
 		<section class="col-md-6 add-btn">
-			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">+</button>
-			<p><small>Upload New Asset</small></p>
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">Upload New File</button>
 		</section>
 	</header>
     <section class='current_events'>
@@ -31,12 +42,12 @@
 
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
-								<p>File type: ____</p>
-								<p>Size: ____</p>
+								<p>File type: <%= _file.type %></p>
+								<p>Size: <%= Math.round(_file.size/1000) %> KB</p>
 							</li>
 							<li class="col-md-3"> <!-- MEDIA -->
 								<a href="#" class="thumbnail">
-									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+									<img src="<%=_file.path%>"/>
 								</a>
 								<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>
 								<%/*<button type="button" class="btn btn-default btn-sm">Replace</button> */%>
@@ -55,9 +66,15 @@
 							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
-										<% /* begin for loop*/ %>
-											<li><a>test scene name</a></li>
-											<li><a><% /* need event.scene.title */ %></a></li>
+										<% /* begin for loop*/ 
+											var associatedAssets = _.where(assets,{file:_file._id})
+											
+											associatedAssets.forEach(function(asset,j){
+										%>
+											<li><a><%=asset.title%></a></li>	
+										<%	})
+										%>
+										
 										<% /* end for loop */ %>
 									</ul>
 								</div>
