@@ -38,7 +38,7 @@
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
 			    	<ul class="event row" >
-			    		<form class="file <% /* need file.slug */ %>" method="post" action="/files/<% /* need file.slug */ %>">
+			    		<form class="file <%= _file.slug %>" method="post" action="/files/<%= _file.slug %>">
 
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
