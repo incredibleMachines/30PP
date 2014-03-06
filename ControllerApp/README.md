@@ -30,12 +30,6 @@ Open Terminal and ensure that Mongod is running *See Above*
 ```bash
 $ mongo 30_PP
 
-$ db.events.remove()
-
-$ db.scenes.remove()
-
-$ db.assets.remove()
-
-$ db.files.remove()
+> for(var i= 0; i< db.getCollectionNames().length; i++){ db[db.getCollectionNames()[i]].remove() }
 
 ```
