@@ -17,29 +17,32 @@
     AVQueuePlayer * _queuePlayer;
     AVPlayerItem * _playerItem;
     AVPlayerItem *_loadItem;
-    AVPlayerItem *_loadItem1;
-    AVPlayerItem *_loadItem2;
     dispatch_queue_t _outputQ;
+    
+    BOOL _useTexture;
+    BOOL _useAlpha;
     
     BOOL _bLoading;
     BOOL _bLoaded;
     BOOL _bPaused;
     BOOL _bFinished;
     BOOL _bLoops;
+    
+    CGSize _videoSize;
     CMTime _currentTime;
     CMTime _duration;
     CMTime _startTime;
     double _playbackRate;
     double _frameRate;
     
-    CGSize _videoSize;
-    
-    int index;
-    
     id _playerItemVideoOutput;
+    CVOpenGLTextureCacheRef _textureCache;
+	CVOpenGLTextureRef _latestTextureFrame;
     CVPixelBufferRef _latestPixelFrame;
     
     CVDisplayLinkRef displayLink;
+    
+    int _pixelLoadCount;
     
     
 }
@@ -53,6 +56,9 @@
 @property (nonatomic, assign, readonly) BOOL bLoaded;
 @property (nonatomic, assign, readonly) BOOL bFinished;
 
+@property (nonatomic, assign) BOOL useAlpha;
+@property (nonatomic, assign) BOOL useTexture;
+
 @property (nonatomic, assign, getter = isPaused, setter = setPaused:) BOOL bPaused;
 //@property (nonatomic, assign, readonly) BOOL isPlaying;
 
@@ -64,6 +70,10 @@
 @property (nonatomic, assign) double position;
 @property (nonatomic, assign) double playbackRate;
 @property (nonatomic, assign, getter = loops, setter = setLoops:) BOOL bLoops;
+        
+@property (nonatomic, assign, readonly) BOOL textureAllocated;
+@property (nonatomic, assign, readonly) GLuint textureID;
+@property (nonatomic, assign, readonly) GLenum textureTarget;
 
 - (void)loadURL:(NSURL *)url;
 
@@ -73,9 +83,10 @@
 - (void)play;
 
 - (BOOL)update;
+- (void)bindTexture;
+- (void)unbindTexture;
 - (void)pixels:(unsigned char *)outbuf;
 
-- (void)initArray:(NSArray*)files;
 - (void)initPlayer:(NSString*)string;
 - (void)makeActive;
 

@@ -14,7 +14,7 @@
 //#include "Compositor/SceneContent.h"
 
 #define BUFFER_SIZE 3
-#define MESH_NUM 3
+#define MESH_NUM 1
 
 class playerApp : public ofBaseApp {
 
@@ -74,8 +74,10 @@ public:
     };
     
     vector<ofTexture *> meshTexture;
+    ofTexture masterTexture;
     
     meshContent mesh[MESH_NUM];
+    meshContent singleMesh;
 
     //count of current SceneContent to load from buffer
     int count;
@@ -90,6 +92,9 @@ public:
     bool bDrop;
     bool bFirstLoaded;
     bool bLoaded;
+    bool bMipMap;
+//    
+//    vector <ofAVQueuePlayer *> videos;
     
 
     int frameCount;

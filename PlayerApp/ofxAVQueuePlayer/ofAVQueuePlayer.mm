@@ -43,12 +43,9 @@ bool ofAVQueuePlayer::addVideo(string path)
 //    }
 	
 	@autoreleasepool{
-        
-//        moviePlayer = [[AVQueueRenderer alloc] init];
             path = ofToDataPath(path, false);
             [moviePlayer addVideo:[NSString stringWithUTF8String:path.c_str()]];
     }
-//    bShouldPlay = false;
     return true;
 }
 //--------------------------------------------------------------
@@ -145,6 +142,45 @@ ofPixelsRef ofAVQueuePlayer::getPixelsRef()
 		ofLogError("ofAVQueuePlayer::getPixelsRef()") << "Returning pixels that may be unallocated. Make sure to initialize the video player before calling getPixelsRef.";
 	}
 	return pixels;
+}
+
+//--------------------------------------------------------------
+ofTexture* ofAVQueuePlayer::getTexture()
+{
+	//TODO: Allow AVF's direct to texture
+	if (moviePlayer.textureAllocated) {
+		updateTexture();
+	}
+	return &tex;
+    
+    //    return NULL;
+}
+
+//--------------------------------------------------------------
+ofTexture& ofAVQueuePlayer::getTextureReference()
+{
+    //	getTexture();
+	updateTexture();
+	return tex;
+}
+
+//--------------------------------------------------------------
+void ofAVQueuePlayer::updateTexture()
+{
+    if(!moviePlayer.textureAllocated) {
+		return;
+	}
+	
+	tex.setUseExternalTextureID(moviePlayer.textureID);
+	ofTextureData& data = tex.getTextureData();
+	data.textureTarget = moviePlayer.textureTarget;
+	data.width = getWidth();
+	data.height = getHeight();
+	data.tex_w = getWidth();
+	data.tex_h = getHeight();
+	data.tex_t = getWidth();
+	data.tex_u = getHeight();
+    
 }
 
 //--------------------------------------------------------------
@@ -371,19 +407,23 @@ void ofAVQueuePlayer::reallocatePixels()
     }
 }
 
+//--------------------------------------------------------------
 void ofAVQueuePlayer::nextVideo(){
     NSLog(@"play next");
     [moviePlayer advanceVideo];
 }
 
+//--------------------------------------------------------------
 bool ofAVQueuePlayer::getLoadedState(){
     return [moviePlayer bLoaded];
 }
 
+//--------------------------------------------------------------
 bool ofAVQueuePlayer::getFinished(){
     return [moviePlayer bFinished];
 }
 
+//--------------------------------------------------------------
 void ofAVQueuePlayer::initPlayer(string filepath){
     
     @autoreleasepool{

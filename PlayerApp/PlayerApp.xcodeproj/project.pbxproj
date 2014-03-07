@@ -124,11 +124,11 @@
 		D396845A18C5306500709200 /* ofAVQueuePlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVQueuePlayer.mm; sourceTree = "<group>"; };
 		D396845B18C5306500709200 /* ofAVQueueRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueueRenderer.h; sourceTree = "<group>"; };
 		D396845C18C5306500709200 /* ofAVQueueRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVQueueRenderer.m; sourceTree = "<group>"; };
-		D3DEC37918C61E09003E48C3 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3B7A22318C9FDD20037B2C6 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3B7A23218CA5CA00037B2C6 /* long_2048.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = long_2048.mov; sourceTree = "<group>"; };
+		D3B7A23318CA5D4B0037B2C6 /* long_1920.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = long_1920.mov; sourceTree = "<group>"; };
+		D3B7A23418CA5FB80037B2C6 /* long1600.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = long1600.mov; sourceTree = "<group>"; };
 		D3DEC37A18C61E09003E48C3 /* settings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
-		D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0.mp4; sourceTree = "<group>"; };
-		D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0_0.mp4; sourceTree = "<group>"; };
-		D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1_0.mp4; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -370,10 +370,10 @@
 		D396845418C5306500709200 /* ofxAVQueuePlayer */ = {
 			isa = PBXGroup;
 			children = (
-				D396845518C5306500709200 /* ofAVFMovieRenderer.h */,
-				D396845618C5306500709200 /* ofAVFMovieRenderer.m */,
 				D396845718C5306500709200 /* ofAVFoundationPlayer.h */,
 				D396845818C5306500709200 /* ofAVFoundationPlayer.mm */,
+				D396845518C5306500709200 /* ofAVFMovieRenderer.h */,
+				D396845618C5306500709200 /* ofAVFMovieRenderer.m */,
 				D396845918C5306500709200 /* ofAVQueuePlayer.h */,
 				D396845A18C5306500709200 /* ofAVQueuePlayer.mm */,
 				D396845B18C5306500709200 /* ofAVQueueRenderer.h */,
@@ -385,9 +385,9 @@
 		D3DEC37718C61E09003E48C3 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */,
-				D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */,
-				D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */,
+				D3B7A23418CA5FB80037B2C6 /* long1600.mov */,
+				D3B7A23318CA5D4B0037B2C6 /* long_1920.mov */,
+				D3B7A23218CA5CA00037B2C6 /* long_2048.mov */,
 				D3DEC37818C61E09003E48C3 /* mesh */,
 				D3DEC37A18C61E09003E48C3 /* settings.json */,
 			);
@@ -398,7 +398,7 @@
 		D3DEC37818C61E09003E48C3 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
-				D3DEC37918C61E09003E48C3 /* mesh.obj */,
+				D3B7A22318C9FDD20037B2C6 /* mesh.obj */,
 			);
 			path = mesh;
 			sourceTree = "<group>";

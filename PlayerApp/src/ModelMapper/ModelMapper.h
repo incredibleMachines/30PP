@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
+#include "ofAVQueuePlayer.h"
 //#include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS
@@ -33,6 +34,7 @@ public:
     void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
     void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
     void update(vector<ofTexture *> tex);
+    void update(vector<ofAVQueuePlayer *> vids);
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
@@ -128,4 +130,5 @@ public:
     bool bMipMap;
     
     vector<ofTexture *> textures;
+    vector <ofAVQueuePlayer *> videos;
 };

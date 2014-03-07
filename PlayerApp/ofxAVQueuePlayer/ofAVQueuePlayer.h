@@ -23,6 +23,8 @@ public:
     ~ofAVQueuePlayer();
     
     bool                addVideo(string path);
+    void                initPlayer(string filepath);
+    void                nextVideo();
     
     void                close();
     
@@ -41,14 +43,20 @@ public:
     bool                isLoaded();
     
     bool                isPlaying();
+    bool                getFinished();
     
     float               getPosition();
+    float               getPositionInSeconds();
     float               getCurrentTime();
     int                 getCurrentFrame();
     int                 getTotalNumFrames();
+    float               getDuration();
     bool                isPaused();
     float               getSpeed();
     ofLoopType          getLoopState();
+    
+    ofTexture *         getTexture();
+    ofTexture&          getTextureReference();
     
     void                setPosition(float pct);
 	void                setTime(float seconds);
@@ -74,12 +82,8 @@ public:
     void                firstFrame();
     void                nextFrame();
     void                previousFrame();
-    float               getPositionInSeconds();
-    float               getDuration();
-    void nextVideo();
     
-    void initPlayer(string filepath);
-    bool getFinished();
+
     
 protected:
     
@@ -102,6 +106,7 @@ protected:
     bool bInitialized;
     
     void reallocatePixels();
+    void updateTexture();
     
     //    ofFbo fbo;
     ofTexture tex;

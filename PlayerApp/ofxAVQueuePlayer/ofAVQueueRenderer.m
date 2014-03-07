@@ -4,6 +4,11 @@
 //
 //  Created by IncredibleMachines on 2/28/14.
 //
+//  based onofxAVFVideoRenderer.m
+//  AVFoundationTest
+//
+//  Created by Sam Kronick on 5/31/13.
+//
 //
 
 #import "ofAVQueueRenderer.h"
@@ -15,8 +20,6 @@
 
 @property (nonatomic, retain)  AVPlayerItem * playerItem;
 @property (nonatomic, retain)  AVPlayerItem * loadItem;
-@property (nonatomic, retain)  AVPlayerItem * loadItem1;
-@property (nonatomic, retain)  AVPlayerItem * loadItem2;
 @property (nonatomic, retain) AVPlayerItemVideoOutput * playerItemVideoOutput;
 
 
@@ -27,9 +30,10 @@
 @synthesize qPlayer=_queuePlayer;
 @synthesize playerItem=_playerItem;
 @synthesize loadItem=_loadItem;
-@synthesize loadItem1=_loadItem1;
-@synthesize loadItem2=_loadItem2;
 @synthesize playerItemVideoOutput = _playerItemVideoOutput;
+
+@synthesize useTexture = _useTexture;
+@synthesize useAlpha = _useAlpha;
 
 @synthesize bLoading = _bLoading;
 @synthesize bLoaded = _bLoaded;
@@ -111,152 +115,6 @@
     }];
 }
 
-
--(void)initArray:(NSArray*)files{
-    
-    NSLog(@"init");
-    _bLoading = NO;
-    _bLoaded = NO;
-    _bPaused = NO;
-    _bFinished = NO;
-    
-    _frameRate = 0.0;
-    _playbackRate = 1.0;
-    _bLoops = false;
-    
-    index=0;
-    
-    // Create and attach video output. 10.8 Only!!!
-    self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
-    [self.playerItemVideoOutput autorelease];
-    if (self.playerItemVideoOutput) {
-        [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
-    }
-    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
-    [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
-    //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
-    
-    
-    NSURL *url1=[NSURL fileURLWithPath:[[files objectAtIndex:0] stringByStandardizingPath]];
-    NSURL *url2=[NSURL fileURLWithPath:[[files objectAtIndex:1] stringByStandardizingPath]];
-    NSURL *url3=[NSURL fileURLWithPath:[[files objectAtIndex:2] stringByStandardizingPath]];
-    
-    
-    NSLog(@"Loading %@", [url1 absoluteString]);
-    NSLog(@"Loading %@", [url2 absoluteString]);
-    NSLog(@"Loading %@", [url3 absoluteString]);
-    
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url1 options:nil];
-    NSString *tracksKey = @"tracks";
-    
-    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler: ^{
-        static const NSString *kItemStatusContext;
-        // Perform the following back on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            // Check to see if the file loaded
-            NSError *error;
-            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
-            
-            if (status == AVKeyValueStatusLoaded) {
-                
-                
-                AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-                _videoSize = [videoTrack naturalSize];
-                _currentTime = kCMTimeZero;
-                _duration = asset.duration;
-                _frameRate = [videoTrack nominalFrameRate];
-                
-                self.loadItem = [AVPlayerItem playerItemWithAsset:asset];
-                //                        [self.loadItem addOutput:self.playerItemVideoOutput];
-                
-                AVURLAsset *asset2 = [AVURLAsset URLAssetWithURL:url2 options:nil];
-                NSString *tracksKey2 = @"tracks";
-                
-                [asset2 loadValuesAsynchronouslyForKeys:@[tracksKey2] completionHandler: ^{
-                    
-                    // Perform the following back on the main thread
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        // Check to see if the file loaded
-                        NSError *error2;
-                        AVKeyValueStatus status2 = [asset2 statusOfValueForKey:tracksKey2 error:&error2];
-                        
-                        if (status2 == AVKeyValueStatusLoaded) {
-                            //                                _duration = CMTimeAdd(_duration,asset2.duration);
-                            
-                            self.loadItem1 = [AVPlayerItem playerItemWithAsset:asset2];
-                            //                                [self.loadItem1 addOutput:self.playerItemVideoOutput];
-                            
-                            AVURLAsset *asset3 = [AVURLAsset URLAssetWithURL:url3 options:nil];
-                            NSString *tracksKey3 = @"tracks";
-                            
-                            [asset3 loadValuesAsynchronouslyForKeys:@[tracksKey3] completionHandler: ^{
-                                
-                                // Perform the following back on the main thread
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    
-                                    // Check to see if the file loaded
-                                    NSError *error3;
-                                    AVKeyValueStatus status3 = [asset3 statusOfValueForKey:tracksKey3 error:&error3];
-                                    
-                                    if (status3 == AVKeyValueStatusLoaded) {
-                                        //                                            _duration = CMTimeAdd(_duration,asset3.duration);
-                                        
-                                        self.loadItem2 = [AVPlayerItem playerItemWithAsset:asset3];
-                                        //                                            [self.loadItem2 addOutput:self.playerItemVideoOutput];
-                                        
-                                        NSLog(@"create player");
-                                        
-                                        NSArray * loadArray=[NSArray arrayWithObjects:self.loadItem, self.loadItem1, self.loadItem2, nil];
-                                        
-                                        
-                                        self.qPlayer=[[AVQueuePlayer alloc] initWithItems:loadArray];
-                                        NSLog(@"PLAYER CREATED");;
-                                        
-                                        
-                                        //                                            [self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&kItemStatusContext];
-                                        
-                                        
-                                        // Notify this object when the player reaches the end
-                                        // This allows us to loop the video
-                                        [[NSNotificationCenter defaultCenter]
-                                         addObserver:self
-                                         selector:@selector(playerItemDidReachEnd:)
-                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                         object:[self.qPlayer currentItem]];
-                                        
-                                        [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
-                                        
-                                        //                                            CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
-                                        //
-                                        //                                            // Set the renderer output callback function
-                                        //                                            CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, self);
-                                        //
-                                        //
-                                        //                                            // Activate the display link
-                                        //                                            CVDisplayLinkStart(displayLink);
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                    }
-                                    _bLoaded=YES;
-                                    _bLoading=NO;
-                                });
-                            }];
-                        }
-                    });
-                }];
-            }
-        });
-    }];
-    
-}
-
-
 - (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
 {
     //	// There is no autorelease pool when this method is called
@@ -282,8 +140,9 @@
         _frameRate = 0.0;
         _playbackRate = 1.0;
         _bLoops = false;
-        
-        index=0;
+    
+        _useTexture = NO;
+        _useAlpha = NO;
     
     // Create and attach video output. 10.8 Only!!!
     self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
@@ -294,7 +153,6 @@
     _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
     [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
 //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
-    
     
     NSURL *url=[NSURL fileURLWithPath:[string stringByStandardizingPath]];
     
@@ -355,6 +213,15 @@
 //                                            
 //                                            // Activate the display link
 //                                            CVDisplayLinkStart(displayLink);
+                    
+                // Create CVOpenGLTextureCacheRef for optimal CVPixelBufferRef to GL texture conversion.
+                if (self.useTexture && !_textureCache) {
+                    CVReturn err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL, CGLGetCurrentContext(), CGLGetPixelFormat(CGLGetCurrentContext()), NULL, &_textureCache);
+                    if (err != noErr) {
+                        NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
+                    }
+                }
+
 
 
                     
@@ -426,6 +293,20 @@
             _latestPixelFrame = NULL;
         }
         _latestPixelFrame = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        
+        if (self.useTexture) {
+            // Create GL texture.
+            if (_latestTextureFrame != NULL) {
+                CVOpenGLTextureRelease(_latestTextureFrame);
+                _latestTextureFrame = NULL;
+                CVOpenGLTextureCacheFlush(_textureCache, 0);
+            }
+            
+            CVReturn err = CVOpenGLTextureCacheCreateTextureFromImage(NULL, _textureCache, _latestPixelFrame, NULL, &_latestTextureFrame);
+            if (err != noErr) {
+                NSLog(@"Error creating OpenGL texture %d", err);
+            }
+        }
         
         // Update time.
         _currentTime = self.qPlayer.currentItem.currentTime;
@@ -512,6 +393,45 @@
             NSLog(@"Error in Pixel Copy vImage_error %ld", err);
         }
     }
+}
+
+//--------------------------------------------------------------
+- (BOOL)textureAllocated
+{
+    return self.useTexture && _latestTextureFrame != NULL;
+}
+
+//--------------------------------------------------------------
+- (GLuint)textureID
+{
+    return CVOpenGLTextureGetName(_latestTextureFrame);
+}
+
+//--------------------------------------------------------------
+- (GLenum)textureTarget
+{
+    return CVOpenGLTextureGetTarget(_latestTextureFrame);
+}
+
+//--------------------------------------------------------------
+- (void)bindTexture
+{
+    if (!self.textureAllocated) return;
+    
+	GLuint texID = [self textureID];
+	GLenum target = [self textureTarget];
+	
+	glEnable(target);
+	glBindTexture(target, texID);
+}
+
+//--------------------------------------------------------------
+- (void)unbindTexture
+{
+    if (!self.textureAllocated) return;
+	
+	GLenum target = [self textureTarget];
+	glDisable(target);
 }
 
 //--------------------------------------------------------------
@@ -605,6 +525,37 @@
 -(BOOL) bLoaded
 {
     return _bLoaded;
+}
+
+//--------------------------------------------------------------
+- (void)dealloc
+{
+	self.playerItemVideoOutput = nil;
+    
+	if (_textureCache != NULL) {
+		CVOpenGLTextureCacheRelease(_textureCache);
+		_textureCache = NULL;
+	}
+	if (_latestTextureFrame != NULL) {
+		CVOpenGLTextureRelease(_latestTextureFrame);
+		_latestTextureFrame = NULL;
+	}
+	if (_latestPixelFrame != NULL) {
+		CVPixelBufferRelease(_latestPixelFrame);
+		_latestPixelFrame = NULL;
+	}
+	
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    if (self.playerItem) {
+        [self.playerItem removeObserver:self forKeyPath:@"status"];
+        self.playerItem = nil;
+    }
+    
+    [self.qPlayer replaceCurrentItemWithPlayerItem:nil];
+    self.qPlayer = nil;
+    
+    [super dealloc];
 }
 
 

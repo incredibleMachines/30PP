@@ -44,13 +44,13 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     _whichMeshes.push_back(1);
     _whichMeshes.push_back(2);
     setup(_numCams,_guiCam,_whichMeshes);
+    
+    cout<<"setup"<<endl;
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //----------SETUP GLOBALS
-    
-    plane.set(1024,1024);
 
     numCams=_numCams;
     guiCam=_guiCam;
@@ -115,8 +115,25 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
 
 void ModelMapper::update(vector<ofTexture *> tex){
     
+    bMipMap==true;
+    
     //update gui camera to display selected camera graphics
     textures=tex;
+    for(int i=0;i<numMeshes;i++){
+        cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
+    }
+    cameras[guiCam].masks=cameras[cameraSelect].masks;
+    cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
+    cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
+    cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
+}
+
+void ModelMapper::update(vector<ofAVQueuePlayer *> vids){
+    
+    bMipMap=false;
+    
+    //update gui camera to display selected camera graphics
+    videos=vids;
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
@@ -1064,18 +1081,16 @@ void ModelMapper:: drawCameras() {
         
         //Begin camera object
         cameras[i].camera.begin(cameras[i].viewport);
-        
-
             
         for(int j=0;j<numMeshes;j++){
             
-            textures[j]->bind();
+            textures[0]->bind();
 
             ofSetColor(255,255,255);
 
             cameras[i].mesh[j].draw();
         
-            textures[j]->unbind();
+            textures[0]->unbind();
             
             //draw mesh wireframe
             if(bDrawWireframe==true){
