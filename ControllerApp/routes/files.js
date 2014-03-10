@@ -114,23 +114,53 @@ exports.single = function(_Database){
 exports.update = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'update'});
-		//res.render('events/index', { current: req.url, title: 'add event' });
+	
+		var post = req.body;
+		var files = req.files;
+		//console.log(post)
+		//console.log(files.file.size)
+		
+		if(files.content.size === 0){
+			console.log("No Image to upload Just Update document")
+			
+			post.slug = utils.makeSlug(post.title)
+			var updateObj = {$set:{title: post.title, slug: post.slug, last_edited: new Date()}}
+			_Database.update('files',{_id:_Database.makeMongoID(post.id)},updateObj,function(e){
+				if(!e) res.redirect('/files')
+				else jsonp(500,{error: e})
+			})
+		}else{
+			console.log("Upload File then Update");
+			post.slug = utils.makeSlug(post.title)
+			
+			handleFile(files.content,post,_Database,req,res,true)
+			
+		}
+			
 	}
 }
 exports.delete = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'delete'});
+		//res.jsonp({message:'delete'});
 		//res.render('events/index', { current: req.url, title: 'add event' });
+		var file = req.params.slug;
+		_Database.remove('files',{slug:file},function(e){
+			
+			if(!e) res.redirect('/files')
+			else res.json({error: 'Delete file error'})
+		})
+	
 	}
+	
+	
 }
 //content = form file submission titled content
 //post = post data from req
 //req = our route request
 //res = our server response
 
-function handleFile(content,post,_Database,req,res){
+function handleFile(content,post,_Database,req,res,bUpdate){
 			//check the content type of the file
 		if(content.headers['content-type'].indexOf('image')>=0){
 			console.log('IMAGE')
@@ -143,8 +173,8 @@ function handleFile(content,post,_Database,req,res){
 				post.created_at = new Date();
 				post.size = img.size;
 				post.type = img.type;
-				addNewFile(post,_Database,res);
-				
+				if(!bUpdate)addNewFile(post,_Database,res);
+				else updateFile(post,_Database,res)
 			})
 		}else if(content.headers['content-type'].indexOf('video')>=0){
 			console.log('VIDEO')
@@ -157,8 +187,8 @@ function handleFile(content,post,_Database,req,res){
 				post.created_at = new Date();
 				post.size = vid.size;
 				post.type = vid.type;
-				addNewFile(post,_Database,res);
-
+				if(!bUpdate) addNewFile(post,_Database,res);
+				else updateFile(post,_Database,res)
 			})
 		}else{
 			//unaccepted file type remove the file from the temp folder
@@ -169,7 +199,26 @@ function handleFile(content,post,_Database,req,res){
 			
 		} //if(content.headers['content-type']
 }
-
+function updateFile(_post,__Database,_res){
+	
+	var updateObj = {$set:{
+							title: _post.title,
+							slug: _post.slug,
+							last_edited: new Date(),
+							path:_post.path,
+							size: _post.size,
+							type: _post.type
+							
+							}}
+	__Database.update('files', {_id: __Database.makeMongoID(_post.id)},updateObj,function(e){
+		
+		if(!e) _res.redirect('/files')
+		else _res.jsonp(500, {error: e})
+		
+	})
+	
+	
+}
 
 //_post= the json obj
 //__Database = _Database

@@ -38,8 +38,8 @@
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
 			    	<ul class="event row" >
-			    		<form class="file <%= _file.slug %>" method="post" action="/files/<%= _file.slug %>">
-
+			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
+							<input type="hidden" name="id" value="<%= _file._id%>">
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
 								<p>File type: <%= _file.type %></p>
@@ -49,10 +49,13 @@
 								<a href="#" class="thumbnail">
 									<img src="<%=_file.path%>"/>
 								</a>
-								<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>
-								<%/*<button type="button" class="btn btn-default btn-sm">Replace</button> */%>
+								<!--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>-->
+								<button type="button" class="btn btn-default btn-sm file-replace">Replace</button>
+								<input style="display:none;"class="form-control" type="file" name="content" >
+
 							</li>
 							<li class="col-md-2 file-location"> <!-- LOCATION -->
+								<%  /* Seems as though this whole section is no longer needed */%>
 								<select name="location" class="form-control show-tick">
 									<% locations.forEach(function(_loc,j){ %>
 									<% /* begin for loop */ %>
@@ -67,6 +70,10 @@
 								<div class="asset-scene-list">
 									<ul>
 										<% /* begin for loop*/ 
+											//Note:: This needs modification, we don't actually want the title of the asset, but the title of 
+											//the scene which the asset lives within
+											//it will be important to surface this data as the current form makes little sense.
+											
 											var associatedAssets = _.where(assets,{file:_file._id})
 											
 											associatedAssets.forEach(function(asset,j){

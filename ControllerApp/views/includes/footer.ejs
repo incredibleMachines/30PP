@@ -49,6 +49,14 @@
 	 });
   	</script>
   <% }%>
+  <% if(page_slug=='files-index'){ %>
+  	<script src='/js/fileController.js'></script>
+  	<script>
+	  	$(document).ready(function(){
+		  	var fileController = new FileController();
+	  	})
+  	</script>
+  <% }%>
   <!-- EJS LOCALS DATA: FOR DEBUG 
   	<%- JSON.stringify(locals) %> 
   -->
