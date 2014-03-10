@@ -11,8 +11,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <OpenGL/OpenGL.h>
 
-#define FREEWHEELING_PERIOD_IN_SECONDS 0.5
-#define ADVANCE_INTERVAL_IN_SECONDS 0.1
+#define FREEWHEELING_PERIOD_IN_SECONDS 0.1
+#define ADVANCE_INTERVAL_IN_SECONDS 0.03
 
 @interface AVQueueRenderer : AVPlayer <AVPlayerItemOutputPullDelegate> {
     AVQueuePlayer * _queuePlayer;
@@ -64,6 +64,7 @@
 @property (nonatomic, assign, readonly, getter = isLoading) BOOL bLoading;
 @property (nonatomic, assign, readonly) BOOL bLoaded;
 @property (nonatomic, assign, readonly) BOOL bFinished;
+@property (nonatomic, assign, readonly) BOOL bNewFrame;
 
 @property (nonatomic, assign) BOOL useAlpha;
 @property (nonatomic, assign) BOOL useTexture;

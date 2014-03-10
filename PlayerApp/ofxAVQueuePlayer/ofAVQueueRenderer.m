@@ -39,6 +39,8 @@
 @synthesize bLoaded = _bLoaded;
 @synthesize bPaused = _bPaused;
 @synthesize bFinished=_bFinished;
+@synthesize bNewFrame=_newFrame;
+
 
 @synthesize frameRate = _frameRate;
 @synthesize playbackRate = _playbackRate;
@@ -146,6 +148,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
     
         _useTexture = NO;
         _useAlpha = NO;
+    _newFrame=NO;
     
     _queue = dispatch_queue_create(NULL, NULL);
     
@@ -157,6 +160,8 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         CVDisplayLinkSetOutputCallback(_displayLink, displayLinkCallback, (__bridge void *)self);
         // Pause the displayLink till ready to conserve power
         CVDisplayLinkStop(_displayLink);
+        
+//        	CVDisplayLinkStart(_displayLink);
         
         // Request notification for media change in advance to start up displayLink or any setup necessary
         [_playerItemVideoOutput setDelegate:self queue:_queue];
@@ -319,7 +324,6 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         
 //        self->_latestPixelFrame=[playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
 //		
-//        self->_newFrame=YES;
         if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
             NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
                   CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
@@ -337,10 +341,10 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
         //so we need to swap the alpha around using a vImage permutation
         
-        NSLog(@"buffer width calc: %zu", CVPixelBufferGetWidth(pixBuff)*3);
-        NSLog(@"buffer width report: %zu", CVPixelBufferGetBytesPerRow(pixBuff));
-        NSLog(@"buffer height: %zu", CVPixelBufferGetHeight(pixBuff));
-        NSLog(@"buffer array size: %zu", CVPixelBufferGetHeight(pixBuff)*CVPixelBufferGetBytesPerRow(pixBuff));
+//        NSLog(@"buffer width calc: %zu", CVPixelBufferGetWidth(pixBuff)*3);
+//        NSLog(@"buffer width report: %zu", CVPixelBufferGetBytesPerRow(pixBuff));
+//        NSLog(@"buffer height: %zu", CVPixelBufferGetHeight(pixBuff));
+//        NSLog(@"buffer array size: %zu", CVPixelBufferGetHeight(pixBuff)*CVPixelBufferGetBytesPerRow(pixBuff));
         
         vImage_Buffer src = {
             CVPixelBufferGetBaseAddress(pixBuff),
@@ -352,21 +356,24 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
         //so we use vImage to copy them into the out buffer
         
-        NSLog(@"copying buffer");
-        vImage_Buffer dest = { self->_pix, 2405, 1600, 3*1600};
+//        NSLog(@"copying buffer");
+        vImage_Buffer dest = { self->_pix, self.height, self.width, 3*self.width};
         err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
-        NSLog(@"copied");
+//        NSLog(@"copied");
         
         CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
         
         if (err != kvImageNoError) {
             NSLog(@"Error in Pixel Copy vImage_error %ld", err);
         }
+        
+        self->_newFrame=YES;
 //
 		CVBufferRelease(pixBuff);
 	}
 	else
 	{
+        self->_newFrame=NO;
 		CMTime elapsedTime = CMClockMakeHostTimeFromSystemUnits(inNow->hostTime - self->_lastHostTime);
 		if (CMTimeGetSeconds(elapsedTime) > FREEWHEELING_PERIOD_IN_SECONDS)
 		{
@@ -639,6 +646,12 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 {
     return _bLoaded;
 }
+
+-(BOOL) bNewFrame
+{
+    return _newFrame;
+}
+
 
 //--------------------------------------------------------------
 - (void)dealloc

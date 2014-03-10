@@ -94,8 +94,8 @@ void ofAVQueuePlayer::update()
 				bShouldPlay = false;
 			}
         }
-		bNewFrame = [moviePlayer update];
-        bHavePixelsChanged = bNewFrame;
+		bNewFrame = [moviePlayer bNewFrame];
+      bHavePixelsChanged = bNewFrame;
     }
     else {
         ofLogNotice("ofAVQueuePlayer::update()") << "Movie player not ready";
@@ -139,7 +139,7 @@ ofPixelsRef ofAVQueuePlayer::getPixelsRef()
 //		}
         if (bHavePixelsChanged) {
             if(moviePlayer.pix){
-                cout<<"getPixels width"<<[moviePlayer width]<<endl;
+//                cout<<"getPixels width"<<[moviePlayer width]<<endl;
                 pixels.setFromExternalPixels(moviePlayer.pix, [moviePlayer width],[moviePlayer height], 3);
             }
             bHavePixelsChanged=false;
