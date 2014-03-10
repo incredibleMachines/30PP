@@ -133,10 +133,17 @@ ofPixelsRef ofAVQueuePlayer::getPixelsRef()
 {
 	if (isLoaded()) {
 		// Don't get the pixels every frame if it hasn't updated
-		if (bHavePixelsChanged) {
-			[moviePlayer pixels:pixels.getPixels()];
-			bHavePixelsChanged = false;
-		}
+//		if (bHavePixelsChanged) {
+//			[moviePlayer pixels:pixels.getPixels()];
+//			bHavePixelsChanged = false;
+//		}
+        if (bHavePixelsChanged) {
+            if(moviePlayer.pix){
+                cout<<"getPixels width"<<[moviePlayer width]<<endl;
+                pixels.setFromExternalPixels(moviePlayer.pix, [moviePlayer width],[moviePlayer height], 3);
+            }
+            bHavePixelsChanged=false;
+        }
 	}
 	else {
 		ofLogError("ofAVQueuePlayer::getPixelsRef()") << "Returning pixels that may be unallocated. Make sure to initialize the video player before calling getPixelsRef.";
@@ -403,6 +410,8 @@ void ofAVQueuePlayer::reallocatePixels()
         pixels.allocate(getWidth(), getHeight(), OF_IMAGE_COLOR_ALPHA);
     }
     else {
+                    cout<<"allocated width"<<getWidth()<<endl;
+        cout<<"allocated height"<<getHeight()<<endl;
         pixels.allocate(getWidth(), getHeight(), OF_IMAGE_COLOR);
     }
 }

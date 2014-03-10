@@ -11,13 +11,20 @@
 #import <AVFoundation/AVFoundation.h>
 #import <OpenGL/OpenGL.h>
 
-#define BUFFER_SIZE 3
+#define FREEWHEELING_PERIOD_IN_SECONDS 0.5
+#define ADVANCE_INTERVAL_IN_SECONDS 0.1
 
 @interface AVQueueRenderer : AVPlayer <AVPlayerItemOutputPullDelegate> {
     AVQueuePlayer * _queuePlayer;
     AVPlayerItem * _playerItem;
     AVPlayerItem *_loadItem;
-    dispatch_queue_t _outputQ;
+    
+    AVPlayerItemVideoOutput *_playerItemVideoOutput;
+	CVDisplayLinkRef _displayLink;
+	CMVideoFormatDescriptionRef _videoInfo;
+	
+	uint64_t _lastHostTime;
+	dispatch_queue_t _queue;
     
     BOOL _useTexture;
     BOOL _useAlpha;
@@ -35,14 +42,16 @@
     double _playbackRate;
     double _frameRate;
     
-    id _playerItemVideoOutput;
+    BOOL _newFrame;
+    
+//    id _playerItemVideoOutput;
     CVOpenGLTextureCacheRef _textureCache;
 	CVOpenGLTextureRef _latestTextureFrame;
     CVPixelBufferRef _latestPixelFrame;
     
-    CVDisplayLinkRef displayLink;
-    
     int _pixelLoadCount;
+    
+    unsigned char * _pix;
     
     
 }
@@ -74,6 +83,8 @@
 @property (nonatomic, assign, readonly) BOOL textureAllocated;
 @property (nonatomic, assign, readonly) GLuint textureID;
 @property (nonatomic, assign, readonly) GLenum textureTarget;
+
+@property (nonatomic, assign) unsigned char * pix;
 
 - (void)loadURL:(NSURL *)url;
 

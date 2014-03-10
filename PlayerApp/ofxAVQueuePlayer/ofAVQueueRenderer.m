@@ -43,6 +43,9 @@
 @synthesize frameRate = _frameRate;
 @synthesize playbackRate = _playbackRate;
 @synthesize bLoops = _bLoops;
+@synthesize pix=_pix;
+
+static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext);
 
 - (id)init{
     self=[super init];
@@ -144,14 +147,30 @@
         _useTexture = NO;
         _useAlpha = NO;
     
-    // Create and attach video output. 10.8 Only!!!
-    self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
-    [self.playerItemVideoOutput autorelease];
-    if (self.playerItemVideoOutput) {
-        [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
+    _queue = dispatch_queue_create(NULL, NULL);
+    
+    _playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)}];
+    if (_playerItemVideoOutput)
+    {
+        // Create a CVDisplayLink to receive a callback at every vsync
+        CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
+        CVDisplayLinkSetOutputCallback(_displayLink, displayLinkCallback, (__bridge void *)self);
+        // Pause the displayLink till ready to conserve power
+        CVDisplayLinkStop(_displayLink);
+        
+        // Request notification for media change in advance to start up displayLink or any setup necessary
+        [_playerItemVideoOutput setDelegate:self queue:_queue];
+        [_playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:ADVANCE_INTERVAL_IN_SECONDS];
     }
-    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
-    [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
+    
+//    // Create and attach video output. 10.8 Only!!!
+//    self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
+//    [self.playerItemVideoOutput autorelease];
+//    if (self.playerItemVideoOutput) {
+//        [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
+//    }
+//    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
+//    [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
 //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
     
     NSURL *url=[NSURL fileURLWithPath:[string stringByStandardizingPath]];
@@ -181,6 +200,8 @@
                     _duration = asset.duration;
                     _frameRate = [videoTrack nominalFrameRate];
                     
+                    
+                    
                     self.loadItem = [AVPlayerItem playerItemWithAsset:asset];
                     
                     NSLog(@"create player");
@@ -189,10 +210,18 @@
                     
                     
                     self.qPlayer=[[AVQueuePlayer alloc] initWithItems:loadArray];
-                    NSLog(@"PLAYER CREATED");;
+                    NSLog(@"PLAYER CREATED");
                     
+                    NSLog(@"width: %lf",[self width]);
+                    NSLog(@"height: %lf",[self height]);
+                    int size=[self width] * [self height] *3;
+                    NSLog(@"char array size: %i", size);
                     
-//                                            [self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&kItemStatusContext];
+                    _pix= (unsigned char*) calloc(size, sizeof(unsigned char));
+                    
+                    NSLog(@"char array init: %lu", sizeof _pix);
+                    
+//                  [self.playerItem addObserver:self forKeyPath:@"status" options:0 context:&kItemStatusContext];
                     
                     
                     // Notify this object when the player reaches the end
@@ -205,14 +234,14 @@
                     
                     [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
                     
-//                                            CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
+//                  CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
 //                                            
-//                                            // Set the renderer output callback function
-//                                            CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, self);
+//                  // Set the renderer output callback function
+//                  CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, self);
 //
 //                                            
 //                                            // Activate the display link
-//                                            CVDisplayLinkStart(displayLink);
+//              CVDisplayLinkStart(displayLink);
                     
                 // Create CVOpenGLTextureCacheRef for optimal CVPixelBufferRef to GL texture conversion.
                 if (self.useTexture && !_textureCache) {
@@ -221,13 +250,6 @@
                         NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
                     }
                 }
-
-
-
-                    
-                    
-                    
-
                 }
                 _bLoaded=YES;
                 _bLoading=NO;
@@ -280,34 +302,116 @@
     }
 }
 
+static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext)
+{
+	AVQueueRenderer *self = (__bridge AVQueueRenderer *)displayLinkContext;
+	AVPlayerItemVideoOutput *playerItemVideoOutput = self->_playerItemVideoOutput;
+	
+	// The displayLink calls back at every vsync (screen refresh)
+	// Compute itemTime for the next vsync
+	CMTime outputItemTime = [playerItemVideoOutput itemTimeForCVTimeStamp:*inOutputTime];
+	if ([playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime])
+	{
+		self->_lastHostTime = inOutputTime->hostTime;
+		
+		// Copy the pixel buffer to be displayed next and add it to AVSampleBufferDisplayLayer for display
+		CVPixelBufferRef pixBuff = [playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        
+//        self->_latestPixelFrame=[playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+//		
+//        self->_newFrame=YES;
+        if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
+            NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
+                  CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
+            return;
+        }
+        
+        if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
+            NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
+            return;
+        }
+        
+//        CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+        //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+        //video.width * video.height * 4
+        //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+        //so we need to swap the alpha around using a vImage permutation
+        
+        NSLog(@"buffer width calc: %zu", CVPixelBufferGetWidth(pixBuff)*3);
+        NSLog(@"buffer width report: %zu", CVPixelBufferGetBytesPerRow(pixBuff));
+        NSLog(@"buffer height: %zu", CVPixelBufferGetHeight(pixBuff));
+        NSLog(@"buffer array size: %zu", CVPixelBufferGetHeight(pixBuff)*CVPixelBufferGetBytesPerRow(pixBuff));
+        
+        vImage_Buffer src = {
+            CVPixelBufferGetBaseAddress(pixBuff),
+            CVPixelBufferGetHeight(pixBuff),
+            CVPixelBufferGetWidth(pixBuff),
+            CVPixelBufferGetBytesPerRow(pixBuff)
+        };
+        vImage_Error err;
+        //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+        //so we use vImage to copy them into the out buffer
+        
+        NSLog(@"copying buffer");
+        vImage_Buffer dest = { self->_pix, 2405, 1600, 3*1600};
+        err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+        NSLog(@"copied");
+        
+//        CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+        
+        if (err != kvImageNoError) {
+            NSLog(@"Error in Pixel Copy vImage_error %ld", err);
+        }
+//
+		CVBufferRelease(pixBuff);
+	}
+	else
+	{
+		CMTime elapsedTime = CMClockMakeHostTimeFromSystemUnits(inNow->hostTime - self->_lastHostTime);
+		if (CMTimeGetSeconds(elapsedTime) > FREEWHEELING_PERIOD_IN_SECONDS)
+		{
+			// No new images for a while.  Shut down the display link to conserve power, but request a wakeup call if new images are coming.
+			
+			CVDisplayLinkStop(displayLink);
+			
+			[playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:ADVANCE_INTERVAL_IN_SECONDS];
+		}
+	}
+	
+	return kCVReturnSuccess;
+}
+
+
+
 - (BOOL)update
 {
     if (_bLoaded==NO) return NO;
+    else{
     
-    // Check our video output for new frames.
-    CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForHostTime:CACurrentMediaTime()];
-    if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime]) {
-        // Get pixels.
-        if (_latestPixelFrame != NULL) {
-            CVPixelBufferRelease(_latestPixelFrame);
-            _latestPixelFrame = NULL;
-        }
-        _latestPixelFrame = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
-        
-        if (self.useTexture) {
-            // Create GL texture.
-            if (_latestTextureFrame != NULL) {
-                CVOpenGLTextureRelease(_latestTextureFrame);
-                _latestTextureFrame = NULL;
-                CVOpenGLTextureCacheFlush(_textureCache, 0);
-            }
-            
-            CVReturn err = CVOpenGLTextureCacheCreateTextureFromImage(NULL, _textureCache, _latestPixelFrame, NULL, &_latestTextureFrame);
-            if (err != noErr) {
-                NSLog(@"Error creating OpenGL texture %d", err);
-            }
-        }
-        
+//    // Check our video output for new frames.
+//    CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForHostTime:CACurrentMediaTime()];
+//    if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime]) {
+//        // Get pixels.
+//        if (_latestPixelFrame != NULL) {
+//            CVPixelBufferRelease(_latestPixelFrame);
+//            _latestPixelFrame = NULL;
+//        }
+//        _latestPixelFrame = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+//        
+//        if (self.useTexture) {
+//            // Create GL texture.
+//            if (_latestTextureFrame != NULL) {
+//                CVOpenGLTextureRelease(_latestTextureFrame);
+//                _latestTextureFrame = NULL;
+//                CVOpenGLTextureCacheFlush(_textureCache, 0);
+//            }
+//            
+//            CVReturn err = CVOpenGLTextureCacheCreateTextureFromImage(NULL, _textureCache, _latestPixelFrame, NULL, &_latestTextureFrame);
+//            if (err != noErr) {
+//                NSLog(@"Error creating OpenGL texture %d", err);
+//            }
+//        }
+    
         // Update time.
         _currentTime = self.qPlayer.currentItem.currentTime;
         _duration = self.qPlayer.currentItem.duration;
@@ -316,7 +420,7 @@
         return YES;
     }
     
-    return NO;
+//    return NO;
 }
 
 //--------------------------------------------------------------
@@ -355,6 +459,7 @@
 - (void)pixels:(unsigned char *)outbuf
 {
     @autoreleasepool {
+        if(_newFrame==YES){
         
         if (_latestPixelFrame == NULL) return;
         
@@ -389,8 +494,12 @@
         
         CVPixelBufferUnlockBaseAddress(_latestPixelFrame, kCVPixelBufferLock_ReadOnly);
         
+        NSLog(@"Pixels");
+        
         if (err != kvImageNoError) {
             NSLog(@"Error in Pixel Copy vImage_error %ld", err);
+        }
+            _newFrame=NO;
         }
     }
 }
@@ -504,6 +613,10 @@
     self.qPlayer.volume = volume;
 }
 
+//-(unsigned char *) pix{
+//    return self.pix;
+//}
+
 //--------------------------------------------------------------
 - (double)width
 {
@@ -557,9 +670,17 @@
     
     [super dealloc];
 }
+@end
 
 
+@implementation AVQueueRenderer (AVPlayerItemOutputPullDelegate)
 
-
+- (void)outputMediaDataWillChange:(AVPlayerItemOutput *)sender
+{
+	// Start running again.
+	_lastHostTime = CVGetCurrentHostTime();
+	
+	CVDisplayLinkStart(_displayLink);
+}
 
 @end
