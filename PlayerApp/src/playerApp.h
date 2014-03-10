@@ -10,7 +10,7 @@
 #include "ofAVFoundationPlayer.h"
 //#include "Events/Event.h"
 //#include "Events/Scene.h"
-#include "Events/EventTypes.h"
+//#include "Events/EventTypes.h"
 //#include "Compositor/SceneContent.h"
 
 #define BUFFER_SIZE 3

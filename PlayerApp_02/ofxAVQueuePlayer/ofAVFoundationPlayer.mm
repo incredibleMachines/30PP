@@ -36,6 +36,7 @@ ofAVFoundationPlayer::~ofAVFoundationPlayer()
 bool ofAVFoundationPlayer::loadMovie(string path)
 {
 
+    ofLogNotice("ofAVFoundationPlayer::update()") << "loadMovie: " << path;
     if (bInitialized) {
         close();
     }
