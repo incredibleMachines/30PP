@@ -76,7 +76,7 @@ app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
 app.use(express.session());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname+'/public' /*path.join(__dirname, 'public')*/));
 
 // development only
 if ('development' == app.get('env')) {
@@ -105,6 +105,7 @@ app.get('/events/:slug/test',events.emitOne(Database,WebSocket._socket));
 //render handling
 
 app.get('/renderqueue', renderer.index(Database));
+app.post('/render',renderer.render(Database,AfterEffects))
 
 //asset handling pages
 app.get('/files', files.index(Database));
@@ -112,12 +113,12 @@ app.post('/files', files.add(Database));
 app.get('/files/:slug', files.single(Database));
 app.post('/files/:slug', files.update(Database));
 app.delete('/files/:slug', files.delete(Database));
-app.post('files/:slug/delete',files.delete(Database));
+app.post('/files/:slug/delete',files.delete(Database));
 
 //scene handling
 
 app.post('/scenes',scenes.add(Database));
-app.post('/scenes/reorder',scenes.reorder(Database));
+app.post('/scenes/reorder/:id',scenes.reorder(Database));
 app.post('/scenes/:id',scenes.update(Database));
 app.delete('/scenes/:id',scenes.delete(Database));
 app.post('/scenes/:id/delete',scenes.delete(Database));

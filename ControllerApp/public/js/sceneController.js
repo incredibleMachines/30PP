@@ -143,6 +143,7 @@ function SceneController(_scenes){
 		
 	}); //#End Zone Type Selection options
 	
+	
 	$('select#text_type').change(function(e){
 		
 		var diff =  $(this).val()-currentScene.text_type;
@@ -246,6 +247,22 @@ function SceneController(_scenes){
 		})
 		
 	});
+	
+	//scene order button press
+	$('button.scene-order').click(function(e){
+		var $this = $(this);
+		var direction;
+	
+		if($this.hasClass('scene-order-up')){
+			direction = "up"
+		}else{
+			direction = "down"
+		}
+		var scene_id = $this.parent().siblings('button').data('scene-id')
+		
+		var form = $('<form action="/scenes/reorder/'+scene_id+'" method="post"><input type="hidden" name="type" value="'+direction+'"></form>')
+		$(form).submit();
+	})
 	
 	/*
 	**

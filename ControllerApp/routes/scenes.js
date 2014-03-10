@@ -52,11 +52,77 @@ exports.add = function(_Database){
 		 })
 	}
 }
+//reorder the scenes in the DB and for output
 exports.reorder = function(_Database){
 	return function(req,res){
+		var id = req.params.id;
 		var post = req.body;
-		console.log(req.body);
-		res.jsonp({message:'reorder not implimented yet'})
+		post.id = id;
+		console.log(post)
+		_Database.getDocumentByID('scenes',id,function(e,scene){
+			if(e) res.jsonp(500,{error: e})
+			else{
+				_Database.getDocumentByID('events',scene.event_id,function(_e,event){
+					if(_e) res.jsonp(500,{error:e})
+					else{
+						var index; 
+						var swap_index;
+						var holder = event.scenes;
+						var bFoundMatch = false;
+						console.log(" EVENT SCENES ".inverse.cyan)
+						console.log(event.scenes);
+						console.log(" END EVENT SCENES ".inverse.cyan)
+						//iterate through the events scenes array
+						event.scenes.forEach(function(_scene, i){
+							console.log(_scene.toString().green.inverse+ "    ".inverse.green+i.toString().inverse.green)
+							if(!bFoundMatch){						
+							//find the index of the scene
+								if( _scene.toString() === id.toString() ){
+									bFoundMatch = true;
+									index = i;
+									console.log(" We Have A Match ".inverse.red+ id.inverse.red+" : at Index : ".inverse.red+index.toString().inverse.red);
+									
+									//determine if the scene must go up or down
+									if(post.type ==='up'){
+										swap_index = index-1
+									}else if(post.type ==='down'){
+										swap_index = index+1
+									}
+									
+									//switch the indexes
+									//var obj = event.scenes[index]
+									holder[index] = holder[swap_index] 
+									holder[swap_index] = _Database.makeMongoID(id)
+									var updateObj = {$set: {scenes: holder}}
+									console.log(" UPDATED HOLDER ".inverse.blue)
+									console.log(holder);							
+									console.log(" END UPDATED HOLDER ".inverse.blue)
+									
+									//update event scene array
+		
+									_Database.updateById('events',event._id, updateObj,function(__e){
+																	//return to the event slug
+																	if(!__e) res.redirect('/events/'+event.slug) 
+																	else res.jsonp(500,{error: __e})
+														})
+									
+									
+								}//end if( _scene.toString() === id.toString() )
+							}//end if(!bFoundMatch)
+						
+						
+						})//end for each
+								
+					}
+				})
+				
+			}
+			
+			
+		})
+		
+		//console.log(req.body);
+		//res.jsonp({message:'reorder not implimented yet'})
 		
 	}
 	
