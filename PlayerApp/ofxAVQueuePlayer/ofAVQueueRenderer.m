@@ -331,7 +331,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
             return;
         }
         
-//        CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+        CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
         //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
         //video.width * video.height * 4
         //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
@@ -357,7 +357,7 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
         err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
         NSLog(@"copied");
         
-//        CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+        CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
         
         if (err != kvImageNoError) {
             NSLog(@"Error in Pixel Copy vImage_error %ld", err);
@@ -458,50 +458,50 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 
 - (void)pixels:(unsigned char *)outbuf
 {
-    @autoreleasepool {
-        if(_newFrame==YES){
-        
-        if (_latestPixelFrame == NULL) return;
-        
-        if ((NSInteger)self.width != CVPixelBufferGetWidth(_latestPixelFrame) || (NSInteger)self.height != CVPixelBufferGetHeight(_latestPixelFrame)) {
-            NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
-                  CVPixelBufferGetWidth(_latestPixelFrame), CVPixelBufferGetHeight(_latestPixelFrame), (long)self.width, (long)self.height);
-            return;
-        }
-        
-        if (CVPixelBufferGetPixelFormatType(_latestPixelFrame) != kCVPixelFormatType_32ARGB) {
-            NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(_latestPixelFrame));
-            return;
-        }
-        
-        CVPixelBufferLockBaseAddress(_latestPixelFrame, kCVPixelBufferLock_ReadOnly);
-        //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
-        //video.width * video.height * 4
-        //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
-        //so we need to swap the alpha around using a vImage permutation
-        vImage_Buffer src = {
-            CVPixelBufferGetBaseAddress(_latestPixelFrame),
-            CVPixelBufferGetHeight(_latestPixelFrame),
-            CVPixelBufferGetWidth(_latestPixelFrame),
-            CVPixelBufferGetBytesPerRow(_latestPixelFrame)
-        };
-        vImage_Error err;
-        //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
-        //so we use vImage to copy them into the out buffer
-
-            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
-            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
-        
-        CVPixelBufferUnlockBaseAddress(_latestPixelFrame, kCVPixelBufferLock_ReadOnly);
-        
-        NSLog(@"Pixels");
-        
-        if (err != kvImageNoError) {
-            NSLog(@"Error in Pixel Copy vImage_error %ld", err);
-        }
-            _newFrame=NO;
-        }
-    }
+//    @autoreleasepool {
+//        if(_newFrame==YES){
+//        
+//        if (_latestPixelFrame == NULL) return;
+//        
+//        if ((NSInteger)self.width != CVPixelBufferGetWidth(_latestPixelFrame) || (NSInteger)self.height != CVPixelBufferGetHeight(_latestPixelFrame)) {
+//            NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
+//                  CVPixelBufferGetWidth(_latestPixelFrame), CVPixelBufferGetHeight(_latestPixelFrame), (long)self.width, (long)self.height);
+//            return;
+//        }
+//        
+//        if (CVPixelBufferGetPixelFormatType(_latestPixelFrame) != kCVPixelFormatType_32ARGB) {
+//            NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(_latestPixelFrame));
+//            return;
+//        }
+//        
+//        CVPixelBufferLockBaseAddress(_latestPixelFrame, kCVPixelBufferLock_ReadOnly);
+//        //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+//        //video.width * video.height * 4
+//        //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+//        //so we need to swap the alpha around using a vImage permutation
+//        vImage_Buffer src = {
+//            CVPixelBufferGetBaseAddress(_latestPixelFrame),
+//            CVPixelBufferGetHeight(_latestPixelFrame),
+//            CVPixelBufferGetWidth(_latestPixelFrame),
+//            CVPixelBufferGetBytesPerRow(_latestPixelFrame)
+//        };
+//        vImage_Error err;
+//        //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+//        //so we use vImage to copy them into the out buffer
+//
+//            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
+//            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+//        
+//        CVPixelBufferUnlockBaseAddress(_latestPixelFrame, kCVPixelBufferLock_ReadOnly);
+//        
+//        NSLog(@"Pixels");
+//        
+//        if (err != kvImageNoError) {
+//            NSLog(@"Error in Pixel Copy vImage_error %ld", err);
+//        }
+//            _newFrame=NO;
+//        }
+//    }
 }
 
 //--------------------------------------------------------------
