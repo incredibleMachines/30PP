@@ -194,6 +194,17 @@ namespace MSA {
 		bool getTransparent() {
 			return ![glWindow() isOpaque];
 		}
+        
+        
+        /***** 30PP *****/
+        void initPlayer(string _video, int _ID){
+            string video = ofToDataPath(_video, false);
+            
+            NSString * filepath=[NSString stringWithUTF8String:video.c_str()];
+            [glView() initPlayer:filepath ID:_ID];
+        }
+        
+        /***** 30PP *****/
 
 		
 		

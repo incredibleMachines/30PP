@@ -93,5 +93,9 @@ namespace MSA {
 		
 		void				setSyncToDisplayLink(bool b);
 		bool				getSyncToDisplayLink();
+        
+        /***** 30PP *****/
+        void                initPlayer(string _video, int _ID);
+        /***** 30PP *****/
 	}
 }

@@ -49,6 +49,18 @@ using namespace ofxCocoa;
 
 @implementation GLView
 
+@synthesize player=_player;
+@synthesize playerItem=_playerItem;
+
+@synthesize playerItemVideoOutput = _playerItemVideoOutput;
+
+@synthesize bLoaded = _bLoaded;
+@synthesize bPaused = _bPaused;
+@synthesize bFinished=_bFinished;
+
+@synthesize videoFrameRate = _frameRate;
+@synthesize playbackRate = _playbackRate;
+
 @synthesize useDisplayLink;
 @synthesize windowMode;
 @synthesize openGLContext;
@@ -58,7 +70,179 @@ using namespace ofxCocoa;
 
 //------ DISPLAY LINK STUFF ------
 -(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime {
-	[self updateAndDraw];
+    
+    NSLog(@"NewFrame");
+    
+    CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForCVTimeStamp:*outputTime];
+    
+    if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime])
+	{
+		self->_lastHostTime = outputTime->hostTime;
+		
+		// Copy the pixel buffer to be displayed next and add it to AVSampleBufferDisplayLayer for display
+		CVPixelBufferRef pixBuff = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+		
+        
+        
+        /***** 30PP *****/
+        NSLog(@"Pix Buff width: %lu",CVPixelBufferGetWidth(pixBuff));
+        
+        
+        if(CVPixelBufferGetWidth(pixBuff)!=0&&self->_bPixelsAllocated==NO){
+            self->_bPixelsAllocated=YES;
+            
+            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
+                NSLog(@"LAUNCH CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld.",
+                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
+                return;
+            }
+            
+            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
+                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
+                return;
+            }
+            
+            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+            //video.width * video.height * 4
+            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+            //so we need to swap the alpha around using a vImage permutation
+            vImage_Buffer src = {
+                CVPixelBufferGetBaseAddress(pixBuff),
+                CVPixelBufferGetHeight(pixBuff),
+                CVPixelBufferGetWidth(pixBuff),
+                CVPixelBufferGetBytesPerRow(pixBuff)
+            };
+            vImage_Error err;
+            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+            //so we use vImage to copy them into the out buffer
+            
+            unsigned char * outbuf[self.width*self.height*3];
+            
+            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
+            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+            
+            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+            
+            //            mesh[_i].glFormat=ofGetGlInternalFormat(mesh[_i].video.getPixelsRef());
+            //            mesh[_i].glType=ofGetGlType(mesh[_i].video.getPixelsRef());
+            //
+            self->_glFormat=GL_RGB;
+            self->_glType=GL_UNSIGNED_BYTE;
+            
+            
+            //allocate texture
+            
+            //    meshTexture[_i]=mesh[_i].video.getTexture();
+            
+            //set our pixel source to determine mip map texel size
+            
+            //create texture
+            GLuint glID=self->_texID;
+            glGenTextures(1, &glID);
+            
+            //bind texture
+            glBindTexture(GL_TEXTURE_2D, self->_texID);
+            
+            //setup mipmaps
+            glTexImage2D(GL_TEXTURE_2D, 0, self->_glType, self.width, self.height, 0, self->_glFormat, self->_glType, outbuf);
+            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+            
+            //set environment, not using currenty but just incase we change our env elsewhere
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+            
+            //enable GL_TEXTURE_2D
+            glEnable(GL_TEXTURE_2D);
+            
+            //create mipmaps
+            glGenerateMipmap(GL_TEXTURE_2D);
+            
+            //set params, GL_LINEAR_MIPMAP_LINER is trilinear which means greatest quality
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            
+            //anisotropy unblurs our mip maps, basically sets "how much" we want antialias with higher param being less blur
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+            glDisable(GL_TEXTURE_2D);
+            
+            /***** 30PP *****/
+            
+            
+        }
+        
+        else if(CVPixelBufferGetWidth(pixBuff)!=0){
+            
+            
+            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
+                NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
+                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
+                return;
+            }
+            
+            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
+                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
+                return;
+            }
+            
+            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+            //video.width * video.height * 4
+            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+            //so we need to swap the alpha around using a vImage permutation
+            vImage_Buffer src = {
+                CVPixelBufferGetBaseAddress(pixBuff),
+                CVPixelBufferGetHeight(pixBuff),
+                CVPixelBufferGetWidth(pixBuff),
+                CVPixelBufferGetBytesPerRow(pixBuff)
+            };
+            vImage_Error err;
+            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+            //so we use vImage to copy them into the out buffer
+            
+            unsigned char * outbuf;
+            
+            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
+            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+            
+            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+            
+            //bind texture
+            glBindTexture(GL_TEXTURE_2D, self->_texID);
+            
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, self.width, self.height, self->_glFormat, self->_glType, outbuf);
+            
+            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+            
+            //environment, in case we change elsewhere
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+            
+            //enable GL_TEXTURE_2D
+            glEnable(GL_TEXTURE_2D);
+            
+            //make mipmaps - REQUIRES GL to be post-3.0
+            glGenerateMipmap(GL_TEXTURE_2D);
+            
+            //set quality - GL_LINEAR_MIPMAP_LINEAR is highest, trilinear
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            
+            //set amount of anisotropic filtering - this undoes the blur of the mipmapping relative to camera
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+            glDisable(GL_TEXTURE_2D);
+            
+            
+            if (err != kvImageNoError) {
+                NSLog(@"Error in Pixel Copy vImage_error %ld", err);
+            }
+            
+            /***** 30PP *****/
+        }
+		
+		CVBufferRelease(pixBuff);
+	}
+    
+    	[self updateAndDraw];
+
 	
     return kCVReturnSuccess;
 }
@@ -66,12 +250,15 @@ using namespace ofxCocoa;
 
 // This is the renderer output callback function
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext){
+	   
     CVReturn result = [(GLView*)displayLinkContext getFrameForTime:outputTime];
     return result;
+    
 }
 
 
 -(void)setupDisplayLink {
+    
 	NSLog(@"glView::setupDisplayLink");
 	// Create a display link capable of being used with all active displays
 	CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
@@ -90,7 +277,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(void)releaseDisplayLink {
 	NSLog(@"glView::releaseDisplayLink");
-	
+    
 	CVDisplayLinkStop(displayLink);
 	CVDisplayLinkRelease(displayLink);
 	displayLink = 0;
@@ -195,6 +382,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// This method will be called on both the main thread (through -drawRect:) and a secondary thread (through the display link rendering loop)
 	// Also, when resizing the view, -reshape is called on the main thread, but we may be drawing on a secondary thread
 	// Add a mutex around to avoid the threads accessing the context simultaneously
+    
 	if(useDisplayLink) CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
 	
 	// Make sure we draw to the right context
@@ -214,7 +402,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
 	
 	isAnimating		= false;
-	useDisplayLink	= false;
+	useDisplayLink	= true;
 	
 	pixelFormat = nil;
 	
@@ -225,7 +413,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSLog(@"%@", appWindow()->context);
 	openGLContext = appWindow()->context;
 	
-	/* Initialized at AppWindow::setupOpenGL
+	// Initialized at AppWindow::setupOpenGL
 	 
 	if(appWindow()->initSettings().numFSAASamples) {
 		NSOpenGLPixelFormatAttribute attribs[] = {
@@ -273,7 +461,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
-	*/
+	
 	
 	// End fix 
 	
@@ -461,6 +649,97 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	NSPoint p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	return ofPoint(p.x, self.frame.size.height - p.y, 0);
 }
+
+/***** 30PP *****/
+- (NSDictionary *)pixelBufferAttributes
+{
+    // kCVPixelFormatType_32ARGB, kCVPixelFormatType_32BGRA, kCVPixelFormatType_422YpCbCr8
+    return @{
+             (NSString *)kCVPixelBufferOpenGLCompatibilityKey : [NSNumber numberWithBool:NO],
+             (NSString *)kCVPixelBufferPixelFormatTypeKey     : [NSNumber numberWithInt:kCVPixelFormatType_32ARGB]
+			 //[NSNumber numberWithInt:kCVPixelFormatType_422YpCbCr8]
+             };
+}
+
+-(void)initPlayer:(NSString *)path ID:(int)ID{
+    _texID=ID;
+    NSLog(@"VideoPath:%@",path);
+    NSLog(@"init");
+    _bLoaded = NO;
+    _bPaused = NO;
+    _bFinished = NO;
+    _bPixelsAllocated=NO;
+    
+    _frameRate = 0.0;
+    _playbackRate = 1.0;
+    
+    // Create and attach video output. 10.8 Only!!!
+    self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
+    [self.playerItemVideoOutput autorelease];
+    if (self.playerItemVideoOutput) {
+        NSLog(@"generated video output");
+        [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
+    }
+    
+    NSURL *url=[NSURL fileURLWithPath:[path stringByStandardizingPath]];
+    
+    
+    NSLog(@"Loading %@", [url absoluteString]);
+    
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    NSString *tracksKey = @"tracks";
+    
+    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler: ^{
+        static const NSString *kItemStatusContext;
+        // Perform the following back on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // Check to see if the file loaded
+            NSError *error;
+            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+            
+            if (status == AVKeyValueStatusLoaded) {
+                
+                
+                AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+                _videoSize = [videoTrack naturalSize];
+                _currentTime = kCMTimeZero;
+                _duration = asset.duration;
+                _frameRate = [videoTrack nominalFrameRate];
+                
+                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                
+                NSLog(@"create player");
+                
+                self.player=[[AVPlayer alloc] initWithPlayerItem:self.playerItem];
+                
+                NSLog(@"PLAYER CREATED");;
+                
+                // Notify this object when the player reaches the end
+                // This allows us to loop the video
+                [[NSNotificationCenter defaultCenter]
+                 addObserver:self
+                 selector:@selector(playerItemDidReachEnd:)
+                 name:AVPlayerItemDidPlayToEndTimeNotification
+                 object:[self.player currentItem]];
+                
+                [[self.player currentItem] addOutput:self.playerItemVideoOutput];
+                
+            }
+            _bLoaded=YES;
+        });
+    }];
+    
+    
+}
+
+
+
+
+/***** 30PP *****/
+
+
 
 //------------------------------------------------------------
 // ADDED BR 7/31/11
@@ -654,5 +933,103 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	ofPoint p = [self ofPointFromOutsideEvent:theEvent];
 	notifyMouseReleasedOutside(p.x, p.y, 1);
 }
+
+
+/***** 30PP *****/
+
+//--------------------------------------------------------------
+- (double)duration
+{
+    return CMTimeGetSeconds(_duration);
+}
+
+//--------------------------------------------------------------
+- (int)totalFrames
+{
+    return self.duration * self.videoFrameRate;
+}
+
+//--------------------------------------------------------------
+- (double)currentTime
+{
+    return CMTimeGetSeconds(_currentTime);
+}
+
+//--------------------------------------------------------------
+- (void)setCurrentTime:(double)currentTime
+{
+    [_player seekToTime:CMTimeMakeWithSeconds(currentTime, _duration.timescale)];
+}
+
+//--------------------------------------------------------------
+- (int)currentFrame
+{
+    return self.currentTime * self.videoFrameRate;
+}
+
+//--------------------------------------------------------------
+- (void)setCurrentFrame:(int)currentFrame
+{
+    float position = currentFrame / (float)self.totalFrames;
+    [self setPosition:position];
+}
+
+//--------------------------------------------------------------
+- (double)position
+{
+    return self.currentTime / self.duration;
+}
+
+//--------------------------------------------------------------
+- (void)setPosition:(double)position
+{
+    double time = self.duration * position;
+    //    [self.player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC)];
+    [_player seekToTime:CMTimeMakeWithSeconds(time, _duration.timescale)];
+}
+
+//--------------------------------------------------------------
+- (void)setPlaybackRate:(double)playbackRate
+{
+    _playbackRate = playbackRate;
+    [_player setRate:_playbackRate];
+}
+
+//--------------------------------------------------------------
+- (float)volume
+{
+    return self.player.volume;
+}
+
+//--------------------------------------------------------------
+- (void)setVolume:(float)volume
+{
+    self.player.volume = volume;
+}
+
+//--------------------------------------------------------------
+- (double)width
+{
+    return _videoSize.width;
+}
+
+//--------------------------------------------------------------
+- (double)height
+{
+    return _videoSize.height;
+}
+
+//--------------------------------------------------------------
+- (BOOL)bFinished
+{
+    return _bFinished;
+}
+
+-(BOOL) bLoaded
+{
+    return _bLoaded;
+}
+
+/***** 30PP *****/
 
 @end

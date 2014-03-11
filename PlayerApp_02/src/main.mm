@@ -28,7 +28,7 @@ int main()
     NSLog(@"init width: %f", initSettings.initRect.size.width);
     NSLog(@"init height: %f", initSettings.initRect.size.height);
 	
-	MSA::ofxCocoa::setSyncToDisplayLink(false);
+	MSA::ofxCocoa::setSyncToDisplayLink(true);
 	MSA::ofxCocoa::AppWindow		cocoaWindow(initSettings);
 	
     ofSetupOpenGL(&cocoaWindow,0,0,OF_FULLSCREEN);

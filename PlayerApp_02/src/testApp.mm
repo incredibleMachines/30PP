@@ -24,8 +24,11 @@ void testApp::setup() {
     
 //	MSA::ofxCocoa::setSyncToDisplayLink(doDisplayLink);
 	ofSetFrameRate(120);			// run as fast as you can
-	
-//  MSA::ofxCocoa::showSystemUI(kUIModeNormal);
+    
+    meshTexture.push_back(new ofTexture());
+    meshTexture[0]->allocate(1600, 2405, GL_RGB);
+	cout<<"texID: "<<meshTexture[0]->texData.textureID<<endl;
+  MSA::ofxCocoa::initPlayer("long1600.mov", meshTexture[0]->texData.textureID);
 //  MSA::ofxCocoa::setTransparent(false);
 //  MSA::ofxCocoa::setWindowLevel(NSScreenSaverWindowLevel);
 	
@@ -43,14 +46,14 @@ void testApp::setup() {
     numMesh=_meshesLoad.size();
     
     for(int i=0; i<MESH_NUM;i++){
-        meshTexture.push_back(new ofTexture());
-        mesh[i].bSetup=false;
-        mesh[i].video.setPixelFormat(OF_PIXELS_RGB);
-//        mesh[i].video.initPlayer(ofToString(i)+"_0.mov");
-//        mesh[i].video.initPlayer("long1600.mov");
-        mesh[i].video.loadMovie("long1600.mov");
-        mesh[i].video.play();
-        cout<<"playerApp init"<<endl;
+//        meshTexture.push_back(new ofTexture());
+//        mesh[i].bSetup=false;
+//        mesh[i].video.setPixelFormat(OF_PIXELS_RGB);
+////        mesh[i].video.initPlayer(ofToString(i)+"_0.mov");
+////        mesh[i].video.initPlayer("long1600.mov");
+//        mesh[i].video.loadMovie("long1600.mov");
+//        mesh[i].video.play();
+//        cout<<"playerApp init"<<endl;
     }
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
@@ -80,29 +83,29 @@ void testApp::update(){
     
     bool bSetup=true;
 
-    if(bContentLoaded==false){
-        
-        for(int i=0;i<MESH_NUM;i++){
-            mesh[i].video.update();
-            if(mesh[i].video.isLoaded()==true&&mesh[i].bSetup==false){
-                cout<<"make first texture"<<endl;
-//                setupTexture(i);
-                mesh[i].bSetup=true;
-                mesh[i].video.play();
-            }
-            else if(mesh[i].bSetup==true){
-//                createTexture(0,i);
-                meshTexture[i] = &mesh[i].video.getTextureReference();
-            }
-            else if(mesh[i].bSetup==false)
-            {
-                bSetup=false;
-            }
-//            if(mesh[i].video.isLoaded()==true){
-//                meshTexture[i]=mesh[i].video.getTexture();
+//    if(bContentLoaded==false){
+//        
+//        for(int i=0;i<MESH_NUM;i++){
+//            mesh[i].video.update();
+//            if(mesh[i].video.isLoaded()==true&&mesh[i].bSetup==false){
+//                cout<<"make first texture"<<endl;
+////                setupTexture(i);
+//                mesh[i].bSetup=true;
+//                mesh[i].video.play();
 //            }
-        }
-    }
+//            else if(mesh[i].bSetup==true){
+////                createTexture(0,i);
+//                meshTexture[i] = &mesh[i].video.getTextureReference();
+//            }
+//            else if(mesh[i].bSetup==false)
+//            {
+//                bSetup=false;
+//            }
+////            if(mesh[i].video.isLoaded()==true){
+////                meshTexture[i]=mesh[i].video.getTexture();
+////            }
+//        }
+//    }
     
     if(bMipMap==true){
         map.update(meshTexture);

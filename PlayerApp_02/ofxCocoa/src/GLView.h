@@ -49,8 +49,28 @@ void ofGLReadyCallback();
     /***** 30PP *****/
     AVPlayer * _player;
     AVPlayerItem * _playerItem;
-    AVPlayerItemVideoOutput * W_playerItemVideoOutput;
+    AVPlayerItemVideoOutput * _playerItemVideoOutput;
     unsigned char * _pixels;
+    BOOL _bLoaded;
+    BOOL _bPaused;
+    BOOL _bFinished;
+    
+    CMTime _currentTime;
+    CMTime _duration;
+    CMTime _startTime;
+    double _playbackRate;
+    double _frameRate;
+    
+    CGSize _videoSize;
+    
+//    id _playerItemVideoOutput;
+//    CVPixelBufferRef _latestPixelFrame;
+    uint64_t _lastHostTime;
+    int _texID;
+    int _glFormat;
+    int _glType;
+    BOOL _bPixelsAllocated;
+    
     /****************/
     
 	NSRect			savedWindowFrame;
@@ -69,8 +89,36 @@ void ofGLReadyCallback();
 	BOOL			captureExternalMouseEvents;
 	BOOL			externalMouseEventsActive;
 	id mouseMoveHandler, leftMouseDownHandler, rightMouseDownHandler, leftMouseUpHandler, rightMouseUpHandler, leftMouseDraggedHandler,rightMouseDraggedHandler;
+    
+    
 
 }
+
+    /***** 30PP *****/
+- (NSDictionary *)pixelBufferAttributes;
+@property (nonatomic, retain)  AVPlayer * player;
+@property (nonatomic, retain)  AVPlayerItem * playerItem;
+@property (nonatomic, retain) AVPlayerItemVideoOutput * playerItemVideoOutput;
+
+@property (nonatomic, assign, readonly) double width;
+@property (nonatomic, assign, readonly) double height;
+
+@property (nonatomic, assign, readonly) BOOL bLoaded;
+@property (nonatomic, assign, readonly) BOOL bFinished;
+
+@property (nonatomic, assign, getter = isPaused, setter = setPaused:) BOOL bPaused;
+//@property (nonatomic, assign, readonly) BOOL isPlaying;
+
+@property (nonatomic, assign, readonly) double videoFrameRate;
+@property (nonatomic, assign, readonly) double duration;
+@property (nonatomic, assign, readonly) int totalFrames;
+@property (nonatomic, assign) double currentTime;
+@property (nonatomic, assign) int currentFrame;
+@property (nonatomic, assign) double position;
+@property (nonatomic, assign) double playbackRate;
+
+    /***** 30PP *****/
+
 
 @property (readonly) BOOL useDisplayLink;
 @property (readonly) int windowMode;
@@ -98,5 +146,11 @@ void ofGLReadyCallback();
 
 // BR
 -(void) setCaptureExternalMouseEvents:(BOOL)b;
+
+/***** 30PP *****/
+-(void) initPlayer:(NSString*)path ID:(int)ID;
+/***** 30PP *****/
+
+
 
 @end
