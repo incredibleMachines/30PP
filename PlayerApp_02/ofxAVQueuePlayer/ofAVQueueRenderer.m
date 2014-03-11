@@ -228,16 +228,6 @@
                                         
                                         [[self.qPlayer currentItem] addOutput:self.playerItemVideoOutput];
                                         
-                                        //                                            CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
-                                        //
-                                        //                                            // Set the renderer output callback function
-                                        //                                            CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, self);
-                                        //
-                                        //
-                                        //                                            // Activate the display link
-                                        //                                            CVDisplayLinkStart(displayLink);
-                                        
-                                        
                                         
                                         
                                         
@@ -254,20 +244,6 @@
         });
     }];
     
-}
-
-
-- (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
-{
-    //	// There is no autorelease pool when this method is called
-    //	// because it will be called from a background thread.
-    //	// It's important to create one or app can leak objects.
-    //	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    ////	
-    ////	[self drawView];
-    //	
-    //	[pool release];
-	return kCVReturnSuccess;
 }
 
 
@@ -291,7 +267,7 @@
     if (self.playerItemVideoOutput) {
         [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
     }
-    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
+//    _outputQ = dispatch_queue_create("outputQ", DISPATCH_QUEUE_PRIORITY_BACKGROUND);
     [[self playerItemVideoOutput] setDelegate:self queue:_outputQ];
 //     [self.playerItemVideoOutput requestNotificationOfMediaDataChangeWithAdvanceInterval:0.03];
     

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
-
 #include "ModelMapper/ModelMapper.h"
 #include "ofAVQueuePlayer.h"
 #include "ofAVFoundationPlayer.h"
 
 #define BUFFER_SIZE 3
-#define MESH_NUM 3
+#define MESH_NUM 1
 
 class testApp : public ofBaseApp{
 	
@@ -23,8 +22,8 @@ public:
 	float	lineWidth;
 	bool	doVSync;
 	bool	doDisplayLink;
-    void setupTexture(int _i);
-    void createTexture(int _i, int _j);
+    void    setupTexture(int _i);
+    void    createTexture(int _i, int _j);
     
     
     //----------MODELS + CAMERAS
@@ -46,8 +45,9 @@ public:
     
     class meshContent{
     public:
-        ofAVQueuePlayer video;
-//        ofVideoPlayer video;
+//        ofAVQueuePlayer video;
+//        ofAVFoundationPlayer video;
+        ofVideoPlayer video;
         bool bSetup;
         int glType;
         int glFormat;
@@ -76,6 +76,7 @@ public:
     bool bDrop;
     bool bFirstLoaded;
     bool bLoaded;
+    bool bMipMap;
     
     
     int frameCount;

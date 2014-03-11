@@ -39,9 +39,6 @@
     id _playerItemVideoOutput;
     CVPixelBufferRef _latestPixelFrame;
     
-    CVDisplayLinkRef displayLink;
-    
-    
 }
 
 @property (nonatomic, retain) AVQueuePlayer * qPlayer;

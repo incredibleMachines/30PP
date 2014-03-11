@@ -75,6 +75,13 @@
 		E2A6964318CE773A008D8EF1 /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962218CE773A008D8EF1 /* GLView.mm */; };
 		E2A6964418CE773A008D8EF1 /* GLWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962418CE773A008D8EF1 /* GLWindow.mm */; };
 		E2A6964518CE773A008D8EF1 /* ofxCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962618CE773A008D8EF1 /* ofxCocoa.mm */; };
+		E2A6965418CE7C9B008D8EF1 /* 0_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */; };
+		E2A6965518CE7C9B008D8EF1 /* 1_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */; };
+		E2A6965618CE7C9B008D8EF1 /* 2_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */; };
+		E2A6965718CE7C9B008D8EF1 /* 2_0_new.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */; };
+		E2A6965818CE7C9B008D8EF1 /* mesh.obj in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965218CE7C9B008D8EF1 /* mesh.obj */; };
+		E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965318CE7C9B008D8EF1 /* settings.json */; };
+		E2A6965B18CE7DCE008D8EF1 /* long1600.mov in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965A18CE7DCE008D8EF1 /* long1600.mov */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -318,6 +325,13 @@
 		E2A6962418CE773A008D8EF1 /* GLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLWindow.mm; sourceTree = "<group>"; };
 		E2A6962518CE773A008D8EF1 /* ofxCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCocoa.h; sourceTree = "<group>"; };
 		E2A6962618CE773A008D8EF1 /* ofxCocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxCocoa.mm; sourceTree = "<group>"; };
+		E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0_0.mp4; sourceTree = "<group>"; };
+		E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1_0.mp4; sourceTree = "<group>"; };
+		E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0.mp4; sourceTree = "<group>"; };
+		E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0_new.mp4; sourceTree = "<group>"; };
+		E2A6965218CE7C9B008D8EF1 /* mesh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		E2A6965318CE7C9B008D8EF1 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		E2A6965A18CE7DCE008D8EF1 /* long1600.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = long1600.mov; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -912,6 +926,29 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E2A6964C18CE7C9B008D8EF1 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */,
+				E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */,
+				E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */,
+				E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */,
+				E2A6965A18CE7DCE008D8EF1 /* long1600.mov */,
+				E2A6965118CE7C9B008D8EF1 /* mesh */,
+				E2A6965318CE7C9B008D8EF1 /* settings.json */,
+			);
+			name = data;
+			path = bin/data;
+			sourceTree = "<group>";
+		};
+		E2A6965118CE7C9B008D8EF1 /* mesh */ = {
+			isa = PBXGroup;
+			children = (
+				E2A6965218CE7C9B008D8EF1 /* mesh.obj */,
+			);
+			path = mesh;
+			sourceTree = "<group>";
+		};
 		E4328144138ABC890047C5CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -942,6 +979,7 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
+				E2A6964C18CE7C9B008D8EF1 /* data */,
 				E4B69B5B0A3A1756003C02F2 /* example_windowDebug.app */,
 			);
 			sourceTree = "<group>";
@@ -1046,6 +1084,8 @@
 				E2A6952D18CE699E008D8EF1 /* .gitignore in Resources */,
 				E2A691D718CE6567008D8EF1 /* aiMaterial.inl in Resources */,
 				E2A695A918CE699E008D8EF1 /* COPYING in Resources */,
+				E2A6965518CE7C9B008D8EF1 /* 1_0.mp4 in Resources */,
+				E2A6965B18CE7DCE008D8EF1 /* long1600.mov in Resources */,
 				E2A691DA18CE6567008D8EF1 /* aiVector3D.inl in Resources */,
 				E2A6963D18CE773A008D8EF1 /* README.txt in Resources */,
 				E2A695C518CE699F008D8EF1 /* README.md in Resources */,
@@ -1053,13 +1093,18 @@
 				E2A6963F18CE773A008D8EF1 /* README.md in Resources */,
 				E2A691D618CE6567008D8EF1 /* aiColor4D.inl in Resources */,
 				E2A6963C18CE773A008D8EF1 /* NoWindow.xib in Resources */,
+				E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */,
 				E2A691D818CE6567008D8EF1 /* aiMatrix3x3.inl in Resources */,
 				E2A695A718CE699E008D8EF1 /* install.xml in Resources */,
+				E2A6965418CE7C9B008D8EF1 /* 0_0.mp4 in Resources */,
+				E2A6965618CE7C9B008D8EF1 /* 2_0.mp4 in Resources */,
 				E2A695C418CE699F008D8EF1 /* ofxLibwebsockets.xcconfig in Resources */,
 				E2A695C318CE699F008D8EF1 /* ofxaddons_thumbnail.png in Resources */,
+				E2A6965718CE7C9B008D8EF1 /* 2_0_new.mp4 in Resources */,
 				E2A695AA18CE699E008D8EF1 /* libwebsockets-test-server.key.pem in Resources */,
 				E2A695B418CE699E008D8EF1 /* zlib.pdb in Resources */,
 				E2A6952E18CE699E008D8EF1 /* addon_config.mk in Resources */,
+				E2A6965818CE7C9B008D8EF1 /* mesh.obj in Resources */,
 				E2A6962718CE773A008D8EF1 /* .gitignore in Resources */,
 				E2A691D918CE6567008D8EF1 /* aiMatrix4x4.inl in Resources */,
 			);

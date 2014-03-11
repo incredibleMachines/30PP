@@ -37,12 +37,22 @@
 #import "ofConstants.h"
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CVDisplayLink.h>
-
+#import <Quartz/Quartz.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Accelerate/Accelerate.h>
 #import "AppWindow.h"
 
 void ofGLReadyCallback();
 
 @interface GLView : NSOpenGLView {
+    
+    /***** 30PP *****/
+    AVPlayer * _player;
+    AVPlayerItem * _playerItem;
+    AVPlayerItemVideoOutput * W_playerItemVideoOutput;
+    unsigned char * _pixels;
+    /****************/
+    
 	NSRect			savedWindowFrame;
 	int				windowMode;
 	
@@ -59,6 +69,7 @@ void ofGLReadyCallback();
 	BOOL			captureExternalMouseEvents;
 	BOOL			externalMouseEventsActive;
 	id mouseMoveHandler, leftMouseDownHandler, rightMouseDownHandler, leftMouseUpHandler, rightMouseUpHandler, leftMouseDraggedHandler,rightMouseDraggedHandler;
+
 }
 
 @property (readonly) BOOL useDisplayLink;

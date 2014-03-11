@@ -295,6 +295,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
+        
+        
 	} else {
         cout << "ERROR SETTING UP WINDOW" << endl;
     }

@@ -14,22 +14,24 @@ int main()
 	MSA::ofxCocoa::InitSettings			initSettings;
 	
 	initSettings.isOpaque				= true;
-	initSettings.windowLevel			= NSMainMenuWindowLevel + 1;
+	initSettings.windowLevel			= NSMainMenuWindowLevel + 1; /* xcdoc://?url=developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
 	initSettings.hasWindowShadow		= false;
 	initSettings.numFSAASamples			= true;
-	initSettings.initRect.size.width	= 100;
-	initSettings.initRect.size.height	= 100;
-	initSettings.windowMode				= OF_WINDOW;
+//	initSettings.initRect.size.width	= 200;
+//	initSettings.initRect.size.height	= 100;
+	initSettings.windowMode				= OF_FULLSCREEN;
 	
 	// to go fullscreen across all windows:
-	//initSettings.windowStyle			= NSBorderlessWindowMask;
-	//initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
+	initSettings.windowStyle			= NSBorderlessWindowMask;     /* xcdoc://osx//library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
+//	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
+    NSLog(@"init width: %f", initSettings.initRect.size.width);
+    NSLog(@"init height: %f", initSettings.initRect.size.height);
 	
-	MSA::ofxCocoa::setSyncToDisplayLink(true);
+	MSA::ofxCocoa::setSyncToDisplayLink(false);
 	MSA::ofxCocoa::AppWindow		cocoaWindow(initSettings);
 	
-	ofSetupOpenGL(&cocoaWindow, 0, 0, OF_WINDOW);
+    ofSetupOpenGL(&cocoaWindow,0,0,OF_FULLSCREEN);
 	
     // this kicks off the running of my app
     // can be OF_WINDOW or OF_FULLSCREEN

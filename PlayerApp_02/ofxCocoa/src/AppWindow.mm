@@ -81,6 +81,8 @@ namespace MSA {
 			
 			
 			NSOpenGLPixelFormat* pixelFormat = nil;
+            
+            cout<<"initCheck: "<<initSettings().numFSAASamples<<endl;
 			 
 			if(initSettings().numFSAASamples) {
 			 NSOpenGLPixelFormatAttribute attribs[] = {
@@ -93,8 +95,8 @@ namespace MSA {
 			 NSOpenGLPFAMultisample,
 			 NSOpenGLPFASampleBuffers, 1,
 			 NSOpenGLPFASamples, initSettings().numFSAASamples,
-			 NSOpenGLPFANoRecovery,
-			 0};
+			 NSOpenGLPFANoRecovery, 0,
+             NSOpenGLPFAFullScreen, 1};
 			 
 			 NSLog(@"   trying Multisampling");
 			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
@@ -116,8 +118,8 @@ namespace MSA {
 			 NSOpenGLPFADepthSize, 24,
 			 NSOpenGLPFAAlphaSize, 8,
 			 NSOpenGLPFAColorSize, 32,
-			 NSOpenGLPFANoRecovery,
-			 0};		
+			 NSOpenGLPFANoRecovery, 0,
+             NSOpenGLPFAFullScreen, 1};
 			 
 			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
 			 glDisable(GL_MULTISAMPLE);
@@ -248,7 +250,6 @@ namespace MSA {
 			viewSize	= fromNSSize(glView().frame.size);
 			windowPos	= fromNSPoint(glWindow().frame.origin);
 			windowPos.y	= screenSize.y = windowPos.y;		// vertically flip position
-
 
 			ofNotifyUpdate();
 			
