@@ -76,7 +76,7 @@ app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
 app.use(express.session());
 app.use(app.router);
-app.use(express.static(__dirname+'/public' /*path.join(__dirname, 'public')*/));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
