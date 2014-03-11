@@ -7,6 +7,7 @@
 */
 
 function SceneController(_scenes){
+
 	var currentScene = _scenes[0];
 	//console.log(_scenes);
 	console.log( window.location.hash.substr(1))
@@ -18,9 +19,6 @@ function SceneController(_scenes){
 				//alert(id);
 				//repopulate the content
 				//change form slug
-				//console.log(scene)
-				//console.log()
-				//console.log(currentScene)
 
 				$('#scene-contents	 form').attr('action', '/scenes/'+currentScene._id);
 				//console.log('.scene-title.'+currentScene.slug)
@@ -70,9 +68,14 @@ function SceneController(_scenes){
 					})
 					
 				}).addClass('asset-single-'+i);
-				
+				$(newAsset).find('.thumbnail img').attr("src","holder.js/100%x100/text:Select%20File")
+				var img = $('.asset-single-'+key).find('.thumbnail img');
+				console.log(img)
+				Holder.run({
+					images: img[0]
+				})
 				//reset for array values
-				
+				$(newAsset).find('.thumbnail').show()
 				$(newAsset).find('input.asset-title').attr('name','assets['+i+'][title]');
 				$(newAsset).find('select.asset-zone-type').attr('name','assets['+i+'][zone_type]');
 				$(newAsset).find('select.asset-zone-type option:selected').removeAttr('selected');
@@ -145,7 +148,7 @@ function SceneController(_scenes){
 	
 	
 	$('select#text_type').change(function(e){
-		
+		alert('')
 		var diff =  $(this).val()-currentScene.text_type;
 		console.log(diff)
 		var visible = $('textarea.asset-caption').filter(':visible');
@@ -174,6 +177,8 @@ function SceneController(_scenes){
 					})
 					
 				}).addClass('asset-single-'+i);
+				$(newAsset).find('.thumbnail img').attr("src","");
+				$(newAsset).find('.thumbnail').hide();
 				$(newAsset).find('input.asset-title').attr('name','assets['+i+'][title]');
 				$(newAsset).find('select.asset-zone-type').attr('name','assets['+i+'][zone_type]');
 				$(newAsset).find('select.asset-zone-type option:selected').removeAttr('selected');
@@ -428,10 +433,18 @@ function SceneController(_scenes){
   					//iterate through the asset
 					Object.keys(currentScene.assets[i]).forEach(function(key){
 						//make sure that our index's match
+						console.log(currentScene.assets[i][key].file)
 						//console.log($('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]'))	
 						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]').attr('selected','selected');
-						
-						
+						if(currentScene.assets[i][key].file != "") $('.asset-single-'+key).find('.thumbnail img').attr("src","/"+currentScene.assets[i][key].file.path)
+						else{ 
+							$('.asset-single-'+key).find('.thumbnail img').attr("src","holder.js/100%x100/text:No%20File%20Associated")
+							var img = $('.asset-single-'+key).find('.thumbnail img');
+							console.log(img)
+							Holder.run({
+								images: img[0]
+							})
+						}
 						$('.asset-single-'+key).find('textarea.asset-caption').html(currentScene.assets[i][key].caption);			
 						//doesnt' load image from filepath express.js doesn't know about .assets
 						//$('.asset-single-'+key).find('.asset-image .thumbnail img').attr('src',currentScene.assets[i][key].file.path);
