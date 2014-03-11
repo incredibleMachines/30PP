@@ -201,7 +201,7 @@ void playerApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void::playerApp::setupTexture(int _i){
+void playerApp::setupTexture(int _i){
 
             meshTexture.push_back(new ofTexture());
 //          load pixel data to set our mipmapper texture
