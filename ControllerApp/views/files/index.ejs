@@ -2,7 +2,7 @@
 <% include ../includes/header %>
 
 <% 
-	
+	/* for sorting mongo db items as elements */
 	assets = JSON.stringify(assets)
 	assets = JSON.parse(assets)
 	
@@ -35,6 +35,13 @@
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% /* begin for loop */ %>
+		  	<% files = _.sortBy(files,function(file){
+		  		//
+		  		if(!file.last_edited) return new Date(file.created_at)
+		  		else return new Date(file.last_edited);
+		  	}) 
+		  		files.reverse()
+		  	%>
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
 			    	<ul class="event row" >
