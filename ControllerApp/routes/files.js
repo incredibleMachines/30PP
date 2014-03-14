@@ -8,7 +8,7 @@ exports.index = function(_Database){
 				_Database.getAll('locations',function(_e,_locations){
 					if(!_e){ 
 							_Database.getAll('assets',function(__e,_assets){
-								if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index',files: _files,assets:_assets,locations:_locations,error:null });
+								if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index', files: _files, assets:_assets,locations:_locations,error:null });
 								else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug: 'files-index error', file:_files,assets:null,locations:_locations,error:null })
 							})
 					}else{ 
@@ -61,7 +61,10 @@ exports.add = function(_Database){
 		
 		var content = files.content; //our form name for the file
 		
+		handleFile(content,post,_Database,req,res);
+		
 		// TO DO: handle a new location
+/*
 		if(post.new_location != ''){
 			//check if the location exists already
 			post.new_location = post.new_location.toLowerCase();
@@ -98,6 +101,7 @@ exports.add = function(_Database){
 			post.location = _Database.makeMongoID(post.location);
 			handleFile(content,post,_Database,req,res);
 		}
+*/
 		
 		//delete post.new_location;
 		

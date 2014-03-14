@@ -21,7 +21,8 @@ exports.MongoConnect = function(){
 		//setup collection connections
 
 		collection.assets    = database.collection('assets');
-		collection.events    = database.collection('events');
+		//collection.events    = database.collection('events');
+		collection.clips	 = database.collection('clips');
 		collection.users     = database.collection('users');
 		collection.scenes    = database.collection('scenes');
 		collection.files 	 = database.collection('files');
@@ -74,6 +75,20 @@ function queryCollection(_type, _query, _cb){
 
 	
 }
+//_type = collection name
+//_query = your formatted mongodb query
+//_cb = callback(err,collection[])
+//returns mongodb Collection as an Array
+function queryCollectionWithOptions(_type, _query, _options, _cb){
+	
+	collection[_type].find(_query,_options).toArray(function(e,_data){
+	
+		if(!e) _cb(null,_data);
+		else _cb(e);
+	})
+
+	
+}
 
 //remove a document
 //_type = collection name
@@ -105,7 +120,7 @@ exports.update=function(_type,_what,_updateObj,_cb){
 //_id = string as mongo id
 //_updateObj = the update operation which needs to take place
 //_cb = callback(err)
-exports.updateById=function(_type,_id,_updateObj,_cb){
+exports.updateByID=function(_type,_id,_updateObj,_cb){
 	
 	//convert _id to MongoObject
 	//var o_id = new BSON.ObjectID(_id.toString());
@@ -121,67 +136,31 @@ exports.updateById=function(_type,_id,_updateObj,_cb){
 exports.formatScenes = function(_event_id,_scenes,_cb){
 	formatScenes(_event_id,_scenes,_cb);
 }
-//_event_id=the event we are formatting
-//_scenes=mongodb array of scenes
-//_cb= callback(err,_scenes[])
-function formatScenes(_event_id,_scenes,_cb){
+//_scene_id=the scene we are formatting
+//_clips=mongodb array of clips
+//_cb= callback(err,_clips[])
+function formatScenes(_scene_id,_clips,_cb){
 
 		//get all scenes in an event
-		queryCollection('scenes', {event_id: makeMongoID(_event_id)}, function(e, docs){
-			//console.log(doc);
+		queryCollection('clips', {scene_id: makeMongoID(_scene_id)}, function(e, _clip_docs){
 			if(!e){
-				var scene_counter = 0;
-				_scenes.forEach(function(scene_id, i){
-					console.log(scene_id);
-					docs.forEach(function(doc,j){
-
-						if(scene_id.toString() == doc._id.toString()){
-							//console.log('match');
-							console.log()
-							console.log('Single Scene')
-							console.log(doc);
-							console.log()
-
-							var asset_counter=0;
-							if(doc.assets.length>0){
-								doc.assets.forEach(function(asset,k){
-									Object.keys(asset).forEach(function(key){
-										console.log(asset[key])
-
-										getDocumentByID('assets',asset[key],function(e,_asset){
-											formatAsset(_asset,function(__asset){
-												asset_counter++;
-												docs[j].assets[k][key] = __asset;
-												if(asset_counter == doc.assets.length){
-													_scenes[i]=docs[j]
-													scene_counter++;
-													if(scene_counter==_scenes.length){
-														//callback
-														_cb(null,_scenes)
-													}
-												}
-											});
-										})
-									})
-
-								})
-							}else{
-
-								_scenes[i]= docs[j]
-								scene_counter++;
-								if(scene_counter==_scenes.length){
-									_cb(null,_scenes)
-								}
+				var clip_counter = 0;
+				_clip_docs.forEach(function(clip_doc,i){
+					_clips.forEach(function(clip_id,j){
+						if(clip_doc._id.toString() === clip_id.toString()){
+							_clips[j] = clip_doc;
+							//TO DO:
+							//handle zone data and get the right file information
+							clip_counter++;
+							if(clip_counter == _clips.length){
+								_cb(null,_clips)
 							}
-						}
+						}	
 					})
-
 				})
-
-				//_cb(null,scenes);
-			}else{
-				_cb(err)
-			}
+			}else{//if(!e)
+				_cb(e,null)
+			}//if(!e)
 		})
 
 }
@@ -257,10 +236,7 @@ exports.makeMongoID=function(_id){
 }
 //create a mongoID Function
 function makeMongoID(__id){
-	//TODO:
-	//check for character sizing. must be 24?
-	//console.log("Make MongoID Request");
-	//console.log(typeof __id);
+
 	if(typeof __id == "object") return __id;
 	if(typeof __id == "string" && __id.length == 24) return new BSON.ObjectID(__id.toString());
 	else return '';

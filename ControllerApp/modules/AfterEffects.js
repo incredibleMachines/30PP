@@ -44,7 +44,7 @@ var sample = {
 
 
 
-/** Depreciated **/
+/** Deprecated **/
 //an object to contain all of our applescript commands.
 //may need to be modified 
 var AERunDoScript = { begin: "osascript -e 'tell application \"Adobe After Effects CC\"'",
@@ -138,7 +138,7 @@ function runScriptFile(file){
 }
 
 //old test to create loop of movies
-//needs to be depricated
+//needs to be deprecated
 exports.createMovie = function(){
 	//console.log(makeScript("file"))
 	var array =[];
@@ -161,7 +161,7 @@ exports.createMovie = function(){
 }
 
 //old test to create loop of movies
-//needs to be depricated
+//needs to be deprecated
 function createMovie(data,cb){
 	console.log(data)
 	setTimeout(function(){

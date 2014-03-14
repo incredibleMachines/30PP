@@ -1,47 +1,30 @@
-<section class='new_scene modal fade' id="new_scene_modal" tabindex="-1" role="dialog" aria-labelledby="new_event_modal" aria-hidden="true" >
+<section class='new_scene modal fade' id="new_scene_modal" tabindex="-1" role="dialog" aria-labelledby="new_scene_modal" aria-hidden="true" >
 	<section class="modal-dialog">
-		<section class="modal-content">
-			<div class="modal-header">
-				<h3>Add New Scene</h3>
-			</div><!-- .modal-header -->
-			<form class="modal-body" role="form" action="/scenes" method="post">
-					<input type="hidden" name="event_id" value="<%=event._id %>"/>
-					<section class="form-group col-md-8">
+    	<section class="modal-content">
+	    	<div class="modal-header">	
+		    	<h3>Add New Scene</h3>
+		    	</div>
+		 
+			    <form class="modal-body" role="form" action="/scenes" method="post">
+				    <section class="form-group col-md-8">
 					    <label for="title">Scene Title</label>
 					    <input type="text" class="form-control" id="title" name="title" placeholder="Give your scene a title">
 				    </section>
 				    <section class="form-group col-md-8">
-						<label for="scene_type">Scene Type</label>
-						<select class="form-control scene-scene_type" name="scene_type" id="scene_type">
-						<% var arr = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
-							for(var i =0; i<arr.length; i++){ %>
-							 <option value="<%=i%>"><%=arr[i]%></option>
-							 <% }/* %>							
-							<%/*for(var i=0; i<4;i++){%>
-								<option value="<%=i%>">Scene Type <%= i %></option>
-							<%}*/%>
-						</select>
-						<!--<p class="help-block">Select a scene type.</p>-->
-					</section>
-				    <section class="form-group col-md-8">
-					    <label for="text_type">Text Options</label>
-							<select class="form-control" name="text_type">
-							<% for(var i = 0; i< 3; i++){ %>
-								<option value="<%=i%>"><% if(i == 0){ %> No <% } else if(i == 1){ %> Single <% } else if(i ==2){ %> Double <% } %> Text</option>
-							<% } %>
-						</select>
-						<!--<p class="help-block">Select a zone type.</p>-->
+					    <label for="title">Event Type</label>
+							<select class="form-control" name="type">
+									<% EVENT_TYPES.forEach(function(type){ %> 
+									<option value="<%= utils.makeSlug(type) %>"><%= type %></option>
+									<% }) %>
+							</select>
+						<p class="help-block">Select the event type.</p>
 				    </section>
-				    <!-- <section class="form-group col-md-12"> -->
-					    <!-- <label for="text">On-Screen Text</label> -->
-					    <!-- <textarea class="form-control" name="text" placeholder ="Add text to display during scene (optional)"></textarea>-->
-					    <!--<p class="help-block">Add text to display during scene (optional)</p>-->
-				    <!-- </section> -->
-			</form><!-- .modal-body -->
-			<div class="modal-footer">
-				<button class="btn btn-primary modal-submit green" type="button">Submit</button>
-				<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-			</div><!-- .modal-footer-->
-		</section><!-- .modal-content -->
-	</section><!-- .modal-dialog -->
-</section><!-- #new_scene_modal .new_scene .modal .fade -->
+				</form>
+				<div class="modal-footer">
+					<button class="btn btn-primary modal-submit green" type="button">Submit</button>
+			    		<button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+					
+				</div>
+	    	</section>
+    	</section>
+</section><!-- #new_event_modal .new_event .modal .fade-->

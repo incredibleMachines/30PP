@@ -7,4 +7,5 @@ function FileController(){
 		$this.hide();
 		
 	})
+
 }

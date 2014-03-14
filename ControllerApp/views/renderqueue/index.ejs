@@ -12,7 +12,8 @@
 	
 	renderqueue = JSON.stringify(renderqueue)
 	renderqueue = JSON.parse(renderqueue)
-    					
+    
+    var eventsToRender = [];
 	
 %>
 <section class="<%= page_slug %>">
@@ -45,15 +46,27 @@
 		  <ul class="list-group">
 		  	<% renderqueue.forEach(function(queueItem,i){ %>
 		  		<% //get the event associated with out 
-		  		   var event = _.findWhere(events,{_id:queueItem.event_id}) %>
+		  		   var event = _.findWhere(events,{_id:queueItem.event_id}) 
+					var checkEvent = _.findWhere(eventsToRender,{_id: event._id});
+					
+			  		   if( typeof checkEvent === 'undefined'){ 
+			  		   
+			  		   		eventsToRender.push(event);
+			  		   
+			  		   }
+		  		  })
+		  		 %>
+		  		 <%
+		  		 eventsToRender.forEach(function(eventItem,i){
+		  		 %>
+ 
 		  		 <li class="list-group-item">
-		  		 <!-- <%- JSON.stringify(queueItem) %> -->
 		  		 <ul class="event row" >
-			  		 <li class="col-md-2"><%= queueItem.title%></li>
-			  		 <li class="col-md-2"><%= SCENE_TYPES[queueItem.scene_type] %></li>
-			  		 <li class="col-md-2"><%= queueItem.zone_type %></li>
-			  		 <li class="col-md-2"><a href="/events/<%=event.slug%>/#<%= queueItem.slug %>" ><%= event.title %></a></li>
-			  		 <li class="col-md-2">Total Assets: <%= queueItem.assets.length%></li>
+			  		 <li class="col-md-2"><%= eventItem.title%></li>
+			  		 <li class="col-md-2"><% //SCENE_TYPES[queueItem.scene_type] %></li>
+			  		 <li class="col-md-2"><% //queueItem.zone_type %></li>
+			  		 <li class="col-md-2"><a href="/events/<%=eventItem.slug%>" ><%= eventItem.title %></a></li>
+			  		 <li class="col-md-2">Total Assets: <%%></li>
 			  		 <li class="col-md-2">NaN</li>
 		  		 </ul>
 		  		 </li><!-- .list-group-item -->

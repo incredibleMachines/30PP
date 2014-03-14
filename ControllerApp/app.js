@@ -19,6 +19,7 @@ var events = require('./routes/events');
 var renderer = require('./routes/renderer')
 var files = require('./routes/files');
 var scenes = require('./routes/scenes');
+var clips = require('./routes/clips')
 var api = require('./routes/api');
 
 /**
@@ -60,8 +61,13 @@ WebSocket.Connect(8080,Database);
 
 var app = express();
 
+//LOCALS GLOBAL OBJECT TO BE ORGANIZED
+
 //allow our local express files to use underscore
 app.locals._ = require('underscore');
+app.locals.utils = require('./modules/Utils');
+app.locals.EVENT_TYPES = ["Default","Ambient","Gastronomy", "Parks and Leisure"]
+app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
 
  
 app.set('port', process.env.PORT || 3000);
@@ -93,14 +99,17 @@ app.get('/', events.index(Database));
 
 //event options
 app.get('/events', events.index(Database));
-app.post('/events', events.add(Database));
 
-app.get('/events/:slug',events.single(Database));
-app.post('/events/:slug', events.update(Database));
-app.delete('/events/:slug', events.delete(Database));
-app.post('/events/:slug/delete',events.delete(Database))
+//migrate to scene object
+app.post('/scenes', scenes.add(Database));
+
+app.get('/scenes/:slug',scenes.single(Database));
+app.post('/scenes/:slug', scenes.update(Database));
+app.post('/scenes/reorder/:slug',scenes.reorder(Database));
+app.delete('/scenes/:slug', scenes.delete(Database));
+app.post('/scenes/:slug/delete',scenes.delete(Database))
  
-app.get('/events/:slug/test',events.emitOne(Database,WebSocket._socket));
+//app.get('/events/:slug/test',events.emitOne(Database,WebSocket._socket));
 
 //render handling
 
@@ -116,12 +125,12 @@ app.delete('/files/:slug', files.delete(Database));
 app.post('/files/:slug/delete',files.delete(Database));
 
 //scene handling
-
-app.post('/scenes',scenes.add(Database));
-app.post('/scenes/reorder/:id',scenes.reorder(Database));
-app.post('/scenes/:id',scenes.update(Database));
-app.delete('/scenes/:id',scenes.delete(Database));
-app.post('/scenes/:id/delete',scenes.delete(Database));
+//scenes turns into clips
+app.post('/clips',clips.add(Database));
+app.post('/clips/reorder/:id',clips.reorder(Database));
+app.post('/clips/:id',clips.update(Database));
+app.delete('/clips/:id',clips.delete(Database));
+app.post('/clips/:id/delete',clips.delete(Database));
 
 //api handling
 app.get('/api', api.index(Database));

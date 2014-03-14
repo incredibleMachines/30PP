@@ -1,4 +1,4 @@
-<section class="new_asset modal fade" id="new_asset_modal" tabindex="-1" role="dialog" aria-labelledby="new_asset_modal" aria-hidden="true" >
+<section class="new_file modal fade" id="new_file_modal" tabindex="-1" role="dialog" aria-labelledby="new_file_modal" aria-hidden="true" >
 	<section class="modal-dialog">
     	<section class="modal-content">
 	    	<div class="modal-header">
@@ -14,22 +14,7 @@
 					    <input type="file" class="form-control browse" name="content"/>
 				    	<!--<p class="help-block">Select the {file} to upload</p>-->
 				    </section>
-					<section class="form-group col-md-8">
-						<label for="Location">Location <small>(if applicable)</small></label>
-						<% var loc = true; if(locations.length==0){loc=false} %>
-						<select name="location" class="form-control location" <% if(!loc){ %>disabled<%}%>>
-							<% if(loc==true){ %>
-								<option>choose a location</option>
-								<% for(var i =0; i<locations.length;i++){%>
-									<option value="<%= locations[i]._id %>"><%= locations[i].address %></option>
-								<% } %>
-							<% }else{ %>
-								<option>no locations entered yet</option>
-							<% } %>
-						</select>
-						<p class="help-block"><small>...or enter a new location</small></p>
-						<input type="input" name="new_location" class="form-control" placeholder="Street address, city, state, zip"/>
-					</section>
+					
 		    </form>
 			<div class="modal-footer">
 				<button class="btn btn-primary modal-submit green" type="button">Submit</button>
