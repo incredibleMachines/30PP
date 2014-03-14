@@ -202,7 +202,6 @@ function SceneController(_clips,_files){
 		
 		//console.log($(this).val())
 		currentClip.layout = $(this).val()
-		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+currentClip.layout+".jpg")
 		formatClip(currentClip)
 		
 		
@@ -214,7 +213,7 @@ function SceneController(_clips,_files){
 	*/
 	
 	function formatClip(_clip){
-		
+		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+_clip.layout+".jpg")
 		console.log(_clip)
 		$('#clip-contents form').attr('action', '/clips/'+_clip._id);
 		$('h3.clip-title').html(_clip.title)
@@ -334,20 +333,20 @@ function SceneController(_clips,_files){
 				
 					InitMapCanvas(val,function(mousePos){
 						//alert(mousePos.x+","+mousePos.y)
-						var length = $('section.location').length
-						var input  = '<section style="display:none;" class="location" >'
-							input += '<input type="hidden" value="'+Math.floor(mousePos.x)+'" name="zones[0][locations]['+length+'][x]">'
-							input += '<input type="hidden" value="'+Math.floor(mousePos.y)+'" name="zones[0][locations]['+length+'][y]"/> </section>';
-						
-						$this.parent().append(input)
-						
+						var length = $('section.location').length;
+						alert(length);
+						var input;
+						for(var i=0; i<5; i++){
+							input += '<section style="display:none;" class="location" >'						
+							input += '<input type="hidden" value="'+Math.floor(mousePos.x+i)+'" name="zones[0][locations]['+i+'][x]">'
+							input += '<input type="hidden" value="'+Math.floor(mousePos.y+i)+'" name="zones[0][locations]['+i+'][y]"/>'
+							input += '</section>';
+						}						
+						$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
 					})	
-					
-					
 				}
 			})
 		}
-		
 	}
 	
 	/*
