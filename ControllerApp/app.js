@@ -105,7 +105,7 @@ app.post('/scenes', scenes.add(Database));
 
 app.get('/scenes/:slug',scenes.single(Database));
 app.post('/scenes/:slug', scenes.update(Database));
-app.post('/scenes/reorder/:slug',scenes.reorder(Database));
+app.post('/scenes/reorder/:id',scenes.reorder(Database));
 app.delete('/scenes/:slug', scenes.delete(Database));
 app.post('/scenes/:slug/delete',scenes.delete(Database))
  

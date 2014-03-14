@@ -17,10 +17,12 @@ exports.add = function(_Database){
 		post.duration = null
 		post.created_at = new Date()
 		
-		
-		_Database.add('scenes', post, function(e,_scene){
-			if(!e) res.redirect('/events?type='+_scene.type)
-			else res.redirect('/events')
+		_Database.queryCollection('scenes',{type:post.type},function(e,_scenes){
+			post.order = _scenes.length
+			_Database.add('scenes', post, function(e,_scene){
+				if(!e) res.redirect('/events?type='+_scene.type)
+				else res.redirect('/events')
+			})
 		})
 				
 	}
@@ -73,16 +75,62 @@ exports.single = function(_Database){
 }
 exports.update = function(_Database){
 	return function(req,res){
-		res.jsonp({working:"onit"})
+		var post = req.body
+		var slug = req.params.slug
+		//console.log(post)
+		_Database.update('scenes',{slug: slug},{$set:{title:post.title}},function(e){
+			if(!e){ 
+				_Database.getDocumentBySlug('scenes',slug,function(_e,_scene){
+					if(!_e) res.redirect('/events/?type='+_scene.type)
+					else res.jsonp(500,{error:_e})
+				})
+			
+			}else res.jsonp(500,{error:e})
+		})
+		//res.jsonp({working:"onit"})
 	}
 }
 exports.delete = function(_Database){
 	return function(req,res){
-		res.jsonp({working:"onit"})
+		//res.jsonp({working:"onit"})
+		var slug = req.params.slug
+		var type ='';
+		_Database.getDocumentBySlug('scenes',slug,function(e,_scene){
+			type = _scene.type
+			_Database.remove('clips',{scene_id: _scene._id},function(_e){
+				_Database.remove('scenes',{_id:_scene._id},function(__e){
+					res.redirect('/events/?type='+type)
+				})
+			})
+		})
+		
 	}
 }
 exports.reorder = function(_Database){
 	return function(req,res){
-		res.jsonp({working:"onit"})
+		//res.jsonp({working:"onit"})
+		var post = req.body;
+		post.id = req.params.id
+		var desiredIndex = 0;
+		
+		_Database.getDocumentByID('scenes',post.id,function(e,_scene){
+			console.log(_scene)
+			var currentIndex = _scene.order;
+			if(post.type =='up'){
+				desiredIndex = _scene.order-1;
+			}else{
+				desiredIndex = _scene.order+1;
+			}
+			_Database.update('scenes',{type: _scene.type ,order: desiredIndex},{$set:{order:currentIndex}},function(_e){
+				_Database.update('scenes',{_id:_scene._id},{$set:{order:desiredIndex}},function(__e){
+					
+					res.redirect('/events/?type='+_scene.type)
+					
+				})
+				
+			})
+			
+			
+		})
 	}
 }
