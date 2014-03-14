@@ -3,16 +3,16 @@
   <% /* Only Including the Modals we need for specific pages */ %>
   <% /* Event Index Page */ %>
   <% if(page_slug == 'events-index'){ %>
-  	<% include ../includes/modals/new_event %>	
+  	<% include ../includes/modals/new_scene %>	
   <% } %>
   <% /* Event Single Page */ %>
-  <% if(page_slug == 'events-single' ){ %>
-  	<% include ../includes/modals/new_scene %> 
-  	<% include ../includes/modals/new_asset %>
+  <% if(page_slug == 'scenes-single' ){ %>
+  	<% include ../includes/modals/new_clip %> 
+  	<% include ../includes/modals/new_file %>
   <% }%>
   <% /* Any Assets Page */ %>
   <% if(page_slug.indexOf('files')>=0){ %>
-	<% include ../includes/modals/new_asset %>
+	<% include ../includes/modals/new_file %>
   <%}%>
 
   <!-- Javscripts -->
@@ -26,27 +26,36 @@
   <script src='/js/main.js'></script>
   <% /* Custom JS Loading */%>
   <% if(page_slug == 'events-index'){ %>
-  	<% if(events.length ==0){ %>
+  	<% if(scenes.length ==0){ %>
   	<script>
 	  	$(document).ready(function(){
-		  	$('#new_event_modal').modal('show')
+		  	$('#new_scene_modal').modal('show')
 	  	})
   	</script>
   	<% } %>
   <% } %>
-  <% if(page_slug == 'events-single' ){ %>
+  <% if(page_slug == 'scenes-single' ){ %>
+  	<script src='/js/map.js'></script>
   	<script src='/js/sceneController.js'></script>
   	<script>
   	$(document).ready(function(){
   		<% /*  */ %>
-  		<% if(event.scenes.length == 0){ %>
-	  	$('#new_scene_modal').modal('show');
+  		<% if(scene.clips.length == 0){ %>
+	  	$('#new_clip_modal').modal('show');
 	  	<% }else{ %>
-	  	var sceneControl = new SceneController(<%-JSON.stringify(event.scenes)%>,function(){});
+	  	var sceneControl = new SceneController(<%-JSON.stringify(scene.clips)%>,<%- JSON.stringify(files)%>,function(){});
 	  	<% } %>	  		
 
 	  	
 	 });
+  	</script>
+  <% }%>
+  <% if(page_slug=='files-index'){ %>
+  	<script src='/js/fileController.js'></script>
+  	<script>
+	  	$(document).ready(function(){
+		  	var fileController = new FileController();
+	  	})
   	</script>
   <% }%>
   <!-- EJS LOCALS DATA: FOR DEBUG 

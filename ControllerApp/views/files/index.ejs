@@ -2,7 +2,7 @@
 <% include ../includes/header %>
 
 <% 
-	
+	/* for sorting mongo db items as elements */
 	assets = JSON.stringify(assets)
 	assets = JSON.parse(assets)
 	
@@ -16,7 +16,7 @@
 	<header class="row">
 	    <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1>
 		<section class="col-md-6 add-btn">
-			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">Upload New File</button>
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_file_modal">Upload New File</button>
 		</section>
 	</header>
     <section class='current_events'>
@@ -35,11 +35,18 @@
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% /* begin for loop */ %>
+		  	<% files = _.sortBy(files,function(file){
+		  		//
+		  		if(!file.last_edited) return new Date(file.created_at)
+		  		else return new Date(file.last_edited);
+		  	}) 
+		  		files.reverse()
+		  	%>
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
 			    	<ul class="event row" >
-			    		<form class="file <%= _file.slug %>" method="post" action="/files/<%= _file.slug %>">
-
+			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
+							<input type="hidden" name="id" value="<%= _file._id%>">
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
 								<p>File type: <%= _file.type %></p>
@@ -49,10 +56,13 @@
 								<a href="#" class="thumbnail">
 									<img src="<%=_file.path%>"/>
 								</a>
-								<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>
-								<%/*<button type="button" class="btn btn-default btn-sm">Replace</button> */%>
+								<!--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>-->
+								<button type="button" class="btn btn-default btn-sm file-replace">Replace</button>
+								<input style="display:none;"class="form-control" type="file" name="content" >
+
 							</li>
 							<li class="col-md-2 file-location"> <!-- LOCATION -->
+								<%  /* Seems as though this whole section is no longer needed */%>
 								<select name="location" class="form-control show-tick">
 									<% locations.forEach(function(_loc,j){ %>
 									<% /* begin for loop */ %>
@@ -67,6 +77,10 @@
 								<div class="asset-scene-list">
 									<ul>
 										<% /* begin for loop*/ 
+											//Note:: This needs modification, we don't actually want the title of the asset, but the title of 
+											//the scene which the asset lives within
+											//it will be important to surface this data as the current form makes little sense.
+											
 											var associatedAssets = _.where(assets,{file:_file._id})
 											
 											associatedAssets.forEach(function(asset,j){
@@ -81,8 +95,8 @@
 							</li>
 							<li class="col-md-2"> <!-- UPDATE DELTE BTNS -->
 								<div class="btn-group">
-									  <button type="button" class="btn btn-default btn-xs event-update green">Update</button>
-									  <button type="button" class="btn btn-default btn-xs event-delete red">Delete</button>
+									  <button type="button" class="btn btn-default btn-xs file-update green">Update</button>
+									  <button type="button" class="btn btn-default btn-xs file-delete red">Delete</button>
 								</div>
 							</li>
 						</form>

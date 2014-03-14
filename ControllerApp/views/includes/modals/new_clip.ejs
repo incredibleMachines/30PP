@@ -1,0 +1,30 @@
+<section class='new_clip modal fade' id="new_clip_modal" tabindex="-1" role="dialog" aria-labelledby="new_clip_modal" aria-hidden="true" >
+	<section class="modal-dialog">
+		<section class="modal-content">
+			<div class="modal-header">
+				<h3>Add New Clip</h3>
+			</div><!-- .modal-header -->
+			<form class="modal-body" role="form" action="/clips" method="post">
+					<input type="hidden" name="scene_id" value="<%=scene._id %>"/>
+					<section class="form-group col-md-8">
+					    <label for="title">Clip Title</label>
+					    <input type="text" class="form-control" id="title" name="title" placeholder="Give your clip a title">
+				    </section>
+				    <section class="form-group col-md-8">
+						<label for="scene_type">Layout</label>
+						<select class="form-control scene-scene_type" name="layout" id="layout">
+						<%  
+							for(var i =0; i<SCENE_TYPES.length; i++){ %>
+							 <option value="<%=i%>"><%=SCENE_TYPES[i]%></option>
+							 <% }%>
+						</select>
+					</section>
+				    
+			</form><!-- .modal-body -->
+			<div class="modal-footer">
+				<button class="btn btn-primary modal-submit green" type="button">Submit</button>
+				<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+			</div><!-- .modal-footer-->
+		</section><!-- .modal-content -->
+	</section><!-- .modal-dialog -->
+</section><!-- #new_scene_modal .new_scene .modal .fade -->

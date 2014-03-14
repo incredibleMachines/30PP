@@ -56,23 +56,23 @@ $(document).ready(function(){
 		});
 		
 	/*
-	** Event Actions
+	** Scene Actions
 	*/
 	
 	
-	$("button.event-view").click(function(e){
+	$("button.scene-view").click(function(e){
 		var link = $(this).parents('form').attr('action');
 		//console.log(link);
 		//find form slug direct page
 		window.location.replace(link);
 	});
-	$("button.event-update").click(function(e){
+	$("button.scene-update").click(function(e){
 		e.preventDefault();
 		$(this).parents('form').submit();
 	});
-	$("button.event-delete").click(function(e){
+	$("button.scene-delete").click(function(e){
 	
-		if(confirm("You are about to Delete this Event, Proceed?")){
+		if(confirm("You are about to Delete this Scene, Proceed?")){
 		
 			var path = $(this).parents('form').attr('action')+"/delete";
 			$(this).parents('form').attr('action',path);
@@ -100,6 +100,40 @@ $(document).ready(function(){
 		//console.log(path);
 	
 	});
+	
+	/*
+	** Render Queue
+	*/
+	
+	
+	$("button.render-content").click(function(e){
+		//simple form post, could be implimented via AJAX and facilitate page more robust page functionality.
+		var form = $('<form action="/render" method="post"></form>')
+		
+		$(form).submit();
+		
+	})
+	
+	/* 
+	** File Actions	
+	*/
+	$("button.file-update").click(function(e){
+		e.preventDefault();
+		$(this).parents('form').submit();
+	});
+	$("button.file-delete").click(function(e){
+	
+		if(confirm("You are about to Delete this File, Proceed?")){
+		
+			var path = $(this).parents('form').attr('action')+"/delete";
+			$(this).parents('form').attr('action',path);
+			$(this).parents('form').submit();
+			
+		}else{
+			e.preventDefault();
+		}
+	});
+	
 	
 });
 

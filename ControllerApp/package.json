@@ -10,7 +10,7 @@
     "colors" : "*",
 	"ws" : "0.4.x",
 	"mongodb":"1.x",
-    "less-middleware": "0.x",
+    "less-middleware": "0.1.x",
     "ejs": "*",
     "async":"*",
     "underscore": "1.6.x",

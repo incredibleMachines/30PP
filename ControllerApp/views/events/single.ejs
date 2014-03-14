@@ -18,8 +18,8 @@
 					<% for(var i = 0; i<event.scenes.length; i++){ %>
 					<li class="list-group-item">
 						<section class="btn-group-vertical">
-							<button class="btn btn-default btn-xs dropup scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
-							<button class="btn btn-default btn-xs scene-order-down <% if(i == event.scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs scene-order scene-order-down <% if(i == event.scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
 						</section>
 						<button type="button" data-scene-id="<%=event.scenes[i]._id%>" class="scene-title <%=event.scenes[i].slug %> btn btn-link btn-lg "><%=event.scenes[i].title%></button>
 					</li>
@@ -198,7 +198,7 @@
 												<img src="holder.js/100%x100/text:Text Only Asset" />
 											<% } %>
 										</a>
-										<button type="button" class="btn btn-default btn-sm">Delete</button>
+										<!--<button type="button" class="btn btn-default btn-sm">Delete</button>-->
 										</section>
 										<section class="col-md-6 asset-contents">
 										<!--<form action="/assets/:slug" method="post"> -->
