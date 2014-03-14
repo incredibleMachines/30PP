@@ -26,13 +26,19 @@
   <script src='/js/main.js'></script>
   <% /* Custom JS Loading */%>
   <% if(page_slug == 'events-index'){ %>
-  	<% if(scenes.length ==0){ %>
+  	<script src='/js/eventController.js'></script>
   	<script>
-	  	$(document).ready(function(){
+  	
+  	  	$(document).ready(function(){
+  	  	<% if(scenes.length ==0){ %>
 		  	$('#new_scene_modal').modal('show')
+		<% }else{ %>
+		  	var eventController = new EventController()
+	  	<% } %>
+	  	
 	  	})
   	</script>
-  	<% } %>
+  	
   <% } %>
   <% if(page_slug == 'scenes-single' ){ %>
   	<script src='/js/map.js'></script>

@@ -99,7 +99,21 @@ exports.update = function(_Database){
 }
 exports.delete = function(_Database){
 	return function(req,res){
-		res.jsonp({working:"onit"})
+		//res.jsonp({working:"ondeleting"})
+		var id = req.params.id
+		var post = req.body
+		_Database.getDocumentByID('clips',id,function(e,_clip){
+			_Database.updateByID('scenes',_clip.scene_id,{$pull:{clips:_clip._id}},function(e){
+				_Database.remove('clips',{_id:_clip.id},function(e){
+					//res.redirect('/scenes/'+)
+					makeRedirectBySceneId(_Database, _clip.scene_id, function(___e, url){
+						res.redirect(url)
+					})
+				})
+			})
+			
+		})
+	
 	}
 }
 exports.reorder = function(_Database){
@@ -147,7 +161,15 @@ exports.reorder = function(_Database){
 	}
 }
 
-
+function makeRedirectBySceneId(_Database, sceneId, cb){
+	/* function to get the event-slug by eventId */
+	_Database.getDocumentByID('scenes', sceneId, function(_e, _scene){
+		//if(_e) res.jsonp(500,{error:_e});
+		//else res.redirect('/events/'+_doc.slug+'#'+clipSlug);	
+		if(_e) cb(_e)
+		else cb(null, '/scenes/'+_scene.slug)
+	});
+}
 function makeRedirectBySceneIdToClip(_Database, sceneId, clipSlug, cb){
 	/* function to get the event-slug by eventId */
 	_Database.getDocumentByID('scenes', sceneId, function(_e, _scene){

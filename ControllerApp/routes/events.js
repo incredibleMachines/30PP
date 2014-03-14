@@ -16,7 +16,7 @@ exports.index = function(_Database){
 	 	var title = utils.reverseSlug(type)
 	 	//query scenes by event type 
 	 		
-	 	_Database.queryCollection('scenes', {type: type} , function(err, _scenes){
+	 	_Database.queryCollectionWithOptions('scenes', {type: type} , {sort: 'order'} ,function(err, _scenes){
 	 		//error handling needs to happen
 	 		
 		 	res.render('events/index', { current: req.url, title: utils.toTitleCase(title), page_slug: 'events-index', scenes: _scenes } );

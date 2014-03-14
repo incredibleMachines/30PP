@@ -2,6 +2,13 @@
 
 $(document).ready(function(){
 
+	
+	if($('select.new-event-type').length){
+	
+		$('select.new-event-type').val(GetURLParameter("type"))
+	
+	}
+
 	/*
 	**
 	** Form controls
@@ -71,23 +78,23 @@ $(document).ready(function(){
 		$(this).parents('form').submit();
 	});
 	$("button.scene-delete").click(function(e){
-	
+		
 		if(confirm("You are about to Delete this Scene, Proceed?")){
 		
 			var path = $(this).parents('form').attr('action')+"/delete";
 			$(this).parents('form').attr('action',path);
 			$(this).parents('form').submit();
 			
-		}else{
-			e.preventDefault();
 		}
+			e.preventDefault();
+		
 	});
 	
 	/*
 	** Event Single Actions
 	*/
 	
-	$("button.scene-delete").click(function(e){
+	$("button.clip-delete").click(function(e){
 	
 		var path = $(this).parents('form').attr('action')+"/delete";		
 		
@@ -133,7 +140,26 @@ $(document).ready(function(){
 			e.preventDefault();
 		}
 	});
+
+
 	
 	
 });
 
+
+
+/*
+** GetURLParameter
+** http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+**
+*/
+function GetURLParameter(sParam){
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++){
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam){
+            return sParameterName[1];
+        }
+    }
+}

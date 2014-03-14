@@ -12,7 +12,7 @@
 		  <!-- Our Events Table  -->
 		  <div class="panel-heading">
 		  	<ul class="event row panel-title" >
-		  		<!--<li class="col-md-1 panel-title">+</li>-->
+		  		<li class="col-md-1 panel-title"></li>
 		  		<li class="col-md-4 panel-title">Title</li>
 		  		<!--<li class="col-md-2 panel-title">Event Type</li>-->
 		  		<li class="col-md-2 panel-title">Duration</li>
@@ -25,11 +25,14 @@
 		  <ul class="list-group">
 		  	<% scenes.forEach(function(scene,i){ %>
 		    <li class="list-group-item">
-			    	<ul class="event row" >
+			    	<ul class="event row" data-id="<%= scene._id %>" >
 			    		<form class="event <%=scene.slug%>" method="post" action="/scenes/<%=scene.slug%>">
-							<!--<li class="col-md-1">
-								<input type="checkbox" >
-							</li>-->
+							<li class="col-md-1">
+								<section class="btn-group-vertical">
+									<button type="button" class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
+									<button type="button" class="btn btn-default btn-xs scene-order scene-order-down <% if(i == scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+								</section>
+							</li>
 							<li class="col-md-4">						
 								<input class="form-control" type="text" name="title" value="<%=scene.title%>">
 							</li>

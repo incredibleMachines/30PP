@@ -9,14 +9,16 @@ var bDEBUG = true;
 exports.index = function(_Database){
 	
 	return function(req,res){
-		_Database.queryCollection('scenes',{render: true},function(e,queue){
+		_Database.getAll('clips',function(e,_clips){
 			//console.log(data)
 			if(e){ res.jsonp({"Error": "Query Collection Error: Scenes"})
 			}else{
-				_Database.getAll('events',function(_e, events){
+				_Database.getAll('scenes',function(_e, _scenes){
 					if(_e) res.jsonp({"Error": "Query Collection Error: Events"})
 				
-					else res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', renderqueue: queue, events: events } );	
+					else{ 	var _queue = _.where(_clips,{render: true})
+							res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', queue: _queue, clips: _clips, scenes: _scenes } );	
+						}
 				})
 			}
 		})

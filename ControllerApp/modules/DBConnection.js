@@ -75,6 +75,9 @@ function queryCollection(_type, _query, _cb){
 
 	
 }
+exports.queryCollectionWithOptions = function(_type,_query,_options,_cb){
+	queryCollectionWithOptions(_type, _query, _options, _cb)
+}
 //_type = collection name
 //_query = your formatted mongodb query
 //_cb = callback(err,collection[])

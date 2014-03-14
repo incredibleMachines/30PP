@@ -64,7 +64,6 @@ section.new_event {
 /* -------------- EVENT -------------- */
 ul.event {
   display: inline;
-  position: relative;
   list-style: none;
   width: 100%;
   margin: 0;
