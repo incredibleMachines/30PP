@@ -71,23 +71,23 @@ $(document).ready(function(){
 		$(this).parents('form').submit();
 	});
 	$("button.scene-delete").click(function(e){
-	
+		
 		if(confirm("You are about to Delete this Scene, Proceed?")){
 		
 			var path = $(this).parents('form').attr('action')+"/delete";
 			$(this).parents('form').attr('action',path);
 			$(this).parents('form').submit();
 			
-		}else{
-			e.preventDefault();
 		}
+			e.preventDefault();
+		
 	});
 	
 	/*
 	** Event Single Actions
 	*/
 	
-	$("button.scene-delete").click(function(e){
+	$("button.clip-delete").click(function(e){
 	
 		var path = $(this).parents('form').attr('action')+"/delete";		
 		

@@ -202,10 +202,21 @@ function SceneController(_clips,_files){
 		
 		//console.log($(this).val())
 		currentClip.layout = $(this).val()
-		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+currentClip.layout+".jpg")
 		formatClip(currentClip)
 		
 		
+	})
+	$('select.zone-file').change(function(e){
+		var file = _.findWhere(_files,{_id:$(this).val()})
+
+		if(typeof file !=='undefined') $(this).closest('.row').find('img').attr('src','/'+file.path).height("auto")
+		else{
+			$(this).closest('.row').find('img').attr("src","holder.js/100%x100/industrial/text:No File Associated")
+			Holder.run({
+						images: $(this).closest('.row').find('img')[0]
+					})
+
+		}
 	})
 
 	/*
@@ -214,7 +225,8 @@ function SceneController(_clips,_files){
 	*/
 	
 	function formatClip(_clip){
-		
+		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+_clip.layout+".jpg")
+
 		console.log(_clip)
 		$('#clip-contents form').attr('action', '/clips/'+_clip._id);
 		$('h3.clip-title').html(_clip.title)
@@ -339,7 +351,7 @@ function SceneController(_clips,_files){
 							input += '<input type="hidden" value="'+Math.floor(mousePos.x)+'" name="zones[0][locations]['+length+'][x]">'
 							input += '<input type="hidden" value="'+Math.floor(mousePos.y)+'" name="zones[0][locations]['+length+'][y]"/> </section>';
 						
-						$this.parent().append(input)
+						$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
 						
 					})	
 					
