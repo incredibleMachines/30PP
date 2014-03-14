@@ -26,7 +26,7 @@ exports.add = function(_Database){
 					
 					_Database.getDocumentByID('scenes',_clip.scene_id, function(_e,_scene){
 					
-						if(!_e) res.redirect('/scenes/'+_scene.slug)
+						if(!_e) res.redirect('/scenes/'+_scene.slug+'#'+_clip.slug)
 						else res.jsonp(500,{error: _e})
 						
 					})
