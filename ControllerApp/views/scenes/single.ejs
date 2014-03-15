@@ -80,7 +80,7 @@
 													<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_file_modal">Upload</button>
 												</label>
 												<select name="zones[0][file]" class="form-control zone-file show-tick">
-													<option value="">No File</option>
+													<option value="none">No File</option>
 													<% for(var j = 0; j< files.length; j++){ %>
 														<option value="<%= files[j]._id %>"><%= files[j].title %></option>
 													<% } %>
@@ -108,7 +108,7 @@
 										</section><!-- .zone-contents -->
 										<section class="col-md-5 zone-image">										
 											<a class="thumbnail">
-												<img src="holder.js/100%x100//industrial/text:No File Associated" />
+												<img src="holder.js/100%x150/industrial/text:No File Associated" />
 											</a>
 										</section><!-- .zone-image -->
 									</article> <!-- .row .zone-single -->

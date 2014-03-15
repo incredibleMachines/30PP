@@ -50,8 +50,13 @@ function SceneController(_clips,_files){
 	$(document).delegate('select.zone-map-type','change', function(e){
 		$this = $(this)
 				
-		if($this.val() === 'none') $('canvas#map').remove()
-		else{
+		if($this.val() === 'none'){ 
+					$('canvas#map').remove()
+					$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
+					Holder.run({
+						images: $this.closest('.row').find('img')[0]
+					})				
+		}else{
 			//check if element exists using length
 			if(!$('canvas#map').length){
 				
@@ -60,6 +65,14 @@ function SceneController(_clips,_files){
 				//init the map
 			}
 			
+			$this.closest('.row').find('select.zone-file').val('none')
+			var val = $this.val()
+			var output = val.charAt(0).toUpperCase()+val.slice(1)
+			$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+output)
+			//$this.closest('.row').find('img').attr('src','holder.js/100%x150/industrial/text:'+$this.val()+' location')
+			Holder.run({
+						images: $this.closest('.row').find('img')[0]
+					})
 			InitMapCanvas($this.val(),function(mousePos){
 				//alert(mousePos.x+","+mousePos.y)
 				var length = $('section.location').length
@@ -70,6 +83,9 @@ function SceneController(_clips,_files){
 				$this.parent().append(input)
 				
 			})	
+		
+			
+		
 		}
 		
 		
@@ -111,8 +127,12 @@ function SceneController(_clips,_files){
 				var text  = '<section class="zone-text input-group"><input name="zones['+index+'][text][0]" placeholder="Input Text" class="form-control zone-text"/>'
 					text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text">+</button><button type="button" class="btn remove-zone-text btn">-</button></div>'
 					text += '</section>'
-					
-					
+				//set image to be multitext and file to be none
+				$this.closest('.row').find('select.zone-file').val('none')
+				$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
+					Holder.run({
+						images: $this.closest('.row').find('img')[0]
+					})		
 			break;
 		}
 		
@@ -206,16 +226,26 @@ function SceneController(_clips,_files){
 		
 		
 	})
-	$('select.zone-file').change(function(e){
+	$(document).delegate('select.zone-file','change', function(e){
+		$this =$(this)
 		var file = _.findWhere(_files,{_id:$(this).val()})
 
-		if(typeof file !=='undefined') $(this).closest('.row').find('img').attr('src','/'+file.path).height("auto")
+		if(typeof file !=='undefined'){ 
+			$(this).closest('.row').find('img').attr('src','/'+file.path).height("auto")
+			//
+			$(this).closest('.row').find('select.zone-map-type').val('none')
+			$(this).closest('.row').find('select.zone-map-type').siblings('section.location').remove()
+			$('canvas#map').remove()		
+			}
 		else{
-			$(this).closest('.row').find('img').attr("src","holder.js/100%x100/industrial/text:No File Associated")
+			$(this).closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
 			Holder.run({
 						images: $(this).closest('.row').find('img')[0]
 					})
-
+		}
+		if($this.closest('.row').find('select.zone-text-type').val() === 'multiple'){
+			$this.closest('.row').find('.zone-text').remove()
+			$this.closest('.row').find('select.zone-text-type').val('none')
 		}
 	})
 
@@ -324,7 +354,7 @@ function SceneController(_clips,_files){
 					$('.zone-single-'+index).find('img').attr("src","/"+file.path)
 					$('.zone-single-'+index).find('select.zone-file').val(zone.file)
 				}else{
-					$('.zone-single-'+index).find('img').attr("src","holder.js/100%x100/industrial/text:No File Associated")
+					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
 					Holder.run({
 								images: $('.zone-single-'+index).find('img')[0]
 							})
@@ -527,7 +557,7 @@ function SceneController(_clips,_files){
 						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]').attr('selected','selected');
 						if(currentScene.assets[i][key].file != "") $('.asset-single-'+key).find('.thumbnail img').attr("src","/"+currentScene.assets[i][key].file.path)
 						else{ 
-							$('.asset-single-'+key).find('.thumbnail img').attr("src","holder.js/100%x100/text:No%20File%20Associated")
+							$('.asset-single-'+key).find('.thumbnail img').attr("data-src","holder.js/100%x150/text:No%20File%20Associated")
 							var img = $('.asset-single-'+key).find('.thumbnail img');
 							console.log(img)
 							Holder.run({
@@ -613,7 +643,7 @@ function SceneController(_clips,_files){
 					})
 					
 				}).addClass('asset-single-'+i);
-				$(newAsset).find('.thumbnail img').attr("src","holder.js/100%x100/text:Select%20File")
+				$(newAsset).find('.thumbnail img').attr("data-src","holder.js/100%x150/text:Select%20File")
 				var img = $('.asset-single-'+key).find('.thumbnail img');
 				console.log(img)
 				Holder.run({
