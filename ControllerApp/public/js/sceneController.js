@@ -325,7 +325,18 @@ function SceneController(_clips,_files){
 		if(_clip.zones.length>0){
 			console.log(_clip.zones)
 			_clip.zones.forEach(function(zone,index){
-				
+				if(zone.file){
+					var file = _.findWhere(_files,{_id:zone.file})
+					console.log(file)
+					$('.zone-single-'+index).find('img').attr("src","/"+file.path)
+					$('.zone-single-'+index).find('select.zone-file').val(zone.file)
+				}else{
+					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
+					Holder.run({
+								images: $('.zone-single-'+index).find('img')[0]
+							})
+					
+				}
 				if(zone.text){
 					console.log(typeof zone.text)
 					if(typeof zone.text !== 'object'){ 
@@ -344,27 +355,23 @@ function SceneController(_clips,_files){
 								$('.zone-single-'+index).find('.zone-text-type').parent().append(text)  
 
 						}
+						$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
+						Holder.run({
+							images: $('.zone-single-'+index).find('img')[0]
+						})
 						$('.zone-single-'+index).find('select.zone-text-type').val('multiple')
 					}
 				} 
-				//if(location){}
-				if(zone.file){
-					var file = _.findWhere(_files,{_id:zone.file})
-					console.log(file)
-					$('.zone-single-'+index).find('img').attr("src","/"+file.path)
-					$('.zone-single-'+index).find('select.zone-file').val(zone.file)
-				}else{
-					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
-					Holder.run({
-								images: $('.zone-single-'+index).find('img')[0]
-							})
-					
-				}
 				
 				if(zone.locations){
 					console.log("Locations: "+zone.locations.length)
 					val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(val)
+					var output = val.charAt(0).toUpperCase()+val.slice(1)
+					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+output)
+					Holder.run({
+						images: $('.zone-single-'+index).find('img')[0]
+					})
 					
 					if(!$('canvas#map').length){
 				
