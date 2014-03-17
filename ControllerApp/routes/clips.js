@@ -59,7 +59,7 @@ exports.update = function(_Database){
 				
 			}else{ zone.text=null}
 			
-			if(zone.file != '') zone.file = _Database.makeMongoID(zone.file)
+			if(zone.file !== "none") zone.file = _Database.makeMongoID(zone.file)
 			else zone.file = null
 			
 			if('locations' in zone){
