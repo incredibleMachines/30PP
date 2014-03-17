@@ -364,7 +364,7 @@ function SceneController(_clips,_files){
 				} 
 				
 				if(zone.locations){
-					console.log("Locations: "+zone.locations.length)
+					//console.log("Locations: "+zone.locations.length)
 					val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(val)
 					var output = val.charAt(0).toUpperCase()+val.slice(1)
@@ -378,6 +378,14 @@ function SceneController(_clips,_files){
 						var canvas = '<canvas id="map" style="width: 100%; height: 200px;"> </canvas>'
 						$('.zone-single-'+index).find('select.zone-map-type').parent().append(canvas)
 						//init the map
+					}
+					
+					for(var i = 0; i<zone.locations.length;i++){
+						var input  = '<section style="display:none;" class="location" >'
+							input += '<input type="hidden" value="'+zone.locations[i].x+'" name="zones[0][locations]['+i+'][x]">'
+							input += '<input type="hidden" value="'+zone.locations[i].y+'" name="zones[0][locations]['+i+'][y]"/> </section>';
+							
+							$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
 					}
 				
 					InitMapCanvas(val,function(mousePos){
