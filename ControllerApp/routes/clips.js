@@ -62,11 +62,11 @@ exports.update = function(_Database){
 			if(zone.file != '') zone.file = _Database.makeMongoID(zone.file)
 			else zone.file = null
 			
-			if('location' in zone){
+			if('locations' in zone){
 				//iterate on location
 			} else{
 				
-				zone.location = null	
+				zone.locations = null	
 			} 
 			
 		})
