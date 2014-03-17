@@ -38,23 +38,194 @@ exports.render = function(_Database, _AfterEffects){
 		//file handling and naming protocol 
 		//object structure and order
 		
-		_Database.queryCollection('scenes',{render:true},function(e,queue){
+		_Database.queryCollection('clips',{render:true},function(e,queue){
 			
-			if(e) console.error(" Error: Query Collection Error | Scenes ".inverse.red)
+			if(e) console.error(" Error: Query Collection Error | Clips ".inverse.red)
 			else{
-				_Database.getAll('events',function(_e,events){
-					if(_e) console.error(" Error: Query Collection Error | Events ".inverse.red);
+				_Database.getAll('scenes',function(_e,scenes){
+					if(_e) console.error(" Error: Query Collection Error | Scenes ".inverse.red);
 					else{
-						console.log(" Render Queue ".inverse.green)
-						console.log(queue)
-						console.log(" Events ".inverse.green)
-						console.log(events)
+						//console.log(" Render Queue ".inverse.green)
+						//console.log(queue)
+						//console.log(" Scenes ".inverse.green)
+						//console.log(scenes)
 						
 						//now that we have our event lets sort what needs to be rendered out
-						sortRenderEvents(queue, events, function(results){
-							//results to be rendered
-							//console.log(results);
+						sortRenderEvents(queue, scenes, function(results){
+							//results to be rendered this contains an array of our scenes with clip objects which need to be rendered
+							//if(bDEBUG) console.log("RESULTS")
+							//if(bDEBUG) console.log(results);
 							
+							//if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.cyan);
+							results.forEach(function(result, i){
+								if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.yellow);
+								console.log(result);
+								result.clips.forEach(function(clip,j){
+									if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.red);
+									console.log(clip)
+									
+									//figure out what the fuck needs to happen with this clip
+									var obj = {};
+									/*
+									switch(parseInt(clip.layout)){
+										
+										case 0:
+											//full immersion
+											//MUST GET LAYER NAME FROM AE FILE TO ADD
+											//TEMP TEMP TEMP TEMP
+											obj.template 	= "FullImmersion.aep"
+											obj.type 	 	= result.type
+											obj.script   	= "FullImmersion.jsx"
+											obj.output 	 	= result.slug+"_"+clip.slug+".mov"
+											obj.data	 	= {};
+											obj.data.Source_Image 	= clip.zones[0].file	
+											obj.order 		= null
+											obj.clips 		= [_Database.makeMongoID(clip._id)]
+											obj.scene_id    = _Database.makeMongoID(result._id)
+											_Database.add('renderqueue',obj,function(e){})	
+											
+										break;
+										case 1:
+											//single wall
+											var text_type;
+											
+											obj.data = {}
+
+											
+											if(clip.zones[1].text){
+												
+												if(typeof clip.zones[1].text === 'object'){
+													//multitext
+													text_type = "Multiple"
+													
+													for(var k =0; k<clip.zones[1].text.length;k++){
+														var key = "Source_Text_"+k
+														obj.data[key] = clip.zones[1].text[k]
+													}
+													
+												}else{
+													//single text
+													text_type = "Single"
+													obj.data.Source_Text = clip.zones[1].text
+													obj.data.Source_Image_Wall = clip.zones[1].file
+												}
+												
+											}else{
+												//if no text, we will use the same template as single
+												//we will write an empty string into the appropriate text field
+												text_type = "Single"
+												obj.data.Source_Text = ""
+												obj.data.Source_Image_Wall = clip.zones[1].file
+												
+											}
+											var location_type;
+											if(clip.zones[0].locations){
+												
+												if(clip.zones[0].locations.length> 1){
+													location_type= "Multiple"
+													for(var k =0; k<clip.zones[0].locations.length;k++){
+														var key = "Source_Location_"+k
+														obj.data[key] = clip.zones[0].locations[k]
+													}
+												}else{
+													location_type= "Single"
+													obj.data.Source_Location = clip.zones[0].locations[0]
+												}
+												
+											}else{
+												location_type = "None"
+												obj.data.Source_Location = null
+												obj.data.Source_Image_Sculpture = clip.zones[0].file
+											}
+											
+											obj.template = "SingleWall_"+text_type+"_"+location_type+".aep"
+											obj.type = result.type
+											obj.script = "SingleWall_"+text_type+"_"+location_type+".jsx"
+											obj.output = result.slug+"_"+clip.slug+".mov"
+											obj.order = null
+											obj.clips = [_Database.makeMongoID(clip._id)]
+											obj.scene_id    = _Database.makeMongoID(result._id)
+											
+											_Database.add('renderqueue',obj,function(e){})
+											
+										break;
+										case 2:
+											//double wall
+											obj.data = {}
+											var location_type;
+											if(clip.zones[0].locations){
+												
+												if(clip.zones[0].locations.length> 1){
+													location_type= "Multiple"
+													for(var k =0; k<clip.zones[0].locations.length;k++){
+														var key = "Source_Location_"+k
+														obj.data[key] = clip.zones[0].locations[k]
+													}
+												}else{
+													location_type= "Single"
+													obj.data.Source_Location = clip.zones[0].locations[0]
+												}
+												
+											}else{
+												location_type = "None"
+												obj.data.Source_Location = null
+												obj.data.Source_Image_Sculpture = clip.zones[0].file
+											}
+											//only iterate between our wall zones 
+											//index 1 and 2 
+											var text_type_arr=[];
+											for(var z = 1; z < clip.zones.length; z++){
+												
+												var text_key = "Source_Text_"+z
+												var img_key = "Source_Image_Wall_"+z
+
+												if(clip.zones[z].text){
+													
+													if(typeof clip.zones[z].text === "object"){
+														//multi text option
+														text_type_arr.push("Multiple")
+														
+														for(var k = 0; k<clip.zones[z].text.length; k++){
+															var key = text_key+"_"+k
+															obj.data[key] = clip.zones[z].text[k]
+														}
+														
+													}else{
+														//single text 
+														text_type_arr.push("Single")
+														obj.data[text_key]= clip.zones[z].text
+														obj.data[img_key] = clip.zones[z].file
+														
+													}
+													
+												}else{
+													text_type_arr.push("Single")
+													obj.data[text_key] = ""
+													obj.data[img_key] = clip.zones[z].file
+												}
+												
+											}
+											
+											var text_type = (_.contains(text_type_arr,"Multiple"))? 'Multiple' : 'Single'
+											
+											obj.template = "DoubleWall_"+text_type+"_"+location_type+".aep"
+											obj.type = result.type
+											obj.scene_id = _Database.makeMongoID(result._id)
+											obj.script =  "DoubleWall_"+text_type+"_"+location_type+".jsx"
+											obj.output = result.slug+"_"+clip.slug+".mov"
+											obj.clips = [_Database.makeMongoID(clip._id)]
+											
+											_Database.add('renderqueue',obj,function(e){})
+											
+										break;
+										
+									}
+									*/
+									
+									
+								})
+
+							})
 							//bind all the scenes and events we need, check each scene to find a match of render content							
 							//sort out of all the scenes that are actually rendered together, and all the scenes that are rendered seperately
 							//create json packets for each template that needs to be rendered - 
@@ -80,39 +251,75 @@ exports.render = function(_Database, _AfterEffects){
 	
 }
 
+function parseRenderQueue(result,cb){
+	console.log(JSON.stringify(result))
+	cb()
+}
 
-
-
-function sortRenderEvents(queue, events, cb){
+function sortRenderEvents(queue, scenes, cb){
 	
 	//use underscore to sort through the events and see which ones are in need of render
 	var holder = [], 
-	counter = 0;
+	counter = 0
 	
 	queue = JSON.stringify(queue)
 	queue = JSON.parse(queue)
 	
-	events = JSON.stringify(events)
-	events = JSON.parse(events)
+	scenes = JSON.stringify(scenes)
+	scenes = JSON.parse(scenes)
+	
+	var scenesHolder = _.clone(scenes)
 	
 	queue.forEach(function(item,i){
-		if(bDEBUG) console.log(item.event_id.toString().green.inverse);
-		
-		var event = _.findWhere(events,{_id:item.event_id}) 
-		var checkEvent = _.findWhere(holder,{_id: event._id});
-		
-		if( typeof checkEvent === 'undefined'){
-			if(bDEBUG) console.log(' NO EVENT EXISTS IN QUEUE YET '.inverse.yellow)
-			//push back to create more viable queue object, this will allow us to bind our scenes and assets
+	
+		scenesHolder.forEach(function(scene,j){
 			
-			holder.push(event) 
-		}else{
-			if(bDEBUG) console.log(' EVENT EXISTS IN RENDER QUEUE '.inverse.cyan);
-		}
-
-		counter++;
-		if(counter == queue.length) cb(holder)
+			if(scene._id === item.scene_id){
+				scene.clips.forEach(function(clip,k){
+					
+					if(clip === item._id){
+						
+						scene.clips[k] = item
+						
+						counter++
+						
+						if(counter === queue.length) cb(scenesHolder)
+						
+					}
+					
+				})
+				
+			}
+		})
+		
+		
 	})
+	
+	
+/*
+	queue.forEach(function(item,i){
+		if(bDEBUG) console.log(item.scene_id.toString().green.inverse);
+		
+		var scene = _.findWhere(scenes,{_id:item.scene_id}) 
+		//var checkScene = _.findWhere(holder,{_id: scene._id});
+		
+		scene.clips.forEach(function(_clip,j){
+
+			if(_clip === item._id){
+				if(bDEBUG) console.log(" CLIP Match ".inverse.red)
+				scene.clips[j] = queue
+				counter++;
+				if(counter==queue.length){
+					cb(scenes)
+				
+					//console.log(scenes)
+				}
+			}
+			
+		})
+		
+	})
+*/
 	
 	
 }
