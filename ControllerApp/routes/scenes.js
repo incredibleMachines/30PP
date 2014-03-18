@@ -18,7 +18,7 @@ exports.add = function(_Database){
 		post.created_at = new Date()
 		
 		_Database.queryCollection('scenes',{type:post.type},function(e,_scenes){
-			post.order = _scenes.length
+			post.order = (_scenes.length==0) 1 : _scenes.length
 			_Database.add('scenes', post, function(e,_scene){
 				if(!e) res.redirect('/events?type='+_scene.type)
 				else res.redirect('/events')
