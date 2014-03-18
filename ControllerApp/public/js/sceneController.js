@@ -67,29 +67,20 @@ function SceneController(_clips,_files){
 			
 			$this.closest('.row').find('select.zone-file').val('none')
 			var val = $this.val()
-			var output = val.charAt(0).toUpperCase()+val.slice(1)
-			$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+output)
+			var type = val.charAt(0).toUpperCase()+val.slice(1)
+			$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+type)
 			//$this.closest('.row').find('img').attr('src','holder.js/100%x150/industrial/text:'+$this.val()+' location')
 			Holder.run({
 						images: $this.closest('.row').find('img')[0]
 					})
-			InitMapCanvas($this.val(),function(mousePos){
-				//alert(mousePos.x+","+mousePos.y)
-				var length = $('section.location').length
-				var input = '<section style="display:none;" class="location" >'
-				input+= 	'<input type="hidden" value="'+Math.floor(mousePos.x)+'" name="zones[0][locations]['+length+'][x]">'
-				input+= 	'<input type="hidden" value="'+Math.floor(mousePos.y)+'" name="zones[0][locations]['+length+'][y]"/> </section>';
-				
-				$this.parent().append(input)
-				
-			})	
-		
+					
+			var locs;
 			
-		
+			InitMapCanvas(type, locs, mapCallback); //see mapCallback defined below
 		}
-		
-		
 	})
+	
+	
 	//toggle of text options
 	$(document).delegate('select.zone-text-type','change', function(e){
 			
@@ -365,9 +356,10 @@ function SceneController(_clips,_files){
 				
 				if(zone.locations){
 					//console.log("Locations: "+zone.locations.length)
-					val = (zone.locations.length>1)? 'multiple' : 'single'
-					$('.zone-single-'+index).find('select.zone-map-type').val(val)
-					var output = val.charAt(0).toUpperCase()+val.slice(1)
+					var type = (zone.locations.length>1)? 'multiple' : 'single'
+					//val = (zone.locations.length>1)? 'multiple' : 'single'
+					$('.zone-single-'+index).find('select.zone-map-type').val(type)
+					var output = type.charAt(0).toUpperCase()+type.slice(1)
 					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+output)
 					Holder.run({
 						images: $('.zone-single-'+index).find('img')[0]
@@ -381,28 +373,43 @@ function SceneController(_clips,_files){
 					}
 					
 					for(var i = 0; i<zone.locations.length;i++){
-						var input  = '<section style="display:none;" class="location" >'
+						var input  = '<section style="display:none;" class="location '+zone.locations[i].x+' '+zone.locations[i].y+'" >'
 							input += '<input type="hidden" value="'+zone.locations[i].x+'" name="zones[0][locations]['+i+'][x]">'
 							input += '<input type="hidden" value="'+zone.locations[i].y+'" name="zones[0][locations]['+i+'][y]"/> </section>';
 							
 							$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
 					}
-				
-					InitMapCanvas(val,function(mousePos){
-						//alert(mousePos.x+","+mousePos.y)
-						var length = $('section.location').length
-						var input  = '<section style="display:none;" class="location" >'
-							input += '<input type="hidden" value="'+Math.floor(mousePos.x)+'" name="zones[0][locations]['+length+'][x]">'
-							input += '<input type="hidden" value="'+Math.floor(mousePos.y)+'" name="zones[0][locations]['+length+'][y]"/> </section>';
-						
-						$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
-						
-					})	
+					
+					var locs = zone.locations;
+					
+					InitMapCanvas(type, locs, mapCallback); //see mapCallback defined below
 				}
 			})
 		}
 	}
 	
+	
+	function mapCallback(locPos, eventType){
+								//alert(mousePos.x+","+mousePos.y)
+		var length = $('section.location').length
+		
+		switch(eventType){
+			case 0:
+				//**** hardcoding the index to '0', assuming that sculpture will always be at index 0 ****//
+/* 				console.log($('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y)); */
+				$('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y).remove();						
+			break;
+			
+			case 1:
+				//alert("adding: "+locPos.x+","+locPos.y+"  length: "+length);
+				var input  = '<section style="display:none;" class="location '+locPos.x+' '+locPos.y+'" >'
+				input += '<input type="hidden" value="'+locPos.x+'" name="zones[0][locations]['+length+'][x]">'
+				input += '<input type="hidden" value="'+locPos.y+'" name="zones[0][locations]['+length+'][y]"/> </section>';
+ 				//$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
+				$('.zone-single-0').find('select.zone-map-type').parent().append(input)
+			break;
+		}
+	}
 	/*
 	**
 	** orderAssets()
