@@ -78,7 +78,7 @@ exports.update = function(_Database){
 		var post = req.body
 		var slug = req.params.slug
 		//console.log(post)
-		_Database.update('scenes',{slug: slug},{$set:{title:post.title}},function(e){
+		_Database.update('scenes',{slug: slug},{$set:{title:post.title,slug:utils.makeSlug(post.title)}},function(e){
 			if(!e){ 
 				_Database.getDocumentBySlug('scenes',slug,function(_e,_scene){
 					if(!_e) res.redirect('/events/?type='+_scene.type)
