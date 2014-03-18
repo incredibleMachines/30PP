@@ -20,13 +20,14 @@ exports.MongoConnect = function(){
 		database = mongo.db('30_PP');
 		//setup collection connections
 
-		collection.assets    = database.collection('assets');
+		//collection.assets    = database.collection('assets');
 		//collection.events    = database.collection('events');
 		collection.clips	 = database.collection('clips');
 		collection.users     = database.collection('users');
 		collection.scenes    = database.collection('scenes');
 		collection.files 	 = database.collection('files');
 		collection.locations = database.collection('locations');
+		collection.renderqueue = database.collection('renderqueue')
 		
 	})
 }
