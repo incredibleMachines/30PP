@@ -33,229 +33,165 @@ exports.render = function(_Database, _AfterEffects){
 	return function(req,res){
 		res.jsonp({status:'Check Console for data, currently being implimented'})
 		
-		//create the order for our render objects and figure out what we need to do. 
-		//will likely need to spawn off child objects and resave data.
-		//file handling and naming protocol 
-		//object structure and order
-		
-		_Database.queryCollection('clips',{render:true},function(e,queue){
-			
-			if(e) console.error(" Error: Query Collection Error | Clips ".inverse.red)
-			else{
-				_Database.getAll('scenes',function(_e,scenes){
-					if(_e) console.error(" Error: Query Collection Error | Scenes ".inverse.red);
-					else{
-						//console.log(" Render Queue ".inverse.green)
-						//console.log(queue)
-						//console.log(" Scenes ".inverse.green)
-						//console.log(scenes)
-						
-						//now that we have our event lets sort what needs to be rendered out
-						sortRenderEvents(queue, scenes, function(results){
-							//results to be rendered this contains an array of our scenes with clip objects which need to be rendered
-							//if(bDEBUG) console.log("RESULTS")
-							//if(bDEBUG) console.log(results);
-							
-							//if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.cyan);
-							results.forEach(function(result, i){
-								if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.yellow);
-								console.log(result);
-								result.clips.forEach(function(clip,j){
-									if(bDEBUG) console.log("++++++++++++++++++++++++".inverse.red);
-									console.log(clip)
-									
-									//figure out what the fuck needs to happen with this clip
-									var obj = {};
-									/*
-									switch(parseInt(clip.layout)){
-										
-										case 0:
-											//full immersion
-											//MUST GET LAYER NAME FROM AE FILE TO ADD
-											//TEMP TEMP TEMP TEMP
-											obj.template 	= "FullImmersion.aep"
-											obj.type 	 	= result.type
-											obj.script   	= "FullImmersion.jsx"
-											obj.output 	 	= result.slug+"_"+clip.slug+".mov"
-											obj.data	 	= {};
-											obj.data.Source_Image 	= clip.zones[0].file	
-											obj.order 		= null
-											obj.clips 		= [_Database.makeMongoID(clip._id)]
-											obj.scene_id    = _Database.makeMongoID(result._id)
-											_Database.add('renderqueue',obj,function(e){})	
-											
-										break;
-										case 1:
-											//single wall
-											var text_type;
-											
-											obj.data = {}
-
-											
-											if(clip.zones[1].text){
-												
-												if(typeof clip.zones[1].text === 'object'){
-													//multitext
-													text_type = "Multiple"
-													
-													for(var k =0; k<clip.zones[1].text.length;k++){
-														var key = "Source_Text_"+k
-														obj.data[key] = clip.zones[1].text[k]
-													}
-													
-												}else{
-													//single text
-													text_type = "Single"
-													obj.data.Source_Text = clip.zones[1].text
-													obj.data.Source_Image_Wall = clip.zones[1].file
-												}
-												
-											}else{
-												//if no text, we will use the same template as single
-												//we will write an empty string into the appropriate text field
-												text_type = "Single"
-												obj.data.Source_Text = ""
-												obj.data.Source_Image_Wall = clip.zones[1].file
-												
-											}
-											var location_type;
-											if(clip.zones[0].locations){
-												
-												if(clip.zones[0].locations.length> 1){
-													location_type= "Multiple"
-													for(var k =0; k<clip.zones[0].locations.length;k++){
-														var key = "Source_Location_"+k
-														obj.data[key] = clip.zones[0].locations[k]
-													}
-												}else{
-													location_type= "Single"
-													obj.data.Source_Location = clip.zones[0].locations[0]
-												}
-												
-											}else{
-												location_type = "None"
-												obj.data.Source_Location = null
-												obj.data.Source_Image_Sculpture = clip.zones[0].file
-											}
-											
-											obj.template = "SingleWall_"+text_type+"_"+location_type+".aep"
-											obj.type = result.type
-											obj.script = "SingleWall_"+text_type+"_"+location_type+".jsx"
-											obj.output = result.slug+"_"+clip.slug+".mov"
-											obj.order = null
-											obj.clips = [_Database.makeMongoID(clip._id)]
-											obj.scene_id    = _Database.makeMongoID(result._id)
-											
-											_Database.add('renderqueue',obj,function(e){})
-											
-										break;
-										case 2:
-											//double wall
-											obj.data = {}
-											var location_type;
-											if(clip.zones[0].locations){
-												
-												if(clip.zones[0].locations.length> 1){
-													location_type= "Multiple"
-													for(var k =0; k<clip.zones[0].locations.length;k++){
-														var key = "Source_Location_"+k
-														obj.data[key] = clip.zones[0].locations[k]
-													}
-												}else{
-													location_type= "Single"
-													obj.data.Source_Location = clip.zones[0].locations[0]
-												}
-												
-											}else{
-												location_type = "None"
-												obj.data.Source_Location = null
-												obj.data.Source_Image_Sculpture = clip.zones[0].file
-											}
-											//only iterate between our wall zones 
-											//index 1 and 2 
-											var text_type_arr=[];
-											for(var z = 1; z < clip.zones.length; z++){
-												
-												var text_key = "Source_Text_"+z
-												var img_key = "Source_Image_Wall_"+z
-
-												if(clip.zones[z].text){
-													
-													if(typeof clip.zones[z].text === "object"){
-														//multi text option
-														text_type_arr.push("Multiple")
-														
-														for(var k = 0; k<clip.zones[z].text.length; k++){
-															var key = text_key+"_"+k
-															obj.data[key] = clip.zones[z].text[k]
-														}
-														
-													}else{
-														//single text 
-														text_type_arr.push("Single")
-														obj.data[text_key]= clip.zones[z].text
-														obj.data[img_key] = clip.zones[z].file
-														
-													}
-													
-												}else{
-													text_type_arr.push("Single")
-													obj.data[text_key] = ""
-													obj.data[img_key] = clip.zones[z].file
-												}
-												
-											}
-											
-											var text_type = (_.contains(text_type_arr,"Multiple"))? 'Multiple' : 'Single'
-											
-											obj.template = "DoubleWall_"+text_type+"_"+location_type+".aep"
-											obj.type = result.type
-											obj.scene_id = _Database.makeMongoID(result._id)
-											obj.script =  "DoubleWall_"+text_type+"_"+location_type+".jsx"
-											obj.output = result.slug+"_"+clip.slug+".mov"
-											obj.clips = [_Database.makeMongoID(clip._id)]
-											
-											_Database.add('renderqueue',obj,function(e){})
-											
-										break;
-										
-									}
-									*/
-									
-									
-								})
-
-							})
-							//bind all the scenes and events we need, check each scene to find a match of render content							
-							//sort out of all the scenes that are actually rendered together, and all the scenes that are rendered seperately
-							//create json packets for each template that needs to be rendered - 
-							//create/reference a skeleton structure of the event we are rendering based off scene [] in event object
-							//create skeleton of events/scenes which reflects merged scenes, to be rendered scenes and prerendered scenes 
-							//organize these items by the movies we have made
-							//place everything in the correct order make temp file and concatinate file
-							//render each scene, update db accordingly 
-							
-							
-						})
-						
-					}
-					
-				})
+		parseRenderQueue(_Database, function(result){
+			//console.log("parseRenderQueue")
+			//console.log(result)
+			formatJSONForAE(result,function(formattedOutput){
 				
+				
+			})
+			//organize data for each template
+			//create the JSON and render out the 
+			//console.log(JSON.stringify(result))
+		})
+	}
+}
+//Function to parse all items that need rendering
+//This function relies on the sortRenderQueue Function to do the dirty work
+function parseRenderQueue(_Database, cb){
+	//get all scenes, clips and files
+	//find all the clips that need to be rendered
+	//determine the scenes that need to be rendered
+	
+	_Database.getAll('scenes',function(e,scenes){
+		_Database.getAll('clips',function(_e,clips){
+			_Database.getAll('files',function(__e,files){
+				scenes = JSON.stringify(scenes)
+				scenes = JSON.parse(scenes)
+				clips = JSON.stringify(clips)
+				clips = JSON.parse(clips)
+				files = JSON.stringify(files)
+				files = JSON.parse(files)
+				sortRenderQueue(scenes,clips,files,function(result){
+					cb(result)
+				})			
+				
+			})
+		})
+	})
+
+}
+
+//A Function which takes DB Collections and organizes the appropriate scenes,clips and files
+
+function sortRenderQueue(scenes,clips,files,cb){
+	//make our queue find which clips need to be rendered
+	
+	
+	async.waterfall([ function(callback){
+		//console.log('here')
+		//first create an object of our render queue by finding clips that are up for 
+		//rendering and then locating the scenes which contain those clips
+		var clip_queue = _.where(clips,{render:true})
+		var scene_queue = [];
+		var clip_queue_counter = 0;
+		clip_queue.forEach(function(item,i){
+		
+			var checkScene = _.findWhere(scene_queue,{_id: item.scene_id});
+			if(typeof checkScene === 'undefined'){
+				var scene = _.findWhere(scenes,{_id:item.scene_id})
+				scene_queue.push(scene)
 			}
 			
+			clip_queue_counter++
+			if(clip_queue_counter === clip_queue.length){
+			//console.log(scene_queue)
+			//if we have gone through all the items in our clip_queue lets bind our scene_queue with the correct clips
+			//pass the scene_queue off to our next 
+			callback(null,scene_queue)
+			}
 		})
 		
+	},function(scene_queue,callback){
+		//console.log(scene_queue)
+		//go through our scene queue and populate our clips and files
+		var scene_counter = 0;
+		scene_queue.forEach(function(scene,i){
+			
+			var clip_counter = 0;
+			scene.clips.forEach(function(clip,j){
+				//console.log(clip)
+				scene_queue[i].clips[j] = _.findWhere(clips,{_id:clip})
+				//check each zone to see if there is a file object, if there is populate it
+				//console.log(scene_queue[i].clips[j])
+				var zone_counter = 0;
+				
+				scene_queue[i].clips[j].zones.forEach(function(zone,k){
+					//check each zone and bind the file information if that zone has a file contained
+					zone_counter++;
+					if(zone.file!==null){
+						//console.log("HAS FILE".inverse.red)
+						zone.file = _.findWhere(files,{_id:zone.file})
+					}
+					//if we are at the end of the zones for the clip
+					if(zone_counter == scene_queue[i].clips[j].zones.length){
+						
+						clip_counter++
+						//if we've gone through all the clips in a scene
+						if(clip_counter === scene.clips.length){
+							
+							scene_counter++
+							//if we've gone through all the scenes
+							if(scene_counter === scene_queue.length){
+								callback(null,scene_queue)
+							}//end (scene_counter === scene_queue.length)
+							
+						}//end if(clip_counter === scene.clips.length)	
+						
+					} //end if(zone_counter == scene_queue[i].clips[j].zones.length)
+					
+				})//end scene_queue[i].clips[j].zones.forEach(function(zone,k){})
+				
+							
+			})//end scene.clips.forEach(function(clip,j){})
+			
+		}) //end scene_queue.forEach(function(scene,i){})
 		
-	}
+	}],function(err,result){
+		
+		//console.log(JSON.stringify(result))
+		cb(result)
+	});
+		
+}
+
+//function which takes formatted Scenes and outputs a JSON Array of 
+//formattedScenes is a binding of the MongoDB Scene,Clip and File documents
+//cb
+function formatJSONForAE(formattedScenes,cb){
+	
+	/* Sample JSON for AE Object */
+	/* Referenced From: https://docs.google.com/a/incrediblemachines.net/document/d/12J7cS7iemVJnBjicObgC-fdH1XKCbKJfY2_XMl1dwiA/edit
+		Create one Render Object Per Scene
+		{
+			template: default_parks.aep,
+			script: default_parks.jsx,
+			output: default_parks.mov,
+			data: {
+					source_seq_image_L_1:
+					source_seq_image_R_1:
+					source_seq_text_L_1:
+					source_seq_text_R_1:
+					source_multitext_text_1:
+					source_multitext_text_2:
+					source_location_1:
+					source_location_2:
+			},
+			scene: mongoID
+			clips:[mongoID]
+		}
+	*/
 	
 }
 
+
+/*
 function parseRenderQueue(result,cb){
 	console.log(JSON.stringify(result))
 	cb()
 }
-
+*/
+/*
 function sortRenderEvents(queue, scenes, cb){
 	
 	//use underscore to sort through the events and see which ones are in need of render
@@ -296,7 +232,7 @@ function sortRenderEvents(queue, scenes, cb){
 	})
 	
 	
-/*
+
 	queue.forEach(function(item,i){
 		if(bDEBUG) console.log(item.scene_id.toString().green.inverse);
 		
@@ -319,7 +255,7 @@ function sortRenderEvents(queue, scenes, cb){
 		})
 		
 	})
-*/
+
 	
 	
-}
+}*/
