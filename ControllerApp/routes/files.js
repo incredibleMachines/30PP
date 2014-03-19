@@ -4,19 +4,14 @@ var upload = require('../modules/Upload');
 exports.index = function(_Database){
 	return function(req,res){
 		_Database.getAll('files',function(e,_files){
-			if(!e){
-				_Database.getAll('locations',function(_e,_locations){
-					if(!_e){ 
-							_Database.getAll('assets',function(__e,_assets){
-								if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index', files: _files, assets:_assets,locations:_locations,error:null });
-								else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug: 'files-index error', file:_files,assets:null,locations:_locations,error:null })
-							})
-					}else{ 
-						res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: _files,assets: null, locations:null,error:'Return Locations Error' }); 
-					}
-				})	
+			if(!e){ 
+				_Database.getAll('clips',function(__e,_clips){
+					if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index', files: _files, clips:_clips,error:null });
+					else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug: 'files-index error', file:_files,clips:null,error:null })
+				})
+					
 			}else{ 
-				res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: null,locations:null,error:'Return Files Error' })
+				res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: null,clips:null,error:'Return Files Error' })
 			}
 		})
 	}

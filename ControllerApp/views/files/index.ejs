@@ -3,8 +3,8 @@
 
 <% 
 	/* for sorting mongo db items as elements */
-	assets = JSON.stringify(assets)
-	assets = JSON.parse(assets)
+	clips = JSON.stringify(clips)
+	clips = JSON.parse(clips)
 	
 	files = JSON.stringify(files)
 	files = JSON.parse(files)
@@ -61,18 +61,6 @@
 								<input style="display:none;"class="form-control" type="file" name="content" >
 
 							</li>
-							<li class="col-md-2 file-location"> <!-- LOCATION -->
-								<%  /* Seems as though this whole section is no longer needed */%>
-								<select name="location" class="form-control show-tick">
-									<% locations.forEach(function(_loc,j){ %>
-									<% /* begin for loop */ %>
-										<option value="<%= _loc._id %>"> <%=_loc.address /* need dropdown menu stuff */ %></option>
-									<% /* end for loop */ %>
-									<% }) %>
-								</select>
-								<p>Dont see the location here?</p>
-								<button type="button" class="btn btn-default btn-sm blue">Enter an Address</button>
-							</li>
 							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
@@ -81,11 +69,11 @@
 											//the scene which the asset lives within
 											//it will be important to surface this data as the current form makes little sense.
 											
-											var associatedAssets = _.where(assets,{file:_file._id})
+											var associatedAssets = _.where(clips,{file:_file._id})
 											
-											associatedAssets.forEach(function(asset,j){
+											associatedAssets.forEach(function(clip,j){
 										%>
-											<li><a><%=asset.title%></a></li>	
+											<li><a><%=clip.title%></a></li>	
 										<%	})
 										%>
 										
