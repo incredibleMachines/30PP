@@ -14,25 +14,17 @@ void testApp::setup() {
 	doDisplayLink	= true;
     
 	ofEnableDepthTest();
-	ofSetVerticalSync(doVSync);
     ofEnableNormalizedTexCoords();
-    ofDisableArbTex();
-    
-//    ofSetVerticalSync(true);
     
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     
-//	MSA::ofxCocoa::setSyncToDisplayLink(doDisplayLink);
 	ofSetFrameRate(120);			// run as fast as you can
     
     meshTexture.push_back(new ofTexture());
-    meshTexture[0]->allocate(1600, 2405, GL_RGB);
+    meshTexture[0]->allocate(TEX_WIDTH, TEX_HEIGHT, GL_RGB);
+    
 	cout<<"texID: "<<meshTexture[0]->texData.textureID<<endl;
-  MSA::ofxCocoa::initPlayer("long1600.mov", meshTexture[0]->texData.textureID);
-//  MSA::ofxCocoa::setTransparent(false);
-//  MSA::ofxCocoa::setWindowLevel(NSScreenSaverWindowLevel);
-	
-//	lineWidth = 10;
+    MSA::ofxCocoa::initPlayer("output_1.mov", meshTexture[0]->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -40,8 +32,8 @@ void testApp::setup() {
     //Load mesh vector to select which meshes within obj to use
     vector<int> _meshesLoad;
     _meshesLoad.push_back(0);
-    _meshesLoad.push_back(1);
-    _meshesLoad.push_back(2);
+//    _meshesLoad.push_back(1);
+//    _meshesLoad.push_back(2);
     
     numMesh=_meshesLoad.size();
     
@@ -60,14 +52,13 @@ void testApp::setup() {
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("mesh/mesh.obj");
+    map.setMassMesh("Shape Test_01.obj");
     
     //testing - set manual trigger to false
     bContentLoaded=false;
     bLoaded=true;
     play=0;
     load=0;
-    frameCount=0;
     bMipMap=true;
 }
 
@@ -107,11 +98,27 @@ void testApp::update(){
 //        }
 //    }
     
+//    meshTexture[0]->texData.textureID=MSA::ofxCocoa::getTextureID();
+    meshTexture[0]->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
+    
+	ofTextureData& data = meshTexture[0]->getTextureData();
+	data.textureTarget = GL_TEXTURE_RECTANGLE;
+	data.width = TEX_WIDTH;
+	data.height = TEX_HEIGHT;
+	data.tex_w = TEX_WIDTH;
+	data.tex_h = TEX_HEIGHT;
+	data.tex_t = TEX_WIDTH;
+	data.tex_u = TEX_HEIGHT;
+    
+    cout<<"Tex: "<< meshTexture[0]->texData.textureID<<endl;
+    
+
     if(bMipMap==true){
         map.update(meshTexture);
     }
     
     //    }
+    
     
     
 }
@@ -137,13 +144,16 @@ void testApp::draw(){
     }
     
     
-    if(setup==true){
+//    if(setup==true){
         map.draw();
-    }
+//    }
+    
+//    meshTexture[0]->draw(0,0);
     
 //    mesh[0].video.draw(0,0,mesh[0].video.getWidth(), mesh[0].video.getHeight());
     
     ofSetColor(255);
+    ofCircle(10,10,10);
     
 //
 	ofDrawBitmapString(ofToString(ofGetFrameRate(), 2) + " | doDisplayLink: " + ofToString(doDisplayLink) + " | doVSync: " + ofToString(doVSync) , 20, 20);

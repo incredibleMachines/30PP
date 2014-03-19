@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import <AVFoundation/AVFoundation.h>
-#import <OpenGL/OpenGL.h>
+//#import <OpenGL/OpenGL.h>
 
 #define BUFFER_SIZE 3
 

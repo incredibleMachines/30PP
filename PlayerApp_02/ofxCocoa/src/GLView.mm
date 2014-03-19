@@ -36,11 +36,6 @@
 
 
 #import "GLView.h"
-#import <OpenGL/gl.h>
-#import <OpenGL/OpenGL.h>
-#import <OpenGL/glext.h>
-#import <OpenGL/glu.h>
-
 #import "ofxCocoa.h"
 
 using namespace MSA;
@@ -71,174 +66,256 @@ using namespace ofxCocoa;
 //------ DISPLAY LINK STUFF ------
 -(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime {
     
-    NSLog(@"NewFrame");
+        CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForCVTimeStamp:*outputTime];
     
-    CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForCVTimeStamp:*outputTime];
-    
-    if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime])
-	{
-		self->_lastHostTime = outputTime->hostTime;
-		
-		// Copy the pixel buffer to be displayed next and add it to AVSampleBufferDisplayLayer for display
-		CVPixelBufferRef pixBuff = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
-		
+    if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime]){
         
+//		self->_lastHostTime = outputTime->hostTime;
+//      Copy the pixel buffer to be displayed next and add it to AVSampleBufferDisplayLayer for display
+//        CGLLockContext(CGLGetCurrentContext());
+        glEnable(GL_MULTISAMPLE);
+		
+        CVPixelBufferRef pixBuff = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
+        
+//        _latestBuffer=pixBuff;
+//        CFDictionarySetValue(dict, kCVOpenGLBufferTarget, [NSNumber numberWithInt:GL_TEXTURE_2D]);
+//        CFDictionarySetValue(dict, kCVOpenGLBufferInternalFormat, [NSNumber numberWithInt:GL_RGB]);
+//        CFDictionarySetValue(dict, kCVOpenGLBufferMaximumMipmapLevel, [NSNumber numberWithInt:6]);
+//        CFDictionarySetValue(dict, kCVOpenGLBufferWidth, [NSNumber numberWithInt:[self width]]);
+//        CFDictionarySetValue(dict, kCVOpenGLBufferHeight, [NSNumber numberWithInt:[self height]]);
+        
+        CVBufferSetAttachment(pixBuff, kCVOpenGLBufferTarget, [NSNumber numberWithInt:GL_TEXTURE_2D],kCVAttachmentMode_ShouldPropagate);
+        
+        CVOpenGLBufferRef _latestBuffer;
+        
+        CVOpenGLBufferPoolCreateOpenGLBuffer(NULL, _buffer, &_latestBuffer);
+
+        CVOpenGLBufferAttach(pixBuff, CGLGetCurrentContext(), 0, 0, 0);
+        
+//        NSLog(@"Mipmap Level is %@",  (CFNumberRef) CFDictionaryGetValue(CVOpenGLBufferGetAttributes(_latestBuffer), kCVOpenGLBufferMaximumMipmapLevel));
         
         /***** 30PP *****/
-        NSLog(@"Pix Buff width: %lu",CVPixelBufferGetWidth(pixBuff));
+//        NSLog(@"Pix Buff width: %lu",CVPixelBufferGetWidth(pixBuff));
         
-        
-        if(CVPixelBufferGetWidth(pixBuff)!=0&&self->_bPixelsAllocated==NO){
-            self->_bPixelsAllocated=YES;
-            
-            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
-                NSLog(@"LAUNCH CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld.",
-                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
-                return;
-            }
-            
-            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
-                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
-                return;
-            }
-            
-            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
-            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
-            //video.width * video.height * 4
-            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
-            //so we need to swap the alpha around using a vImage permutation
-            vImage_Buffer src = {
-                CVPixelBufferGetBaseAddress(pixBuff),
-                CVPixelBufferGetHeight(pixBuff),
-                CVPixelBufferGetWidth(pixBuff),
-                CVPixelBufferGetBytesPerRow(pixBuff)
-            };
-            vImage_Error err;
-            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
-            //so we use vImage to copy them into the out buffer
-            
-            unsigned char * outbuf[self.width*self.height*3];
-            
-            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
-            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
-            
-            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
-            
-            //            mesh[_i].glFormat=ofGetGlInternalFormat(mesh[_i].video.getPixelsRef());
-            //            mesh[_i].glType=ofGetGlType(mesh[_i].video.getPixelsRef());
-            //
-            self->_glFormat=GL_RGB;
-            self->_glType=GL_UNSIGNED_BYTE;
-            
-            
-            //allocate texture
-            
-            //    meshTexture[_i]=mesh[_i].video.getTexture();
-            
-            //set our pixel source to determine mip map texel size
-            
-            //create texture
-            GLuint glID=self->_texID;
-            glGenTextures(1, &glID);
-            
-            //bind texture
-            glBindTexture(GL_TEXTURE_2D, self->_texID);
-            
-            //setup mipmaps
-            glTexImage2D(GL_TEXTURE_2D, 0, self->_glType, self.width, self.height, 0, self->_glFormat, self->_glType, outbuf);
-            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-            
-            //set environment, not using currenty but just incase we change our env elsewhere
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            
-            //enable GL_TEXTURE_2D
-            glEnable(GL_TEXTURE_2D);
-            
-            //create mipmaps
-            glGenerateMipmap(GL_TEXTURE_2D);
-            
-            //set params, GL_LINEAR_MIPMAP_LINER is trilinear which means greatest quality
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            
-            //anisotropy unblurs our mip maps, basically sets "how much" we want antialias with higher param being less blur
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
-            glDisable(GL_TEXTURE_2D);
-            
-            /***** 30PP *****/
-            
-            
+        if (_latestTextureFrame != NULL) {
+            CVOpenGLTextureRelease(_latestTextureFrame);
+            _latestTextureFrame = NULL;
+            CVOpenGLTextureCacheFlush(_textureCache, 0);
         }
         
-        else if(CVPixelBufferGetWidth(pixBuff)!=0){
-            
-            
-            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
-                NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
-                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
-                return;
-            }
-            
-            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
-                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
-                return;
-            }
-            
-            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
-            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
-            //video.width * video.height * 4
-            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
-            //so we need to swap the alpha around using a vImage permutation
-            vImage_Buffer src = {
-                CVPixelBufferGetBaseAddress(pixBuff),
-                CVPixelBufferGetHeight(pixBuff),
-                CVPixelBufferGetWidth(pixBuff),
-                CVPixelBufferGetBytesPerRow(pixBuff)
-            };
-            vImage_Error err;
-            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
-            //so we use vImage to copy them into the out buffer
-            
-            unsigned char * outbuf;
-            
-            vImage_Buffer dest = { outbuf, self.height, self.width, self.width * 3 };
-            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
-            
-            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
-            
-            //bind texture
-            glBindTexture(GL_TEXTURE_2D, self->_texID);
-            
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, self.width, self.height, self->_glFormat, self->_glType, outbuf);
-            
-            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-            
-            //environment, in case we change elsewhere
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            
-            //enable GL_TEXTURE_2D
-            glEnable(GL_TEXTURE_2D);
-            
-            //make mipmaps - REQUIRES GL to be post-3.0
-            glGenerateMipmap(GL_TEXTURE_2D);
-            
-            //set quality - GL_LINEAR_MIPMAP_LINEAR is highest, trilinear
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            
-            //set amount of anisotropic filtering - this undoes the blur of the mipmapping relative to camera
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
-            glDisable(GL_TEXTURE_2D);
-            
-            
-            if (err != kvImageNoError) {
-                NSLog(@"Error in Pixel Copy vImage_error %ld", err);
-            }
-            
-            /***** 30PP *****/
+//        if (_latestBuffer != NULL) {
+//            CVOpenGLBufferRelease(_latestBuffer);
+//            _latestBuffer = NULL;
+//        }
+        
+        CVReturn err = CVOpenGLTextureCacheCreateTextureFromImage(NULL, _textureCache, pixBuff, NULL, &_latestTextureFrame);
+        
+        if (err != noErr) {
+            NSLog(@"Error creating OpenGL texture %d", err);
         }
+        
+        NSLog(@"Tex ID %i", CVOpenGLTextureGetName(_latestTextureFrame));
+        NSLog(@"Tex Target %i", CVOpenGLTextureGetTarget(_latestTextureFrame));
+        NSLog(@"GLBufferTarget %@", (NSNumber *)CVBufferGetAttachment(pixBuff, kCVOpenGLBufferTarget, NULL));
+        
+        CVPixelBufferRelease(pixBuff);
+        CVOpenGLBufferRelease(_latestBuffer);
+        
+//        CGLUnlockContext(CGLGetCurrentContext());
+        
+        
+//        
+//        glBindTexture(GL_TEXTURE_2D,  CVOpenGLTextureGetName(_latestTextureFrame));
+//        
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, self.width, self.height, 0, GL_RGB, GL_UNSIGNED_BYTE, _latestBuffer);
+//        
+//        glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+//        
+//        
+//        //set environment, not using currenty but just incase we change our env elsewhere
+//        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//        
+//        glEnable(GL_TEXTURE_2D);
+//        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+//
+//        //set params, GL_LINEAR_MIPMAP_LINER is trilinear which means greatest quality
+//        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//
+//        //anisotropy unblurs our mip maps, basically sets "how much" we want antialias with higher param being less blur
+//        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8);
+//        
+//        glDisable(GL_TEXTURE_2D);
+    
+        
+//        GLuint glID=self->_texID;
+//        
+//        if(self->_bPixelsAllocated==NO){
+//            self->_bPixelsAllocated=YES;
+//            glGenTextures(1, &glID);
+//        }
+        
+//            bind texture
+        
+
+        
+        
+
+        
+//        if(CVPixelBufferGetWidth(pixBuff)!=0&&self->_bPixelsAllocated==NO){
+//            self->_bPixelsAllocated=YES;
+//            
+//            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
+//                NSLog(@"LAUNCH CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld.",
+//                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
+//                return;
+//            }
+//            
+//            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
+//                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
+//                return;
+//            }
+//            
+//            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+//            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+//            //video.width * video.height * 4
+//            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+//            //so we need to swap the alpha around using a vImage permutation
+//            vImage_Buffer src = {
+//                CVPixelBufferGetBaseAddress(pixBuff),
+//                CVPixelBufferGetHeight(pixBuff),
+//                CVPixelBufferGetWidth(pixBuff),
+//                CVPixelBufferGetBytesPerRow(pixBuff)
+//            };
+//            vImage_Error err;
+//            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+//            //so we use vImage to copy them into the out buffer
+//            
+//            int size=[self width] * [self height] *3;
+//            NSLog(@"char array size: %i", size);
+//            
+//            _pix = (unsigned char*) calloc(size, sizeof(unsigned char));
+//            
+//            vImage_Buffer dest = { _pix, self.height, self.width, self.width * 3 };
+//            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+//            
+//            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+//            
+//            //            mesh[_i].glFormat=ofGetGlInternalFormat(mesh[_i].video.getPixelsRef());
+//            //            mesh[_i].glType=ofGetGlType(mesh[_i].video.getPixelsRef());
+//            //
+//            self->_glFormat=GL_RGB;
+//            self->_glType=GL_UNSIGNED_BYTE;
+//            
+//            
+//            //allocate texture
+//            
+//
+//            
+//            //set our pixel source to determine mip map texel size
+//            
+//            //create texture
+//            GLuint glID=self->_texID;
+//            glGenTextures(1, &glID);
+//            
+//            //bind texture
+//            glBindTexture(GL_TEXTURE_2D, self->_texID);
+//            
+//            //setup mipmaps
+//            glTexImage2D(GL_TEXTURE_2D, 0, self->_glType, self.width, self.height, 0, self->_glFormat, self->_glType, _pix);
+////            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+////            
+////            //set environment, not using currenty but just incase we change our env elsewhere
+////            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+////            
+////            //enable GL_TEXTURE_2D
+////            glEnable(GL_TEXTURE_2D);
+////            
+////            //create mipmaps
+////            glGenerateMipmap(GL_TEXTURE_2D);
+////            
+////            //set params, GL_LINEAR_MIPMAP_LINER is trilinear which means greatest quality
+////            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+////            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+////            
+////            //anisotropy unblurs our mip maps, basically sets "how much" we want antialias with higher param being less blur
+////            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+////            glDisable(GL_TEXTURE_2D);
+//            
+//            /***** 30PP *****/
+//            
+//            
+//            
+//            
+//        }
+//        
+//        else if(CVPixelBufferGetWidth(pixBuff)!=0){
+//            
+//            
+//            if ((NSInteger)self.width != CVPixelBufferGetWidth(pixBuff) || (NSInteger)self.height != CVPixelBufferGetHeight(pixBuff)) {
+//                NSLog(@"CoreVideo pixel buffer is %ld x %ld while self reports size of %ld x %ld. This is most likely caused by a non-square pixel video format such as HDV. Open this video in texture only mode to view it at the appropriate size",
+//                      CVPixelBufferGetWidth(pixBuff), CVPixelBufferGetHeight(pixBuff), (long)self.width, (long)self.height);
+//                return;
+//            }
+//            
+//            if (CVPixelBufferGetPixelFormatType(pixBuff) != kCVPixelFormatType_32ARGB) {
+//                NSLog(@"QTKitMovieRenderer - Frame pixelformat not kCVPixelFormatType_32ARGB: %d, instead %ld", kCVPixelFormatType_32ARGB, (long)CVPixelBufferGetPixelFormatType(pixBuff));
+//                return;
+//            }
+//            
+//            CVPixelBufferLockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+//            //If we are using alpha, the ofxAVFVideoPlayer class will have allocated a buffer of size
+//            //video.width * video.height * 4
+//            //CoreVideo creates alpha video in the format ARGB, and openFrameworks expects RGBA,
+//            //so we need to swap the alpha around using a vImage permutation
+//            vImage_Buffer src = {
+//                CVPixelBufferGetBaseAddress(pixBuff),
+//                CVPixelBufferGetHeight(pixBuff),
+//                CVPixelBufferGetWidth(pixBuff),
+//                CVPixelBufferGetBytesPerRow(pixBuff)
+//            };
+//            vImage_Error err;
+//            //If we are are doing RGB then ofxAVFVideoPlayer will have created a buffer of size video.width * video.height * 3
+//            //so we use vImage to copy them into the out buffer
+//            
+//            vImage_Buffer dest = { _pix, self.height, self.width, self.width * 3 };
+//            err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
+//            
+//            CVPixelBufferUnlockBaseAddress(pixBuff, kCVPixelBufferLock_ReadOnly);
+//            
+//            //bind texture
+//            glBindTexture(GL_TEXTURE_2D, self->_texID);
+//            
+//            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, self.width, self.height, self->_glFormat, self->_glType, _pix);
+//            
+////            glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+////            
+////            //environment, in case we change elsewhere
+////            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+////            
+////            //enable GL_TEXTURE_2D
+////            glEnable(GL_TEXTURE_2D);
+////            
+////            //make mipmaps - REQUIRES GL to be post-3.0
+////            glGenerateMipmap(GL_TEXTURE_2D);
+////            
+////            //set quality - GL_LINEAR_MIPMAP_LINEAR is highest, trilinear
+////            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+////            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+////            
+////            //set amount of anisotropic filtering - this undoes the blur of the mipmapping relative to camera
+////            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+////            glDisable(GL_TEXTURE_2D);
+//            
+//            
+//            if (err != kvImageNoError) {
+//                NSLog(@"Error in Pixel Copy vImage_error %ld", err);
+//            }
+//            
+//            /***** 30PP *****/
+//        }
 		
-		CVBufferRelease(pixBuff);
+
 	}
     
     	[self updateAndDraw];
@@ -270,7 +347,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	CGLContextObj cglContext = (CGLContextObj)[[self openGLContext] CGLContextObj];
 	CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)[[self pixelFormat] CGLPixelFormatObj];
 	CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink, cglContext, cglPixelFormat);
-	
+    
 	// start it
 	CVDisplayLinkStart(displayLink);
 }
@@ -399,74 +476,89 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context {
+    
+
+    
 	NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
 	
 	isAnimating		= false;
 	useDisplayLink	= true;
 	
 	pixelFormat = nil;
+    
 	
-	
-	
+
 	// Fixing the addon to compile against OF_007
-	cout<<"here"<<endl;
+//	cout<<"here"<<endl;
     NSLog(@"%@", appWindow()->context);
-	openGLContext = appWindow()->context;
+//	openGLContext = appWindow()->context;
 	
 	// Initialized at AppWindow::setupOpenGL
-	 
 	if(appWindow()->initSettings().numFSAASamples) {
 		NSOpenGLPixelFormatAttribute attribs[] = {
-			NSOpenGLPFAAccelerated,
-			NSOpenGLPFADoubleBuffer,
-			NSOpenGLPFAMultiScreen,
-			NSOpenGLPFADepthSize, 24,
-			NSOpenGLPFAAlphaSize, 8,
-			NSOpenGLPFAColorSize, 32,
-			NSOpenGLPFAMultisample,
-			NSOpenGLPFASampleBuffers, 1,
-			NSOpenGLPFASamples, appWindow()->initSettings().numFSAASamples,
-			NSOpenGLPFANoRecovery,
-			0};
+            NSOpenGLPFADoubleBuffer,
+
+            NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
+
+            NSOpenGLPFAMultisample,
+            NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+            NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)8,
+
+//            NSOpenGLPFAColorSize, 32,
+//            NSOpenGLPFAAlphaSize, 8,
+//            NSOpenGLPFAAccelerated,
+//            NSOpenGLPFAMultiScreen,
+
+////            NSOpenGLPFASampleBuffers, 8,
+////            NSOpenGLPFASamples, appWindow()->initSettings().numFSAASamples,
+
+//            NSOpenGLPFANoRecovery, 0,
+//            NSOpenGLPFAFullScreen, 1,
+//            NSOpenGLPFAOpenGLProfile,
+//            NSOpenGLProfileVersion3_2Core,
+            (NSOpenGLPixelFormatAttribute)0
+};
 		
 		NSLog(@"   trying Multisampling");
 		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-		if(pixelFormat) {
+//		if(pixelFormat) {
 			NSLog(@"      Multisampling supported");
 			glEnable(GL_MULTISAMPLE);
-		} else {
-			NSLog(@"      Multisampling not supported");
-		}
+//		} else {
+//			NSLog(@"      Multisampling not supported");
+//		}
 	}
+
 	
 	
-	if(pixelFormat == nil) {
-		NSLog(@"   trying non multisampling");
-		NSOpenGLPixelFormatAttribute attribs[] = {
-			NSOpenGLPFAAccelerated,
-			NSOpenGLPFADoubleBuffer,
-			NSOpenGLPFAMultiScreen,
-			NSOpenGLPFADepthSize, 24,
-			NSOpenGLPFAAlphaSize, 8,
-			NSOpenGLPFAColorSize, 32,
-			NSOpenGLPFANoRecovery,
-			0};		
-		
-		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-		glDisable(GL_MULTISAMPLE);
-		if(pixelFormat == nil) {
-			NSLog(@"      not even that. fail");
-		}
-	} 
+//	if(pixelFormat == nil) {
+//		NSLog(@"   trying non multisampling");
+//		NSOpenGLPixelFormatAttribute attribs[] = {
+//			NSOpenGLPFAAccelerated,
+//			NSOpenGLPFADoubleBuffer,
+//			NSOpenGLPFAMultiScreen,
+//			NSOpenGLPFADepthSize, 24,
+//			NSOpenGLPFAAlphaSize, 8,
+//			NSOpenGLPFAColorSize, 32,
+//			NSOpenGLPFANoRecovery,
+//			0};		
+//		
+//		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+//		glDisable(GL_MULTISAMPLE);
+//		if(pixelFormat == nil) {
+//			NSLog(@"      not even that. fail");
+//		}
+//	} 
 	
 	
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
-	
-	
+
+    
 	// End fix 
 	
 	if (self = [super initWithFrame:frameRect]) {
 		[[self openGLContext] makeCurrentContext];
+        
 		
 		// set surface opacity
 		GLint i = appWindow()->initSettings().isOpaque;
@@ -488,7 +580,32 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	} else {
         cout << "ERROR SETTING UP WINDOW" << endl;
     }
+    
+        NSLog(@"%s %s", glGetString(GL_RENDERER), glGetString(GL_VERSION));
 	
+//    CGLPixelFormatObj pixelFormatObj;
+//    CGLContextObj contextObj;
+//	GLint numPixelFormats;
+//	
+//	// Set up an array of attributes
+//	CGLPixelFormatAttribute attribs[] = {
+//        kCGLPFADoubleBuffer,
+//		kCGLPFAColorSize, (CGLPixelFormatAttribute)24,
+//		kCGLPFADepthSize, (CGLPixelFormatAttribute)24,
+//        kCGLPFAMultisample,
+//        kCGLPFASampleBuffers, (CGLPixelFormatAttribute)1,
+//        kCGLPFASamples, (CGLPixelFormatAttribute)16,
+//        (CGLPixelFormatAttribute)0
+//    };
+//	
+//	// Create the full-screen context with the attributes listed above
+//	// By specifying the non-fullscreen context as the shareContext, we automatically inherit the OpenGL objects (textures, etc) it has defined
+//	CGLChoosePixelFormat(attribs, &pixelFormatObj, &numPixelFormats);
+//	CGLCreateContext(pixelFormatObj, CGLGetCurrentContext(), &contextObj);
+////    CGLSetCurrentContext(contextObj);
+//	CGLDestroyPixelFormat(pixelFormatObj);
+////    CGLDestroyContext(contextObj);
+//    
     ofGLReadyCallback();
 	
 	return self;
@@ -519,7 +636,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(void)awakeFromNib {
 	NSLog(@"GLView::awakeFromNib, window:%@",[self window]);
-	[[self window] setAcceptsMouseMovedEvents:YES]; 
+	[[self window] setAcceptsMouseMovedEvents:YES];
+    
 }
 
 
@@ -655,7 +773,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
     // kCVPixelFormatType_32ARGB, kCVPixelFormatType_32BGRA, kCVPixelFormatType_422YpCbCr8
     return @{
-             (NSString *)kCVPixelBufferOpenGLCompatibilityKey : [NSNumber numberWithBool:NO],
+             (NSString *)kCVPixelBufferOpenGLCompatibilityKey : [NSNumber numberWithBool:YES],
              (NSString *)kCVPixelBufferPixelFormatTypeKey     : [NSNumber numberWithInt:kCVPixelFormatType_32ARGB]
 			 //[NSNumber numberWithInt:kCVPixelFormatType_422YpCbCr8]
              };
@@ -725,6 +843,45 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                  object:[self.player currentItem]];
                 
                 [[self.player currentItem] addOutput:self.playerItemVideoOutput];
+                
+                
+                // Create CVOpenGLTextureCacheRef for optimal CVPixelBufferRef to GL texture conversion.
+                if (!_textureCache) {
+                    
+                    
+                    CVReturn err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL,
+                                                              CGLGetCurrentContext(), CGLGetPixelFormat(CGLGetCurrentContext()),
+                                                              NULL, &_textureCache);
+                    
+                    
+                    dict = CFDictionaryCreateMutable (
+                            kCFAllocatorDefault,
+                            5,
+                            &kCFTypeDictionaryKeyCallBacks,
+                            &kCFTypeDictionaryValueCallBacks);
+                    
+                    CFDictionarySetValue(dict, kCVOpenGLBufferTarget, [NSNumber numberWithInt:GL_TEXTURE_2D]);
+                    CFDictionarySetValue(dict, kCVOpenGLBufferInternalFormat, [NSNumber numberWithInt:GL_RGB]);
+                    CFDictionarySetValue(dict, kCVOpenGLBufferMaximumMipmapLevel, [NSNumber numberWithInt:6]);
+                    CFDictionarySetValue(dict, kCVOpenGLBufferWidth, [NSNumber numberWithInt:[self width]]);
+                    CFDictionarySetValue(dict, kCVOpenGLBufferHeight, [NSNumber numberWithInt:[self height]]);
+                    CFDictionarySetValue(dict, kCVBufferPropagatedAttachmentsKey , [NSNumber numberWithInt:kCVAttachmentMode_ShouldNotPropagate]);
+                    
+                    CVReturn err2 = CVOpenGLBufferPoolCreate(NULL, NULL, dict, &_buffer);
+
+
+                    //(CFDictionaryRef)ctxAttributes, &_textureCache);
+                    if (err2 != noErr) {
+                        NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
+                    }
+                    
+//                    if (dict) CFRelease (dict);
+                }
+                
+                
+                
+                [self.player play];
+
                 
             }
             _bLoaded=YES;
@@ -1028,6 +1185,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 -(BOOL) bLoaded
 {
     return _bLoaded;
+}
+
+//--------------------------------------------------------------
+- (GLuint)textureID
+{
+    if(_latestTextureFrame){
+        return CVOpenGLTextureGetName(_latestTextureFrame);
+    }
+    else{
+        return 1;
+    }
 }
 
 /***** 30PP *****/

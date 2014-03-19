@@ -43,6 +43,8 @@
 		D339C1B318CFA0BB008E604C /* ofxaddons_thumbnail.png in Resources */ = {isa = PBXBuildFile; fileRef = D339C11418CFA0BB008E604C /* ofxaddons_thumbnail.png */; };
 		D339C1B418CFA0BB008E604C /* ofxLibwebsockets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D339C11518CFA0BB008E604C /* ofxLibwebsockets.xcconfig */; };
 		D339C1B518CFA0BB008E604C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D339C11618CFA0BB008E604C /* README.md */; };
+		D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */; };
+		D3A7130E18D9E8C2004D8D41 /* Mat_Color_1.mov in Resources */ = {isa = PBXBuildFile; fileRef = D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */; };
 		E2A6919C18CE6328008D8EF1 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919818CE6328008D8EF1 /* Camera.cpp */; };
 		E2A6919D18CE6328008D8EF1 /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919A18CE6328008D8EF1 /* ModelMapper.cpp */; };
 		E2A691D518CE6567008D8EF1 /* addon_config.mk in Resources */ = {isa = PBXBuildFile; fileRef = E2A6919F18CE6567008D8EF1 /* addon_config.mk */; };
@@ -74,10 +76,6 @@
 		E2A6964318CE773A008D8EF1 /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962218CE773A008D8EF1 /* GLView.mm */; };
 		E2A6964418CE773A008D8EF1 /* GLWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962418CE773A008D8EF1 /* GLWindow.mm */; };
 		E2A6964518CE773A008D8EF1 /* ofxCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2A6962618CE773A008D8EF1 /* ofxCocoa.mm */; };
-		E2A6965418CE7C9B008D8EF1 /* 0_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */; };
-		E2A6965518CE7C9B008D8EF1 /* 1_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */; };
-		E2A6965618CE7C9B008D8EF1 /* 2_0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */; };
-		E2A6965718CE7C9B008D8EF1 /* 2_0_new.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */; };
 		E2A6965818CE7C9B008D8EF1 /* mesh.obj in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965218CE7C9B008D8EF1 /* mesh.obj */; };
 		E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */ = {isa = PBXBuildFile; fileRef = E2A6965318CE7C9B008D8EF1 /* settings.json */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -242,6 +240,8 @@
 		D339C11518CFA0BB008E604C /* ofxLibwebsockets.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ofxLibwebsockets.xcconfig; sourceTree = "<group>"; };
 		D339C11618CFA0BB008E604C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D339C11818CFA0BB008E604C /* ofxLibwebsockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxLibwebsockets.h; sourceTree = "<group>"; };
+		D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Shape Test_01.obj"; sourceTree = "<group>"; };
+		D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Mat_Color_1.mov; sourceTree = "<group>"; };
 		E2A6919818CE6328008D8EF1 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E2A6919918CE6328008D8EF1 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		E2A6919A18CE6328008D8EF1 /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
@@ -322,10 +322,6 @@
 		E2A6962418CE773A008D8EF1 /* GLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLWindow.mm; sourceTree = "<group>"; };
 		E2A6962518CE773A008D8EF1 /* ofxCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCocoa.h; sourceTree = "<group>"; };
 		E2A6962618CE773A008D8EF1 /* ofxCocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxCocoa.mm; sourceTree = "<group>"; };
-		E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0_0.mp4; sourceTree = "<group>"; };
-		E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1_0.mp4; sourceTree = "<group>"; };
-		E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0.mp4; sourceTree = "<group>"; };
-		E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0_new.mp4; sourceTree = "<group>"; };
 		E2A6965218CE7C9B008D8EF1 /* mesh.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
 		E2A6965318CE7C9B008D8EF1 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -923,10 +919,8 @@
 		E2A6964C18CE7C9B008D8EF1 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				E2A6964D18CE7C9B008D8EF1 /* 0_0.mp4 */,
-				E2A6964E18CE7C9B008D8EF1 /* 1_0.mp4 */,
-				E2A6964F18CE7C9B008D8EF1 /* 2_0.mp4 */,
-				E2A6965018CE7C9B008D8EF1 /* 2_0_new.mp4 */,
+				D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */,
+				D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */,
 				E2A6965118CE7C9B008D8EF1 /* mesh */,
 				E2A6965318CE7C9B008D8EF1 /* settings.json */,
 			);
@@ -1074,7 +1068,6 @@
 				E2A6963E18CE773A008D8EF1 /* WithWindow.xib in Resources */,
 				E2A691D718CE6567008D8EF1 /* aiMaterial.inl in Resources */,
 				D339C19618CFA0BB008E604C /* libwebsockets-test-server.key.pem in Resources */,
-				E2A6965518CE7C9B008D8EF1 /* 1_0.mp4 in Resources */,
 				E2A691DA18CE6567008D8EF1 /* aiVector3D.inl in Resources */,
 				D339C1B518CFA0BB008E604C /* README.md in Resources */,
 				E2A6963D18CE773A008D8EF1 /* README.txt in Resources */,
@@ -1085,14 +1078,13 @@
 				E2A691D618CE6567008D8EF1 /* aiColor4D.inl in Resources */,
 				D339C1B318CFA0BB008E604C /* ofxaddons_thumbnail.png in Resources */,
 				D339C1B418CFA0BB008E604C /* ofxLibwebsockets.xcconfig in Resources */,
+				D3A7130E18D9E8C2004D8D41 /* Mat_Color_1.mov in Resources */,
 				E2A6963C18CE773A008D8EF1 /* NoWindow.xib in Resources */,
 				D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */,
 				E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */,
 				E2A691D818CE6567008D8EF1 /* aiMatrix3x3.inl in Resources */,
-				E2A6965418CE7C9B008D8EF1 /* 0_0.mp4 in Resources */,
 				D339C1A418CFA0BB008E604C /* zlib.pdb in Resources */,
-				E2A6965618CE7C9B008D8EF1 /* 2_0.mp4 in Resources */,
-				E2A6965718CE7C9B008D8EF1 /* 2_0_new.mp4 in Resources */,
+				D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */,
 				E2A6965818CE7C9B008D8EF1 /* mesh.obj in Resources */,
 				D339C19718CFA0BB008E604C /* libwebsockets-test-server.pem in Resources */,
 				E2A6962718CE773A008D8EF1 /* .gitignore in Resources */,
@@ -1192,13 +1184,13 @@
 					../../../addons/ofxCocoa/libs,
 					../../../addons/ofxCocoa/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 			};
 			name = Debug;
 		};
@@ -1229,13 +1221,13 @@
 					../../../addons/ofxCocoa/libs,
 					../../../addons/ofxCocoa/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
 					"-mtune=native",
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.9;
 			};
 			name = Release;
 		};
@@ -1351,6 +1343,7 @@
 					"$(PROJECT_DIR)/ofxLibwebsockets/libs/openssl/lib/osx",
 					"$(PROJECT_DIR)/ofxLibwebsockets/libs/openssl/lib/win32",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,
@@ -1473,6 +1466,7 @@
 					"$(PROJECT_DIR)/ofxLibwebsockets/libs/openssl/lib/osx",
 					"$(PROJECT_DIR)/ofxLibwebsockets/libs/openssl/lib/win32",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,

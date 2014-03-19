@@ -10,6 +10,7 @@
 int main()
 {
 	
+//    ofSetLogLevel(OF_LOG_VERBOSE);
 	
 	MSA::ofxCocoa::InitSettings			initSettings;
 	
@@ -31,7 +32,7 @@ int main()
 	MSA::ofxCocoa::setSyncToDisplayLink(true);
 	MSA::ofxCocoa::AppWindow		cocoaWindow(initSettings);
 	
-    ofSetupOpenGL(&cocoaWindow,0,0,OF_FULLSCREEN);
+          ofSetupOpenGL(&cocoaWindow,0,0,OF_FULLSCREEN);
 	
     // this kicks off the running of my app
     // can be OF_WINDOW or OF_FULLSCREEN

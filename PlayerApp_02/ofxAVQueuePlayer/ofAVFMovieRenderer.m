@@ -155,16 +155,16 @@ int count = 0;
                 }
                 [self.player.currentItem addOutput:self.playerItemVideoOutput];
                 
-//                // Create CVOpenGLTextureCacheRef for optimal CVPixelBufferRef to GL texture conversion.
-//                if (self.useTexture && !_textureCache) {
-//                    CVReturn err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL,
-//                                                              CGLGetCurrentContext(), CGLGetPixelFormat(CGLGetCurrentContext()),
-//                                                              NULL, &_textureCache);
-//                    //(CFDictionaryRef)ctxAttributes, &_textureCache);
-//                    if (err != noErr) {
-//                        NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
-//                    }
-//                }
+                // Create CVOpenGLTextureCacheRef for optimal CVPixelBufferRef to GL texture conversion.
+                if (self.useTexture && !_textureCache) {
+                    CVReturn err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL,
+                                                              CGLGetCurrentContext(), CGLGetPixelFormat(CGLGetCurrentContext()),
+                                                              NULL, &_textureCache);
+                    //(CFDictionaryRef)ctxAttributes, &_textureCache);
+                    if (err != noErr) {
+                        NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
+                    }
+                }
                 
                 // Only monitor audio if the file is local and has audio tracks.
 //                NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];

@@ -40,6 +40,8 @@
 #import <Quartz/Quartz.h>
 #import <AVFoundation/AVFoundation.h>
 #import <Accelerate/Accelerate.h>
+//#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl3.h>
 #import "AppWindow.h"
 
 void ofGLReadyCallback();
@@ -71,6 +73,14 @@ void ofGLReadyCallback();
     int _glType;
     BOOL _bPixelsAllocated;
     
+    unsigned char * _pix;
+    
+    CVOpenGLTextureCacheRef _textureCache;
+	CVOpenGLTextureRef _latestTextureFrame;
+    CVPixelBufferPoolRef _pixelBuffer;
+//    CVOpenGLBufferRef _latestBuffer;
+    CVOpenGLBufferPoolRef _buffer;
+    
     /****************/
     
 	NSRect			savedWindowFrame;
@@ -89,6 +99,8 @@ void ofGLReadyCallback();
 	BOOL			captureExternalMouseEvents;
 	BOOL			externalMouseEventsActive;
 	id mouseMoveHandler, leftMouseDownHandler, rightMouseDownHandler, leftMouseUpHandler, rightMouseUpHandler, leftMouseDraggedHandler,rightMouseDraggedHandler;
+    
+    CFMutableDictionaryRef dict;
     
     
 
@@ -116,6 +128,8 @@ void ofGLReadyCallback();
 @property (nonatomic, assign) int currentFrame;
 @property (nonatomic, assign) double position;
 @property (nonatomic, assign) double playbackRate;
+
+@property (nonatomic, assign, readonly) GLuint textureID;
 
     /***** 30PP *****/
 

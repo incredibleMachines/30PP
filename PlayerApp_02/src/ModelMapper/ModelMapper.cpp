@@ -50,6 +50,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
 
 void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
+    
     //----------SETUP GLOBALS
     
     numCams=_numCams;
@@ -82,7 +83,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //adjustment settings
     bShiftPressed=false;
-    moveModifier=.1;
+    moveModifier=10;
     
     //texture settings
     bMipMap=true;
@@ -146,7 +147,6 @@ void ModelMapper::update(vector<ofAVQueuePlayer *> vids){
 void ModelMapper::draw(){
     
     //----------DRAW CAMERAS, MESHES, TEXTURES
-    
     drawCameras();
     
     //----------DRAW MESH POINT SELECTION HIGHLIGHTS
@@ -1084,6 +1084,7 @@ void ModelMapper:: drawCameras() {
             
             for(int j=0;j<numMeshes;j++){
                 
+                
                 textures[0]->bind();
                 
                 ofSetColor(255,255,255);
@@ -1094,9 +1095,10 @@ void ModelMapper:: drawCameras() {
                 
                 //draw mesh wireframe
                 if(bDrawWireframe==true){
-                    ofSetColor(255,255,255);
+                    ofSetColor(255,255,255,100);
                     ofSetLineWidth(2);
                     //                plane.drawWireframe();
+
                     cameras[i].mesh[j].drawWireframe();
                 }
                 
@@ -1131,6 +1133,8 @@ void ModelMapper::drawHighlights() {
     if(adjustMode==ADJUST_MODE_MESH){
         
         //----------DRAW NEAREST VERTEX
+        
+        
         
         //determine nearest vertex and highlight yellow, if within clickThreshold distance of vertex
         for(int i=0;i<numMeshes;i++){

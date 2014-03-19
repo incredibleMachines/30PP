@@ -204,6 +204,10 @@ namespace MSA {
             [glView() initPlayer:filepath ID:_ID];
         }
         
+        GLuint getTextureID(){
+            return [glView() textureID];
+        }
+        
         /***** 30PP *****/
 
 		

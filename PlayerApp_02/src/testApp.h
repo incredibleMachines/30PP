@@ -7,6 +7,8 @@
 
 #define BUFFER_SIZE 3
 #define MESH_NUM 1
+#define TEX_WIDTH 1959
+#define TEX_HEIGHT 2048
 
 class testApp : public ofBaseApp{
 	
@@ -78,8 +80,6 @@ public:
     bool bLoaded;
     bool bMipMap;
     
-    
-    int frameCount;
 };
 
 

@@ -79,54 +79,61 @@ namespace MSA {
 			// Initialize an openGLContext before glewInit()
 			
 			
-			
 			NSOpenGLPixelFormat* pixelFormat = nil;
             
             cout<<"initCheck: "<<initSettings().numFSAASamples<<endl;
 			 
 			if(initSettings().numFSAASamples) {
-			 NSOpenGLPixelFormatAttribute attribs[] = {
-			 NSOpenGLPFAAccelerated,
-			 NSOpenGLPFADoubleBuffer,
-			 NSOpenGLPFAMultiScreen,
-			 NSOpenGLPFADepthSize, 24,
-			 NSOpenGLPFAAlphaSize, 8,
-			 NSOpenGLPFAColorSize, 32,
-			 NSOpenGLPFAMultisample,
-			 NSOpenGLPFASampleBuffers, 1,
-			 NSOpenGLPFASamples, initSettings().numFSAASamples,
-			 NSOpenGLPFANoRecovery, 0,
-             NSOpenGLPFAFullScreen, 1};
-			 
-			 NSLog(@"   trying Multisampling");
-			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-			 if(pixelFormat) {
-				 NSLog(@"      Multisampling supported");
-			 glEnable(GL_MULTISAMPLE);
-			 } else {
-				 NSLog(@"      Multisampling not supported");
+                 NSOpenGLPixelFormatAttribute attribs[] = {
+//                     NSOpenGLPFAAccelerated,
+//                     NSOpenGLPFADoubleBuffer,
+//                     NSOpenGLPFAMultiScreen,
+//                     NSOpenGLPFADepthSize, 32,
+//                     NSOpenGLPFAAlphaSize, 8,
+//                     NSOpenGLPFAColorSize, 32,
+//                     NSOpenGLPFAMultisample,
+//                     NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
+//                     NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)4,
+//                     NSOpenGLPFANoRecovery, 0,
+//                     NSOpenGLPFAFullScreen, 1,
+//                     NSOpenGLPFAOpenGLProfile,
+//                     NSOpenGLProfileVersion3_2Core
+                     0
+                 };
+                 
+                 NSLog(@"   trying Multisampling");
+                 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+                 if(pixelFormat) {
+                     NSLog(@"      Multisampling supported");
+                     glEnable(GL_MULTISAMPLE);
+                 }
+                 else {
+                     NSLog(@"      Multisampling not supported");
+                 }
 			 }
-			 }
 			 
-			 
-			 if(pixelFormat == nil) {
-				 NSLog(@"   trying non multisampling");
-			 NSOpenGLPixelFormatAttribute attribs[] = {
-			 NSOpenGLPFAAccelerated,
-			 NSOpenGLPFADoubleBuffer,
-			 NSOpenGLPFAMultiScreen,
-			 NSOpenGLPFADepthSize, 24,
-			 NSOpenGLPFAAlphaSize, 8,
-			 NSOpenGLPFAColorSize, 32,
-			 NSOpenGLPFANoRecovery, 0,
-             NSOpenGLPFAFullScreen, 1};
-			 
-			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-			 glDisable(GL_MULTISAMPLE);
-			 if(pixelFormat == nil) {
-			 NSLog(@"      not even that. fail");
-			 }
-			 } 
+//			 if(pixelFormat == nil) {
+//				 NSLog(@"   trying non multisampling");
+//                 NSOpenGLPixelFormatAttribute attribs[] = {
+//                 NSOpenGLPFAAccelerated,
+//                 NSOpenGLPFADoubleBuffer,
+//                 NSOpenGLPFAMultiScreen,
+//                 NSOpenGLPFADepthSize, 24,
+//                 NSOpenGLPFAAlphaSize, 8,
+//                 NSOpenGLPFAColorSize, 32,
+//                 NSOpenGLPFANoRecovery, 0,
+//                 NSOpenGLPFAFullScreen, 1,
+//                 NSOpenGLPFAOpenGLProfile,
+//                 NSOpenGLProfileVersion3_2Core,
+//                 0
+//             };
+//			 
+//			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+//			 glDisable(GL_MULTISAMPLE);
+//			 if(pixelFormat == nil) {
+//			 NSLog(@"      not even that. fail");
+//			 }
+//			 }
 			
 			//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 			
@@ -134,7 +141,10 @@ namespace MSA {
 			context = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
 			[context makeCurrentContext];
 			//[pool release];
+            
 			
+            NSLog(@"%s %s GLEW: %s", glGetString(GL_RENDERER), glGetString(GL_VERSION), glewGetString(GLEW_VERSION));
+            
 			
 			//[context release];
 			[pool drain];
