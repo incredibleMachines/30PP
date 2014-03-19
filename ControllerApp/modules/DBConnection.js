@@ -26,7 +26,7 @@ exports.MongoConnect = function(){
 		collection.users     = database.collection('users');
 		collection.scenes    = database.collection('scenes');
 		collection.files 	 = database.collection('files');
-		collection.locations = database.collection('locations');
+		//collection.locations = database.collection('locations');
 		collection.renderqueue = database.collection('renderqueue')
 		
 	})

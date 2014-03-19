@@ -114,7 +114,7 @@ app.post('/scenes/:slug/delete',scenes.delete(Database))
 //render handling
 
 app.get('/renderqueue', renderer.index(Database));
-app.post('/render',renderer.render(Database,AfterEffects))
+app.post('/render',renderer.render(Database,AfterEffects,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
 
 //asset handling pages
 app.get('/files', files.index(Database));

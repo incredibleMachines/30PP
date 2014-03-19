@@ -1,3 +1,5 @@
+var utils = require('../modules/Utils');
+
 //use underscore here to help us facilitate actions
 var _ = require('underscore');
 
@@ -27,7 +29,7 @@ exports.index = function(_Database){
 }
 
 //a function to facilitate the render process gathers all data and executes
-exports.render = function(_Database, _AfterEffects){
+exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
 	
 	
 	return function(req,res){
@@ -36,8 +38,9 @@ exports.render = function(_Database, _AfterEffects){
 		parseRenderQueue(_Database, function(result){
 			//console.log("parseRenderQueue")
 			//console.log(result)
-			formatJSONForAE(result,function(formattedOutput){
+			formatJSONForAE(result, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 				
+				console.log(JSON.stringify(formattedOutput))
 				
 			})
 			//organize data for each template
@@ -158,12 +161,12 @@ function sortRenderQueue(scenes,clips,files,cb){
 //function which takes formatted Scenes and outputs a JSON Array of 
 //formattedScenes is a binding of the MongoDB Scene,Clip and File documents
 //cb
-function formatJSONForAE(formattedScenes,cb){
+function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 	
 	/* Sample JSON for AE Object */
 	/* Referenced From: https://docs.google.com/a/incrediblemachines.net/document/d/12J7cS7iemVJnBjicObgC-fdH1XKCbKJfY2_XMl1dwiA/edit
 		Create one Render Object Per Scene
-		{
+		{	type: default_parks
 			template: default_parks.aep,
 			script: default_parks.jsx,
 			output: default_parks.mov,
@@ -181,6 +184,197 @@ function formatJSONForAE(formattedScenes,cb){
 			clips:[mongoID]
 		}
 	*/
+	//sort through all the scenes, by type 
+	
+	async.waterfall([function(cb){
+		//sort all our scenes by event type
+		var scenesByType = {};
+		//console.log(formattedScenes)
+		var typeCounter=0;
+		EVENT_TYPES.forEach(function(event_type){
+			var slug = utils.makeSlug(event_type)
+			var temp = _.where(formattedScenes, {type: slug})
+			typeCounter++
+			if(temp.length>0){
+				scenesByType[slug] = temp;
+				//console.log(event_type)
+				//console.log(slug)	
+				//console.log(scenesByType[slug])
+			}
+			if(typeCounter==EVENT_TYPES.length){
+				//order each of the scenes by order
+				_.each(scenesByType,function(scene,slug){
+					scenesByType[slug] = _.indexBy(scenesByType[slug], 'order');
+				})
+				
+				console.log(scenesByType)
+				
+				cb(null,scenesByType)		
+			}
+			 
+		})
+		
+		
+	},function(scenesByType,callback){
+		//create our JSON Objects for AE with all the items ordered together
+		
+		//default each scene and organize
+		var holder = [];
+		_.each(scenesByType,function(scenes,slug){
+			var groupHolder = [];
+			//sort out each scene by slug
+			if(slug === 'default'){
+					
+				//console.log(scenesByType[slug])
+				
+				var length = scenesByType[slug].length;
+				//console.log(length)
+				
+				 
+				_.each(scenesByType[slug],function(scene,order){
+					//assumes that _.each will iterate in the correct order
+					
+					var type = slug+'_'+scene.slug	
+					var temp = _.findWhere(groupHolder, {type: type })
+					
+					if( typeof temp === 'undefined'){
+						var newObj = {type: type}
+						groupHolder.push(newObj)
+						//currentGroup = temp;
+					}
+					
+					var currentGroup = _.findWhere(groupHolder,{type:type})
+		
+					currentGroup.template = type+".aep"
+					currentGroup.script = type+".jsx"
+					
+					_.each(scene.clips,function(clip,index){
+						
+						console.log(scene.slug)	
+						console.log(order)		
+						console.log(clip)
+						
+						switch(clip.zones.length){
+							case 1:
+								if(!currentGroup.hasOwnProperty('source_image_slr')) currentGroup.source_image_slr = []	
+								
+								currentGroup.source_image_slr.push(clip.zones[0].file.path)
+								
+							break;
+							case 2:
+							
+								if(clip.zones[0].locations){
+									
+									if(!currentGroup.hasOwnProperty('source_location')) currentGroup.source_location = []
+									currentGroup.source_location.push(clip.zones[0].locations)
+									/*
+									for(var i =0; i<clip.zones[0].locations.length;i++){
+										currentGroup.source_location.push(clip.zones[0].locations[i])
+									}*/
+										
+								}else{
+									if(!currentGroup.hasOwnProperty('source_image_s')) currentGroup.source_image_s = []
+									currentGroup.source_image_s.push(clip.zones[0].file.path)
+								}
+								if(clip.zones[1].file){
+									if(!currentGroup.hasOwnProperty('source_image_lr')) currentGroup.source_image_lr = []
+									currentGroup.source_image_lr.push(clip.zones[1].file.path)
+								}
+								if(clip.zones[1].text){
+									if(typeof clip.zones[1].text === 'string'){
+										if(!currentGroup.hasOwnProperty('source_multitext_text')) currentGroup.source_single_text = []
+										currentGroup.source_single_text.push(clip.zones[1].text)
+									}else{
+										if(!currentGroup.hasOwnProperty('source_multitext_text')) currentGroup.source_multitext_text = []
+										currentGroup.source_multitext_text.push(clip.zones[1].text)
+										/*
+										for(var i=0; i<clip.zones[1].text.length; i++){
+											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										}
+										*/
+									}
+									
+								}
+								
+							
+							break;
+							case 3:
+								if(clip.zones[0].locations){
+									
+									if(!currentGroup.hasOwnProperty('source_location')) currentGroup.source_location = []
+									currentGroup.source_location.push(clip.zones[0].locations)
+									/*
+									for(var i =0; i<clip.zones[0].locations.length;i++){
+										currentGroup.source_location.push(clip.zones[0].locations[i])
+									}*/
+										
+								}else{
+									if(!currentGroup.hasOwnProperty('source_image_s')) currentGroup.source_image_s = []
+									currentGroup.source_image_s.push(clip.zones[0].file.path)
+								}
+								if(clip.zones[1].file){
+									if(!currentGroup.hasOwnProperty('source_sequence_image_l')) currentGroup.source_sequence_image_l = []
+									currentGroup.source_sequence_image_l.push(clip.zones[1].file.path)
+								}
+								if(clip.zones[1].text){
+									if(typeof clip.zones[1].text === 'string'){
+										if(!currentGroup.hasOwnProperty('source_sequence_text_l')) currentGroup.source_sequence_text_l = []
+										currentGroup.source_sequence_text_l.push(clip.zones[1].text)
+									}else{
+										if(!currentGroup.hasOwnProperty('source_multitext_text_l')) currentGroup.source_multitext_text_l = []
+										currentGroup.source_multitext_text_l.push(clip.zones[1].text)
+										/*
+										for(var i=0; i<clip.zones[1].text.length; i++){
+											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										}
+										*/
+									}
+									
+								}
+								if(clip.zones[2].file){
+									if(!currentGroup.hasOwnProperty('source_sequence_image_r')) currentGroup.source_sequence_image_r = []
+									currentGroup.source_sequence_image_r.push(clip.zones[2].file.path)
+								}
+								if(clip.zones[2].text){
+									if(typeof clip.zones[2].text === 'string'){
+										if(!currentGroup.hasOwnProperty('source_sequence_text_r')) currentGroup.source_sequence_text_r = []
+										currentGroup.source_sequence_text_r.push(clip.zones[2].text)
+									}else{
+										if(!currentGroup.hasOwnProperty('source_multitext_text_r')) currentGroup.source_multitext_text_r = []
+										currentGroup.source_multitext_text_r.push(clip.zones[2].text)
+										/*
+										for(var i=0; i<clip.zones[1].text.length; i++){
+											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										}
+										*/
+									}
+									
+								}
+							break;
+						}
+						
+						
+					})
+							
+				})
+				
+				//console.log(groupHolder)
+				callback(null,groupHolder)	
+			}else{
+				//custom video type
+			}
+			
+		})
+		
+		//for each other type custom organize
+		//ignoring custom types for now
+		
+		
+	}],function(err,result){
+		
+		cb(result)
+	})
+
 	
 }
 
