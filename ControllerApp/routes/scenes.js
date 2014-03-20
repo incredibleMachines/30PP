@@ -19,9 +19,13 @@ exports.add = function(_Database){
 		
 		_Database.queryCollection('scenes',{type:post.type},function(e,_scenes){
 			post.order = (_scenes.length==0)? 1 : _scenes.length
-			_Database.add('scenes', post, function(e,_scene){
-				if(!e) res.redirect('/events?type='+_scene.type)
-				else res.redirect('/events')
+			var regex = new RegExp(post.slug)
+			_Database.queryCollection('scenes',{slug:{$regex: regex }},function(e,_slugs){
+				if(_slugs.length>0) post.slug+='-'+_slugs.length.toString()
+				_Database.add('scenes', post, function(e,_scene){
+					if(!e) res.redirect('/events?type='+_scene.type)
+					else res.redirect('/events')
+				})
 			})
 		})
 				
@@ -80,7 +84,7 @@ exports.update = function(_Database){
 		//console.log(post)
 		_Database.update('scenes',{slug: slug},{$set:{title:post.title,slug:utils.makeSlug(post.title)}},function(e){
 			if(!e){ 
-				_Database.getDocumentBySlug('scenes',slug,function(_e,_scene){
+				_Database.getDocumentBySlug('scenes',utils.makeSlug(post.title),function(_e,_scene){
 					if(!_e) res.redirect('/events/?type='+_scene.type)
 					else res.jsonp(500,{error:_e})
 				})
