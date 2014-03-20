@@ -15,7 +15,11 @@ function SceneController(_clips,_files){
 	//check if we're looking for a scene
 
 	if(window.location.hash){
+	
 		//console.log( window.location.hash.substr(1))
+		/* this is where we could check for multiple hashes in the URL 
+			for example #new-clip#file-532b4e82efd9bea254a6ef75
+		*/
 		var slug = window.location.hash.substr(1)
 		var clip = _.findWhere(_clips, {slug: slug});
 		//var clip _.findWhere( _clips, {slug:slug} ) 
@@ -38,11 +42,8 @@ function SceneController(_clips,_files){
 			//we will always get a match here
 			if(clip._id == id ){ 
 				currentClip = clip;
-								
-				
 				
 				formatClip(currentClip)
-		
 			}
 		})
 		
