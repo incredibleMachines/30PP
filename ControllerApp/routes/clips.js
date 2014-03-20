@@ -15,26 +15,29 @@ exports.add = function(_Database){
 		post.zones = {}
 		post.created_at = new Date()
 		post.render = false
-		
-		_Database.add('clips', post, function(e,_clip){
-			if(!e){
-				//var temp = {}
-				//temp[_clip.slug] = _clip._id;
-												
-				var updateObj = {$push:{clips:  _clip._id } }
-				_Database.update('scenes',{_id: _Database.makeMongoID(_clip.scene_id)},updateObj,function(e){
-					
-					_Database.getDocumentByID('scenes',_clip.scene_id, function(_e,_scene){
-					
-						if(!_e) res.redirect('/scenes/'+_scene.slug+'#'+_clip.slug)
-						else res.jsonp(500,{error: _e})
+		var regex = new RegExp(post.slug)
+		_Database.queryCollection('clips',{slug:{$regex:regex}},function(error,_slugs){
+			if(_slugs.length>0) post.slug+='-'+_slugs.length.toString()
+			_Database.add('clips', post, function(e,_clip){
+				if(!e){
+					//var temp = {}
+					//temp[_clip.slug] = _clip._id;
+													
+					var updateObj = {$push:{clips:  _clip._id } }
+					_Database.update('scenes',{_id: _Database.makeMongoID(_clip.scene_id)},updateObj,function(e){
+						
+						_Database.getDocumentByID('scenes',_clip.scene_id, function(_e,_scene){
+						
+							if(!_e) res.redirect('/scenes/'+_scene.slug+'#'+_clip.slug)
+							else res.jsonp(500,{error: _e})
+							
+						})
 						
 					})
-					
-				})
-			}else{//if(!e)
-				res.jsonp(500,{error:e})
-			}//if(!e)
+				}else{//if(!e)
+					res.jsonp(500,{error:e})
+				}//if(!e)
+			})
 		})
 		
 		
