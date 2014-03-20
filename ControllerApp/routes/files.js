@@ -229,29 +229,16 @@ function addNewFile(_post,__Database,_res){
 
 	var slug = _post.current
 	console.log("current slug: "+slug)
-	delete _post.page_slug
+	delete _post.current
 	
 	__Database.add('files', _post, function(e,_doc){
 		console.log(' ... Added New File '.inverse+_doc.title.toString().inverse+' ... ')
 
 		if(!e){ 
-					
 			_res.redirect(slug);
+			//_res.redirect(slug+"#file-"+_doc._id); /* how we can pass the file id in through URL */
 			//_res.jsonp(200,{success:_post})
 			
-			
-			/* Outdated Files No Longer contain links back to objects
-			//update event with new asset -	
-			var updateObj = {$push:{assets:_doc._id.toString()}};
-			__Database.updateById('events', _post.event_id,updateObj,function(_e){
-				if(!_e){
-					//we're all good
-					_res.jsonp(200,{success:_doc})
-				}else{ //_e
-					//we successfully added the asset,but didn't associate it with our event
-					_res.jsonp(500,_e);
-				}
-			})*/
 		}else{ //e 
 			_res.jsonp(500,{error:e});
 		}
