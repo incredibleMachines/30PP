@@ -48,6 +48,7 @@ exports.add = function(_Database){
 		
 		var post = req.body;
 		//handle the post
+		console.log("post: "+post);
 		post.slug = utils.makeSlug(post.title);
 		//post.event_id = _Database.makeMongoID(post.event_id);
 		
@@ -166,12 +167,14 @@ function handleFile(content,post,_Database,req,res,bUpdate){
 			post.type=2;
 			
 			upload.image(req.files.content,function(img){
-				console.log(img)
+				//console.log("img: "+JSON.stringify(img));
+				//console.log("post: "+JSON.stringify(post));
 				
 				post.path = img.path;
 				post.created_at = new Date();
 				post.size = img.size;
 				post.type = img.type;
+
 				if(!bUpdate)addNewFile(post,_Database,res);
 				else updateFile(post,_Database,res)
 			})
@@ -223,12 +226,19 @@ function updateFile(_post,__Database,_res){
 //__Database = _Database
 
 function addNewFile(_post,__Database,_res){
+
+	var slug = _post.current
+	console.log("current slug: "+slug)
+	delete _post.page_slug
 	
 	__Database.add('files', _post, function(e,_doc){
 		console.log(' ... Added New File '.inverse+_doc.title.toString().inverse+' ... ')
-		
+
 		if(!e){ 
-			_res.jsonp(200,{success:_doc})
+					
+			_res.redirect(slug);
+			//_res.jsonp(200,{success:_post})
+			
 			
 			/* Outdated Files No Longer contain links back to objects
 			//update event with new asset -	

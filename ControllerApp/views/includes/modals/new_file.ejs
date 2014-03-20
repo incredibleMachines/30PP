@@ -1,3 +1,17 @@
+<%/* 
+
+New File Modal
+
+Form for adding a file from scene single or file library.
+
+Form Inputs:
+	- title
+	- content
+	- page_slug (hidden)
+
+*/%>
+
+
 <section class="new_file modal fade" id="new_file_modal" tabindex="-1" role="dialog" aria-labelledby="new_file_modal" aria-hidden="true" >
 	<section class="modal-dialog">
     	<section class="modal-content">
@@ -12,6 +26,7 @@
 			  		<section class="form-group content-upload col-md-12">
 					    <label for="content">Select a file to upload</label>
 					    <input type="file" class="form-control browse" name="content"/>
+					    <input type="hidden" name="current" value="<%= locals.current %>"/>
 				    	<!--<p class="help-block">Select the {file} to upload</p>-->
 				    </section>
 					
