@@ -19,7 +19,7 @@ exports.index = function(_Database){
 		})						
 	
 		//TODO: pagination quantity - how many per page!
-		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*5, limit:5}, function(e,_files){
+		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*resultsPerPage, limit:resultsPerPage}, function(e,_files){
 			if(!e){ 
 				_Database.getAll('clips',function(__e,_clips){
 					//if(!__e) res.json(400,{requrl: req.url, files: _files, clips: _clips});
