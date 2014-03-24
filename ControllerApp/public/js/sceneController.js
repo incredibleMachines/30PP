@@ -227,7 +227,9 @@ function SceneController(_clips,_files){
 			//
 			$(this).closest('.row').find('select.zone-map-type').val('none')
 			$(this).closest('.row').find('select.zone-map-type').siblings('section.location').remove()
-			$('canvas#map').remove()		
+			
+			if($(this).closest('.row').hasClass('zone-single-0')) $('canvas#map').remove()
+			//$('canvas#map').remove()		
 			}
 		else{
 			$(this).closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
@@ -278,6 +280,7 @@ function SceneController(_clips,_files){
 
 			var newClip = $(clip).clone();
 			$(newClip).removeClass('zone-single-0').addClass('zone-single-'+i);
+			$(newClip).find('section.location').remove()
 					
 			$(newClip).find('select.zone-file').attr('name','zones['+i+'][file]')
 			$(newClip).find('select.zone-file option:selected').removeAttr('selected')
