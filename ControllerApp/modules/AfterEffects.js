@@ -3,6 +3,7 @@ var util 	= require('util'),
 	fs		= require('fs'), 
 	async 	= require('async');
 	
+	
 //NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
 var AFTEREFFECTS, 
 	bRendering = false,
@@ -75,8 +76,13 @@ exports.init = function(cb){
 
 //_cb = callback(err, stdout)
 
-
 exports.runScriptFunction = function(_script,_call,_cb){
+	
+	runScriptFunction(_script,_call,_cb);
+	
+}
+
+function runScriptFunction(_script,_call,_cb){
 
 	
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/"+_script+"' '"+_call+"'";
@@ -113,13 +119,21 @@ exports.exit = function(cb){
 						})
 }
 
+exports.isOpen = function(){
+	return bOpen;
+}
+
 exports.getCurrentFile = function(){
 	return currentFile;
 }
 
-exports.isOpen = function(){
-	return bOpen;
+
+exports.processRenderOutput = function(formattedScenes,cb){
+	
+	console.log(JSON.stringify(formattedScenes))
+	
 }
+
 
 //data to render as an array[]
 //render options
