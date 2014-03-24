@@ -3,15 +3,36 @@ var upload = require('../modules/Upload');
 
 exports.index = function(_Database){
 	return function(req,res){
-		_Database.getAll('files',function(e,_files){
+		
+		var page = req.params.page;
+		if (page === undefined) page = 1;
+		console.log("files/page: "+page);
+			
+			
+		//TODO: calculate num_pages
+		var resultsPerPage = 5; /*** how many results per page ***/
+		var numPages; 
+		
+		_Database.getAll('files', function(e,_files){
+			if(!e) numPages = Math.ceil(_files.length/resultsPerPage);
+			else res.json({error:e});
+		})						
+	
+		//TODO: pagination quantity - how many per page!
+		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*5, limit:5}, function(e,_files){
 			if(!e){ 
 				_Database.getAll('clips',function(__e,_clips){
-					if(!__e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index', files: _files, clips:_clips,error:null });
-					else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug: 'files-index error', file:_files,clips:null,error:null })
+					//if(!__e) res.json(400,{requrl: req.url, files: _files, clips: _clips});
+					//else res.json(500, {error:__e});
+					if(!__e) res.render('files/index', { current:req.url, title:'File Library', page_slug:'files-index', 
+						files:_files, clips:_clips, num_pages:numPages, page_num:page, error:null });
+					else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug:'files-index error', 
+						file:_files,clips:null, num_pages:numPages, page_num:page, error:null })
 				})
 					
 			}else{ 
-				res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: null,clips:null,error:'Return Files Error' })
+				res.render('files/index', { current:req.url, title:'File Library Error', page_slug:'files-index error',
+					files:null, clips:null, num_pages:numPages, page_num:page, error:'Return Files Error' })
 			}
 		})
 	}
@@ -104,6 +125,7 @@ exports.add = function(_Database){
 	} //end return function(req,res)
 }
 
+/* //never being used, we never look at files individually
 exports.single = function(_Database){
 
 	return function(req,res){
@@ -111,6 +133,10 @@ exports.single = function(_Database){
 		res.render('events/index', { current: req.url, title: 'Single Asset', page_slug: 'files-single'  });
 	}
 }
+*/
+
+
+
 exports.update = function(_Database){
 
 	return function(req,res){
