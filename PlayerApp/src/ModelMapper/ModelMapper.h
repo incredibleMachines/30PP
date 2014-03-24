@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
-#include "ofAVQueuePlayer.h"
+//#include "ofAVQueuePlayer.h"
 //#include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS
@@ -34,7 +34,7 @@ public:
     void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
     void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
     void update(vector<ofTexture *> tex);
-    void update(vector<ofAVQueuePlayer *> vids);
+
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
@@ -61,9 +61,11 @@ public:
     bool bDrawWireframe;
     //swith for shift key modifier
     bool bShiftPressed;
+    //swith for shift key modifier
+    bool bCommandPressed;
     //value of move commands (modified by shift key)
     float moveModifier;
-
+    
     
     //---------CUSTOM FUNCTIONS
     //drawGuiText draws information on user settings on GUI_CAMERA Screen only
@@ -105,9 +107,9 @@ public:
     int meshType;
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
-            ofPlanePrimitive plane;
+    ofPlanePrimitive plane;
     
-
+    
     //---------MASK SETTINGS
     class maskVertex{
     public:
@@ -126,9 +128,8 @@ public:
     float clickThreshold;
     
     //----------TEXTURE SETTINGS
-//    vector<Composite> compositeTexture;
+    //    vector<Composite> compositeTexture;
     bool bMipMap;
     
     vector<ofTexture *> textures;
-    vector <ofAVQueuePlayer *> videos;
 };
