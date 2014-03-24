@@ -396,7 +396,9 @@ function SceneController(_clips,_files){
 	function mapCallback(locPos, eventType){
 								//alert(mousePos.x+","+mousePos.y)
 		var length = $('section.location').length
-		
+		var current = $('select.zone-map-type').val()
+		//alert(current)
+		if(current === 'single') $('.location').remove()
 		switch(eventType){
 			case 0:
 				//**** hardcoding the index to '0', assuming that sculpture will always be at index 0 ****//
