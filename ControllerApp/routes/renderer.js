@@ -12,7 +12,7 @@ exports.index = function(_Database){
 	
 	return function(req,res){
 		_Database.getAll('clips',function(e,_clips){
-			//console.log(data)
+			console.log(_clips)
 			if(e){ res.jsonp({"Error": "Query Collection Error: Scenes"})
 			}else{
 				_Database.getAll('scenes',function(_e, _scenes){
@@ -40,7 +40,11 @@ exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
 			//console.log(result)
 			formatJSONForAE(result, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 				
-				console.log(JSON.stringify(formattedOutput))
+				//console.log(JSON.stringify(formattedOutput))
+				_AfterEffects.processRenderOutput(formattedOutput,function(e){
+					
+					
+				})
 				
 			})
 			//organize data for each template
@@ -98,7 +102,8 @@ function sortRenderQueue(scenes,clips,files,cb){
 			
 			clip_queue_counter++
 			if(clip_queue_counter === clip_queue.length){
-			//console.log(scene_queue)
+			//console.log("SORT RENDER QUEUE PART ONE".inverse.red);
+			//console.log(JSON.stringify(scene_queue))
 			//if we have gone through all the items in our clip_queue lets bind our scene_queue with the correct clips
 			//pass the scene_queue off to our next 
 			callback(null,scene_queue)
@@ -118,33 +123,46 @@ function sortRenderQueue(scenes,clips,files,cb){
 				//check each zone to see if there is a file object, if there is populate it
 				//console.log(scene_queue[i].clips[j])
 				var zone_counter = 0;
-				
-				scene_queue[i].clips[j].zones.forEach(function(zone,k){
-					//check each zone and bind the file information if that zone has a file contained
-					zone_counter++;
-					if(zone.file!==null){
-						//console.log("HAS FILE".inverse.red)
-						zone.file = _.findWhere(files,{_id:zone.file})
-					}
-					//if we are at the end of the zones for the clip
-					if(zone_counter == scene_queue[i].clips[j].zones.length){
-						
-						clip_counter++
-						//if we've gone through all the clips in a scene
-						if(clip_counter === scene.clips.length){
+				if(scene_queue[i].clips[j].zones.length>0){
+					scene_queue[i].clips[j].zones.forEach(function(zone,k){
+						//check each zone and bind the file information if that zone has a file contained
+						zone_counter++;
+						if(zone.file!==null){
+							//console.log("HAS FILE".inverse.red)
+							zone.file = _.findWhere(files,{_id:zone.file})
+						}
+						//if we are at the end of the zones for the clip
+						if(zone_counter == scene_queue[i].clips[j].zones.length){
 							
-							scene_counter++
-							//if we've gone through all the scenes
-							if(scene_counter === scene_queue.length){
-								callback(null,scene_queue)
-							}//end (scene_counter === scene_queue.length)
+							clip_counter++
+							//if we've gone through all the clips in a scene
+							if(clip_counter === scene.clips.length){
+								
+								scene_counter++
+								//if we've gone through all the scenes
+								if(scene_counter === scene_queue.length){
+									//console.log("SORT RENDER QUEUE PART TWO".inverse.red);
+									//console.log(JSON.stringify(scene_queue))
+									//console.log(scene_queue)
+									callback(null,scene_queue)
+								}//end (scene_counter === scene_queue.length)
+								
+							}//end if(clip_counter === scene.clips.length)	
 							
-						}//end if(clip_counter === scene.clips.length)	
+						} //end if(zone_counter == scene_queue[i].clips[j].zones.length)
 						
-					} //end if(zone_counter == scene_queue[i].clips[j].zones.length)
+					})//end scene_queue[i].clips[j].zones.forEach(function(zone,k){})
+				}else{
 					
-				})//end scene_queue[i].clips[j].zones.forEach(function(zone,k){})
-				
+					clip_counter++;
+					if(clip_counter === scene.clips.length){
+						scene_counter++
+						if(scene_counter===scene_queue.length){
+							callback(null,scene_queue)
+						}
+					}
+					
+				}//end if(scene_queue[i].clips[j].zones.length>0)
 							
 			})//end scene.clips.forEach(function(clip,j){})
 			
@@ -184,8 +202,9 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 			clips:[mongoID]
 		}
 	*/
-	//sort through all the scenes, by type 
-	
+	//sort through all the scenes, by type
+	//console.log("FORMAT JSON FOR AE".inverse.red)
+	//console.log(formattedScenes)
 	async.waterfall([function(cb){
 		//sort all our scenes by event type
 		var scenesByType = {};
@@ -206,8 +225,8 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 				_.each(scenesByType,function(scene,slug){
 					scenesByType[slug] = _.indexBy(scenesByType[slug], 'order');
 				})
-				
-				console.log(scenesByType)
+				//console.log("formatJSONForAE STEP ONE".inverse.red)
+				//console.log(scenesByType)
 				
 				cb(null,scenesByType)		
 			}
@@ -247,46 +266,47 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 		
 					currentGroup.template = type+".aep"
 					currentGroup.script = type+".jsx"
-					
+					currentGroup.data = {}
 					_.each(scene.clips,function(clip,index){
-						
-						console.log(scene.slug)	
-						console.log(order)		
+						//console.log("formatJSONForAE STEP TWO".inverse.red)
+						//console.log(scene.slug)	
+						//console.log(order)
+						//console.log(clip.zones.length)
+	
 						console.log(clip)
-						
 						switch(clip.zones.length){
 							case 1:
-								if(!currentGroup.hasOwnProperty('source_image_slr')) currentGroup.source_image_slr = []	
+								if(!currentGroup.data.hasOwnProperty('source_image_LSR')) currentGroup.data.source_image_LSR = []	
 								
-								currentGroup.source_image_slr.push(clip.zones[0].file.path)
+								currentGroup.data.source_image_LSR.push(clip.zones[0].file.path)
 								
 							break;
 							case 2:
 							
 								if(clip.zones[0].locations){
 									
-									if(!currentGroup.hasOwnProperty('source_location')) currentGroup.source_location = []
-									currentGroup.source_location.push(clip.zones[0].locations)
+									if(!currentGroup.data.hasOwnProperty('source_location')) currentGroup.data.source_location = []
+									currentGroup.data.source_location.push(clip.zones[0].locations)
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
 										currentGroup.source_location.push(clip.zones[0].locations[i])
 									}*/
 										
 								}else{
-									if(!currentGroup.hasOwnProperty('source_image_s')) currentGroup.source_image_s = []
-									currentGroup.source_image_s.push(clip.zones[0].file.path)
+									if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
+									currentGroup.data.source_image_S.push(clip.zones[0].file.path)
 								}
 								if(clip.zones[1].file){
-									if(!currentGroup.hasOwnProperty('source_image_lr')) currentGroup.source_image_lr = []
-									currentGroup.source_image_lr.push(clip.zones[1].file.path)
+									if(!currentGroup.data.hasOwnProperty('source_image_LR')) currentGroup.data.source_image_LR = []
+									currentGroup.data.source_image_LR.push(clip.zones[1].file.path)
 								}
 								if(clip.zones[1].text){
 									if(typeof clip.zones[1].text === 'string'){
-										if(!currentGroup.hasOwnProperty('source_multitext_text')) currentGroup.source_single_text = []
-										currentGroup.source_single_text.push(clip.zones[1].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_single_text = []
+										currentGroup.data.source_single_text.push(clip.zones[1].text)
 									}else{
-										if(!currentGroup.hasOwnProperty('source_multitext_text')) currentGroup.source_multitext_text = []
-										currentGroup.source_multitext_text.push(clip.zones[1].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
+										currentGroup.data.source_multitext_text.push(clip.zones[1].text)
 										/*
 										for(var i=0; i<clip.zones[1].text.length; i++){
 											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
@@ -301,28 +321,28 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 							case 3:
 								if(clip.zones[0].locations){
 									
-									if(!currentGroup.hasOwnProperty('source_location')) currentGroup.source_location = []
-									currentGroup.source_location.push(clip.zones[0].locations)
+									if(!currentGroup.data.hasOwnProperty('source_location')) currentGroup.data.source_location = []
+									currentGroup.data.source_location.push(clip.zones[0].locations)
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
 										currentGroup.source_location.push(clip.zones[0].locations[i])
 									}*/
 										
 								}else{
-									if(!currentGroup.hasOwnProperty('source_image_s')) currentGroup.source_image_s = []
-									currentGroup.source_image_s.push(clip.zones[0].file.path)
+									if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
+									currentGroup.data.source_image_S.push(clip.zones[0].file.path)
 								}
 								if(clip.zones[1].file){
-									if(!currentGroup.hasOwnProperty('source_sequence_image_l')) currentGroup.source_sequence_image_l = []
-									currentGroup.source_sequence_image_l.push(clip.zones[1].file.path)
+									if(!currentGroup.data.hasOwnProperty('source_sequence_image_L')) currentGroup.data.source_sequence_image_L = []
+									currentGroup.data.source_sequence_image_L.push(clip.zones[1].file.path)
 								}
 								if(clip.zones[1].text){
 									if(typeof clip.zones[1].text === 'string'){
-										if(!currentGroup.hasOwnProperty('source_sequence_text_l')) currentGroup.source_sequence_text_l = []
-										currentGroup.source_sequence_text_l.push(clip.zones[1].text)
+										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_sequence_text_L = []
+										currentGroup.data.source_sequence_text_L.push(clip.zones[1].text)
 									}else{
-										if(!currentGroup.hasOwnProperty('source_multitext_text_l')) currentGroup.source_multitext_text_l = []
-										currentGroup.source_multitext_text_l.push(clip.zones[1].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text_L')) currentGroup.data.source_multitext_text_L = []
+										currentGroup.data.source_multitext_text_L.push(clip.zones[1].text)
 										/*
 										for(var i=0; i<clip.zones[1].text.length; i++){
 											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
@@ -332,16 +352,16 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 									
 								}
 								if(clip.zones[2].file){
-									if(!currentGroup.hasOwnProperty('source_sequence_image_r')) currentGroup.source_sequence_image_r = []
-									currentGroup.source_sequence_image_r.push(clip.zones[2].file.path)
+									if(!currentGroup.data.hasOwnProperty('source_sequence_image_R')) currentGroup.data.source_sequence_image_R = []
+									currentGroup.data.source_sequence_image_R.push(clip.zones[2].file.path)
 								}
 								if(clip.zones[2].text){
 									if(typeof clip.zones[2].text === 'string'){
-										if(!currentGroup.hasOwnProperty('source_sequence_text_r')) currentGroup.source_sequence_text_r = []
-										currentGroup.source_sequence_text_r.push(clip.zones[2].text)
+										if(!currentGroup.data.hasOwnProperty('source_sequence_text_R')) currentGroup.data.source_sequence_text_R = []
+										currentGroup.data.source_sequence_text_R.push(clip.zones[2].text)
 									}else{
-										if(!currentGroup.hasOwnProperty('source_multitext_text_r')) currentGroup.source_multitext_text_r = []
-										currentGroup.source_multitext_text_r.push(clip.zones[2].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text_R')) currentGroup.data.source_multitext_text_R = []
+										currentGroup.data.source_multitext_text_R.push(clip.zones[2].text)
 										/*
 										for(var i=0; i<clip.zones[1].text.length; i++){
 											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
@@ -358,8 +378,9 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 							
 				})
 				
+				holder.push(groupHolder)
 				//console.log(groupHolder)
-				callback(null,groupHolder)	
+				callback(null,holder)	
 			}else{
 				//custom video type
 			}
