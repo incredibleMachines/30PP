@@ -107,9 +107,9 @@ exports.delete = function(_Database){
 				})
 			})
 		})
-		
 	}
 }
+
 exports.reorder = function(_Database){
 	return function(req,res){
 		//res.jsonp({working:"onit"})
@@ -121,20 +121,19 @@ exports.reorder = function(_Database){
 			console.log(_scene)
 			var currentIndex = _scene.order;
 			if(post.type =='up'){
-				desiredIndex = _scene.order-1;
+				desiredIndex = parseInt(_scene.order)-1;
 			}else{
-				desiredIndex = _scene.order+1;
+				desiredIndex = parseInt(_scene.order)+1;
 			}
 			_Database.update('scenes',{type: _scene.type ,order: desiredIndex},{$set:{order:currentIndex}},function(_e){
 				_Database.update('scenes',{_id:_scene._id},{$set:{order:desiredIndex}},function(__e){
 					
 					res.redirect('/events/?type='+_scene.type)
 					
-				})
-				
+				})	
 			})
-			
-			
 		})
 	}
 }
+
+
