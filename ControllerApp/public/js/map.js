@@ -64,7 +64,9 @@ function InitMapCanvas(_type, _locs, _cb){
 			case 0:
 				var thisLoc = {"x":locs[selectionId].x, "y":locs[selectionId].y};
 				_cb(thisLoc, clickType);
+
 				locs.splice(selectionId, 1);
+
 				//console.log("REMOVE LOC");
 			break;
 			
@@ -72,6 +74,8 @@ function InitMapCanvas(_type, _locs, _cb){
 				var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 				_cb(thisLoc, clickType);
 				locs.push({"x":parseInt(mousePos.x), "y":parseInt(mousePos.y), "color":"#0000FF"});
+				if(locs.length>1 && type === 'single') locs.shift()
+
 				//console.log("ADD LOC");
 			break;	
 		}
