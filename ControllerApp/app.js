@@ -82,12 +82,17 @@ app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(app.router);
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+app.use(function(req, res, next){
+  res.render('404', {});
+});
 
 /** 
  * HTTP Routes Handled by Express
@@ -192,6 +197,7 @@ app.get('/PlayerApp/open',function(req,res){res.jsonp(404,null)})
 app.post('/locations',locations.add(Database));
 app.post('/locations/:slug',locations.update(Database));
 */
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port '.grey + app.get('port').toString().cyan);
