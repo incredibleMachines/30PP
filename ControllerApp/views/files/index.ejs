@@ -9,12 +9,14 @@
 	files = JSON.stringify(files)
 	files = JSON.parse(files)
 	
-	
+	//num_pages = JSON.stringify(num_pages)
+	//num_pages = JSON.parse(num_pages)
 %>
 
 <section class="<%= page_slug %>">
 	<header class="row">
-	    <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1>
+	    <!-- <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1> -->
+	    <h1 class="col-md-6"><%=title%> <small> Page: <%= page_num %></small></h1>
 		<section class="col-md-6 add-btn">
 			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_file_modal">Upload New File</button>
 		</section>
@@ -39,7 +41,7 @@
 		  		if(!file.last_edited) return new Date(file.created_at)
 		  		else return new Date(file.last_edited);
 		  	}) 
-		  		files.reverse()
+		  		//files.reverse() //taking out reverse for pagination
 		  	%>
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item">
@@ -53,7 +55,7 @@
 							</li>
 							<li class="col-md-3"> <!-- MEDIA -->
 								<a href="#" class="thumbnail">
-									<img src="<%=_file.path%>"/>
+									<img src="/<%=_file.path%>"/>
 								</a>
 								<!--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>-->
 								<button type="button" class="btn btn-default btn-sm file-replace">Replace</button>
@@ -93,6 +95,29 @@
 		    <% /* end for loop */ %>
 		  </ul><!-- ul.list-group -->
 	</div>
+	
     </section>
+    
+    <ul class="pagination" style="display:block; width:50%; margin: 0 auto; padding-bottom: 80px;">
+
+		<li <% if(parseInt(page_num) === 1){%> class="disabled" <%}%> >
+		<a <% if(parseInt(page_num) > 1){ %> href="/files/<%= parseInt(page_num)-1 %>" <%}%> >&laquo;</a></li>
+		<% for (var i=1; i<=num_pages; i++){ %>
+			<% if (i === parseInt(page_num)){ %>
+				<li class="active"><a href="/files/<%=i%>"><%=i%></a></li>
+			<% } else { %>
+				<li><a href="/files/<%=i%>"><%=i%></a></li>
+			<% } %>
+		<% } %>
+		
+  		<li <% if(parseInt(page_num) === parseInt(num_pages)){ %> class="disabled" <% } %> >
+  		<a <% if(parseInt(page_num) !== parseInt(num_pages)){ %> href="/files/<%= parseInt(page_num)+1 %>" <%}%> >&raquo;</a></li>
+	  	
+	</ul>
+	
 </section> <!-- .<%= page_slug %> -->   
+
+
+	
 <% include ../includes/footer %>
+

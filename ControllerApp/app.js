@@ -118,8 +118,9 @@ app.post('/render',renderer.render(Database,AfterEffects,app.locals.EVENT_TYPES,
 
 //asset handling pages
 app.get('/files', files.index(Database));
+app.get('/files/:page',files.index(Database)); //NEW - for pagination
 app.post('/files', files.add(Database));
-app.get('/files/:slug', files.single(Database));
+/* app.get('/files/:slug', files.single(Database)); */
 app.post('/files/:slug', files.update(Database));
 app.delete('/files/:slug', files.delete(Database));
 app.post('/files/:slug/delete',files.delete(Database));
