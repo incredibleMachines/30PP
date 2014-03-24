@@ -20,7 +20,7 @@
 							<button class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
 							<button class="btn btn-default btn-xs scene-order scene-order-down <% if(i == scene.clips.length-1){%>disabled<%}%>"><span class="caret"></span></button>
 						</section>
-						<button type="button" data-scene-id="<%=scene.clips[i]._id%>" class="scene-title <%=scene.clips[i].slug %> btn btn-link btn-lg "><%=scene.clips[i].title%></button>
+						<button type="button" data-scene-id="<%=scene.clips[i]._id%>" class="sub-nav scene-title <%=scene.clips[i].slug %> btn btn-link btn-lg "><%=scene.clips[i].title%></button>
 					</li>
 					<% } %>
 				</ul>

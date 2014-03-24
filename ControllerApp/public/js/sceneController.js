@@ -29,6 +29,9 @@ function SceneController(_clips,_files){
 	}
 	
 	formatClip(currentClip)
+	
+	clipNav()
+	firstOn(currentClip.slug)
 		
 	//if a scene title button is pressed in the sidebar
 	//change the scene with javascript
@@ -822,4 +825,20 @@ function SceneController(_clips,_files){
 		currentScene.text_type = $(this).val()
 		orderAssets()
 	}) */
+	
+	/* By Jenn: For making selected clip name in scene sub-nav turn black when active */
+	function clipNav() {
+		$('.sub-nav').click(function() {
+			$(this).closest('ul.list-group').find('.active').removeClass("active");
+			$(this).closest('.list-group-item').addClass( "active");
+		});
+		
+	}
+	
+	/* By Jenn: For making 1st sub-nav item be active on page load */
+	function firstOn(slug) {
+		console.log(slug)
+		$('button.'+slug).closest('.list-group-item').addClass("active");
+	}
+	
 }
