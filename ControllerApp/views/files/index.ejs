@@ -28,7 +28,7 @@
 		  	<ul class="event row panel-title" >
 		  		<li class="col-md-3 panel-title">Title</li>
 		  		<li class="col-md-3 panel-title">Media</li>
-		  		<li class="col-md-2 panel-title">Appears in:</li>
+		  		<li class="col-md-3 panel-title">Appears in:</li>
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
@@ -62,7 +62,7 @@
 								<input style="display:none;"class="form-control" type="file" name="content" >
 
 							</li>
-							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
+							<li class="col-md-3 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
 									
@@ -83,12 +83,11 @@
 										
 										/* now go through all scenes to see who has this clip */
 										scenes.forEach(function(scene,k){
-											console.log("scene num: "+k);
 											var theseClips = scene.clips;
 											theseClips.forEach(function(clip, k){
 												matchedClips.forEach(function(matchedClip, l){
 													if(clip === matchedClip._id){
-														console.log("found match: "+matchedClip.slug);
+														//console.log("found match: "+matchedClip.slug);
 														matchedScenes.push(scene);
 													}
 												})
@@ -97,7 +96,8 @@
 																					
 										matchedScenes.forEach(function(scene,j){ %>
 										
-										<li><a href= "/scenes/<%=scene.slug%>#<%=matchedClips[j].slug%>"><%=scene.type%>: <%=scene.title%></a></li><br />	
+										<li><a href= "/scenes/<%=scene.slug%>#<%=matchedClips[j].slug%>">
+											<%=scene.type%>: <%=scene.title%> - <%=matchedClips[j].title%></a></li><br />	
 										
 										<%})%>
 									</ul>
