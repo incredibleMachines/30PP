@@ -341,8 +341,8 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_sequence_text_L = []
 										currentGroup.data.source_sequence_text_L.push(clip.zones[1].text)
 									}else{
-										if(!currentGroup.data.hasOwnProperty('source_multitext_text_L')) currentGroup.data.source_multitext_text_L = []
-										currentGroup.data.source_multitext_text_L.push(clip.zones[1].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
+										currentGroup.data.source_multitext_text.push(clip.zones[1].text)
 										/*
 										for(var i=0; i<clip.zones[1].text.length; i++){
 											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
@@ -360,8 +360,8 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_R')) currentGroup.data.source_sequence_text_R = []
 										currentGroup.data.source_sequence_text_R.push(clip.zones[2].text)
 									}else{
-										if(!currentGroup.data.hasOwnProperty('source_multitext_text_R')) currentGroup.data.source_multitext_text_R = []
-										currentGroup.data.source_multitext_text_R.push(clip.zones[2].text)
+										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
+										currentGroup.data.source_multitext_text.push(clip.zones[2].text)
 										/*
 										for(var i=0; i<clip.zones[1].text.length; i++){
 											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
