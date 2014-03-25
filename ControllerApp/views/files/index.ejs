@@ -74,8 +74,8 @@
 											var zones = clips[c].zones;
 											var matched = false;
 											for(var d=0; d<zones.length; d++){
-												if(zones[d].file === _file._id) matched = true;
-											}
+												if(zones[d].file === _file._id) matched = true; 
+											} //underscore can help all this malarky be more efficient
 											if(matched) matchedClips.push(clips[c]);
 										}
 										//console.log("matchedClips: "+matchedClips);
@@ -88,7 +88,7 @@
 											theseClips.forEach(function(clip, k){
 												matchedClips.forEach(function(matchedClip, l){
 													if(clip === matchedClip._id){
-														console.log("found match: "+clip);
+														console.log("found match: "+matchedClip.slug);
 														matchedScenes.push(scene);
 													}
 												})
@@ -97,7 +97,7 @@
 																					
 										matchedScenes.forEach(function(scene,j){ %>
 										
-										<li><a href= "/scenes/<%=scene.slug%>"><%=scene.type%>: <%=scene.title%></a></li><br />	
+										<li><a href= "/scenes/<%=scene.slug%>#<%=matchedClips[j].slug%>"><%=scene.type%>: <%=scene.title%></a></li><br />	
 										
 										<%})%>
 									</ul>
