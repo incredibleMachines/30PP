@@ -22,17 +22,22 @@ exports.index = function(_Database){
 		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*resultsPerPage, limit:resultsPerPage}, function(e,_files){
 			if(!e){ 
 				_Database.getAll('clips',function(__e,_clips){
-					//if(!__e) res.json(400,{requrl: req.url, files: _files, clips: _clips});
-					//else res.json(500, {error:__e});
-					if(!__e) res.render('files/index', { current:req.url, title:'File Library', page_slug:'files-index', 
-						files:_files, clips:_clips, num_pages:numPages, page_num:page, error:null });
-					else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug:'files-index error', 
-						file:_files,clips:null, num_pages:numPages, page_num:page, error:null })
+					if(!__e){
+						_Database.getAll('scenes',function(___e,_scenes){
+							if(!___e) res.render('files/index', { current:req.url, title:'File Library', page_slug:'files-index', 
+								files:_files, clips:_clips, scenes:_scenes, num_pages:numPages, page_num:page, error:null });
+							else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug:'files-index error', 
+								file:_files,clips:_clips, scenes:null, num_pages:numPages, page_num:page, error:'Return Scenes Error' });				
+						})
+					} else {
+						res.render('files/index', { current:req.url, title:'File Library Error', page_slug:'files-index error',
+							files:null, clips:null, scenes:null, num_pages:numPages, page_num:page, error:'Return Files Error' });
+					}
 				})
 					
 			}else{ 
 				res.render('files/index', { current:req.url, title:'File Library Error', page_slug:'files-index error',
-					files:null, clips:null, num_pages:numPages, page_num:page, error:'Return Files Error' })
+					files:null, clips:null, num_pages:numPages, page_num:page, error:'Return Files Error' });
 			}
 		})
 	}

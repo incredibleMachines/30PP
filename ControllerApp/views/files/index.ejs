@@ -5,12 +5,12 @@
 	/* for sorting mongo db items as elements */
 	clips = JSON.stringify(clips)
 	clips = JSON.parse(clips)
-	
+
 	files = JSON.stringify(files)
 	files = JSON.parse(files)
-	
-	//num_pages = JSON.stringify(num_pages)
-	//num_pages = JSON.parse(num_pages)
+
+	scenes = JSON.stringify(scenes)
+	scenes = JSON.parse(scenes)
 %>
 
 <section class="<%= page_slug %>">
@@ -65,20 +65,41 @@
 							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
-										<% /* begin for loop*/ 
-											//Note:: This needs modification, we don't actually want the title of the asset, but the title of 
-											//the scene which the asset lives within
-											//it will be important to surface this data as the current form makes little sense.
-											
-											var associatedAssets = _.where(clips,{file:_file._id})
-											
-											associatedAssets.forEach(function(clip,j){
-										%>
-											<li><a><%=clip.title%></a></li>	
-										<%	})
-										%>
+									
+										<%	
+										var matchedClips = [];
+										var matchedScenes = [];
+										/* go through all clips, find ones that contain this file */
+										for(var c=0; c<clips.length; c++){
+											var zones = clips[c].zones;
+											var matched = false;
+											for(var d=0; d<zones.length; d++){
+												if(zones[d].file === _file._id) matched = true;
+											}
+											if(matched) matchedClips.push(clips[c]);
+										}
+										//console.log("matchedClips: "+matchedClips);
+										//console.log("---------");
 										
-										<% /* end for loop */ %>
+										/* now go through all scenes to see who has this clip */
+										scenes.forEach(function(scene,k){
+											console.log("scene num: "+k);
+											var theseClips = scene.clips;
+											theseClips.forEach(function(clip, k){
+												matchedClips.forEach(function(matchedClip, l){
+													if(clip === matchedClip._id){
+														console.log("found match: "+clip);
+														matchedScenes.push(scene);
+													}
+												})
+											})
+										})
+																					
+										matchedScenes.forEach(function(scene,j){ %>
+										
+										<li><a href= "/scenes/<%=scene.slug%>"><%=scene.type%>: <%=scene.title%></a></li><br />	
+										
+										<%})%>
 									</ul>
 								</div>
 							</li>
