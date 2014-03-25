@@ -108,6 +108,9 @@ select.location {
 .panel-default .panel-heading {
   border-color: #999;
 }
+.clip-view .panel-heading {
+  padding: 10px 0;
+}
 #scene-contents.row {
   margin: 0px;
   padding-top: 20px;
@@ -121,7 +124,7 @@ select.location {
   clear: both;
 }
 header.single-event-head {
-  position: fixed;
+  margin-bottom: 20px;
 }
 header.single-event-head h3 {
   margin: 0px;
@@ -158,6 +161,12 @@ label {
 }
 li.list-group-item .btn-group-vertical .btn-xs {
   padding: 3px 7px;
+}
+.active {
+  background-color: #f5f5f5;
+}
+.active .sub-nav {
+  color: #333;
 }
 .panel-default header.scene-detail-head {
   background-color: #fff;
@@ -350,6 +359,9 @@ fieldset[disabled] .btn-default.active .caret {
 }
 .form-group {
   margin-bottom: 20px;
+}
+.form-group canvas {
+  margin-top: 20px;
 }
 .modal-footer {
   clear: both;
