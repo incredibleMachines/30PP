@@ -1,14 +1,14 @@
 <% /* SCENES SINGLE PAGE */ %>
 <% include ../includes/header %>
 <section class="<%= page_slug %>">
-	<header class="row single-event-head col-md-3">
+	<header class="single-event-head col-md-12">
 	    <h3 class="col-md-12"><small>Scene:</small> <%=scene.title%></h3>
 		<section class="col-md-12 duration-header">
 			<h3><small>Duration: <%= scene.duration %></small></h3>
 		</section>
 	</header>
-	<section class="row pull-left <%= page_slug %> content">
-		<aside class="col-md-3">
+	<section class="row pull-left <%= page_slug %> content col-md-12">
+		<aside class="col-md-3 pull-left">
 			<section class="panel panel-default">
 				<header class="panel-heading">
 					<h3 class="panel-title">Clips <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_clip_modal"><small>Add New Clip +</small></button></h3>
@@ -28,15 +28,15 @@
 		</aside>
 		<%/* Must check for specific single scene if we are loading that currently defaults to the first scene */ %>
 		<% if(scene.clips.length > 0){ %>
-		<section class="col-md-8 clip-view">
+		<section class="col-md-9 clip-view pull-right">
 			<section class="panel panel-default">
 				<header class="panel-heading scene-detail-head">
 					<h3 class="panel-title clip-title"><%= scene.clips[0].title %></h3>
 				</header>
-				<section id="clip-contents" class="row ">						
+				<section id="clip-contents" class="row col-md-12">						
 					<form action="/scenes/<%=scene.clips[0]._id%>" method="post">
 						<input type="hidden" name="scene_id" value="<%= scene._id %>">
-						<article id="clip-data" class="col-md-4">
+						<article id="clip-data" class="row col-md-4">
 							<%/* Must Check for empty Scenes and serve up default content */%>
 							<% /* Update Scenes Slug etc for action */ %>
 								<section class="form-group">
@@ -58,7 +58,7 @@
 										<img src="/imgs/sculpture_<%= scene.clips[0].layout %>.jpg"/>
 									</a>
 								</section><!-- .form-group -->
-								<section class="pull-right btn-group">
+								<section class="btn-group">
 									<button type="submit" class="btn btn-primary btn-block btn-sm green">Save Changes</button>
 									<!--<button type="button" class="btn btn-default btn-block btn-sm">Exit Without Saving</button>-->
 									<button type="button" class="btn btn-danger btn-block btn-sm red scene-delete">Delete This Scene</button>
@@ -66,10 +66,10 @@
 						</article><!-- #scene-data -->
 						
 						
-						<article id="zone-data" class="col-md-8">
+						<article id="zone-data" class="row col-md-8 pull-right">
 								
 								<article class="row zone-single zone-single-0">
-										<section class="col-md-7 zone-contents">
+										<section class="col-md-6 col-md-offset-1 zone-contents row">
 										
 											<section class="form-group">
 												<%  var title = "Title"; %>
@@ -106,7 +106,7 @@
 											</section>
 											
 										</section><!-- .zone-contents -->
-										<section class="col-md-5 zone-image">										
+										<section class="col-md-5 zone-image row pull-right">										
 											<a class="thumbnail">
 												<img data-src="holder.js/100%x150/industrial/text:No File Associated" />
 											</a>

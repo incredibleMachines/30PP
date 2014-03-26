@@ -13,22 +13,22 @@
 	scenes = JSON.parse(scenes)
 %>
 
-<section class="<%= page_slug %>">
-	<header class="row">
+<section class="<%= page_slug %> col-md-12">
+	<header>
 	    <!-- <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1> -->
-	    <h1 class="col-md-6"><%=title%> <small> Page: <%= page_num %></small></h1>
-		<section class="col-md-6 add-btn">
+	    <h1 class="col-md-4 pull-left"><%=title%> <small> Page: <%= page_num %></small></h1>
+		<section class="col-md-2 pull-right add-btn">
 			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_file_modal">Upload New File</button>
 		</section>
 	</header>
-    <section class='current_events'>
+    <section class="current_events row col-md-12">
 		<div class="panel panel-default">
 		  <!-- Our Events Table  -->
 		  <div class="panel-heading">
 		  	<ul class="event row panel-title" >
 		  		<li class="col-md-3 panel-title">Title</li>
 		  		<li class="col-md-3 panel-title">Media</li>
-		  		<li class="col-md-3 panel-title">Appears in:</li>
+		  		<li class="col-md-4 panel-title">Appears in:</li>
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
@@ -44,7 +44,7 @@
 		  		//files.reverse() //taking out reverse for pagination
 		  	%>
 		  	<% files.forEach(function(_file,i){%>
-		    <li class="list-group-item">
+		    <li class="list-group-item row">
 			    	<ul class="event row" >
 			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
 							<input type="hidden" name="id" value="<%= _file._id%>">
@@ -62,7 +62,7 @@
 								<input style="display:none;"class="form-control" type="file" name="content" >
 
 							</li>
-							<li class="col-md-3 scene-num"><!-- ASSOCIATED SCENES -->
+							<li class="col-md-4 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
 									
@@ -119,7 +119,7 @@
 	
     </section>
     
-    <ul class="pagination" style="display:block; width:50%; margin: 0 auto; padding-bottom: 80px;">
+    <ul class="pagination col-md-12">
 
 		<li <% if(parseInt(page_num) === 1){%> class="disabled" <%}%> >
 		<a <% if(parseInt(page_num) > 1){ %> href="/files/<%= parseInt(page_num)-1 %>" <%}%> >&laquo;</a></li>

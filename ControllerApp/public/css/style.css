@@ -73,7 +73,7 @@ ul.event {
 ul.event li {
   position: relative;
   display: inline;
-  padding: 2px 15px;
+  padding: 5px 15px;
   font-weight: bold;
 }
 ul.event li.scene-num {
@@ -87,14 +87,13 @@ select.location {
 }
 /* -------------- Single Event -------------- */
 .panel-title {
-  line-height: 30px;
+  line-height: 20px;
   font-size: 14px;
 }
 .panel-title small {
   float: right;
   font-size: 75%;
   color: #333;
-  margin-top: 2px;
 }
 .panel-title small button {
   margin: -2px 0 0 5px;
@@ -102,14 +101,23 @@ select.location {
 .scene-detail-head .scene-title {
   font-weight: bold;
 }
+.scenes-single .content {
+  padding-top: 20px;
+}
+.panel-heading {
+  padding: 5px 0;
+}
+.panel-heading button {
+  float: right;
+}
 .panel-default {
   border: none;
 }
-.panel-default .panel-heading {
-  border-color: #999;
+.panel-default #clip-contents {
+  margin-top: 20px;
 }
-.clip-view .panel-heading {
-  padding: 10px 0;
+aside header.panel-heading {
+  padding: 10px 20px;
 }
 #scene-contents.row {
   margin: 0px;
@@ -122,9 +130,6 @@ select.location {
 #scene-data .btn-group button {
   width: 40%;
   clear: both;
-}
-header.single-event-head {
-  margin-bottom: 20px;
 }
 header.single-event-head h3 {
   margin: 0px;
@@ -162,6 +167,9 @@ label {
 li.list-group-item .btn-group-vertical .btn-xs {
   padding: 3px 7px;
 }
+ul.list-group li.list-group-item {
+  padding: 10px 0;
+}
 .active {
   background-color: #f5f5f5;
 }
@@ -170,6 +178,21 @@ li.list-group-item .btn-group-vertical .btn-xs {
 }
 .panel-default header.scene-detail-head {
   background-color: #fff;
+  padding: 10px 0;
+}
+.zone-single {
+  padding-bottom: 20px;
+}
+.zone-single .zone-contents {
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+.zone-single .zone-contents input {
+  font-size: 18px;
+  font-weight: bold;
+}
+.pagination {
+  clear: both;
 }
 /* -------------- FILE LIBRARY --------------*/
 .event .file-title input,
@@ -229,7 +252,6 @@ li.list-group-item .btn-group-vertical .btn-xs {
   background-color: #e7e7e7;
 }
 .add-btn {
-  float: right;
   width: 176px;
   padding-top: 10px;
 }
@@ -356,9 +378,6 @@ fieldset[disabled] .btn-default.active .caret {
 .modal-content h3 {
   margin-top: 10px;
   margin-bottom: 0;
-}
-.form-group {
-  margin-bottom: 20px;
 }
 .form-group canvas {
   margin-top: 20px;
