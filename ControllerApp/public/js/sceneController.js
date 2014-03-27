@@ -70,7 +70,8 @@ function SceneController(_clips,_files){
 			}
 			
 			$this.closest('.row').find('select.zone-file').val('none')
-			var val = $this.val()
+			var val = $this.val();
+
 			var type = val.charAt(0).toUpperCase()+val.slice(1)
 			$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+type)
 			//$this.closest('.row').find('img').attr('src','holder.js/100%x150/industrial/text:'+$this.val()+' location')
@@ -80,7 +81,8 @@ function SceneController(_clips,_files){
 					
 			var locs;
 			
-			InitMapCanvas(type, locs, mapCallback); //see mapCallback defined below
+			/* changed to raw val, was type */
+			InitMapCanvas(val, locs, mapCallback); //see mapCallback defined below
 		}
 	})
 	
@@ -362,8 +364,9 @@ function SceneController(_clips,_files){
 				} 
 				
 				if(zone.locations){
-					//console.log("Locations: "+zone.locations.length)
+					console.log("Locations: "+zone.locations.length)
 					var type = (zone.locations.length>1)? 'multiple' : 'single'
+					console.log("type: "+type);
 					//val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(type)
 					var output = type.charAt(0).toUpperCase()+type.slice(1)
@@ -397,15 +400,17 @@ function SceneController(_clips,_files){
 	
 	
 	function mapCallback(locPos, eventType){
-								//alert(mousePos.x+","+mousePos.y)
-		var length = $('section.location').length
+	
+		
 		var current = $('select.zone-map-type').val()
-		//alert(current)
-		if(current === 'single') $('.location').remove()
+		console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x);
+		if(current === 'single') $('section.location').remove()
+		var length = $('section.location').length;
 		switch(eventType){
-			case 0:
+			case 0: //remove location
 				//**** hardcoding the index to '0', assuming that sculpture will always be at index 0 ****//
 /* 				console.log($('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y)); */
+				//console.log("REMOVING LOC FROM FORM");
 				$('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y).remove();						
 			break;
 			
