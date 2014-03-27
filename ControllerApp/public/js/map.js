@@ -7,7 +7,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	var ctx = canvas.getContext("2d");
 	
 	//TODO: make this dynamic
-	canvas.width = 273;
+	canvas.width = 215;
 	canvas.height = 200;
 	
 	var bgImage = new Image();
@@ -16,7 +16,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	var locs = _locs;
 	
 	var locDiameter = 8; // size of circles
-	var locColor = "#0000FF";
+	var locColorOn = "#0000FF";
 	
 	var selectionId; // index for selecting locations
 	var clickType = 1; // 0=delete  ,  1=add location
@@ -28,7 +28,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	function drawLocations(){
 
 		ctx.drawImage(bgImage, 0, 0);
-		ctx.fillStyle = "#0000FF"
+		ctx.fillStyle = locColorOn;
 		
 		for(var i=0; i<locs.length; i++){
 			ctx.fillStyle = locs[i].color;
@@ -52,7 +52,8 @@ function InitMapCanvas(_type, _locs, _cb){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
 		ctx.fillStyle = 'black';
-		ctx.fillText("click to choose "+type+" location", 30, 100);
+		ctx.fillText("click to choose location", 33, 85);
+		//ctx.fillText(type+" location", 57, 100);
 	}
 	
 	
@@ -61,21 +62,22 @@ function InitMapCanvas(_type, _locs, _cb){
 	function processClick(mousePos){
 		if(typeof locs === 'undefined') locs = new Array();
 		switch (clickType){
-			case 0:
+			case 0: //removing a location
 				var thisLoc = {"x":locs[selectionId].x, "y":locs[selectionId].y};
 				_cb(thisLoc, clickType);
-
 				locs.splice(selectionId, 1);
 
 				//console.log("REMOVE LOC");
 			break;
 			
-			case 1:
+			case 1: //adding a location
 				var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 				_cb(thisLoc, clickType);
-				locs.push({"x":parseInt(mousePos.x), "y":parseInt(mousePos.y), "color":"#0000FF"});
-				if(locs.length>1 && type === 'single') locs.shift()
-
+				locs.push({"x":parseInt(mousePos.x), "y":parseInt(mousePos.y), "color":locColorOn});
+				if(locs.length>1 && type === 'single'){
+					//console.log("map.js: single locs.shift");
+					locs.shift()
+				} 
 				//console.log("ADD LOC");
 			break;	
 		}
@@ -108,7 +110,7 @@ function InitMapCanvas(_type, _locs, _cb){
 
 				} else {
 					clickType = 1;
-					locs[i].color = "#0000FF";
+					locs[i].color = locColorOn;
 
 					drawLocations();
 					//console.log("type ADD");
