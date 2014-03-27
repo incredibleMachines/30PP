@@ -1,8 +1,9 @@
 var util 	= require('util'),
 	exec	= require('child_process').exec, 
+	spawn = require('child_process').spawn,
 	fs		= require('fs'), 
 	async 	= require('async');
-	
+
 	
 //NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
 var AFTEREFFECTS, 
@@ -17,6 +18,8 @@ var AFTEREFFECTS,
 */
 var APPLESCRIPT_FOLDER = __dirname+"/../includes/applescripts";
 var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
+var AEPROJECT_FOLDER = __dirname+"/../includes/aeprojects";
+var VIDEO_FOLDER = __dirname+"/../includes/videos";
 
 //notes:
 
@@ -102,8 +105,8 @@ exports.open = function(file,cb){
 	currentFile = file;
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 							bOpen = true;
-							if(err) console.error(err);
-							cb(err,stdout);
+							if(err) console.error(err,null,stderr);
+							cb(err,stdout,stderr);
 							})
 }
 
@@ -132,14 +135,45 @@ exports.processRenderOutput = function(formattedScenes,cb){
 	
 	console.log(JSON.stringify(formattedScenes))
 	
+	async.eachSeries(formattedScenes,renderContent,function(e){
+		if(e)console.error(e)
+		else console.log('done');
+	})
+	
+	
 }
 
 
 //data to render as an array[]
 //render options
-function renderContent(data,options,cb){
-	
+function renderContent(scene,cb){
+	var timebetween = 1000;
+	if(scene.type === 'default_gastronomy'){
+	setTimeout(function(){
+		scene.output = VIDEO_FOLDER+'/'+scene.type+'.mov'
+		scene.template = AEPROJECT_FOLDER+'/'+scene.template
+		console.log(scene)
+		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
+		console.log(" Function Call to AE ".inverse.cyan)
+		console.log(functionCall)		
+		
+		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
+							if(err){
+								console.error(err)
+								cb(e);	
+							}else{ 
+								cb(null)
+							}
+							})
+		
+	},timebetween)
+	}else{
+	cb(null)
+	}
+	//cb(null)
 }
+
+
 
 
 //put togeher ae script osascript based off of using the AERunDoScript Object.

@@ -110,6 +110,7 @@ select.location {
 }
 .clip-view .panel-heading {
   padding: 10px 0;
+  margin-bottom: 20px;
 }
 #scene-contents.row {
   margin: 0px;

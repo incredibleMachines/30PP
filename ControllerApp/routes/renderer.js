@@ -240,7 +240,7 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 		//default each scene and organize
 		var holder = [];
 		_.each(scenesByType,function(scenes,slug){
-			var groupHolder = [];
+			//var groupHolder = [];
 			//sort out each scene by slug
 			if(slug === 'default'){
 					
@@ -253,17 +253,20 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 				_.each(scenesByType[slug],function(scene,order){
 					//assumes that _.each will iterate in the correct order
 					
-					var type = slug+'_'+scene.slug	
-					var temp = _.findWhere(groupHolder, {type: type })
+					var type = slug+'_'+scene.slug
+					var temp = _.findWhere(holder, {type: type })	
+					//var temp = _.findWhere(groupHolder, {type: type })
 					
 					if( typeof temp === 'undefined'){
 						var newObj = {type: type}
-						groupHolder.push(newObj)
+						holder.push(newObj)
+						//groupHolder.push(newObj)
 						//currentGroup = temp;
 					}
 					
-					var currentGroup = _.findWhere(groupHolder,{type:type})
-		
+					//var currentGroup = _.findWhere(groupHolder,{type:type})
+					var currentGroup = _.findWhere(holder,{type:type})
+					
 					currentGroup.template = type+".aep"
 					currentGroup.script = type+".jsx"
 					currentGroup.data = {}
@@ -378,7 +381,7 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 							
 				})
 				
-				holder.push(groupHolder)
+				//holder.push(groupHolder)
 				//console.log(groupHolder)
 				callback(null,holder)	
 			}else{
