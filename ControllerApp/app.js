@@ -76,7 +76,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
+app.use(express.bodyParser({limit:'1000mb',uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
