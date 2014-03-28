@@ -56,9 +56,9 @@ function SceneController(_clips,_files){
 				
 		if($this.val() === 'none'){ 
 					$('canvas#map').remove()
-					$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
+					$this.closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
 					Holder.run({
-						images: $this.closest('.row').find('img')[0]
+						images: $this.closest('.zone-single').find('img')[0]
 					})				
 		}else{
 			//check if element exists using length
@@ -69,14 +69,14 @@ function SceneController(_clips,_files){
 				//init the map
 			}
 			
-			$this.closest('.row').find('select.zone-file').val('none')
+			$this.closest('.zone-single').find('select.zone-file').val('none')
 			var val = $this.val();
 
 			var type = val.charAt(0).toUpperCase()+val.slice(1)
-			$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+type)
+			$this.closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+type)
 			//$this.closest('.row').find('img').attr('src','holder.js/100%x150/industrial/text:'+$this.val()+' location')
 			Holder.run({
-						images: $this.closest('.row').find('img')[0]
+						images: $this.closest('.zone-single').find('img')[0]
 					})
 					
 			var locs;
@@ -92,8 +92,8 @@ function SceneController(_clips,_files){
 			
 		var $this = $(this)
 				
-		var classes = $this.closest('.row').attr('class')
-		//alert(index)
+		var classes = $this.closest('.zone-single').attr('class')
+		//alert(classes)
 		var index
 		//'asset-single-0'
 		$(classes.split(' ')).each(function(){
@@ -125,10 +125,10 @@ function SceneController(_clips,_files){
 					text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text">+</button><button type="button" class="btn remove-zone-text btn">-</button></div>'
 					text += '</section>'
 				//set image to be multitext and file to be none
-				$this.closest('.row').find('select.zone-file').val('none')
-				$this.closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
+				$this.closest('.zone-single').find('select.zone-file').val('none')
+				$this.closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
 					Holder.run({
-						images: $this.closest('.row').find('img')[0]
+						images: $this.closest('.zone-single').find('img')[0]
 					})		
 			break;
 		}
@@ -228,23 +228,23 @@ function SceneController(_clips,_files){
 		var file = _.findWhere(_files,{_id:$(this).val()})
 
 		if(typeof file !=='undefined'){ 
-			$(this).closest('.row').find('img').attr('src','/'+file.path).height("auto")
+			$(this).closest('.zone-single').find('img').attr('src','/'+file.path).height("auto")
 			//
-			$(this).closest('.row').find('select.zone-map-type').val('none')
-			$(this).closest('.row').find('select.zone-map-type').siblings('section.location').remove()
+			$(this).closest('.zone-single').find('select.zone-map-type').val('none')
+			$(this).closest('.zone-single').find('select.zone-map-type').siblings('section.location').remove()
 			
-			if($(this).closest('.row').hasClass('zone-single-0')) $('canvas#map').remove()
+			if($(this).closest('.zone-single').hasClass('zone-single-0')) $('canvas#map').remove()
 			//$('canvas#map').remove()		
 			}
 		else{
-			$(this).closest('.row').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
+			$(this).closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
 			Holder.run({
-						images: $(this).closest('.row').find('img')[0]
+						images: $(this).closest('.zone-single').find('img')[0]
 					})
 		}
-		if($this.closest('.row').find('select.zone-text-type').val() === 'multiple'){
-			$this.closest('.row').find('.zone-text').remove()
-			$this.closest('.row').find('select.zone-text-type').val('none')
+		if($this.closest('.zone-single').find('select.zone-text-type').val() === 'multiple'){
+			$this.closest('.zone-single').find('.zone-text').remove()
+			$this.closest('.zone-single').find('select.zone-text-type').val('none')
 		}
 	})
 
@@ -424,412 +424,6 @@ function SceneController(_clips,_files){
 			break;
 		}
 	}
-	/*
-	**
-	** orderAssets()
-	**
-	*
-	
-	function orderAssets(){
-		var assets = $('article.asset-single');
-		
-		for(var i = 0; i<assets.length; i++){
-			console.log(assets[i])
-			$(assets[i]).removeClass(function(index,c){
-					//'asset-single-0'
-					var _this = $(this)
-					$(c.split(' ')).each(function(){
-						var c = this.trim();
-						//console.log(c)
-						if(c.indexOf('asset-single-')>=0){
-							//console.log("Match :: "+c)
-							_this.removeClass(c)
-							
-						}
-						//console.log(c)
-					})
-					
-				}).addClass('asset-single-'+i);
-				$(assets[i]).find('input.asset-title').attr('name','assets['+i+'][title]');
-				$(assets[i]).find('select.asset-zone-type').attr('name','assets['+i+'][zone_type]');
-				$(assets[i]).find('select.asset-file').attr('name','assets['+i+'][file]');
-				$(assets[i]).find('textarea.asset-caption').attr('name','assets['+i+'][caption]')
-				console.log(assets[i])
-			
-		}
-		
-		
-	}
-	
-	/*
-	**
-	** createAssets(_val) 
-	** _val = string, a preset value determined by the system currently 'zone_0', 'zone_1','zone_2','zone_3' (subject to updates)
-	** 
-	*/
-	
-	/* Out to pasture....
-	function createAssets(_scene_type, _text_type){
-			//console.log(_scene_type)
-			//TO DO Populate all the assets!
-			//console.log(currentScene.assets.length)
-			//clone our original asset (store it in the Browsers Memory)
-			var asset = $('article.asset-single-0').clone();
-			
-			//clear all the old assets from the HTML
-			$('article.asset-single').remove();
-			
-			/*
-			var assetNum;
-			
-			//assign a number value to our zones - note this is currently hard coded and will be updated
-			switch(_val){
-				//This is will have to change once we know what the fucks we need here.
-				case '0': assetNum = 1; break;
-				case '1': assetNum = 2; break;
-				case '2': assetNum = 3; break;
-				case '3': assetNum = 4; break; 
-			}
-			
-			
-		 	var assetNum =0,  contentAsset, textAsset;
-			//assign a number value to our zones - note this is currently hard coded and will be updated
-			
-			switch(_scene_type){
-				//This is will have to change once we know what the fucks we need here.
-				case "0": contentAsset=1; assetNum+=contentAsset;  break; //Full Immersion
-				case "1": contentAsset=2; assetNum+=contentAsset;  break; //single Wall Sculpture
-				case "2": contentAsset=3; assetNum+=contentAsset;  break; //double Wall Sculpture
-			} 
-			switch(_text_type){
-				case "0": textAsset=0; assetNum+=textAsset;  break;
-				case "1": textAsset=1; assetNum+=textAsset;  break;
-				case "2": textAsset=2; assetNum+=textAsset;  break;
-			}
-							
-			
-			
-			//console.log(currentScene.assets.length +" "+assetNum)
-			//clear all the old single assets from the column
-			$('article.asset-single').remove();
-			
-			
-			
-			for(var i = 0; i< assetNum; i++){
-			
-				var title = "Title";
-				if(i < contentAsset){
-					if( i == 0 ){
-						if(contentAsset ==1 ) title= "Wall And Sculpture"
-						else title = "Sculpture"
-					}
-					if( contentAsset== 3){
-						if(i == 1) title = "Left Wall"
-						if(i == 2) title = "Right Wall"
-						
-					}else{
-						if(i == 1) title = "Single Wall"
-					}
-				}else{
-					if(textAsset>1){
-						if(i == assetNum - 1) title = "Text Two"
-						else title = "Text One"
-					}else{
-						title = "Text"
-					}
-				} 
-				//copy our model asset for the number of assets we have
-				var newAsset = $(asset).clone();
-				//console.log(currentScene.assets[i])
-				//console.log(i+" "+currentScene.assets.indexOf(i));
-				//update the class structure
-				$(newAsset).removeClass('asset-single-0').addClass('asset-single-'+i);
-				
-				$(newAsset).find('select.asset-file').attr('name','assets['+i+'][file]').addClass('')
-				$(newAsset).find('select.asset-file option:selected').removeAttr('selected');
-
-				$(newAsset).find('textarea.asset-caption').attr('name','assets['+i+'][caption]').html('');
-				$(newAsset).find('input.asset-title').attr('value',title)
-				
-				if(i < contentAsset) {
-					$(newAsset).find('textarea.asset-caption').parent().hide()
-					$(newAsset).find('select.asset-file').parent().show()
-					$(newAsset).find('select.asset-zone-type').parent().show()
-				}
-				
-				if(i>=contentAsset){
-					$(newAsset).find('select.asset-file').parent().hide()
-					$(newAsset).find('textarea.asset-caption').parent().show()
-					$(newAsset).find('select.asset-zone-type').parent().hide()
-
-					
-				}
-				if(title == "Sculpture" || title == "Single Wall"){
-					$(newAsset).find('select.asset-zone-type').parent().show()
-					$(newAsset).find('select.asset-zone-type').html("");
-					if(title == "Sculpture") {
-						$(newAsset).find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>");
-						}else if(title=="Single Wall"){
-						
-						$(newAsset).find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Text\">Multi Text</option>")	
-							
-						}
-				}else{
-					$(newAsset).find('select.asset-zone-type').parent().hide()
-				}
-				
-				//append the data into our holder
-				$('#asset-data').append(newAsset);	
-			}
-			
-			for(var i =0; i <assetNum; i++){
-				if(typeof currentScene.assets[i] !== 'undefined'){ //check if we have a corresponding asset
-					console.log(i+" :: "+JSON.stringify(currentScene.assets[i]));
-  					//iterate through the asset
-					Object.keys(currentScene.assets[i]).forEach(function(key){
-						//make sure that our index's match
-						console.log(currentScene.assets[i][key].file)
-						//console.log($('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]'))	
-						$('.asset-single-'+key).find('select.asset-file option[value="'+currentScene.assets[i][key].file._id+'"]').attr('selected','selected');
-						if(currentScene.assets[i][key].file != "") $('.asset-single-'+key).find('.thumbnail img').attr("src","/"+currentScene.assets[i][key].file.path)
-						else{ 
-							$('.asset-single-'+key).find('.thumbnail img').attr("data-src","holder.js/100%x150/text:No%20File%20Associated")
-							var img = $('.asset-single-'+key).find('.thumbnail img');
-							console.log(img)
-							Holder.run({
-								images: img[0]
-							})
-						}
-						$('.asset-single-'+key).find('textarea.asset-caption').html(currentScene.assets[i][key].caption);			
-						//doesnt' load image from filepath express.js doesn't know about .assets
-						//$('.asset-single-'+key).find('.asset-image .thumbnail img').attr('src',currentScene.assets[i][key].file.path);
-						if(currentScene.assets[i][key].type !== 0) { 
-							$('.asset-single-'+key).find('select.asset-file').parent().show(); 
-							$('.asset-single-'+key).find('textarea.asset-caption').parent().hide();
-						}
-						if(currentScene.assets[i][key].type == 0){ 
-							$('.asset-single-'+key).find('select.asset-file').parent().hide();
-							$('.asset-single-'+key).find('textarea.asset-caption').parent().show();
-						}
-						
-						if($('.asset-single-'+key+' input.asset-title').val() == "Single Wall"){
-							var html;
-							console.log("Single Wall")
-							if(currentScene.assets[i][key].zone_type === "Multi Text"){
-								html = "<option value=\"\">None</option><option selected value=\"Multi Text\">Multi Text</option>"
-							}else{
-								html = "<option selected value=\"\">None</option><option value=\"Multi Text\">Multi Text</option>"
-							}
-							
-							
-							$('.asset-single-'+key).find('select.asset-zone-type').html(html)
-							
-						}
-						if($('.asset-single-'+key+' input.asset-title').val() == "Sculpture"){
-							var html;
-							if(currentScene.assets[i][key].zone_type === "Multi Location"){
-								html = "<option value=\"\">None</option><option selected value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>"
-							}else if(currentScene.assets[i][key].zone_type === "Single Location"){
-								html = "<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option selected value=\"Single Location\">Single Location</option>"
-							}else{
-								html = "<option selected value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>"
-							}
-							$('.asset-single-'+key).find('select.asset-zone-type').html(html)	
-						}
-						
-					})
-
-
-				}else{
-					console.log('currentScene.assets['+i+'] == undefined ')
-				}
-			}//end for i<assetNum
-			orderAssets();
-				
-	}//end createAssets(_scene_type, _text_type)
-
-
-}
-
-	//scene type modifications and ui changes when the dropdown changes
-	$('select#scene_type').change(function(e){
-		var diff =  $(this).val()-currentScene.scene_type;
-		var visible = $('select.asset-file').filter(':visible');
-		//console.log('diff '+diff)
-		//console.log('val '+$(this).val())
-		
-		
-		if(diff > 0){
-			//console.log(diff)
-			for(var i = visible.length; i < visible.length+diff; i++){
-				//console.log('here to add number = '+i);
-				var newAsset = $('article.asset-single-0').clone();
-				$(newAsset).removeClass(function(index,c){
-					//'asset-single-0'
-					var _this = $(this)
-					$(c.split(' ')).each(function(){
-						var c = this.trim();
-						//console.log(c)
-						if(c.indexOf('asset-single-')>=0){
-							//console.log("Match :: "+c)
-							_this.removeClass(c)
-							
-						}
-						//console.log(c)
-					})
-					
-				}).addClass('asset-single-'+i);
-				$(newAsset).find('.thumbnail img').attr("data-src","holder.js/100%x150/text:Select%20File")
-				var img = $('.asset-single-'+key).find('.thumbnail img');
-				console.log(img)
-				Holder.run({
-					images: img[0]
-				})
-				//reset for array values
-				$(newAsset).find('.thumbnail').show()
-				$(newAsset).find('input.asset-title').attr('name','assets['+i+'][title]');
-				$(newAsset).find('select.asset-zone-type').attr('name','assets['+i+'][zone_type]');
-				$(newAsset).find('select.asset-zone-type option:selected').removeAttr('selected');
-				$(newAsset).find('select.asset-file').attr('name','assets['+i+'][file]');
-				$(newAsset).find('select.asset-file option:selected').removeAttr('selected');
-				$(newAsset).find('textarea.asset-caption').attr('name','assets['+i+'][caption]').html('');
-				
-				
-				//console.log(newAsset);
-				//$("#asset-data").append(newAsset)//.insertAfter( $('asset-single-'+(i-1) ) );	
-				$(newAsset).insertAfter(".asset-single-"+(i-1))
-			} 
-		}else{
-			//console.log(visible.length)
-			//$(visible[visible.length-1]).parent().remove()
-
-			//add a negative
-					
-			for(var i = visible.length-1; i > visible.length+diff-1; i--){
-				//console.log('remove')			
-				//console.log($(visible[i]).parents('.row'))
-				//never delete our last object
-				if(i>0) $(visible[i]).closest('.row').remove()
-			}
-					
-		}
-		
-		//createAssets($(this).val(),currentScene.text_type);
-		//sort our types out
-		var visible = $('select.asset-file').filter(':visible');
-		//iterate through all our visible scene containers
-		//console.log(visible[0])
-		//console.log(visible.length);
-		//set our zone type options
-		switch(visible.length){
-			case 1:
-				$(visible[0]).closest('.asset-contents').find('.asset-title').attr("value","Wall And Sculpture"); 
-				$(visible[0]).closest('.asset-contents').find('select.asset-zone-type').parent().hide();
-			break;
-			case 2:
-				$(visible[0]).closest('.asset-contents').find('.asset-title').attr("value","Sculpture");
-				$(visible[0]).closest('.asset-contents').find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>").parent().show();
-				$(visible[1]).closest('.asset-contents').find('.asset-title').attr("value","Single Wall")
-				$(visible[1]).closest('.asset-contents').find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Text\">Multi Text</option>").parent().show();
-			break;
-			case 3:
-				$(visible[0]).closest('.asset-contents').find('.asset-title').attr("value","Sculpture");
-				$(visible[0]).closest('.asset-contents').find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>").parent().show();
-				$(visible[1]).closest('.asset-contents').find('.asset-title').attr("value","Left Wall")
-				$(visible[2]).closest('.asset-contents').find('.asset-title').attr("value","Right Wall")
-			
-			default:
-				$(visible[0]).closest('.asset-contents').find('.asset-title').attr("value","Sculpture");
-				$(visible[0]).closest('.asset-contents').find('select.asset-zone-type').html("<option value=\"\">None</option><option value=\"Multi Location\">Multi Location</option><option value=\"Single Location\">Single Location</option>").parent().show();
-				$(visible[1]).closest('.asset-contents').find('.asset-title').attr("value","Left Wall")
-				$(visible[2]).closest('.asset-contents').find('.asset-title').attr("value","Right Wall")
-				
-				for(var i = 3; i<visible.length; i++){
-					//console.log('here');
-					$(visible[i]).closest('.row').remove()
-				} 
-			break;
-		}
-		//set our currentScene Type val to our current val, incase the user wants to make another modification
-		currentScene.scene_type = $(this).val()
-		orderAssets()
-		
-		
-	}); //#End Zone Type Selection options
-	
-	
-	$('select#text_type').change(function(e){
-		
-		var diff =  $(this).val()-currentScene.text_type;
-		console.log(diff)
-		var visible = $('textarea.asset-caption').filter(':visible');
-		//console.log(visible)
-		var totalScenes = $('select.asset-file').filter(':visible');
-		if(diff > 0){
-			//console.log('add')
-			for(var i = totalScenes.length+visible.length; i < (totalScenes.length+visible.length)+diff; i++){
-				//console.log('here to add number = '+i);
-				
-				var newAsset = $('article.asset-single-0').clone();
-				//console.log('here')
-				//callback function to remove 
-				$(newAsset).removeClass(function(index,c){
-					//'asset-single-0'
-					var _this = $(this)
-					$(c.split(' ')).each(function(){
-						var c = this.trim();
-						//console.log(c)
-						if(c.indexOf('asset-single-')>=0){
-							//console.log("Match :: "+c)
-							_this.removeClass(c)
-							
-						}
-						//console.log(c)
-					})
-					
-				}).addClass('asset-single-'+i);
-				$(newAsset).find('.thumbnail img').attr("src","");
-				$(newAsset).find('.thumbnail').hide();
-				$(newAsset).find('input.asset-title').attr('name','assets['+i+'][title]');
-				$(newAsset).find('select.asset-zone-type').attr('name','assets['+i+'][zone_type]');
-				$(newAsset).find('select.asset-zone-type option:selected').removeAttr('selected');
-				$(newAsset).find('select.asset-file').attr('name','assets['+i+'][file]');
-				$(newAsset).find('select.asset-file option:selected').removeAttr('selected');
-				$(newAsset).find('textarea.asset-caption').attr('name','assets['+i+'][caption]').html('');
-				$(newAsset).find('textarea.asset-caption').parent().show()
-				$(newAsset).find('select.asset-file').parent().hide()
-				$(newAsset).find('select.asset-zone-type').parent().hide()
-				//console.log(newAsset);
-				//$("#asset-data").append(newAsset)//.insertAfter( $('asset-single-'+(i-1) ) );	
-				$(newAsset).insertAfter(".asset-single-"+(i-1))
-			} 
-		}else{
-			//console.log('remove')
-			for(var i = visible.length-1; i > visible.length+diff-1; i--){
-				console.log('remove :: '+i)			
-				//console.log($(visible[i]).parents('.row'))
-				//never delete our last object
-				console.log($(visible[i]))
-				$(visible[i]).closest('.row').remove()
-			}
-		}
-		var visible = $('textarea.asset-caption').filter(':visible');
-		//switch to change titles
-		switch(visible.length){
-			
-			case 1:
-				$(visible[0]).closest('.asset-contents').find('input.asset-title').attr("value","Text"); 
-			break;
-			case 2:
-				$(visible[0]).closest('.asset-contents').find('input.asset-title').attr("value","Text One"); 
-				$(visible[1]).closest('.asset-contents').find('input.asset-title').attr("value","Text Two"); 
-			break;
-		
-		}
-		
-		currentScene.text_type = $(this).val()
-		orderAssets()
-	}) */
 	
 	/* By Jenn: For making selected clip name in scene sub-nav turn black when active */
 	function clipNav() {
