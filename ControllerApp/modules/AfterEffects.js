@@ -136,7 +136,10 @@ exports.processRenderOutput = function(formattedScenes,cb){
 	console.log(JSON.stringify(formattedScenes))
 	
 	async.eachSeries(formattedScenes,renderContent,function(e){
-		if(e)console.error(e)
+		if(e){
+			console.error(e)
+			console.log("Error Launching AfterEffects".red.inverse);
+		}
 		else console.log('done');
 	})
 	
@@ -160,7 +163,7 @@ function renderContent(scene,cb){
 		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
 							if(err){
 								console.error(err)
-								cb(e);	
+								cb(err);	
 							}else{ 
 								cb(null)
 							}
