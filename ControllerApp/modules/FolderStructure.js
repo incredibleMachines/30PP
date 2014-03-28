@@ -12,15 +12,17 @@ exports.assetsDir = './public/.assets';
 exports.videosDir = exports.assetsDir+'/videos';
 exports.imagesDir = exports.assetsDir+'/images';
 exports.outputDir = exports.assetsDir+'/output';
+exports.renderDir = exports.assetsDir+'/renders'
 
 //check assetsDirectory
-exports.setup = function(){
+exports.setup = function(base){
 
 	var tempDir = exports.tempDir;
 	var assetsDir = exports.assetsDir;
 	var videosDir = exports.videosDir;
 	var imagesDir = exports.imagesDir;
 	var outputDir = exports.outputDir;
+	var renderDir = exports.renderDir;
 	
 	console.log();
 	console.log(" ... Reviewing Folder Status ... ".inverse);
@@ -115,6 +117,24 @@ exports.setup = function(){
 			fs.mkdirSync(outputDir);
 			console.log(" Output Directory Created ".green.inverse);
 	}
+	
+	/*
+try{
+		
+		var i = fs.lstatSync(renderDir);
+		if(i.isDirectory()){
+			console.log("Render Directory Exists".green);
+		}else{
+			console.log(" No Render Directory ".inverse.red);
+			fs.mkdirSync(renderDir);
+			console.log(" Render Directory Created ".green);
+		}
+	}catch(e){
+			console.log(" No Render Directory ".inverse.red);
+			fs.mkdirSync(renderDir);
+			console.log(" Render Directory Created ".green.inverse);
+	}
+*/
 	
 	console.log();
 	console.log(" ... Folder Setup Complete ... ".inverse);

@@ -2,7 +2,9 @@ var util 	= require('util'),
 	exec	= require('child_process').exec, 
 	spawn = require('child_process').spawn,
 	fs		= require('fs'), 
-	async 	= require('async');
+	async 	= require('async'),
+	folders = require('../modules/FolderStructure');
+	
 
 	
 //NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
@@ -15,11 +17,14 @@ var AFTEREFFECTS,
 	
 	Filepath Globals
 	Takes into account the ControllerApp file structure
+	
+	needs modifications to ControllerApp Route 
 */
 var APPLESCRIPT_FOLDER = __dirname+"/../includes/applescripts";
 var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
 var AEPROJECT_FOLDER = __dirname+"/../includes/aeprojects";
-var VIDEO_FOLDER = __dirname+"/../includes/videos";
+var OUTPUT_FOLDER = __dirname+"/../includes/videos";//folders.outputDir;
+var ASSET_FOLDER = __dirname+"/../public";
 
 //notes:
 
@@ -148,10 +153,12 @@ exports.processRenderOutput = function(formattedScenes,cb){
 //render options
 function renderContent(scene,cb){
 	var timebetween = 1000;
+	scene.asset_loc = ASSET_FOLDER+'/'
+	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
+	scene.template = AEPROJECT_FOLDER+'/'+scene.template
 	if(scene.type === 'default_gastronomy'){
 	setTimeout(function(){
-		scene.output = VIDEO_FOLDER+'/'+scene.type+'.mov'
-		scene.template = AEPROJECT_FOLDER+'/'+scene.template
+
 		console.log(scene)
 		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
 		console.log(" Function Call to AE ".inverse.cyan)
@@ -160,7 +167,7 @@ function renderContent(scene,cb){
 		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
 							if(err){
 								console.error(err)
-								cb(e);	
+								cb(err);	
 							}else{ 
 								cb(null)
 							}
