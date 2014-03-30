@@ -91,7 +91,7 @@ if ('development' == app.get('env')) {
 }
 
 app.use(function(req, res, next){
-  res.render('404', {});
+  res.render('404', {current: req.url});
 });
 
 /** 
