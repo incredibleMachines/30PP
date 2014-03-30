@@ -1,9 +1,12 @@
 var util 	= require('util'),
 	exec	= require('child_process').exec, 
-	spawn = require('child_process').spawn,
+	spawn   = require('child_process').spawn,
 	fs		= require('fs'), 
 	async 	= require('async'),
-	folders = require('../modules/FolderStructure');
+	folders = require('../modules/FolderStructure'),
+	utils 	= require('../modules/Utils');
+	
+
 	
 
 	
@@ -48,9 +51,6 @@ var sample = {
      }
 }
 */
-
-
-
 
 
 /** Deprecated **/
@@ -114,7 +114,9 @@ exports.open = function(file,cb){
 							cb(err,stdout,stderr);
 							})
 }
-
+function exit(cb){
+	exports.exit(cb)
+}
 //close after effects
 // callback  = cb(err,stdout)
 exports.exit = function(cb){
@@ -135,6 +137,47 @@ exports.getCurrentFile = function(){
 	return currentFile;
 }
 
+//function to delete old file and render new one
+//using async queue processes
+var concurrency = 5; //number of tasks running in the queue at once
+
+var renderqueue = async.queue(renderWorker,concurrency)
+renderqueue.drain = function(){
+	console.log('Rendering Complete')
+}
+//the worker function for our renderqueue
+function renderWorker(scene,callback){
+	console.log("Running New Process")
+	utils.deleteFile( scene.output,function(err){
+		if(err) console.error("Delete File: "+scene.output)
+		else console.log("Delete File: "+scene.output)
+		
+		//spawn a process to the aerender 
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project',scene.template,'-output',scene.output,'-comp', 'UV_OUT'])
+		
+		console.log("AERENDER: "+aerender.pid)
+		
+		aerender.stdout.on('data', function (data) {
+		  console.log(aerender.pid+': ' + data)
+		});
+		
+		aerender.stderr.on('data', function (data) {
+		  console.log('stderr: ' + data)
+		});
+		aerender.on('error',function(error){
+			console.error(error)
+		});
+		aerender.on('close', function (code) {
+		  console.log('AERENDER: '+aerender.pid+' exited with code ' + code)
+		  //callback once the process has finished
+		  callback()
+		});
+		
+		
+
+	})
+
+}
 
 exports.processRenderOutput = function(formattedScenes,cb){
 	
@@ -144,8 +187,16 @@ exports.processRenderOutput = function(formattedScenes,cb){
 		if(e){
 			console.error(e)
 			console.log("Error Launching AfterEffects".red.inverse);
+		}else{
+			//close after effects
+			exit(function(){
+				console.log('done');
+				//render all files on the command line
+				renderqueue.push(formattedScenes)
+				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
+			})
 		}
-		else console.log('done');
+		//else console.log('done');
 	})
 	
 	
@@ -159,7 +210,7 @@ function renderContent(scene,cb){
 	scene.asset_loc = ASSET_FOLDER+'/'
 	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
 	scene.template = AEPROJECT_FOLDER+'/'+scene.template
-	if(scene.type === 'default_gastronomy'){
+	if(scene.type === 'default_gastronomy'||scene.type==='default_shopping'){
 	setTimeout(function(){
 
 		console.log(scene)
