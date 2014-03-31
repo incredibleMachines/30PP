@@ -15,7 +15,6 @@ int main()
 	
 	initSettings.isOpaque				= true;
 	initSettings.windowLevel			= NSMainMenuWindowLevel + 1;
-    
     /* xcdoc://?url=developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
     
 	initSettings.hasWindowShadow		= false;
@@ -23,7 +22,8 @@ int main()
 	initSettings.windowMode				= OF_FULLSCREEN;
 	
 	// to go fullscreen across all windows:
-	initSettings.windowStyle			= NSBorderlessWindowMask;     /* xcdoc://osx//library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
+	initSettings.windowStyle			= NSBorderlessWindowMask;
+    /* xcdoc://osx//library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
 
 //	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
