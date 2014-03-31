@@ -328,7 +328,7 @@ function SceneController(_clips,_files){
 				if(zone.file){
 					var file = _.findWhere(_files,{_id:zone.file})
 					console.log(file)
-					$('.zone-single-'+index).find('img').attr("src","/"+file.path)
+					$('.zone-single-'+index).find('img').attr("src","/"+file.path).height("auto")
 					$('.zone-single-'+index).find('select.zone-file').val(zone.file)
 				}else{
 					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
