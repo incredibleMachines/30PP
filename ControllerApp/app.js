@@ -82,7 +82,6 @@ app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(app.router);
 
 // development only
@@ -116,9 +115,12 @@ app.post('/scenes/:slug/delete',scenes.delete(Database))
 app.get('/renderqueue', renderer.index(Database));
 app.post('/render',renderer.render(Database,AfterEffects,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
 
+//concat page
+app.get('/concat',concat.index(Database));
+
 //asset handling pages
 app.get('/files', files.index(Database));
-app.get('/files/:page',files.index(Database)); //NEW - for pagination
+app.get('/files/:page',files.index(Database));
 app.post('/files', files.add(Database));
 app.post('/files/:slug', files.update(Database));
 app.delete('/files/:slug', files.delete(Database));
@@ -153,7 +155,6 @@ app.get('/AfterEffects/open',function(req,res){
 		if(!e) res.jsonp({result: "After Effects Opened",stdout:stdout})
 		else res.jsonp(500,{error: e })
 	})
-	
 })
 
 //open a file in AE 
@@ -171,7 +172,6 @@ app.get('/AfterEffects/script/:file',function(req,res){
 		if(!e) res.jsonp({result:'After Effects Ran Script', stdout: stdout})
 		else res.jsonp(500,{error:e})
 	}) 
-	
 })
 
 //implimentation wishlist
