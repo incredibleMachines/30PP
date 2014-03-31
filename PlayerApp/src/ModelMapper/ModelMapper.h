@@ -26,6 +26,10 @@
 #define MESH_MASS 0
 #define MESH_DETAIL 1
 
+#define MAGNET_MODE_NONE 0
+#define MAGNET_MODE_LINEAR 1
+#define MAGNET_MODE_EASE 2
+
 class ModelMapper {
 public:
     //overloaded setup allowing different data to be passed
@@ -33,8 +37,8 @@ public:
     void setup(int _numCams, int _guiCam); //defaults num Meshes to 1
     void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
     void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
+    
     void update(vector<ofTexture *> tex);
-
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
@@ -85,6 +89,18 @@ public:
     void setMassMesh(string _reloadMesh);
     //sets file path for detailed mesh
     void setDetailMesh(string _reloadMesh);
+    //move camera position
+    void adjustPosition(float x, float y, float z);
+    //move camera orientation
+    void adjustOrientation(float x, float y, float z);
+    //move mesh point
+    void adjustMesh(float x, float y, float z);
+    //move mask point/entire mask
+    void adjustMask(float x, float y);
+    //make vector of Mesh points for magnet mode
+    void calculateMagnetPoints();
+    
+    float mapVal(float in, float inMin, float inMax, float outMin, float outMax, float shaper);
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -98,9 +114,11 @@ public:
     public:
         ofVec3f vertex;
         int index;
+        float modifier; 
     };
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
+    vector< vector<meshVertex> > magnetVertices;
     //holder for mesh filepaths
     string detailMesh;
     string massMesh;
@@ -108,6 +126,9 @@ public:
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
+    
+    float magnetRadius;
+    int magnetMode;
     
     
     //---------MASK SETTINGS
