@@ -228,8 +228,15 @@ function SceneController(_clips,_files){
 		var file = _.findWhere(_files,{_id:$(this).val()})
 
 		if(typeof file !=='undefined'){ 
+			if(file.type.indexOf('video')>=0){
+				$(this).closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No Video Preview")
+				Holder.run({
+					images:$(this).closest('.zone-single').find('img')[0]
+				})
+
+			}else{
 			$(this).closest('.zone-single').find('img').attr('src','/'+file.path).height("auto")
-			//
+			}
 			$(this).closest('.zone-single').find('select.zone-map-type').val('none')
 			$(this).closest('.zone-single').find('select.zone-map-type').siblings('section.location').remove()
 			
@@ -328,7 +335,14 @@ function SceneController(_clips,_files){
 				if(zone.file){
 					var file = _.findWhere(_files,{_id:zone.file})
 					console.log(file)
-					$('.zone-single-'+index).find('img').attr("src","/"+file.path).height("auto")
+					if(file.type.indexOf('video')>=0){
+						$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No Video Preview")
+						Holder.run({
+								images: $('.zone-single-'+index).find('img')[0]
+							})
+					}else{
+						$('.zone-single-'+index).find('img').attr("src","/"+file.path).height("auto")
+					}
 					$('.zone-single-'+index).find('select.zone-file').val(zone.file)
 				}else{
 					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")

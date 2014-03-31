@@ -191,9 +191,6 @@ ul.list-group li.list-group-item {
   font-size: 18px;
   font-weight: bold;
 }
-.pagination {
-  clear: both;
-}
 /* -------------- FILE LIBRARY --------------*/
 .event .file-title input,
 .event .file-location input {
@@ -232,6 +229,9 @@ ul.list-group li.list-group-item {
 .asset-scene-list ul li a:hover {
   text-decoration: none;
   color: #333;
+}
+.pagination-wrap {
+  clear: both;
 }
 /* -------------- BUTTONS -------------- */
 .btn,
