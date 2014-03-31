@@ -56,7 +56,6 @@
 		D33E96D018E07D5100CBB90F /* ofxCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = D33E96B218E07D5100CBB90F /* ofxCocoa.mm */; };
 		D371D53E18E9B9F70085D1B5 /* iconbuilder.icns in Resources */ = {isa = PBXBuildFile; fileRef = D371D53D18E9B9F70085D1B5 /* iconbuilder.icns */; };
 		D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */; };
-		D3A7130E18D9E8C2004D8D41 /* Mat_Color_1.mov in Resources */ = {isa = PBXBuildFile; fileRef = D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */; };
 		D3CB1D5218DA21B60058D084 /* Big_optimized.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3CB1D5118DA21B60058D084 /* Big_optimized.obj */; };
 		E2A6919C18CE6328008D8EF1 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919818CE6328008D8EF1 /* Camera.cpp */; };
 		E2A6919D18CE6328008D8EF1 /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919A18CE6328008D8EF1 /* ModelMapper.cpp */; };
@@ -258,7 +257,6 @@
 		D33E96B218E07D5100CBB90F /* ofxCocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxCocoa.mm; sourceTree = "<group>"; };
 		D371D53D18E9B9F70085D1B5 /* iconbuilder.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = iconbuilder.icns; sourceTree = "<group>"; };
 		D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Shape Test_01.obj"; sourceTree = "<group>"; };
-		D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Mat_Color_1.mov; sourceTree = "<group>"; };
 		D3CB1D5118DA21B60058D084 /* Big_optimized.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Big_optimized.obj; sourceTree = "<group>"; };
 		E2A6919818CE6328008D8EF1 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E2A6919918CE6328008D8EF1 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
@@ -896,7 +894,6 @@
 			isa = PBXGroup;
 			children = (
 				D3CB1D5118DA21B60058D084 /* Big_optimized.obj */,
-				D3A7130D18D9E8C2004D8D41 /* Mat_Color_1.mov */,
 				D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */,
 				E2A6965118CE7C9B008D8EF1 /* mesh */,
 				E2A6965318CE7C9B008D8EF1 /* settings.json */,
@@ -1058,7 +1055,6 @@
 				D33E96C718E07D5100CBB90F /* NoWindow.xib in Resources */,
 				D339C1B418CFA0BB008E604C /* ofxLibwebsockets.xcconfig in Resources */,
 				D371D53E18E9B9F70085D1B5 /* iconbuilder.icns in Resources */,
-				D3A7130E18D9E8C2004D8D41 /* Mat_Color_1.mov in Resources */,
 				D3CB1D5218DA21B60058D084 /* Big_optimized.obj in Resources */,
 				D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */,
 				E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */,
