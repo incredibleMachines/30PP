@@ -19,7 +19,7 @@ exports.toTitleCase = function(str)
 //custom wrapper to delete single files on the fly
 exports.deleteFile = function(file,cb){
 	require('fs').unlink(file, function(e){
-		if(e) cb(err)
+		if(e) cb(e)
 		else cb()
 	})
 }

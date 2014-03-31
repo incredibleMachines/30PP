@@ -116,9 +116,8 @@ select.location {
 .panel-default #clip-contents {
   margin-top: 20px;
 }
-.clip-view .panel-heading {
-  padding: 10px 0;
-  margin-bottom: 20px;
+aside header.panel-heading {
+  padding: 10px 20px;
 }
 #scene-contents.row {
   margin: 0px;
