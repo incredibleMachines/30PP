@@ -21,11 +21,9 @@
 void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
-    
     camera.setGlobalPosition(_pos);
     camera.setGlobalOrientation(_orientation);
     camera.disableMouseInput();
-    
     
     viewport.x=_viewPos.x;
     viewport.y=_viewPos.y;
