@@ -122,23 +122,22 @@
 	</div>
 	
     </section>
-    
-    <ul class="pagination col-md-12">
-
-		<li <% if(parseInt(page_num) === 1){%> class="disabled" <%}%> >
-		<a <% if(parseInt(page_num) > 1){ %> href="/files/<%= parseInt(page_num)-1 %>" <%}%> >&laquo;</a></li>
-		<% for (var i=1; i<=num_pages; i++){ %>
-			<% if (i === parseInt(page_num)){ %>
-				<li class="active"><a href="/files/<%=i%>"><%=i%></a></li>
-			<% } else { %>
-				<li><a href="/files/<%=i%>"><%=i%></a></li>
+  	<div class="text-center pagination-wrap">
+	    <ul class="pagination">
+			<li <% if(parseInt(page_num) === 1){%> class="disabled" <%}%> >
+			<a <% if(parseInt(page_num) > 1){ %> href="/files/<%= parseInt(page_num)-1 %>" <%}%> >&laquo;</a></li>
+			<% for (var i=1; i<=num_pages; i++){ %>
+				<% if (i === parseInt(page_num)){ %>
+					<li class="active"><a href="/files/<%=i%>"><%=i%></a></li>
+				<% } else { %>
+					<li><a href="/files/<%=i%>"><%=i%></a></li>
+				<% } %>
 			<% } %>
-		<% } %>
-		
-  		<li <% if(parseInt(page_num) === parseInt(num_pages)){ %> class="disabled" <% } %> >
-  		<a <% if(parseInt(page_num) !== parseInt(num_pages)){ %> href="/files/<%= parseInt(page_num)+1 %>" <%}%> >&raquo;</a></li>
-	  	
-	</ul>
+			
+	  		<li <% if(parseInt(page_num) === parseInt(num_pages)){ %> class="disabled" <% } %> >
+	  		<a <% if(parseInt(page_num) !== parseInt(num_pages)){ %> href="/files/<%= parseInt(page_num)+1 %>" <%}%> >&raquo;</a></li>
+		</ul>
+	</div>
 	
 </section> <!-- .<%= page_slug %> -->   
 
