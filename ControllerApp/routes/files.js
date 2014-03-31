@@ -3,14 +3,41 @@ var upload = require('../modules/Upload');
 
 exports.index = function(_Database){
 	return function(req,res){
-		_Database.getAll('files',function(e,_files){
-			if(!e){
-				_Database.getAll('locations',function(_e,_locations){
-					if(!_e) res.render('files/index', { current: req.url, title: 'File Library', page_slug:'files-index',files: _files,locations:_locations,error:null });
-					else res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: _files,locations:null,error:'Return Locations Error' });
-				})	
+		
+		var page = req.params.page;
+		if (page === undefined) page = 1;
+		console.log("files/page: "+page);
+			
+			
+		//TODO: calculate num_pages
+		var resultsPerPage = 5; /*** how many results per page ***/
+		var numPages; 
+		
+		_Database.getAll('files', function(e,_files){
+			if(!e) numPages = Math.ceil(_files.length/resultsPerPage);
+			else res.json({error:e});
+		})						
+	
+		//TODO: pagination quantity - how many per page!
+		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*resultsPerPage, limit:resultsPerPage}, function(e,_files){
+			if(!e){ 
+				_Database.getAll('clips',function(__e,_clips){
+					if(!__e){
+						_Database.getAll('scenes',function(___e,_scenes){
+							if(!___e) res.render('files/index', { current:req.url, title:'File Library', page_slug:'files-index', 
+								files:_files, clips:_clips, scenes:_scenes, num_pages:numPages, page_num:page, error:null });
+							else res.render('files/index',{current: req.url, title: 'File Library Error', page_slug:'files-index error', 
+								file:_files,clips:_clips, scenes:null, num_pages:numPages, page_num:page, error:'Return Scenes Error' });				
+						})
+					} else {
+						res.render('files/index', { current:req.url, title:'File Library Error', page_slug:'files-index error',
+							files:null, clips:null, scenes:null, num_pages:numPages, page_num:page, error:'Return Files Error' });
+					}
+				})
+					
 			}else{ 
-				res.render('files/index', { current: req.url, title: 'File Library Error', page_slug:'files-index error',files: null,locations:null,error:'Return Files Error' })
+				res.render('files/index', { current:req.url, title:'File Library Error', page_slug:'files-index error',
+					files:null, clips:null, num_pages:numPages, page_num:page, error:'Return Files Error' });
 			}
 		})
 	}
@@ -47,6 +74,7 @@ exports.add = function(_Database){
 		
 		var post = req.body;
 		//handle the post
+		console.log("post: "+post);
 		post.slug = utils.makeSlug(post.title);
 		//post.event_id = _Database.makeMongoID(post.event_id);
 		
@@ -55,7 +83,10 @@ exports.add = function(_Database){
 		
 		var content = files.content; //our form name for the file
 		
+		handleFile(content,post,_Database,req,res);
+		
 		// TO DO: handle a new location
+/*
 		if(post.new_location != ''){
 			//check if the location exists already
 			post.new_location = post.new_location.toLowerCase();
@@ -92,12 +123,14 @@ exports.add = function(_Database){
 			post.location = _Database.makeMongoID(post.location);
 			handleFile(content,post,_Database,req,res);
 		}
+*/
 		
 		//delete post.new_location;
 		
 	} //end return function(req,res)
 }
 
+/* //never being used, we never look at files individually
 exports.single = function(_Database){
 
 	return function(req,res){
@@ -105,38 +138,76 @@ exports.single = function(_Database){
 		res.render('events/index', { current: req.url, title: 'Single Asset', page_slug: 'files-single'  });
 	}
 }
+*/
+
+
+
 exports.update = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'update'});
-		//res.render('events/index', { current: req.url, title: 'add event' });
+	
+		var post = req.body;
+		var files = req.files;
+		//console.log(post)
+		//console.log(files.file.size)
+		
+		if(files.content.size === 0){
+			console.log("No Image to upload Just Update document")
+			
+			post.slug = utils.makeSlug(post.title)
+			var updateObj = {$set:{title: post.title, slug: post.slug, last_edited: new Date()}}
+			_Database.update('files',{_id:_Database.makeMongoID(post.id)},updateObj,function(e){
+				if(!e) res.redirect('/files')
+				else jsonp(500,{error: e})
+			})
+		}else{
+			console.log("Upload File then Update");
+			post.slug = utils.makeSlug(post.title)
+			
+			handleFile(files.content,post,_Database,req,res,true)
+			
+		}
+			
 	}
 }
 exports.delete = function(_Database){
 
 	return function(req,res){
-		res.jsonp({message:'delete'});
+		//res.jsonp({message:'delete'});
 		//res.render('events/index', { current: req.url, title: 'add event' });
+		var file = req.params.slug;
+		_Database.remove('files',{slug:file},function(e){
+			
+			if(!e) res.redirect('/files')
+			else res.json({error: 'Delete file error'})
+		})
+	
 	}
+	
+	
 }
 //content = form file submission titled content
 //post = post data from req
 //req = our route request
 //res = our server response
 
-function handleFile(content,post,_Database,req,res){
+function handleFile(content,post,_Database,req,res,bUpdate){
 			//check the content type of the file
 		if(content.headers['content-type'].indexOf('image')>=0){
 			console.log('IMAGE')
 			post.type=2;
 			
 			upload.image(req.files.content,function(img){
-				//console.log(img)
+				//console.log("img: "+JSON.stringify(img));
+				//console.log("post: "+JSON.stringify(post));
 				
 				post.path = img.path;
 				post.created_at = new Date();
-				addNewFile(post,_Database,res);
-				
+				post.size = img.size;
+				post.type = img.type;
+
+				if(!bUpdate)addNewFile(post,_Database,res);
+				else updateFile(post,_Database,res)
 			})
 		}else if(content.headers['content-type'].indexOf('video')>=0){
 			console.log('VIDEO')
@@ -147,9 +218,10 @@ function handleFile(content,post,_Database,req,res){
 				
 				post.path = vid.path;
 				post.created_at = new Date();
-
-				addNewFile(post,_Database,res);
-
+				post.size = vid.size;
+				post.type = vid.type;
+				if(!bUpdate) addNewFile(post,_Database,res);
+				else updateFile(post,_Database,res)
 			})
 		}else{
 			//unaccepted file type remove the file from the temp folder
@@ -160,31 +232,44 @@ function handleFile(content,post,_Database,req,res){
 			
 		} //if(content.headers['content-type']
 }
-
+function updateFile(_post,__Database,_res){
+	
+	var updateObj = {$set:{
+							title: _post.title,
+							slug: _post.slug,
+							last_edited: new Date(),
+							path:_post.path,
+							size: _post.size,
+							type: _post.type
+							
+							}}
+	__Database.update('files', {_id: __Database.makeMongoID(_post.id)},updateObj,function(e){
+		
+		if(!e) _res.redirect('/files')
+		else _res.jsonp(500, {error: e})
+		
+	})
+	
+	
+}
 
 //_post= the json obj
 //__Database = _Database
 
 function addNewFile(_post,__Database,_res){
+
+	var slug = _post.current
+	console.log("current slug: "+slug)
+	delete _post.current
 	
 	__Database.add('files', _post, function(e,_doc){
 		console.log(' ... Added New File '.inverse+_doc.title.toString().inverse+' ... ')
-		
+
 		if(!e){ 
-			_res.jsonp(200,{success:_doc})
+			_res.redirect(slug);
+			//_res.redirect(slug+"#file-"+_doc._id); /* how we can pass the file id in through URL */
+			//_res.jsonp(200,{success:_post})
 			
-			/* Outdated Files No Longer contain links back to objects
-			//update event with new asset -	
-			var updateObj = {$push:{assets:_doc._id.toString()}};
-			__Database.updateById('events', _post.event_id,updateObj,function(_e){
-				if(!_e){
-					//we're all good
-					_res.jsonp(200,{success:_doc})
-				}else{ //_e
-					//we successfully added the asset,but didn't associate it with our event
-					_res.jsonp(500,_e);
-				}
-			})*/
 		}else{ //e 
 			_res.jsonp(500,{error:e});
 		}

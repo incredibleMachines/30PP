@@ -2,6 +2,13 @@
 
 $(document).ready(function(){
 
+	
+	if($('select.new-event-type').length){
+	
+		$('select.new-event-type').val(GetURLParameter("type"))
+	
+	}
+
 	/*
 	**
 	** Form controls
@@ -56,23 +63,74 @@ $(document).ready(function(){
 		});
 		
 	/*
-	** Event Actions
+	** Scene Actions
 	*/
 	
 	
-	$("button.event-view").click(function(e){
+	$("button.scene-view").click(function(e){
 		var link = $(this).parents('form').attr('action');
 		//console.log(link);
 		//find form slug direct page
 		window.location.replace(link);
 	});
-	$("button.event-update").click(function(e){
+	$("button.scene-update").click(function(e){
 		e.preventDefault();
 		$(this).parents('form').submit();
 	});
-	$("button.event-delete").click(function(e){
+	$("button.scene-delete").click(function(e){
+		
+		if(confirm("You are about to Delete this Scene, Proceed?")){
+		
+			var path = $(this).parents('form').attr('action')+"/delete";
+			$(this).parents('form').attr('action',path);
+			$(this).parents('form').submit();
+			
+		}
+			e.preventDefault();
+		
+	});
 	
-		if(confirm("You are about to Delete this Event, Proceed?")){
+	/*
+	** Event Single Actions
+	*/
+	
+	$("button.clip-delete").click(function(e){
+	
+		var path = $(this).parents('form').attr('action')+"/delete";		
+		
+		if(confirm("You are about to Delete this Scene, Proceed?")){
+	
+			$(this).parents('form').attr('action',path);
+			$(this).parents('form').submit();
+
+		}
+		//console.log(path);
+	
+	});
+	
+	/*
+	** Render Queue
+	*/
+	
+	
+	$("button.render-content").click(function(e){
+		//simple form post, could be implimented via AJAX and facilitate page more robust page functionality.
+		var form = $('<form action="/render" method="post"></form>')
+		
+		$(form).submit();
+		
+	})
+	
+	/* 
+	** File Actions	
+	*/
+	$("button.file-update").click(function(e){
+		e.preventDefault();
+		$(this).parents('form').submit();
+	});
+	$("button.file-delete").click(function(e){
+	
+		if(confirm("You are about to Delete this File, Proceed?")){
 		
 			var path = $(this).parents('form').attr('action')+"/delete";
 			$(this).parents('form').attr('action',path);
@@ -82,5 +140,26 @@ $(document).ready(function(){
 			e.preventDefault();
 		}
 	});
+
+
+	
+	
 });
 
+
+
+/*
+** GetURLParameter
+** http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+**
+*/
+function GetURLParameter(sParam){
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++){
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam){
+            return sParameterName[1];
+        }
+    }
+}

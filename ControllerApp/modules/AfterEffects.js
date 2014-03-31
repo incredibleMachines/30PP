@@ -1,7 +1,14 @@
 var util 	= require('util'),
 	exec	= require('child_process').exec, 
+	spawn   = require('child_process').spawn,
 	fs		= require('fs'), 
-	async 	= require('async');
+	async 	= require('async'),
+	folders = require('../modules/FolderStructure'),
+	utils 	= require('../modules/Utils');
+	
+
+	
+
 	
 //NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
 var AFTEREFFECTS, 
@@ -13,9 +20,14 @@ var AFTEREFFECTS,
 	
 	Filepath Globals
 	Takes into account the ControllerApp file structure
+	
+	needs modifications to ControllerApp Route 
 */
 var APPLESCRIPT_FOLDER = __dirname+"/../includes/applescripts";
 var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
+var AEPROJECT_FOLDER = __dirname+"/../includes/aeprojects";
+var OUTPUT_FOLDER = __dirname+"/../includes/videos";//folders.outputDir;
+var ASSET_FOLDER = __dirname+"/../public";
 
 //notes:
 
@@ -41,10 +53,7 @@ var sample = {
 */
 
 
-
-
-
-/** Depreciated **/
+/** Deprecated **/
 //an object to contain all of our applescript commands.
 //may need to be modified 
 var AERunDoScript = { begin: "osascript -e 'tell application \"Adobe After Effects CC\"'",
@@ -75,8 +84,13 @@ exports.init = function(cb){
 
 //_cb = callback(err, stdout)
 
-
 exports.runScriptFunction = function(_script,_call,_cb){
+	
+	runScriptFunction(_script,_call,_cb);
+	
+}
+
+function runScriptFunction(_script,_call,_cb){
 
 	
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/"+_script+"' '"+_call+"'";
@@ -96,11 +110,13 @@ exports.open = function(file,cb){
 	currentFile = file;
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 							bOpen = true;
-							if(err) console.error(err);
-							cb(err,stdout);
+							if(err) console.error(err,null,stderr);
+							cb(err,stdout,stderr);
 							})
 }
-
+function exit(cb){
+	exports.exit(cb)
+}
 //close after effects
 // callback  = cb(err,stdout)
 exports.exit = function(cb){
@@ -113,19 +129,112 @@ exports.exit = function(cb){
 						})
 }
 
-exports.getCurrentFile = function(){
-	return currentFile;
-}
-
 exports.isOpen = function(){
 	return bOpen;
 }
 
-//data to render as an array[]
-//render options
-function renderContent(data,options,cb){
+exports.getCurrentFile = function(){
+	return currentFile;
+}
+
+//function to delete old file and render new one
+//using async queue processes
+var concurrency = 5; //number of tasks running in the queue at once
+
+var renderqueue = async.queue(renderWorker,concurrency)
+renderqueue.drain = function(){
+	console.log('Rendering Complete')
+}
+//the worker function for our renderqueue
+function renderWorker(scene,callback){
+	console.log("Running New Process")
+	utils.deleteFile( scene.output,function(err){
+		if(err) console.error("Delete File: "+scene.output)
+		else console.log("Delete File: "+scene.output)
+		
+		//spawn a process to the aerender 
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project',scene.template,'-output',scene.output,'-comp', 'UV_OUT'])
+		
+		console.log("AERENDER: "+aerender.pid)
+		
+		aerender.stdout.on('data', function (data) {
+		  console.log(aerender.pid+': ' + data)
+		});
+		
+		aerender.stderr.on('data', function (data) {
+		  console.log('stderr: ' + data)
+		});
+		aerender.on('error',function(error){
+			console.error(error)
+		});
+		aerender.on('close', function (code) {
+		  console.log('AERENDER: '+aerender.pid+' exited with code ' + code)
+		  //callback once the process has finished
+		  callback()
+		});
+		
+		
+
+	})
+
+}
+
+exports.processRenderOutput = function(formattedScenes,cb){
+	
+	console.log(JSON.stringify(formattedScenes))
+	
+	async.eachSeries(formattedScenes,renderContent,function(e){
+		if(e){
+			console.error(e)
+			console.log("Error Launching AfterEffects".red.inverse);
+		}else{
+			//close after effects
+			exit(function(){
+				console.log('done');
+				//render all files on the command line
+				renderqueue.push(formattedScenes)
+				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
+			})
+		}
+		//else console.log('done');
+	})
+	
 	
 }
+
+
+//data to render as an array[]
+//render options
+function renderContent(scene,cb){
+	var timebetween = 1000;
+	scene.asset_loc = ASSET_FOLDER+'/'
+	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
+	scene.template = AEPROJECT_FOLDER+'/'+scene.template
+	if(scene.type === 'default_gastronomy'||scene.type==='default_shopping'){
+	setTimeout(function(){
+
+		console.log(scene)
+		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
+		console.log(" Function Call to AE ".inverse.cyan)
+		console.log(functionCall)		
+		
+		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
+							if(err){
+								console.error(err)
+								cb(err);	
+							}else{ 
+								cb(null)
+							}
+							})
+		
+	},timebetween)
+	}else{
+	cb(null)
+	}
+	//cb(null)
+}
+
+
 
 
 //put togeher ae script osascript based off of using the AERunDoScript Object.
@@ -138,7 +247,7 @@ function runScriptFile(file){
 }
 
 //old test to create loop of movies
-//needs to be depricated
+//needs to be deprecated
 exports.createMovie = function(){
 	//console.log(makeScript("file"))
 	var array =[];
@@ -161,7 +270,7 @@ exports.createMovie = function(){
 }
 
 //old test to create loop of movies
-//needs to be depricated
+//needs to be deprecated
 function createMovie(data,cb){
 	console.log(data)
 	setTimeout(function(){

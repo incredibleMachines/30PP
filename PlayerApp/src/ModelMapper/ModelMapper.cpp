@@ -50,6 +50,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //----------SETUP GLOBALS
     
+    plane.set(1024,1024);
+
     numCams=_numCams;
     guiCam=_guiCam;
     numMeshes=_whichMeshes.size();
@@ -59,6 +61,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //camera settings
     cameraSelect=1;
     adjustMode=ADJUST_MODE_CAMERA;
+    meshType=MESH_MASS;
     
     //mouse settings
     bMouseDown=false;
@@ -80,6 +83,9 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //adjustment settings
     bShiftPressed=false;
     moveModifier=.1;
+    
+    //texture settings
+    bMipMap=true;
     
     //----------LOAD SETTINGS JSON
     
@@ -104,28 +110,13 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofAddListener(ofEvents().mouseDragged,this,&ModelMapper::mouseDragged);
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
-    
-    //----------SETUP TEXTURE MESHES
-    
-    for(int i=0;i<numMeshes;i++){
-        Composite tempComposite;
-        compositeTexture.push_back(tempComposite);
-    }
-    
-    for(int i=0;i<compositeTexture.size();i++){
-        compositeTexture[i].setup(i);
-    }
+
 }
 
-void ModelMapper::update(){
-    
-    //update textures
-    for(int i=0;i<numMeshes;i++){
-        compositeTexture[i].update();
-    }
+void ModelMapper::update(vector<ofTexture *> tex){
     
     //update gui camera to display selected camera graphics
-    
+    textures=tex;
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
@@ -493,6 +484,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             saveCameras();
             break;
             
+        case 'p':
+            bMipMap=!bMipMap;
+            break;
+            
         
         //----------CREATE NEW MASK
             
@@ -502,6 +497,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 bNewMask=true;
                 bDrawingMask=true;
                 updateMasks();
+            }
+            else {
+                meshType++;
             }
             break;
         
@@ -550,15 +548,24 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             break;
             
         //----------RELOAD MESH
-        
+            
         case 'R':
             //reset mesh to passed through file path to .dae or .obj file
             ofxAssimpModelLoader reload;
-            reload.loadModel(reloadMesh);
-            for(int i=0; i<numMeshes;i++){
-                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
+            if(meshType==MESH_DETAIL){
+                reload.loadModel(detailMesh);
+                for(int i=0; i<numMeshes;i++){
+                    cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
+                }
+            }
+            else if(meshType==MESH_MASS){
+                reload.loadModel(massMesh);
+                for(int i=0; i<numMeshes;i++){
+                    cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
+                }
             }
             cout<<"Reloaded Model"<<endl;
+                
             break;
     }
 }
@@ -833,7 +840,15 @@ void ModelMapper:: setupCameras() {
             vector<ofMesh>meshes;
             for(int j=0; j<numMeshes;j++){
                 ofMesh tempMesh;
-                string loader="mesh_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+                string loader;
+                if(meshType==MESH_DETAIL){
+                    loader="mesh_detail_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+                    
+                }
+                else if(meshType==MESH_MASS){
+                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply");
+                    cout<<loader<<endl;
+                }
                 tempMesh.load(loader);
                 meshes.push_back(tempMesh);
             }
@@ -900,7 +915,13 @@ void ModelMapper:: saveCameras() {
         //save warped mesh objects
         for(int j=0;j<numMeshes;j++){
             string meshname;
-            meshname="mesh_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+            if(meshType==MESH_DETAIL){
+            meshname="mesh_detail_"+ofToString(i)+"_"+
+                ofToString(whichMeshes[j])+".ply";
+            }
+            else if(meshType==MESH_MASS){
+                meshname="mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
+            }
             cameras[i].mesh[j].save(meshname);
         }
     }
@@ -1044,21 +1065,23 @@ void ModelMapper:: drawCameras() {
         //Begin camera object
         cameras[i].camera.begin(cameras[i].viewport);
         
+
+            
         for(int j=0;j<numMeshes;j++){
             
-            //Wrap Composite Fbo around mesh
-            compositeTexture[j].bind();
+            textures[j]->bind();
+
             ofSetColor(255,255,255);
+
+            cameras[i].mesh[j].draw();
         
-            //draw mesh
-            cameras[i].mesh[j].drawFaces();
-        
-            compositeTexture[j].unbind();
+            textures[j]->unbind();
             
             //draw mesh wireframe
             if(bDrawWireframe==true){
                 ofSetColor(255,255,255);
                 ofSetLineWidth(2);
+//                plane.drawWireframe();
                 cameras[i].mesh[j].drawWireframe();
             }
 
@@ -1073,7 +1096,11 @@ void ModelMapper:: drawCameras() {
         else{
             ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
         }
+        
+
     }
+//    ofDisableNormalizedTexCoords();
+//    compositeTexture[0].drawSurface.draw(0,0);
 }
 
 void ModelMapper::drawHighlights() {
@@ -1248,9 +1275,15 @@ void ModelMapper::updateMasks(){
         }
 }
 
-void ModelMapper::setReloadMesh(string _reloadMesh){
+void ModelMapper::setMassMesh(string _reloadMesh){
     
     //pass through reload mesh file path
-    reloadMesh=_reloadMesh;
+    massMesh=_reloadMesh;
+}
+
+void ModelMapper::setDetailMesh(string _reloadMesh){
+    
+    //pass through reload mesh file path
+    massMesh=_reloadMesh;
 }
 

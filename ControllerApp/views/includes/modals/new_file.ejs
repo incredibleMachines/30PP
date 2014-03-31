@@ -1,0 +1,40 @@
+<%/* 
+
+New File Modal
+
+Form for adding a file from scene single or file library.
+
+Form Inputs:
+	- title
+	- content
+	- page_slug (hidden)
+
+*/%>
+
+
+<section class="new_file modal fade" id="new_file_modal" tabindex="-1" role="dialog" aria-labelledby="new_file_modal" aria-hidden="true" >
+	<section class="modal-dialog">
+    	<section class="modal-content">
+	    	<div class="modal-header">
+	    		<h3>Add New File</h3>
+	    	</div> <!--modal-header -->
+		    <form class="modal-body" role="form" action="/files" method="post" enctype="multipart/form-data">
+		    		<section class="form-group col-md-8">
+					    <label for="title">Asset Title</label>
+					    <input type="text" class="form-control" name="title" placeholder="Give your asset a title">
+				    </section>
+			  		<section class="form-group content-upload col-md-12">
+					    <label for="content">Select a file to upload</label>
+					    <input type="file" class="form-control browse" name="content"/>
+					    <input type="hidden" name="current" value="<%= locals.current %>"/>
+				    	<!--<p class="help-block">Select the {file} to upload</p>-->
+				    </section>
+					
+		    </form>
+			<div class="modal-footer">
+				<button class="btn btn-primary modal-submit green" type="button">Submit</button>
+			    	<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+			</div>
+    	</section> <!--modal-content -->
+	</section> <!--modal-dialog -->
+</section>

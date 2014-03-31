@@ -1,22 +1,34 @@
 <%/* FILES INDEX PAGE */%>
 <% include ../includes/header %>
-<section class="<%= page_slug %>">
-	<header class="row">
-	    <h1 class="col-md-6"><% /* need title */ %><small>Total: <% /* need assets length */ %></small></h1>
-		<section class="col-md-6 add-btn">
-			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_asset_modal">+</button>
-			<p><small>Upload New Asset</small></p>
+
+<% 
+	/* for sorting mongo db items as elements */
+	clips = JSON.stringify(clips)
+	clips = JSON.parse(clips)
+
+	files = JSON.stringify(files)
+	files = JSON.parse(files)
+
+	scenes = JSON.stringify(scenes)
+	scenes = JSON.parse(scenes)
+%>
+
+<section class="<%= page_slug %> col-md-12">
+	<header>
+	    <!-- <h1 class="col-md-6"><%=title%> <small> Total: <%= files.length%></small></h1> -->
+	    <h1 class="col-md-4 pull-left"><%=title%> <small> Page: <%= page_num %></small></h1>
+		<section class="col-md-2 pull-right add-btn">
+			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_file_modal">Upload New File</button>
 		</section>
 	</header>
-    <section class='current_events'>
+    <section class="current_events row col-md-12">
 		<div class="panel panel-default">
 		  <!-- Our Events Table  -->
 		  <div class="panel-heading">
 		  	<ul class="event row panel-title" >
 		  		<li class="col-md-3 panel-title">Title</li>
 		  		<li class="col-md-3 panel-title">Media</li>
-		  		<li class="col-md-2 panel-title">Location</li>
-		  		<li class="col-md-2 panel-title">Appears in:</li>
+		  		<li class="col-md-4 panel-title">Appears in:</li>
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
@@ -24,47 +36,81 @@
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% /* begin for loop */ %>
+		  	<% files = _.sortBy(files,function(file){
+		  		//
+		  		if(!file.last_edited) return new Date(file.created_at)
+		  		else return new Date(file.last_edited);
+		  	}) 
+		  		//files.reverse() //taking out reverse for pagination
+		  	%>
 		  	<% files.forEach(function(_file,i){%>
-		    <li class="list-group-item">
+		    <li class="list-group-item row">
 			    	<ul class="event row" >
-			    		<form class="file <% /* need file.slug */ %>" method="post" action="/files/<% /* need file.slug */ %>">
-
+			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
+							<input type="hidden" name="id" value="<%= _file._id%>">
 							<li class="col-md-3 file-title"> <!-- TITLE -->						
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
-								<p>File type: ____</p>
-								<p>Size: ____</p>
+								<p>File type: <%= _file.type %></p>
+								<p>Size: <%= Math.round(_file.size/1000) %> KB</p>
 							</li>
 							<li class="col-md-3"> <!-- MEDIA -->
 								<a href="#" class="thumbnail">
-									<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+									<% if(_file.type.indexOf("video")>=0){ %>
+									<img src="" data-src="holder.js/100%x150/industrial/text:No Video Preview">
+									<% }else { %>
+									<img src="/<%=_file.path%>"/>
+									<% }%>
 								</a>
-								<button type="button" class="btn btn-default btn-sm">Replace</button>
+								<!--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_asset_modal">Replace</button>-->
+								<button type="button" class="btn btn-default btn-sm file-replace">Replace</button>
+								<input style="display:none;"class="form-control" type="file" name="content" >
+
 							</li>
-							<li class="col-md-2 file-location"> <!-- LOCATION -->
-								<select name="location" class="form-control show-tick">
-									<% locations.forEach(function(_loc,j){ %>
-									<% /* begin for loop */ %>
-										<option value="<%= _loc._id %>"> <%=_loc.address /* need dropdown menu stuff */ %></option>
-									<% /* end for loop */ %>
-									<% }) %>
-								</select>
-								<p>Don't see the location here?</p>
-								<button type="button" class="btn btn-default btn-sm blue">Enter an Address</button>
-							</li>
-							<li class="col-md-2 scene-num"><!-- ASSOCIATED SCENES -->
+							<li class="col-md-4 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
-										<% /* begin for loop*/ %>
-											<li><a>test scene name</a></li>
-											<li><a><% /* need event.scene.title */ %></a></li>
-										<% /* end for loop */ %>
+									
+										<%	
+										var matchedClips = [];
+										var matchedScenes = [];
+										/* go through all clips, find ones that contain this file */
+										for(var c=0; c<clips.length; c++){
+											var zones = clips[c].zones;
+											var matched = false;
+											for(var d=0; d<zones.length; d++){
+												if(zones[d].file === _file._id) matched = true; 
+											} //underscore can help all this malarky be more efficient
+											if(matched) matchedClips.push(clips[c]);
+										}
+										//console.log("matchedClips: "+matchedClips);
+										//console.log("---------");
+										
+										/* now go through all scenes to see who has this clip */
+										scenes.forEach(function(scene,k){
+											var theseClips = scene.clips;
+											theseClips.forEach(function(clip, k){
+												matchedClips.forEach(function(matchedClip, l){
+													if(clip === matchedClip._id){
+														//console.log("found match: "+matchedClip.slug);
+														matchedScenes.push(scene);
+													}
+												})
+											})
+										})
+																					
+										matchedScenes.forEach(function(scene,j){ %>
+										
+										<li><a href= "/scenes/<%=scene.slug%>#<%=matchedClips[j].slug%>">
+											<%=scene.type%>: <%=scene.title%> - <%=matchedClips[j].title%></a></li><br />	
+										
+										<%})%>
 									</ul>
 								</div>
 							</li>
 							<li class="col-md-2"> <!-- UPDATE DELTE BTNS -->
 								<div class="btn-group">
-									  <button type="button" class="btn btn-default btn-xs event-update green">Update</button>
-									  <button type="button" class="btn btn-default btn-xs event-delete red">Delete</button>
+									  <button type="button" class="btn btn-default btn-xs file-update green">Update</button>
+									  <button type="button" class="btn btn-default btn-xs file-delete red">Delete</button>
 								</div>
 							</li>
 						</form>
@@ -74,6 +120,29 @@
 		    <% /* end for loop */ %>
 		  </ul><!-- ul.list-group -->
 	</div>
+	
     </section>
+    
+    <ul class="pagination col-md-12">
+
+		<li <% if(parseInt(page_num) === 1){%> class="disabled" <%}%> >
+		<a <% if(parseInt(page_num) > 1){ %> href="/files/<%= parseInt(page_num)-1 %>" <%}%> >&laquo;</a></li>
+		<% for (var i=1; i<=num_pages; i++){ %>
+			<% if (i === parseInt(page_num)){ %>
+				<li class="active"><a href="/files/<%=i%>"><%=i%></a></li>
+			<% } else { %>
+				<li><a href="/files/<%=i%>"><%=i%></a></li>
+			<% } %>
+		<% } %>
+		
+  		<li <% if(parseInt(page_num) === parseInt(num_pages)){ %> class="disabled" <% } %> >
+  		<a <% if(parseInt(page_num) !== parseInt(num_pages)){ %> href="/files/<%= parseInt(page_num)+1 %>" <%}%> >&raquo;</a></li>
+	  	
+	</ul>
+	
 </section> <!-- .<%= page_slug %> -->   
+
+
+	
 <% include ../includes/footer %>
+

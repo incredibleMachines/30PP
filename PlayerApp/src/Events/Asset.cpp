@@ -45,8 +45,8 @@ Asset::Asset(Json::Value thisAsset){
         
         //--- ready to go, pull out all file metadata
         aFileTitle      = aFile.get("title", "no file title found").asString();
-        aFileLoc.address = aFile.get("location", "no file location found").get("address", "no file loc address found").asString();
-        aFileLoc._id    = aFile.get("location", "no file location found").get("_id", "no file loc _id found").asString();
+//        aFileLoc.address = aFile.get("location", "no file location found").get("address", "no file loc address found").asString();
+//        aFileLoc._id    = aFile.get("location", "no file location found").get("_id", "no file loc _id found").asString();
         aFilePath       = aFile.get("path","no file path found").asString();
         aFileType       = aFile.get("type","no file path found").asInt();
         aFileCreatedAt  = aFile.get("created_at", "no file created at found").asString();

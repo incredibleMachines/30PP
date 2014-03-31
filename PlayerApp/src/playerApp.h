@@ -6,11 +6,15 @@
 //30PP
 #include "ModelMapper/ModelMapper.h"
 #include "Handlers/SocketHandler.h"
-#include "Events/Event.h"
-#include "Events/Scene.h"
+#include "ofAVQueuePlayer.h"
+#include "ofAVFoundationPlayer.h"
+//#include "Events/Event.h"
+//#include "Events/Scene.h"
 #include "Events/EventTypes.h"
-#include "Compositor/SceneContent.h"
+//#include "Compositor/SceneContent.h"
 
+#define BUFFER_SIZE 3
+#define MESH_NUM 3
 
 class playerApp : public ofBaseApp {
 
@@ -18,6 +22,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -28,6 +33,9 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    
+    void setupTexture(int _i);
+    void createTexture(int _i, int _j);
     
     //----------WEBSOCKETS
     
@@ -47,7 +55,27 @@ public:
     //---------CONTENT BUFFER
     
     //contentBuffer contains all loaded videos, images, and text Vbos for display on models
-    vector<SceneContent> contentBuffer;
+    
+    int bBuffer;
+    int bContentLoaded;
+    
+    class meshContent{
+    public:
+        ofAVQueuePlayer video;
+        bool bSetup;
+        int glType;
+        int glFormat;
+        int width;
+        int height;
+        int frames;
+        bool loaded;
+        unsigned char * pix;
+        
+    };
+    
+    vector<ofTexture *> meshTexture;
+    
+    meshContent mesh[MESH_NUM];
 
     //count of current SceneContent to load from buffer
     int count;
@@ -57,4 +85,13 @@ public:
     
     //testing - signals that we have successfully "triggered" and init and content load event
     bool bTriggered;
+    
+    int play, load;
+    bool bDrop;
+    bool bFirstLoaded;
+    bool bLoaded;
+    
+
+    int frameCount;
+    
 };

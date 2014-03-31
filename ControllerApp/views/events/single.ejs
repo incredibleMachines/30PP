@@ -2,7 +2,7 @@
 <% include ../includes/header %>
 <section class="<%= page_slug %>">
 	<header class="row single-event-head col-md-3">
-	    <h3 class="col-md-12"><small>Event:</small> <%=title%></h3>
+	    <h3 class="col-md-12"><small>Event:</small> <%=event.title%></h3>
 		<section class="col-md-12 duration-header">
 			<h3><small>Duration: <%= event.duration %></small></h3>
 		</section>
@@ -10,7 +10,7 @@
 	<section class="row <%= page_slug %> content">
 		<aside class="col-md-3">
 			<section class="panel panel-default">
-				<header class="panel-heading">
+				<header class="dog panel-heading">
 					<h3 class="panel-title">Scenes <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_scene_modal"><small>Add New Scene +</small></button></h3>
 				</header> <!-- .panel-heading -->
 				<ul class="list-group">
@@ -18,8 +18,8 @@
 					<% for(var i = 0; i<event.scenes.length; i++){ %>
 					<li class="list-group-item">
 						<section class="btn-group-vertical">
-							<button class="btn btn-default btn-xs dropup scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
-							<button class="btn btn-default btn-xs scene-order-down <% if(i == event.scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs scene-order scene-order-down <% if(i == event.scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
 						</section>
 						<button type="button" data-scene-id="<%=event.scenes[i]._id%>" class="scene-title <%=event.scenes[i].slug %> btn btn-link btn-lg "><%=event.scenes[i].title%></button>
 					</li>
@@ -47,30 +47,38 @@
 								<section class="form-group">
 									<label for="scene_type">Scene Type</label>
 									<select class="form-control scene-scene_type <%=event.scenes[0].slug%>" name="scene_type" id="scene_type">
-										<%for(var i=0; i<4;i++){%>
+									<% var arr = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
+										for(var i =0; i<arr.length; i++){ %>
+										 <option  value="<%=i%>" <% if(event.scenes[0].scene_type == i){ %> selected <% }%>><%=arr[i]%></option>
+										 <% }/* %>
+										<option value="0">Single Wall Sculpture</option>
+										<option value="1">Double Wall Sculpture</option>
+										<option value="2">Full Immersion</option>
+										
+										<%/*for(var i=0; i<4;i++){%>
 											<option <%if(event.scenes[0].scene_type == i){ %> selected <%}%> value="<%=i%>">Scene Type <%= i %></option>
-										<%}%>
+										<%}*/%>
 									</select>
 									<p class="help-block">Select a scene type.</p>
 								</section>
 								<section class="form-group">
-									<label for="zone_type">Zone Type</label>
-									<select  class="form-control show-tick scene-zone_type <%=event.scenes[0].slug %>" name="zone_type" id="zone_type">
-										<% for(var i = 0; i< 4; i++){ %>
-											<option <%if(event.scenes[0].zone_type == i){ %> selected <%}%> value="<%=i%>">Zone Type <%= i %></option>
+									<label for="text_type">Text Options</label>
+									<select  class="form-control show-tick scene-text_type <%=event.scenes[0].slug %>" name="text_type" id="text_type">
+										<% for(var i = 0; i< 3; i++){ %>
+											<option value="<%=i%>" <% if(event.scenes[0].text_type == i){ %> selected <% }%>><% if(i == 0){ %> No <% } else if(i == 1){ %> Single <% } else if(i ==2){ %> Double <% } %> Text</option>
 										<% } %>
 									</select>
 									<!--<p class="help-block">Select a zone type.</p>-->
 								</section>
-								<section class="form-group">
-									<label for="screen_text">On Screen Text</label>
-									<textarea class="form-control scene-text <%=event.scenes[0].slug %>" name="text" id="text" placeholder="Add text to display during scene (optional)"><%= event.scenes[0].text%></textarea>
+								<!-- <section class="form-group"> -->
+									<!-- <label for="screen_text">On Screen Text</label>-->
+									<!--<textarea class="form-control scene-text <%=event.scenes[0].slug %>" name="text" id="text" placeholder="Add text to display during scene (optional)"><%= event.scenes[0].text%></textarea> -->
 									<!--<p class="help-block">Add text to display during scene (optional)</p>-->
-								</section>
+								<!-- </section>-->
 								<section class="pull-right btn-group">
 									<button type="submit" class="btn btn-primary btn-block btn-sm green">Save Changes</button>
 									<!--<button type="button" class="btn btn-default btn-block btn-sm">Exit Without Saving</button>-->
-									<button type="button" class="btn btn-danger btn-block btn-sm red">Delete This Scene</button>
+									<button type="button" class="btn btn-danger btn-block btn-sm red scene-delete">Delete This Scene</button>
 								</section>
 						</article><!-- #scene-data -->
 						
@@ -83,30 +91,66 @@
 								</a>
 							</section><!-- .form-group -->
 							<% /* Begin Loop for each Asset in Scene */ %>
-							<% 	var assetNum;
+							<% 	var assetNum =0,  contentAsset, textAsset;
 								//assign a number value to our zones - note this is currently hard coded and will be updated
-								switch(event.scenes[0].zone_type){
+								switch(event.scenes[0].scene_type){
 									//This is will have to change once we know what the fucks we need here.
-									case "0": assetNum = 1; break;
-									case "1": assetNum = 2; break;
-									case "2": assetNum = 3; break;
-									case "3": assetNum = 4; break; 
-								} %>
+									case "0": contentAsset=1; assetNum+=contentAsset;  break; //Full Immersion
+									case "1": contentAsset=2; assetNum+=contentAsset;  break; //single Wall Sculpture
+									case "2": contentAsset=3; assetNum+=contentAsset;  break; //double Wall Sculpture
+								} 
+								switch(event.scenes[0].text_type){
+									case "0": textAsset=0; assetNum+=textAsset;  break;
+									case "1": textAsset=1; assetNum+=textAsset;  break;
+									case "2": textAsset=2; assetNum+=textAsset;  break;
+								}
+								%>
 							<%  for(var i = 0; i< assetNum; i++){ %>
 							<% /* Single Asset Object will be duplicated based on Number of Assets Needed */ %>
-							<% if(event.scenes[0].assets.length == 0){%>
+							<% if(event.scenes[0].assets.length == 0){ %>
+								
 								<article class="row asset-single asset-single-<%= i %>">
-									<section class="col-md-6 asset-image">
-										<a href="#" class="thumbnail">
-										<img src="holder.js/100%x100/text:No File Associated" />
+									<section class="col-md-6 asset-image">										
+										<a class="thumbnail">
+											<% if(i < contentAsset){ %>
+												<img src="holder.js/100%x100/text:No File Associated" />
+											<% }else{ %>
+												<img src="holder.js/100%x100/text:Text Only Asset" />
+											<% } %>
 										</a>
-										<button type="button" class="btn btn-default btn-sm">Delete</button>
+										<!-- <button type="button" class="btn btn-default btn-sm">Delete Image</button> -->
 										</section>
 										<section class="col-md-6 asset-contents">
+
+										
 										<!--<form action="/assets/:slug" method="post"> -->
 											<section class="form-group">
+												<label>Section Title</label>
+												<%  var title = "Title";
+													if(i < contentAsset){
+														if( i == 0 ){
+															if(contentAsset ==1 ) title= "Wall And Sculpture"
+															else title = "Sculpture"
+														}
+														if( contentAsset== 3){
+															if(i == 1) title = "Left Wall"
+															if(i == 2) title = "Right Wall"
+															
+														}else{
+															if(i == 1) title = "Single Wall"
+														}
+													}else{
+														if(textAsset>1){
+															if(i == assetNum - 1) title = "Text Two"
+															else title = "Text One"
+														}else{
+															title = "Text"
+														}
+													} %>
+												<input class="asset-title" name="assets[<%=i%>][title]" value="<%= title %>" />
+											</section>
+											<section class="form-group"<% if(i >= contentAsset){ %> style="display:none;" <% } %> >
 												<label for="name">Select an asset
-													<button type="button" class="btn btn-xs btn-link disabled ">Edit</button>
 													<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
 												</label>
 												<select name="assets[<%=i%>][file]" class="form-control asset-file show-tick">
@@ -116,22 +160,25 @@
 													<% } %>
 												</select>
 											</section><!--.form-group -->
-											<section class="form-group">
-												<label for="zone">Assign to a zone</label>
-												<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
-													<% for(var k = 0; k<assetNum; k++){ %>
-													<% if(i == k){ %>
-														<option value="<%= k %>" selected>Zone <%= k+1 %></option>
-													<% }else{ %>
-														<option value="<%= k %>">Zone <%= k+1 %></option>
-													<% }//end if else%>
-													<% }//end for %>
+											
+											<section class="form-group" <% if(i >= contentAsset || title !== "Single Wall" || title !== "Sculpture"){ %> style="display:none;" <% } %>>
+												<label>Zone Type</label>
+												<select name="assets[<%=i%>][zone_type]" class="form-control asset-zone-type">
+													<option>None</option>
+												<% if(title == "Single Wall"){ %>
+														<option value="Multi Text">Multi Text</option>
+												<%  }else if(title=="Sculpture"){ %>
+														<option value="Multi Location">Multi Location</option>
+														<option value="Single Location">Single Location</option>
+												<%  }%>
 												</select>
-											</section><!--.form-group -->
-											<section class="form-group">
+											</section>
+											
+											<section class="form-group"<% if(i < contentAsset){ %> style="display:none;" <% } %>>
 												<label for="caption">Caption</label>
 												<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"></textarea>
 											</section><!--.form-group -->
+											
 										<!--</form>-->
 										</section><!-- .asset-contents -->
 									</article> <!-- .row .asset-single -->
@@ -142,19 +189,25 @@
 									
 										if(parseInt(key)== i){
 										%> 
-										<!-- The Object We're Working with Currently -->
-										<!--<%= key+':' %>  <%-JSON.stringify(asset)%> -->
 										<article class="row asset-single asset-single-<%= i %>">
 										<section class="col-md-5 asset-image">
-										<a href="#" class="thumbnail">
-										
-										<img data-src="holder.js/100%x100/text:No File Associated" src=""/>
+										<a class="thumbnail">
+											<% if(asset[key].type !== 0){ %>
+												<img src="holder.js/100%x100/text:No File Associated" />
+											<% }else{ %>
+												<img src="holder.js/100%x100/text:Text Only Asset" />
+											<% } %>
 										</a>
-										<button type="button" class="btn btn-default btn-sm">Delete</button>
+										<!--<button type="button" class="btn btn-default btn-sm">Delete</button>-->
 										</section>
-										<section class="col-md-7 asset-contents">
+										<section class="col-md-6 asset-contents">
 										<!--<form action="/assets/:slug" method="post"> -->
 											<section class="form-group">
+												<label>Section Title</label>
+												
+												<input class="asset-title" name="assets[<%=i%>][title]" value="<%= asset[key].title %>" />
+											</section>
+											<section class="form-group" <% if(asset[key].type === 0){ %> style="display:none;" <% } %> >
 												<label for="name">Select an asset
 													<button type="button" class="btn btn-xs btn-link disabled edit-upload">Edit</button>
 													<button type="button" class="btn btn-xs btn-link edit-upload" data-toggle="modal" data-target="#new_asset_modal">Upload</button>
@@ -170,19 +223,25 @@
 													<% } %>
 												</select>
 											</section><!--.form-group -->
-											<section class="form-group">
-												<label for="zone">Assign to a zone</label>
-												<select name="assets[<%=i%>][zone]" class="form-control asset-zone show-tick" disabled>
-													<% for(var k = 0; k<assetNum; k++){ %>
-														<% if(k == parseInt(key) ){ %>
-															<option selected value="<%=k%>">Zone <%= k+1 %></option>
-														<% }else{ %>
-															<option value="<%=k %>">Zone <%= k+1 %></option>
-														<% } /*end else if */%>
-													<% } %>
+											<section class="form-group" <% if(i >= contentAsset || asset[key].title !== "Single Wall" || asset[key].title !== "Sculpture"){ %> style="display:none;" <% } %>>
+												<% var zone_type = null; 
+												   if(typeof asset[key].zone_type !== "undefined") {
+												   	zone_type = asset[key].zone_type;
+													}
+												%>
+
+												<label>Zone Type</label>
+												<select name="assets[<%=i%>][zone_type]" class="form-control asset-zone-type">
+													<option value="" <% if(zone_type == null){%> selected <% }%>>None</option>
+												<% if(asset[key].title == "Single Wall"){ %>
+														<option value="Multi Text" <% if(zone_type === "Multi Text"){ %> selected <% } %>>Multi Text</option>
+												<%  }else if(asset[key].title=="Sculpture"){ %>
+														<option value="Multi Location" <% if(zone_type === "Multi Location"){ %> selected <% } %>>Multi Location</option>
+														<option value="Single Location" <% if(zone_type === "Single Location"){ %> selected <% } %>>Single Location</option>
+												<%  }%>
 												</select>
-											</section><!--.form-group -->
-											<section class="form-group">
+											</section>
+											<section class="form-group" <% if(asset[key].type !== 0){ %> style="display:none;" <% } %> >
 												<label for="caption">Caption</label>
 												<% 	var caption = true;
 													if(asset[key].caption == "undefined"){
@@ -191,18 +250,18 @@
 														caption=false;
 													}
 												%>
-												<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"><% if(caption==true){	
-												%><%=asset[key].caption%><% } %></textarea>
+												<textarea class="form-control asset-caption" name="assets[<%=i%>][caption]" placeholder="Enter a caption for this asset (optional)"><% 
+												if(caption==true){	//formatting for spacing, make sure textarea html is empty if caption is null
+													%><%=asset[key].caption%><% 
+												}%></textarea>
 											</section><!--.form-group -->
 										<!--</form>-->
 										</section><!-- .asset-contents -->
 										</article> <!-- .row .asset-single -->
 										
-										
-										
-										<% }
+										<% }//end if(parseInt(key)== i){
 									
-									})
+									})// end Object.keys(asset).forEach(function(key){
 								})//end event.scenes[0].assets.forEach( 
 							}//end if(event.scenes[0].assets.length == 0)%>
 							<% } %>

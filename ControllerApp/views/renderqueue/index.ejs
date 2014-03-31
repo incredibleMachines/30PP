@@ -1,0 +1,67 @@
+<% /* RENDER QUEUE INDEX PAGE  */ %>
+<% include ../includes/header %>
+
+<% 
+	
+	//Page Vars
+	//var SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
+	
+	//reobjectify our 
+	scenes = JSON.stringify(scenes);
+	scenes = JSON.parse(scenes)
+	
+	clips = JSON.stringify(clips)
+	clips = JSON.parse(clips)
+	
+	queue = JSON.stringify(queue)
+	queue = JSON.parse(queue)
+    
+    var scenesToRender = [];
+	
+%>
+<section class="<%= page_slug %> col-md-12">
+
+	<header>
+	    <h1 class="col-md-6 pull-left">Render Queue <small>Total: <%= queue.length%></small></h1>
+	    <section class="col-md-2 pull-right add-btn">
+			<button type="button" class="btn btn-default navbar-btn render-content" >Render Content</button>
+		</section>
+	</header>
+    <section class='current_events row col-md-12'>
+    					
+		<div class="panel panel-default">
+		  <!-- Our Events Table  -->
+		  <div class="panel-heading">
+		  	<ul class="event row panel-title" >
+		  		<!--<li class="col-md-1 panel-title">+</li>-->
+		  		<li class="col-md-3 panel-title">Event</li>
+		  		<li class="col-md-3 panel-title">Scene Title</li>
+		  		<li class="col-md-3 panel-title">Clip Title</li>
+		  		<li class="col-md-2 panel-title">Duration</li>
+		  		<li class="col-md-1 panel-title">Actions</li>
+		  	</ul>
+		  </div><!-- .panel-heading -->
+		
+		  <!-- Table body -->
+		  <% if(queue.length> 0){ %>
+		  <ul class="list-group">
+		  		<%
+		  		 queue.forEach(function(item,i){
+		  		 	var scene = _.findWhere(scenes,{_id:item.scene_id})
+		  		 %>
+		  		 <li class="list-group-item">
+			  		 <ul class="event row" >
+				  		 <li class="col-md-3"><%= scene.type %></li>
+				  		 <li class="col-md-3"><%= scene.title %></li>
+				  		 <li class="col-md-3"><%= item.title %></li>
+				  		 <li class="col-md-2"><%= item.duration %></li>
+				  		 <li class="col-md-1"><a href="/scenes/<%= scene.slug %>#<%= item.slug %>" class="btn btn-default btn-xs scene-view"> View &raquo; </a></li>
+			  		 </ul>
+		  		 </li><!-- .list-group-item -->
+		  	<% }) %>
+		  </ul><!-- .list-group -->
+		  <% }else{ %>
+		  		<h3>No Items added to Queue.</h3>
+		  <% } %>
+</section><!--.<%= page_slug %> -->
+<% include ../includes/footer %>

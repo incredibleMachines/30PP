@@ -22,8 +22,13 @@
 		D31EC6A718A9A6AB00B8F882 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A018A9A6AB00B8F882 /* Asset.cpp */; };
 		D31EC6A818A9A6AB00B8F882 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A318A9A6AB00B8F882 /* Event.cpp */; };
 		D31EC6A918A9A6AB00B8F882 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31EC6A518A9A6AB00B8F882 /* Scene.cpp */; };
-		D38507F018AA79E400DAF9E7 /* Composite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D38507EE18AA79E400DAF9E7 /* Composite.cpp */; };
-		D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D39E973018AC3289004C7001 /* SceneContent.cpp */; };
+		D379BF0818C5379900ECB286 /* ofAVFMovieRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D396845618C5306500709200 /* ofAVFMovieRenderer.m */; };
+		D379BF0918C5379900ECB286 /* ofAVFoundationPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D396845818C5306500709200 /* ofAVFoundationPlayer.mm */; };
+		D396844118C52F8A00709200 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844018C52F8A00709200 /* CoreMedia.framework */; };
+		D396844318C52F9200709200 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844218C52F9200709200 /* QuartzCore.framework */; };
+		D396844518C52F9700709200 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D396844418C52F9700709200 /* AVFoundation.framework */; };
+		D396845D18C5313000709200 /* ofAVQueuePlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D396845A18C5306500709200 /* ofAVQueuePlayer.mm */; };
+		D396845E18C5313000709200 /* ofAVQueueRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = D396845C18C5306500709200 /* ofAVQueueRenderer.m */; };
 		E285697E18A42E8C0068B4AB /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E285697318A42E8C0068B4AB /* assimp.a */; };
 		E285697F18A42E8C0068B4AB /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697518A42E8C0068B4AB /* ofxAssimpAnimation.cpp */; };
 		E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E285697718A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp */; };
@@ -87,10 +92,6 @@
 		5D95092D59E7A34C9DB7823E /* Server.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Server.cpp; path = ../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src/Server.cpp; sourceTree = SOURCE_ROOT; };
 		69668FDE141262BC3C6CA929 /* jsoncpp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = jsoncpp.cpp; path = ../../../addons/ofxLibwebsockets/libs/jsoncpp/jsoncpp.cpp; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		D30888A018AC918100ABE8BC /* Blaue_gans.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Blaue_gans.jpg; sourceTree = "<group>"; };
-		D30888A118AC919100ABE8BC /* City_Hall_0287.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = City_Hall_0287.jpg; sourceTree = "<group>"; };
-		D31E43E418AD23C500AC688E /* Chow_texture_test_2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Chow_texture_test_2.mov; sourceTree = "<group>"; };
-		D31E43E518AD257D00AC688E /* ZoneTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZoneTypes.h; sourceTree = "<group>"; };
 		D31EC68218A9A47800B8F882 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventHandler.cpp; sourceTree = "<group>"; };
 		D31EC68318A9A47800B8F882 /* EventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventHandler.h; sourceTree = "<group>"; };
 		D31EC68418A9A47800B8F882 /* SocketHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SocketHandler.cpp; sourceTree = "<group>"; };
@@ -109,20 +110,25 @@
 		D31EC6A418A9A6AB00B8F882 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		D31EC6A518A9A6AB00B8F882 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		D31EC6A618A9A6AB00B8F882 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
-		D38507EE18AA79E400DAF9E7 /* Composite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Composite.cpp; sourceTree = "<group>"; };
-		D38507EF18AA79E400DAF9E7 /* Composite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Composite.h; sourceTree = "<group>"; };
-		D38507F918AA922000DAF9E7 /* fingers.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = fingers.mov; sourceTree = "<group>"; };
-		D38507FC18AAA56F00DAF9E7 /* Ancient_baths 0024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Ancient_baths 0024.jpg"; sourceTree = "<group>"; };
-		D38507FD18AAA57800DAF9E7 /* Calypso_0604.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Calypso_0604.jpg; sourceTree = "<group>"; };
-		D39E973018AC3289004C7001 /* SceneContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneContent.cpp; sourceTree = "<group>"; };
-		D39E973118AC3289004C7001 /* SceneContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneContent.h; sourceTree = "<group>"; };
-		D3A8F05B18A43ACB00DB961F /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
-		D3BB512518A9859C00FCEFD8 /* settings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
-		D3BE79C818AD8A550030E92F /* mesh_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_0.jpg; sourceTree = "<group>"; };
-		D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Mapping test_07_02.obj"; sourceTree = "<group>"; };
-		D3BE79CA18AD8A550030E92F /* mesh_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_1.jpg; sourceTree = "<group>"; };
-		D3BE79CB18AD8A550030E92F /* mesh_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mesh_2.jpg; sourceTree = "<group>"; };
-		D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_Sculpture_SexyMap.mov; sourceTree = "<group>"; };
+		D37596C418B7A68300FD8F45 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = /System/Library/Frameworks/CoreMedia.framework; sourceTree = "<absolute>"; };
+		D37596C618B7A69300FD8F45 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
+		D37596C818B7A69C00FD8F45 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = /System/Library/Frameworks/AVFoundation.framework; sourceTree = "<absolute>"; };
+		D396844018C52F8A00709200 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		D396844218C52F9200709200 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D396844418C52F9700709200 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D396845518C5306500709200 /* ofAVFMovieRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVFMovieRenderer.h; sourceTree = "<group>"; };
+		D396845618C5306500709200 /* ofAVFMovieRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVFMovieRenderer.m; sourceTree = "<group>"; };
+		D396845718C5306500709200 /* ofAVFoundationPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVFoundationPlayer.h; sourceTree = "<group>"; };
+		D396845818C5306500709200 /* ofAVFoundationPlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVFoundationPlayer.mm; sourceTree = "<group>"; };
+		D396845918C5306500709200 /* ofAVQueuePlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueuePlayer.h; sourceTree = "<group>"; };
+		D396845A18C5306500709200 /* ofAVQueuePlayer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofAVQueuePlayer.mm; sourceTree = "<group>"; };
+		D396845B18C5306500709200 /* ofAVQueueRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofAVQueueRenderer.h; sourceTree = "<group>"; };
+		D396845C18C5306500709200 /* ofAVQueueRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ofAVQueueRenderer.m; sourceTree = "<group>"; };
+		D3DEC37918C61E09003E48C3 /* mesh.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = mesh.obj; sourceTree = "<group>"; };
+		D3DEC37A18C61E09003E48C3 /* settings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
+		D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2_0.mp4; sourceTree = "<group>"; };
+		D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0_0.mp4; sourceTree = "<group>"; };
+		D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1_0.mp4; sourceTree = "<group>"; };
 		E285694818A42E8C0068B4AB /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		E285694C18A42E8C0068B4AB /* aiAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAnim.h; sourceTree = "<group>"; };
 		E285694D18A42E8C0068B4AB /* aiAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aiAssert.h; sourceTree = "<group>"; };
@@ -199,6 +205,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D396844518C52F9700709200 /* AVFoundation.framework in Frameworks */,
+				D396844318C52F9200709200 /* QuartzCore.framework in Frameworks */,
+				D396844118C52F8A00709200 /* CoreMedia.framework in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -272,6 +281,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				D396845418C5306500709200 /* ofxAVQueuePlayer */,
 				E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */,
 				AAE50E341C7382A4EF10AF5A /* ofxLibwebsockets */,
 			);
@@ -315,7 +325,6 @@
 				D31EC68D18A9A47800B8F882 /* playerApp.h */,
 				D31EC68C18A9A47800B8F882 /* playerApp.cpp */,
 				D31EC69F18A9A6AB00B8F882 /* Events */,
-				D31EC69A18A9A63200B8F882 /* Compositor */,
 				D31EC68118A9A47800B8F882 /* Handlers */,
 				D31EC68718A9A47800B8F882 /* ModelMapper */,
 			);
@@ -344,18 +353,6 @@
 			path = ModelMapper;
 			sourceTree = "<group>";
 		};
-		D31EC69A18A9A63200B8F882 /* Compositor */ = {
-			isa = PBXGroup;
-			children = (
-				D38507EE18AA79E400DAF9E7 /* Composite.cpp */,
-				D38507EF18AA79E400DAF9E7 /* Composite.h */,
-				D31E43E518AD257D00AC688E /* ZoneTypes.h */,
-				D39E973018AC3289004C7001 /* SceneContent.cpp */,
-				D39E973118AC3289004C7001 /* SceneContent.h */,
-			);
-			path = Compositor;
-			sourceTree = "<group>";
-		};
 		D31EC69F18A9A6AB00B8F882 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,33 +367,40 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
-		D3A8F05A18A43ACB00DB961F /* data */ = {
+		D396845418C5306500709200 /* ofxAVQueuePlayer */ = {
 			isa = PBXGroup;
 			children = (
-				D3BE79CD18AD95EB0030E92F /* UV_Sculpture_SexyMap.mov */,
-				D3BE79C718AD8A550030E92F /* mapping_test */,
-				D31E43E418AD23C500AC688E /* Chow_texture_test_2.mov */,
-				D30888A118AC919100ABE8BC /* City_Hall_0287.jpg */,
-				D30888A018AC918100ABE8BC /* Blaue_gans.jpg */,
-				D38507FD18AAA57800DAF9E7 /* Calypso_0604.jpg */,
-				D38507FC18AAA56F00DAF9E7 /* Ancient_baths 0024.jpg */,
-				D38507F918AA922000DAF9E7 /* fingers.mov */,
-				D3BB512518A9859C00FCEFD8 /* settings.json */,
-				D3A8F05B18A43ACB00DB961F /* .gitkeep */,
+				D396845518C5306500709200 /* ofAVFMovieRenderer.h */,
+				D396845618C5306500709200 /* ofAVFMovieRenderer.m */,
+				D396845718C5306500709200 /* ofAVFoundationPlayer.h */,
+				D396845818C5306500709200 /* ofAVFoundationPlayer.mm */,
+				D396845918C5306500709200 /* ofAVQueuePlayer.h */,
+				D396845A18C5306500709200 /* ofAVQueuePlayer.mm */,
+				D396845B18C5306500709200 /* ofAVQueueRenderer.h */,
+				D396845C18C5306500709200 /* ofAVQueueRenderer.m */,
+			);
+			path = ofxAVQueuePlayer;
+			sourceTree = "<group>";
+		};
+		D3DEC37718C61E09003E48C3 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				D3DEC37B18C61FB5003E48C3 /* 2_0.mp4 */,
+				D3DEC37C18C61FB5003E48C3 /* 0_0.mp4 */,
+				D3DEC37D18C61FB5003E48C3 /* 1_0.mp4 */,
+				D3DEC37818C61E09003E48C3 /* mesh */,
+				D3DEC37A18C61E09003E48C3 /* settings.json */,
 			);
 			name = data;
 			path = bin/data;
 			sourceTree = "<group>";
 		};
-		D3BE79C718AD8A550030E92F /* mapping_test */ = {
+		D3DEC37818C61E09003E48C3 /* mesh */ = {
 			isa = PBXGroup;
 			children = (
-				D3BE79C818AD8A550030E92F /* mesh_0.jpg */,
-				D3BE79C918AD8A550030E92F /* Mapping test_07_02.obj */,
-				D3BE79CA18AD8A550030E92F /* mesh_1.jpg */,
-				D3BE79CB18AD8A550030E92F /* mesh_2.jpg */,
+				D3DEC37918C61E09003E48C3 /* mesh.obj */,
 			);
-			path = mapping_test;
+			path = mesh;
 			sourceTree = "<group>";
 		};
 		E285694718A42E8C0068B4AB /* ofxAssimpModelLoader */ = {
@@ -521,6 +525,9 @@
 		E45BE5980E8CC70C009D7055 /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D37596C818B7A69C00FD8F45 /* AVFoundation.framework */,
+				D37596C618B7A69300FD8F45 /* QuartzCore.framework */,
+				D37596C418B7A68300FD8F45 /* CoreMedia.framework */,
 				BBAB23CA13894EDB00AA2426 /* 3rd party frameworks */,
 				BBAB23C913894ECA00AA2426 /* system frameworks */,
 			);
@@ -536,7 +543,10 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				D3A8F05A18A43ACB00DB961F /* data */,
+				D3DEC37718C61E09003E48C3 /* data */,
+				D396844418C52F9700709200 /* AVFoundation.framework */,
+				D396844218C52F9200709200 /* QuartzCore.framework */,
+				D396844018C52F8A00709200 /* CoreMedia.framework */,
 				E4B69B5B0A3A1756003C02F2 /* PlayerAppDebug.app */,
 			);
 			sourceTree = "<group>";
@@ -637,9 +647,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D379BF0818C5379900ECB286 /* ofAVFMovieRenderer.m in Sources */,
+				D379BF0918C5379900ECB286 /* ofAVFoundationPlayer.mm in Sources */,
+				D396845D18C5313000709200 /* ofAVQueuePlayer.mm in Sources */,
+				D396845E18C5313000709200 /* ofAVQueueRenderer.m in Sources */,
 				9EF1133BC23669A5C94FE30F /* jsoncpp.cpp in Sources */,
 				E285698018A42E8C0068B4AB /* ofxAssimpMeshHelper.cpp in Sources */,
-				D39E973218AC3289004C7001 /* SceneContent.cpp in Sources */,
 				E285698118A42E8C0068B4AB /* ofxAssimpModelLoader.cpp in Sources */,
 				F3AD9E2A2E56B6AF32A0BDAF /* Server.cpp in Sources */,
 				E285698218A42E8C0068B4AB /* ofxAssimpTexture.cpp in Sources */,
@@ -658,7 +671,6 @@
 				D31EC6A718A9A6AB00B8F882 /* Asset.cpp in Sources */,
 				D31EC6A818A9A6AB00B8F882 /* Event.cpp in Sources */,
 				D31EC6A918A9A6AB00B8F882 /* Scene.cpp in Sources */,
-				D38507F018AA79E400DAF9E7 /* Composite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +690,7 @@
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH)";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -687,6 +700,7 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -703,8 +717,9 @@
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
 					../../../addons/ofxLibwebsockets/src,
+					../../../addons/ofxAVFVideoPlayer/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -725,6 +740,7 @@
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(NATIVE_ARCH)";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -735,6 +751,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
@@ -751,8 +768,9 @@
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
 					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
 					../../../addons/ofxLibwebsockets/src,
+					../../../addons/ofxAVFVideoPlayer/src,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-lpthread",
@@ -776,8 +794,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxSyphon/libs/Syphon/lib/osx,
-					/Users/chris/oF/080/addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -787,71 +803,7 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_18)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_19)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_20)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_21)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_22)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_23)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_24)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_25)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_26)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_27)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_28)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_29)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_30)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_31)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_32)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_33)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_34)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_35)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_36)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_37)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_38)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_39)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_40)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_41)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_42)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_43)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_44)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_45)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_46)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_47)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_48)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
@@ -866,8 +818,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxSyphon/libs/Syphon/lib/osx,
-					/Users/chris/oF/080/addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -876,71 +826,7 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_18)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_19)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_20)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_21)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_22)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_23)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_24)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_25)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_26)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_27)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_28)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_29)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_30)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_31)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_32)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_33)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_34)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_35)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_36)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_37)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_38)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_39)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_40)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_41)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_42)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_43)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_44)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_45)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_46)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_47)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_48)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_49)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
-					/Users/jmsaavedra/Documents/openFrameworks/openFrameworks_0080_osx/addons/ofxAssimpModelLoader/libs/assimp/lib/osx,
-				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;

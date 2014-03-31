@@ -1,3 +1,8 @@
 /node_modules
 /.tmp
-/includes/aeprojects
+/includes/aeprojects/*
+/public/.assets
+/public/css/style.css
+/includes/videos/*
+/dump/
+dump/
