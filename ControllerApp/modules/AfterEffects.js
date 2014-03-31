@@ -144,11 +144,17 @@ var concurrency = 5; //number of tasks running in the queue at once
 var renderqueue = async.queue(renderWorker,concurrency)
 renderqueue.drain = function(){
 	console.log('Rendering Complete')
+	//call a concat function
 }
 //the worker function for our renderqueue
 function renderWorker(scene,callback){
 	console.log("Running New Process")
+	
+	var bError = null;
+	
 	utils.deleteFile( scene.output,function(err){
+		
+		
 		if(err) console.error("Delete File: "+scene.output)
 		else console.log("Delete File: "+scene.output)
 		
@@ -163,14 +169,16 @@ function renderWorker(scene,callback){
 		
 		aerender.stderr.on('data', function (data) {
 		  console.log('stderr: ' + data)
+		  bError = true
 		});
 		aerender.on('error',function(error){
 			console.error(error)
+			bError = true;
 		});
 		aerender.on('close', function (code) {
 		  console.log('AERENDER: '+aerender.pid+' exited with code ' + code)
 		  //callback once the process has finished
-		  callback()
+		  callback(bError,scene)
 		});
 		
 		
@@ -190,9 +198,14 @@ exports.processRenderOutput = function(formattedScenes,cb){
 		}else{
 			//close after effects
 			exit(function(){
-				console.log('done');
+				console.log('After Effects Closed');
 				//render all files on the command line
-				renderqueue.push(formattedScenes)
+				renderqueue.push(formattedScenes,function(err,scene){
+					//connect to db and update render to true or false
+					
+					//if error add scene back into queue
+					
+				})
 				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
 			})
 		}
