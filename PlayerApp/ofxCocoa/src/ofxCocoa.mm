@@ -205,12 +205,10 @@ namespace MSA {
         }
         
         void showCursor(){
-//            [appWindow() showCursor];
             [NSCursor unhide];
         }
         
         void hideCursor(){
-//            [appWindow() hideCursor];
             [NSCursor hide];
         }
         
