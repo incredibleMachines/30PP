@@ -166,7 +166,8 @@ namespace MSA {
 			
 			NSApplicationMain(0,  NULL);
 			
-			[pool drain];	
+			[pool drain];
+            
 		}
 		
 		
@@ -178,6 +179,7 @@ namespace MSA {
 		
 		void AppWindow::hideCursor() {
 			[NSCursor hide];
+            
 		}
 		
 		

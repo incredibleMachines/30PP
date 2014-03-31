@@ -96,6 +96,8 @@ namespace MSA {
         
         /***** 30PP *****/
         void                initPlayer(string _video, int _ID);
+        void                showCursor();
+        void                hideCursor();
         GLuint               getTextureID();
         /***** 30PP *****/
 	}

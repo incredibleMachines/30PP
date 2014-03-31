@@ -204,6 +204,16 @@ namespace MSA {
             [glView() initPlayer:filepath ID:_ID];
         }
         
+        void showCursor(){
+//            [appWindow() showCursor];
+            [NSCursor unhide];
+        }
+        
+        void hideCursor(){
+//            [appWindow() hideCursor];
+            [NSCursor hide];
+        }
+        
         GLuint getTextureID(){
             return [glView() textureID];
         }
