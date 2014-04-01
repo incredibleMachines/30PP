@@ -41,8 +41,13 @@ exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
 			formatJSONForAE(result, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 				
 				//console.log(JSON.stringify(formattedOutput))
-				_AfterEffects.processRenderOutput(formattedOutput,function(e){
-					
+				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
+					//concat files
+					if(!e){
+						
+					}else{
+						//what error'd?
+					}
 					
 				})
 				
@@ -270,13 +275,17 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 					currentGroup.template = type+".aep"
 					currentGroup.script = type+".jsx"
 					currentGroup.data = {}
+					currentGroup.ids = []
 					_.each(scene.clips,function(clip,index){
 						//console.log("formatJSONForAE STEP TWO".inverse.red)
 						//console.log(scene.slug)	
 						//console.log(order)
-						//console.log(clip.zones.length)
-	
+						//console.log(clip.zones.length)\
+						
+						//save our ids in the to surface them when the operation is done and set render to false dB
 						console.log(clip)
+						currentGroup.ids.push(clip._id)
+
 						switch(clip.zones.length){
 							case 1:
 								if(!currentGroup.data.hasOwnProperty('source_image_LSR')) currentGroup.data.source_image_LSR = []	

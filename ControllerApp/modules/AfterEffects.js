@@ -142,10 +142,7 @@ exports.getCurrentFile = function(){
 var concurrency = 5; //number of tasks running in the queue at once
 
 var renderqueue = async.queue(renderWorker,concurrency)
-renderqueue.drain = function(){
-	console.log('Rendering Complete')
-	//call a concat function
-}
+
 //the worker function for our renderqueue
 function renderWorker(scene,callback){
 	console.log("Running New Process")
@@ -159,27 +156,28 @@ function renderWorker(scene,callback){
 		else console.log("Delete File: "+scene.output)
 		
 		//spawn a process to the aerender 
-		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project',scene.template,'-output',scene.output,'-comp', 'UV_OUT'])
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project',scene.template,'-output',scene.output, '-comp', 'UV_OUT'])
 		
 		console.log("AERENDER: "+aerender.pid)
 		
 		aerender.stdout.on('data', function (data) {
 		  console.log(aerender.pid+': ' + data)
-		});
+		})
 		
 		aerender.stderr.on('data', function (data) {
 		  console.log('stderr: ' + data)
 		  bError = true
-		});
+		})
+		
 		aerender.on('error',function(error){
 			console.error(error)
 			bError = true;
-		});
+		})
 		aerender.on('close', function (code) {
 		  console.log('AERENDER: '+aerender.pid+' exited with code ' + code)
 		  //callback once the process has finished
 		  callback(bError,scene)
-		});
+		})
 		
 		
 
@@ -187,9 +185,15 @@ function renderWorker(scene,callback){
 
 }
 
-exports.processRenderOutput = function(formattedScenes,cb){
-	
+exports.processRenderOutput = function(formattedScenes,_Database,cb){
+	var renderError = null;
 	console.log(JSON.stringify(formattedScenes))
+	
+	renderqueue.drain = function(){
+		console.log('Rendering Complete')
+		//call a concat function
+		cb(renderError)
+	}
 	
 	async.eachSeries(formattedScenes,renderContent,function(e){
 		if(e){
@@ -201,10 +205,38 @@ exports.processRenderOutput = function(formattedScenes,cb){
 				console.log('After Effects Closed');
 				//render all files on the command line
 				renderqueue.push(formattedScenes,function(err,scene){
+					
+					//a callback emitted from each worker on completion
 					//connect to db and update render to true or false
-					
-					//if error add scene back into queue
-					
+					if(err){
+						//if error add scene back into queue
+						if(!scene.hasOwnProperty('counter')) scene.counter = 0;
+						else scene.counter++;
+						console.error("AERENDER: CALLBACK ERROR  Count: %s".red,scene.counter)
+
+						if(scene.counter>=3) {
+							//callback to different error
+							//wait for queue to drain and pass error back to 
+							console.error("AERENDER: CALLBACK ERROR END".red)
+
+							scene.error = err;
+							renderError = scene;
+							
+						}else{
+							//callback to the anonymous function itself
+							console.error("AERENDER: CALLBACK ERROR RETRY".green)
+							renderqueue.push(scene, arguments.callee(err,scene))
+						}
+					}else{
+						var clips_cb = 0;
+						//database set object to true
+						scene.ids.forEach(function(id,index){
+							
+							_Database.updateByID('clips',id,{$set:{render:false}},function(e){})
+							
+						})
+						
+					}
 				})
 				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
 			})
@@ -212,6 +244,9 @@ exports.processRenderOutput = function(formattedScenes,cb){
 		//else console.log('done');
 	})
 	
+}
+
+function workerCallback(err,scene){
 	
 }
 
