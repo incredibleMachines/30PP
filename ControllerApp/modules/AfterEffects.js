@@ -145,7 +145,7 @@ var renderqueue = async.queue(renderWorker,concurrency)
 
 //the worker function for our renderqueue
 function renderWorker(scene,callback){
-	console.log("Running New Process")
+	//console.log("Running New Process")
 	
 	var bError = null;
 	
@@ -164,9 +164,10 @@ function renderWorker(scene,callback){
 		
 		aerender.stdout.on('data', function (data) {
 		  var string = data.toString().replace(/\n$/, "")
+		  //var newString = string.replace()
 		  //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline 
-		  //var string = data.toString().replace(/(\r\n|\n|\r)/gm,"")//replace all newline chars
-		  console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, string)
+		  var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
+		  console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, nstring)
 		})
 		
 		aerender.stderr.on('data', function (data) {
@@ -232,7 +233,7 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 							console.error("AERENDER: CALLBACK ERROR RETRY".green)
 							renderqueue.push(scene, arguments.callee(err,scene))
 						}
-					}else{
+					}else{//else if(err)
 						var clips_cb = 0;
 						//database set object to true
 						scene.ids.forEach(function(id,index){
@@ -241,10 +242,10 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 							
 						})
 						
-					}
-				})
+					}//end if(err)
+				})//end renderqueue.push
 				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
-			})
+			})//end exit 
 		}
 		//else console.log('done');
 	})

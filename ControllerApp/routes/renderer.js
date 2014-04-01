@@ -12,7 +12,7 @@ exports.index = function(_Database){
 	
 	return function(req,res){
 		_Database.getAll('clips',function(e,_clips){
-			console.log(_clips)
+			//console.log(_clips)
 			if(e){ res.jsonp({"Error": "Query Collection Error: Scenes"})
 			}else{
 				_Database.getAll('scenes',function(_e, _scenes){
