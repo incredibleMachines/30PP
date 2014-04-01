@@ -166,20 +166,14 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
 
         case '1':
             cameraSelect=1;
-            cameras[guiCam].masks=cameras[cameraSelect].masks;
-            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
             updateMasks();
             break;
         case '2':
             cameraSelect=2;
-            cameras[guiCam].masks=cameras[cameraSelect].masks;
-            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
             updateMasks();
             break;
         case '3':
             cameraSelect=3;
-            cameras[guiCam].masks=cameras[cameraSelect].masks;
-            cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
             updateMasks();
             break;
             
@@ -1166,6 +1160,8 @@ void ModelMapper::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ModelMapper::updateMasks(){
+    cameras[guiCam].masks=cameras[cameraSelect].masks;
+    cameras[guiCam].drawMasks=cameras[cameraSelect].drawMasks;
     
     //----------CREATE PATH(S)
     //parse through mask polylines and create paths from them. only do when updating so drawing uses less memory
@@ -1189,6 +1185,8 @@ void ModelMapper::updateMasks(){
             cameras[i].drawMasks[j].setStrokeWidth(1);
         }
     }
+    
+    
 }
 
 void ModelMapper::setMassMesh(string _reloadMesh){

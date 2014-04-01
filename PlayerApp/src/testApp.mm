@@ -67,7 +67,17 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+    switch(key){
+        case ' ':
+            if(map.adjustMode!=ADJUST_MODE_LOCKED){
+                MSA::ofxCocoa::hideCursor();
+            }
+            else if(map.bShiftPressed==true){
+                MSA::ofxCocoa::showCursor();
+            }
+            break;
+    }
+    
 }
 
 void testApp::exit(){

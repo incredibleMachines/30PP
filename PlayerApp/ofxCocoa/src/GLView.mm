@@ -222,6 +222,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(void)updateAndDraw {
+    [[NSCursor crosshairCursor] set];
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	// This method will be called on both the main thread (through -drawRect:) and a secondary thread (through the display link rendering loop)
@@ -245,9 +246,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context {
     
-
-    
-	NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
+	
+    NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
 	
 	isAnimating		= false;
 	useDisplayLink	= true;
