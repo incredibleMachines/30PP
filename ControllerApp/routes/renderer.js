@@ -313,17 +313,25 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 									currentGroup.data.source_image_LR.push(clip.zones[1].file.path)
 								}
 								if(clip.zones[1].text){
+								
 									if(typeof clip.zones[1].text === 'string'){
-										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_single_text = []
-										currentGroup.data.source_single_text.push(clip.zones[1].text)
+										//utils : 
+										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_single_text = []
+										var escapedText = utils.escapeChars(clip.zones[1].text)
+										console.log("escapedSingle: "+escapedText)
+										//currentGroup.data.source_single_text.push(clip.zones[1].text)
+										currentGroup.data.source_single_text.push(escapedText)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
-										currentGroup.data.source_multitext_text.push(clip.zones[1].text)
-										/*
-										for(var i=0; i<clip.zones[1].text.length; i++){
-											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										
+										var escapedText=[];
+										for(var t=0; t<clip.zones[1].text.length; t++){
+											var thisText = utils.escapeChars(clip.zones[1].text[t]);
+											escapedText.push(thisText);
 										}
-										*/
+										console.log("escapedMulti: "+escapedText);
+										//currentGroup.data.source_multitext_text.push(clip.zones[1].text)
+										currentGroup.data.source_multitext_text.push(escapedText)
 									}
 									
 								}
@@ -351,15 +359,19 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 								if(clip.zones[1].text){
 									if(typeof clip.zones[1].text === 'string'){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_sequence_text_L = []
-										currentGroup.data.source_sequence_text_L.push(clip.zones[1].text)
+										var escapedText = utils.escapeChars(clip.zones[1].text)
+										console.log("escapedSingle: "+escapedText)
+										currentGroup.data.source_sequence_text_L.push(escapedText)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
-										currentGroup.data.source_multitext_text.push(clip.zones[1].text)
-										/*
-										for(var i=0; i<clip.zones[1].text.length; i++){
-											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										
+										var escapedText=[];
+										for(var t=0; t<clip.zones[1].text.length; t++){
+											var thisText = utils.escapeChars(clip.zones[1].text[t]);
+											escapedText.push(thisText);
 										}
-										*/
+										console.log("escapedMulti: "+escapedText);
+										currentGroup.data.source_multitext_text.push(escapedText);
 									}
 									
 								}
@@ -370,15 +382,19 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 								if(clip.zones[2].text){
 									if(typeof clip.zones[2].text === 'string'){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_R')) currentGroup.data.source_sequence_text_R = []
-										currentGroup.data.source_sequence_text_R.push(clip.zones[2].text)
+										var escapedText = utils.escapeChars(clip.zones[2].text)
+										console.log("escapedSingle: "+escapedText)
+										currentGroup.data.source_sequence_text_R.push(escapedText)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
-										currentGroup.data.source_multitext_text.push(clip.zones[2].text)
-										/*
-										for(var i=0; i<clip.zones[1].text.length; i++){
-											currentGroup.source_multitext_text.push(clip.zones[1].text[i])
+										
+										var escapedText=[];
+										for(var t=0; t<clip.zones[1].text.length; t++){
+											var thisText = utils.escapeChars(clip.zones[2].text[t]);
+											escapedText.push(thisText);
 										}
-										*/
+										console.log("escapedMulti: "+escapedText);
+										currentGroup.data.source_multitext_text.push(escapedText)
 									}
 									
 								}
