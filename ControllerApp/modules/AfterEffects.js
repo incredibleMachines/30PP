@@ -155,8 +155,10 @@ function renderWorker(scene,callback){
 		if(err) console.error("Delete File: %s".grey,scene.output)
 		else console.log("Delete File: %s".grey,scene.output)
 		
+		//options for render process
+		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', 'ProRes222']
 		//spawn a process to the aerender 
-		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT'])
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
 		
 		console.log()
 		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
@@ -181,6 +183,7 @@ function renderWorker(scene,callback){
 		})
 		aerender.on('close', function (code) {
 		  console.log('AERENDER PID: %s '.inverse+' exited with code %s '.cyan,aerender.pid,code)
+		  if(code !=0) bError = true;
 		  //callback once the process has finished
 		  callback(bError,scene)
 		})

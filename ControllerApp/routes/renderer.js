@@ -314,7 +314,7 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 								}
 								if(clip.zones[1].text){
 									if(typeof clip.zones[1].text === 'string'){
-										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_single_text = []
+										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_single_text = []
 										currentGroup.data.source_single_text.push(clip.zones[1].text)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
