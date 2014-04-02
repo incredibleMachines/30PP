@@ -58,6 +58,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     numMeshes=_whichMeshes.size();
     whichMeshes=_whichMeshes;
     
+    easingType = ofxTween::easeIn;
+    
     //set default variable values
     //camera settings
     cameraSelect=1;
@@ -67,7 +69,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //mouse settings
     bMouseDown=false;
-    clickThreshold=2;
+    clickThreshold=4;
     
     //for checking for double click on mask creation
     mouseTimer=ofGetElapsedTimeMillis();
@@ -101,6 +103,10 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     } else {
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
+    
+    setupGUI();
+    
+
     
     //----------SETUP LISTENERS
     
@@ -142,15 +148,6 @@ void ModelMapper::draw(){
     //----------DRAW MASKS
     drawMasks();
     
-    //----------DRAW GUI
-    if(bDrawGui==true){
-        ofPushStyle();
-        glDepthFunc(GL_ALWAYS);
-        drawGuiText();
-        glDepthFunc(GL_LESS);
-        ofPopStyle();
-    }
-    
 }
 
 void ModelMapper::keyPressed(ofKeyEventArgs& args){
@@ -161,21 +158,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
     }
     
     switch(args.key){
-            
-        //----------SELECT ACTIVE CAMERA
-
-        case '1':
-            cameraSelect=1;
-            updateMasks();
-            break;
-        case '2':
-            cameraSelect=2;
-            updateMasks();
-            break;
-        case '3':
-            cameraSelect=3;
-            updateMasks();
-            break;
             
         //----------MODIFY ADJUSTMENTS
         
@@ -189,32 +171,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             moveModifier=10;
             break;
             
-        //----------SELECT ADJUST MODE
-            
-        case 'c':
-            if(adjustMode!=ADJUST_MODE_LOCKED){
-                bDrawGui=true;
-            }
-            if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustMode=ADJUST_MODE_VIEWPORT;
-            }
-            else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                adjustMode=ADJUST_MODE_LOOK_AT;
-            }
-            
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustMode=ADJUST_MODE_MESH;
-            }
-            else if(adjustMode==ADJUST_MODE_MESH){
-                adjustMode=ADJUST_MODE_MASK;
-            }
-            else if (adjustMode==ADJUST_MODE_MASK){
-                adjustMode=ADJUST_MODE_CAMERA;
-            }
-            break;
-            
-            //----------MAKE ADJUSTMENTS
-            
+        //----------MAKE ADJUSTMENTS
         case OF_KEY_UP:
             //Move Camera Position
             if(adjustMode==ADJUST_MODE_CAMERA){
@@ -228,7 +185,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
             //Adjust Viewport Position for Active Camera
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.y-=moveModifier;
+                adjustViewport(0,-moveModifier);
             }
             
             //Adjust Entire Mask Position
@@ -250,7 +207,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustOrientation(0,-moveModifier/10,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.y+=moveModifier;
+                adjustViewport(0,moveModifier);
             }
             else if(adjustMode==ADJUST_MODE_MASK){
                 adjustMask(0,moveModifier);
@@ -268,7 +225,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustOrientation(-moveModifier/10,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.x+=moveModifier;
+                adjustViewport(moveModifier,0);
                 
             }
             else if(adjustMode==ADJUST_MODE_MASK){
@@ -287,7 +244,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustOrientation(moveModifier/10,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                cameras[cameraSelect].viewport.x-=moveModifier;
+                adjustViewport(-moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_MASK){
                 adjustMask(-moveModifier,0);
@@ -323,36 +280,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMesh(0,0,-moveModifier);
             }
             break;
-            
-            
-            //----------MAGNET RADIUS
-            
-        case '=':
-        case '+':
-            if(adjustMode==ADJUST_MODE_MESH){
-                magnetRadius++;
-                calculateMagnetPoints();
-            }
-            break;
-            
-        case '-':
-        case '_':
-            if(adjustMode==ADJUST_MODE_MESH){
-                magnetRadius--;
-                if(magnetRadius<0){
-                    magnetRadius=0;
-                }
-                calculateMagnetPoints();
-            }
-            break;
-            
-            //----------SAVE CAMERA AND MESH ADJUSTMENTS
-            
-        case 's':
-            saveCameras();
-            break;
-            
-            
+        
             //----------CREATE NEW MASK/SWITCH MAGNET MODE
             
         case 'm':
@@ -364,7 +292,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             else if (adjustMode==ADJUST_MODE_MESH){
                 magnetMode++;
-                if (magnetMode>2){
+                if (magnetMode>3){
                     magnetMode=0;
                 }
                 calculateMagnetPoints();
@@ -389,7 +317,30 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case 'g':
             if(adjustMode!=ADJUST_MODE_LOCKED){
-                bDrawGui=!bDrawGui;
+                if(mainGUI->isVisible()){
+                    mainGUI->setVisible(false);
+                    positionGUI->setVisible(false);
+                    orientationGUI->setVisible(false);
+                    viewportGUI->setVisible(false);
+                    meshGUI->setVisible(false);
+                    magnetGUI->setVisible(false);
+                }
+                else{
+                    mainGUI->setVisible(true);
+                    if(adjustMode==ADJUST_MODE_CAMERA) positionGUI->setVisible(true);
+                    else if(adjustMode==ADJUST_MODE_LOOK_AT) orientationGUI->setVisible(true);
+                    else if(adjustMode==ADJUST_MODE_VIEWPORT) viewportGUI->setVisible(true);
+                    else if(adjustMode==ADJUST_MODE_MESH) {
+                        meshGUI->setVisible(true);
+                        if(selectMode!=SELECT_MODE_POINTER){
+                            magnetGUI->setVisible(true);
+                        }
+                    }
+                }
+            }
+            else if(bShiftPressed==true){
+                mainGUI->setVisible(true);
+                positionGUI->setVisible(true);
             }
             break;
             
@@ -399,43 +350,36 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             if(adjustMode!=ADJUST_MODE_LOCKED){
                 bDrawGui=false;
                 bDrawWireframe=false;
+                wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
                 adjustMode=ADJUST_MODE_LOCKED;
+                mainGUI->setVisible(false);
+                positionGUI->setVisible(false);
+                orientationGUI->setVisible(false);
+                viewportGUI->setVisible(false);
+                meshGUI->setVisible(false);
+                magnetGUI->setVisible(false);
             }
             else if(bShiftPressed==true){
                 adjustMode=ADJUST_MODE_CAMERA;
                 bDrawGui=true;
+                mainGUI->setVisible(true);
+                
+                
+                if(adjustMode==ADJUST_MODE_CAMERA) positionGUI->setVisible(true);
+                else if(adjustMode==ADJUST_MODE_LOOK_AT) orientationGUI->setVisible(true);
+                else if(adjustMode==ADJUST_MODE_VIEWPORT) viewportGUI->setVisible(true);
+                else if(adjustMode==ADJUST_MODE_MESH) {
+                    meshGUI->setVisible(true);
+                    if(selectMode!=SELECT_MODE_POINTER){
+                        magnetGUI->setVisible(true);
+                    }
+                }
+                currentMode->activateToggle("Camera Position");
+                performanceButton->setColorBack(OFX_UI_COLOR_BACK);
             }
             break;
             
             //----------TOGGLE MESH WIREFRAME DRAW
-            
-        case 'w':
-            if(adjustMode!=ADJUST_MODE_LOCKED){
-                bDrawWireframe=!bDrawWireframe;
-            }
-            break;
-            
-            
-            //----------RELOAD MESH
-        
-        case 'R':
-            //reset mesh to passed through file path to .dae or .obj file
-            ofxAssimpModelLoader reload;
-            if(meshType==MESH_DETAIL){
-                reload.loadModel(detailMesh);
-                for(int i=0; i<numMeshes;i++){
-                    cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
-                }
-            }
-            else if(meshType==MESH_MASS){
-                reload.loadModel(massMesh);
-                for(int i=0; i<numMeshes;i++){
-                    cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
-                }
-            }
-            cout<<"Reloaded Model"<<endl;
-            
-            break;
     }
 }
 
@@ -482,7 +426,23 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                     meshVertex tempVert;
                     tempVert.vertex=cur;
                     tempVert.index=j;
-                    tempVector.push_back(tempVert);
+                    bool included=false;
+                    if(tempVertices.size()>0){
+                        for(int k=0;k<tempVertices[i].size();k++){
+                            if(tempVertices[i][k].index==tempVert.index){
+                                included=true;
+                                if(bShiftPressed==true){
+                                    tempVertices[i].erase(tempVertices[i].begin()+k);
+                                }
+                            }
+                        }
+                        if(bShiftPressed==false&&included==false){
+                            tempVector.push_back(tempVert);
+                        }
+                    }
+                    else if(bShiftPressed==false){
+                        tempVector.push_back(tempVert);
+                    }
                 }
             }
             
@@ -493,7 +453,23 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                     meshVertex tempVert;
                     tempVert.vertex=cur;
                     tempVert.index=j;
-                    tempVector.push_back(tempVert);
+                    bool included=false;
+                    if(tempVertices.size()>0){
+                        for(int k=0;k<tempVertices[i].size();k++){
+                            if(tempVertices[i][k].index==tempVert.index){
+                                included=true;
+                                if(bShiftPressed==true){
+                                    tempVertices[i].erase(tempVertices[i].begin()+k);
+                                }
+                            }
+                        }
+                        if(bShiftPressed==false&&included==false){
+                            tempVector.push_back(tempVert);
+                        }
+                    }
+                    else if(bShiftPressed==false){
+                        tempVector.push_back(tempVert);
+                    }
                 }
             }
             
@@ -506,6 +482,9 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             
             moveVertices.push_back(tempVector);
             tempVector.clear();
+        }
+        if(magnetMode!=MAGNET_MODE_NONE){
+            calculateMagnetPoints();
         }
         
     }
@@ -560,57 +539,84 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     
     if(adjustMode==ADJUST_MODE_MESH){
         
-        //clear selected vertex vector
-        if(bShiftPressed==false){
-            tempVertices.clear();
-        }
-        else{
+            //clear selected vertex vector
             tempVertices=moveVertices;
-        }
-        moveVertices.clear();
-        
-        for(int i=0;i<numMeshes;i++)
-        {
-            vector<meshVertex> tempVector;
-            int n=cameras[cameraSelect].mesh[i].getNumVertices();
+            moveVertices.clear();
             
-            //Check for mouse clicks on camera select screen if present highlight this particular vertex
-            for(int j = 0; j <n ; j++){
-                ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
-                float distance = cur.distance(ofVec2f(args.x,args.y));
-                if(distance < clickThreshold) {
-                    meshVertex tempVert;
-                    tempVert.vertex=cur;
-                    tempVert.index=j;
-                    tempVector.push_back(tempVert);
+            for(int i=0;i<numMeshes;i++)
+            {
+                vector<meshVertex> tempVector;
+                int n=cameras[cameraSelect].mesh[i].getNumVertices();
+                
+                //Check for mouse clicks on camera select screen if present highlight this particular vertex
+                for(int j = 0; j <n ; j++){
+                    ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
+                    float distance = cur.distance(ofVec2f(args.x,args.y));
+                    if(distance < clickThreshold) {
+                        meshVertex tempVert;
+                        tempVert.vertex=cur;
+                        tempVert.index=j;
+                        bool included=false;
+                        if(tempVertices.size()>0){
+                            for(int k=0;k<tempVertices[i].size();k++){
+                                if(tempVertices[i][k].index==tempVert.index){
+                                    included=true;
+                                    if(bShiftPressed==true){
+                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                                    }
+                                }
+                            }
+                            if(bShiftPressed==false&&included==false){
+                                tempVector.push_back(tempVert);
+                            }
+                        }
+                        else if(bShiftPressed==false){
+                            tempVector.push_back(tempVert);
+                        }
+                    }
                 }
-            }
-            
-            //Check for mouse clicks on gui screen if present highlight this particular vertex
-            for(int j = 0; j < n; j++){
-                ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                float distance = cur.distance(ofVec2f(args.x,args.y));
-                if(distance < clickThreshold) {
-                    meshVertex tempVert;
-                    tempVert.vertex=cur;
-                    tempVert.index=j;
-                    tempVector.push_back(tempVert);
+                
+                //Check for mouse clicks on gui screen if present highlight this particular vertex
+                for(int j = 0; j < n; j++){
+                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                    float distance = cur.distance(ofVec2f(args.x,args.y));
+                    if(distance < clickThreshold) {
+                        meshVertex tempVert;
+                        tempVert.vertex=cur;
+                        tempVert.index=j;
+                        bool included=false;
+                        if(tempVertices.size()>0){
+                            for(int k=0;k<tempVertices[i].size();k++){
+                                if(tempVertices[i][k].index==tempVert.index){
+                                    included=true;
+                                    if(bShiftPressed==true){
+                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                                    }
+                                }
+                            }
+                            if(bShiftPressed==false&&included==false){
+                                tempVector.push_back(tempVert);
+                            }
+                        }
+                        else if(bShiftPressed==false){
+                            tempVector.push_back(tempVert);
+                        }
+                    }
                 }
-            }
-            
-            //shift-click vector of save selected points
-            if(tempVertices.size()>0){
-                for(int j=0;j < tempVertices[i].size();j++){
-                    tempVector.push_back(tempVertices[i][j]);
+                
+                //shift-click vector of save selected points
+                if(tempVertices.size()>0){
+                    for(int j=0;j < tempVertices[i].size();j++){
+                        tempVector.push_back(tempVertices[i][j]);
+                    }
                 }
-            }
-            
-            moveVertices.push_back(tempVector);
-            tempVector.clear();
-            
-            if(magnetMode!=MAGNET_MODE_NONE){
-                calculateMagnetPoints();
-            }
+                
+                moveVertices.push_back(tempVector);
+                tempVector.clear();
+                
+                if(magnetMode!=MAGNET_MODE_NONE){
+                    calculateMagnetPoints();
+                }
         }
         
     }
@@ -817,133 +823,62 @@ void ModelMapper:: saveCameras() {
     }
 }
 
-void ModelMapper:: drawGuiText() {
-    
-    //Check adjustMode and apply relevant text/instructions
-    string cameraInfo="'c' to Change Adjust Mode. Current Mode: ";
-    string cameraDetails;
-    string cameraData;
-    int lineHeight=30;
-    int lineDraw=cameras[guiCam].viewport.y+lineHeight;
-    
-    ofFill();
-    ofSetColor(0,0,0,127);
-    ofRect(cameras[guiCam].viewport.x,cameras[guiCam].viewport.y,500,500);
-    
-    ofSetColor(255,255,255);
-    
-    //Draw selected camera number
-    ofDrawBitmapString("Adjusting Camera "+ofToString(cameraSelect), cameras[guiCam].viewport.x+10, lineDraw);
-    
-    if(adjustMode==ADJUST_MODE_CAMERA){
-        cameraData+="Camera Position";
+void ModelMapper:: saveCamera() {
         
-        ofSetColor(0,255,0);
-        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
-        lineDraw+=lineHeight;
+        //----------SAVE CAMERA DATA
         
-        ofSetColor(255,255,255);
-        ofDrawBitmapString("(Arrows) Adjust Camera Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(a/z) Adjust Camera Forwards/Backwards",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
+        //Camera position
+        settings["cameras"][cameraSelect]["pos"]["x"]=cameras[cameraSelect].camera.getGlobalPosition().x;
+        settings["cameras"][cameraSelect]["pos"]["y"]=cameras[cameraSelect].camera.getGlobalPosition().y;
+        settings["cameras"][cameraSelect]["pos"]["z"]=cameras[cameraSelect].camera.getGlobalPosition().z;
         
-    }
-    else if(adjustMode==ADJUST_MODE_LOOK_AT){
-        cameraData+="Camera Orientation";
+        //camera viewport offset
+        settings["cameras"][cameraSelect]["viewPos"]["x"]=cameras[cameraSelect].viewport.x;
+        settings["cameras"][cameraSelect]["viewPos"]["y"]=cameras[cameraSelect].viewport.y;
         
-        ofSetColor(0,255,0);
-        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
-        lineDraw+=lineHeight;
+        //camera orientation quaternion
+        settings["cameras"][cameraSelect]["orientation"]["x"]=cameras[cameraSelect].camera.getGlobalOrientation().x();
+        settings["cameras"][cameraSelect]["orientation"]["y"]=cameras[cameraSelect].camera.getGlobalOrientation().y();
+        settings["cameras"][cameraSelect]["orientation"]["z"]=cameras[cameraSelect].camera.getGlobalOrientation().z();
+        settings["cameras"][cameraSelect]["orientation"]["w"]=cameras[cameraSelect].camera.getGlobalOrientation().w();
         
-        ofSetColor(255,255,255);
-        ofDrawBitmapString("(Arrows) Adjust Camera Orientation Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(a/z) Adjust Camera Rotate",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-    }
-    else if(adjustMode==ADJUST_MODE_VIEWPORT){
-        cameraData+="Camera Viewport";
-        
-        ofSetColor(0,255,0);
-        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
-        lineDraw+=lineHeight;
-        
-        ofSetColor(255,255,255);
-        ofDrawBitmapString("(Arrows) Adjust Viewport Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        
-    }
-    else if(adjustMode==ADJUST_MODE_MESH){
-        cameraData+="Mesh Points";
-        
-        ofSetColor(0,255,0);
-        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
-        lineDraw+=lineHeight;
-        
-        string magnetModeText;
-        
-        if(magnetMode==MAGNET_MODE_NONE){
-            magnetModeText="None";
-        }
-        else if(magnetMode==MAGNET_MODE_LINEAR){
-            magnetModeText="Linear";
-        }
-        else if(magnetMode==MAGNET_MODE_EASE){
-            magnetModeText="Ease";
+        //mask vertices
+        settings["cameras"][cameraSelect]["mask"].clear();
+        for(int j=0;j<cameras[cameraSelect].masks.size();j++){
+            vector<ofPoint> vertices=cameras[cameraSelect].masks[j].getVertices();
+            for(int k=0;k<vertices.size();k++){
+                settings["cameras"][cameraSelect]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
+                settings["cameras"][cameraSelect]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
+            }
         }
         
-        ofSetColor(255,255,255);
-        ofDrawBitmapString("Magnet Mode: "+magnetModeText,cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("Magnet Radius: "+ofToString(magnetRadius),cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Mouse Click) Select Individual Mesh Point",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Mouse Drag) Select Multiple Mesh Points",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Arrows) Adjust Selected Mesh Point(s) Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(a/z) Adjust Selected Mesh Point(s) Forwards/Backwards",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(R) Reset Mesh",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-    }
-    else if(adjustMode==ADJUST_MODE_MASK){
-        cameraData+="Masks";
+        //----------SAVE INDIVIDUAL MESH
         
-        ofSetColor(0,255,0);
-        ofDrawBitmapString(cameraData,cameras[guiCam].viewport.x+240, lineDraw);
-        lineDraw+=lineHeight;
-        
-        ofSetColor(255,255,255);
-        ofDrawBitmapString("(m) Create New Mask",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(New Mask Mouse Click) Add Mask Point",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(New Mask Mouse Double Click) Close Mask",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Mouse Click Inside Mask) Select Mask",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Mouse Click on Mask Point) Select Individual Mask Points",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Mouse Drag) Select Mutliple Mask Points",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Arrows) Adjust Selected Mask Point(s) Up/Down/Left Right",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-        ofDrawBitmapString("(Delete) Delete Selected Mask",cameras[guiCam].viewport.x+10,lineDraw);
-        lineDraw+=lineHeight;
-    }
+        //save warped mesh objects
+        for(int j=0;j<numMeshes;j++){
+            string meshname;
+            if(meshType==MESH_DETAIL){
+                meshname="mesh_detail_"+ofToString(cameraSelect)+"_"+
+                ofToString(whichMeshes[j])+".ply";
+            }
+            else if(meshType==MESH_MASS){
+                meshname="mesh_mass_"+ofToString(cameraSelect)+"_"+ofToString(whichMeshes[j])+".ply";
+            }
+            cameras[cameraSelect].mesh[j].save(meshname);
+        }
     
-    ofDrawBitmapString("(c) Switch Selected Camera",cameras[guiCam].viewport.x+10,lineDraw);
-    lineDraw+=lineHeight;
-    ofDrawBitmapString("(s) Save Selected Camera",cameras[guiCam].viewport.x+10,lineDraw);
-    lineDraw+=lineHeight;
-    ofDrawBitmapString("(Spacebar) Trigger Presentation Mode",cameras[guiCam].viewport.x+10,lineDraw);
-    lineDraw+=lineHeight;
-    ofDrawBitmapString("(g) Switch GUI view on/off",cameras[guiCam].viewport.x+10,lineDraw);
-    lineDraw+=lineHeight;
-    ofDrawBitmapString("Framerate: "+ofToString(ofGetFrameRate()), cameras[guiCam].viewport.x+10, lineDraw);
+    //----------SAVE JSON SETTINGS DOCUMENT
+    
+    ofFile file;
+    if (!file.open("settings.json", ofFile::WriteOnly)) {
+		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
+	}
+    else {
+        Json::StyledWriter writer;
+        file << writer.write(settings) << endl;
+        cout<<"settings.json SAVED";
+        file.close();
+    }
 }
 
 void ModelMapper:: drawCameras() {
@@ -1184,9 +1119,7 @@ void ModelMapper::updateMasks(){
             cameras[i].drawMasks[j].setFilled(true);
             cameras[i].drawMasks[j].setStrokeWidth(1);
         }
-    }
-    
-    
+    }   
 }
 
 void ModelMapper::setMassMesh(string _reloadMesh){
@@ -1201,6 +1134,17 @@ void ModelMapper::setDetailMesh(string _reloadMesh){
 
 void ModelMapper::adjustPosition(float x, float y, float z){
     cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
+    
+    if(positionX!=NULL){
+        positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
+    }
+    if(positionY!=NULL){
+        positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
+    }
+    if(positionZ!=NULL){
+        positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+    }
+    
 }
 
 void ModelMapper::adjustOrientation(float x, float y, float z){
@@ -1208,6 +1152,31 @@ void ModelMapper::adjustOrientation(float x, float y, float z){
     ofQuaternion xRot(y, ofVec3f(1,0,0));
     ofQuaternion zRot(z, ofVec3f(0,0,1));
     cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
+    
+    if(orientationX!=NULL){
+        orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
+    }
+    if(orientationY!=NULL){
+        orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
+    }
+    if(orientationZ!=NULL){
+        orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
+    }
+    if(orientationW!=NULL){
+        orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
+    }
+}
+
+void ModelMapper::adjustViewport(float x, float y){
+    cameras[cameraSelect].viewport.x+=x;
+    cameras[cameraSelect].viewport.y+=y;
+    if(viewportX!=NULL){
+        viewportX->setTextString(ofToString(cameras[cameraSelect].viewport.x));
+    }
+    if(viewportY!=NULL){
+        viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
+    }
+    
 }
 
 void ModelMapper::adjustMesh(float x, float y, float z){
@@ -1250,15 +1219,48 @@ void ModelMapper::calculateMagnetPoints(){
                 if (distance<magnetRadius&&distance!=0){
                     magnetCount++;
                     meshVertex tempVert;
-                    tempVert.vertex=cur;
-                    tempVert.index=k;
-                    if(magnetMode==MAGNET_MODE_LINEAR){
-                        tempVert.modifier=ofMap(distance,0,magnetRadius,1,0);
+                    bool duplicate=false;
+                    bool selected=false;
+                    for(int l=0;l<tempVector.size();l++){
+                        if(tempVector[l].index==k){
+                            cout<<"recheck: "<<k<<endl;
+                            duplicate=true;
+                            if(distance>check.distance(tempVector[l].vertex)){
+                                tempVert.vertex=cur;
+                                if(magnetMode==MAGNET_MODE_LINEAR){
+                                    tempVert.modifier=ofMap(distance,0,magnetRadius,1,0);
+                                }
+                                else if(magnetMode==MAGNET_MODE_QUAD) {
+                                    tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeQuad, easingType);
+                                }
+                                else if(magnetMode==MAGNET_MODE_EXPO) {
+                                   tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeExpo, easingType);
+                                }
+                            }
+                            break;
+                        }
                     }
-                    else if(magnetMode==MAGNET_MODE_EASE) {
-                        tempVert.modifier=mapVal(distance,0,magnetRadius,1,0,3);
+                    
+                    for(int l=0;l<moveVertices[i].size();l++){
+                        if(moveVertices[i][l].index==k){
+                            selected=true;
+                        }
                     }
-                    tempVector.push_back(tempVert);
+                    
+                    if(duplicate==false&&selected==false){
+                        tempVert.vertex=cur;
+                        tempVert.index=k;
+                        if(magnetMode==MAGNET_MODE_LINEAR){
+                            tempVert.modifier=ofMap(distance,0,magnetRadius,1,0);
+                        }
+                        else if(magnetMode==MAGNET_MODE_QUAD) {
+                            tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeQuad, easingType);
+                        }
+                        else if(magnetMode==MAGNET_MODE_EXPO) {
+                                   tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeExpo, easingType);
+                        }
+                        tempVector.push_back(tempVert);
+                    }
                 }
             }
         }
@@ -1300,15 +1302,604 @@ void ModelMapper::adjustMask(float x, float y){
     
     //Redraw Mask ofPolylines to ofPaths
     updateMasks();
+}
+
+void ModelMapper::setMainGUI(){
+    mainGUI = new ofxUISuperCanvas("Model Mapper");
+    mainGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    mainGUI->addSpacer();
+    mainGUI->addLabel("Press 'g' to Hide GUIs", OFX_UI_FONT_SMALL);
+    
+    mainGUI->addSpacer();
+    mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
+	mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
+    
+    
+    mainGUI->addSpacer();
+    mainGUI->addLabel("Adjust:",OFX_UI_FONT_MEDIUM);
+	currentMode=mainGUI->addRadio("CHANGE MODE", adjustModes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    currentMode->activateToggle("Camera Position");
+    
+    mainGUI->addSpacer();
+    wireframeButton=mainGUI->addLabelButton("TOGGLE WIREFRAME", false);
+    
+    mainGUI->addSpacer();
+    mainGUI->addLabelButton("SAVE CURRENT", false);
+    mainGUI->addLabelButton("SAVE ALL", false);
+    
+    mainGUI->addSpacer();
+    performanceButton=mainGUI->addLabelButton("PERFORMANCE MODE", false);
+    
+    mainGUI->autoSizeToFitWidgets();
+	ofAddListener(mainGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
+
+void ModelMapper::setPositionGUI(){
+	
+	positionGUI = new ofxUISuperCanvas("Camera Position");
+    
+    positionGUI->addSpacer();
+    positionGUI->addLabel("(Arrow Keys) Adjust Camera x/y", OFX_UI_FONT_SMALL);
+    positionGUI->addLabel("(z/a) Adjust Camera z", OFX_UI_FONT_SMALL);
+    positionGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    positionGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    positionGUI->addSpacer();
+    positionGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    positionGUI->addLabel("Camera X",OFX_UI_FONT_MEDIUM);
+    positionX = positionGUI->addTextInput("Camera X", ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
+    positionX->setAutoClear(false);
+    positionGUI->addLabel("Camera Y",OFX_UI_FONT_MEDIUM);
+    positionY = positionGUI->addTextInput("Camera Y", ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
+    positionY->setAutoClear(false);
+    positionGUI->addLabel("Camera Z",OFX_UI_FONT_MEDIUM);
+    positionZ = positionGUI->addTextInput("Camera Z", ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+    positionZ->setAutoClear(false);
+    
+    positionGUI->setPosition(212, 0);
+    
+    positionGUI->autoSizeToFitWidgets();
+	ofAddListener(positionGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
+
+void ModelMapper::setOrientationGUI(){
+    orientationGUI = new ofxUISuperCanvas("Camera Orientation");
+    
+    orientationGUI->addSpacer();
+    orientationGUI->addLabel("(Arrow Keys) Adjust Orientation x/y", OFX_UI_FONT_SMALL);
+    orientationGUI->addLabel("(z/a) Adjust Orientation z", OFX_UI_FONT_SMALL);
+    orientationGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    orientationGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    orientationGUI->addSpacer();
+    orientationGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    
+    orientationGUI->addLabel("Orientation X",OFX_UI_FONT_MEDIUM);
+    orientationX = orientationGUI->addTextInput("Orientation X", ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
+    orientationX->setAutoClear(false);
+    
+    orientationGUI->addLabel("Orientation Y",OFX_UI_FONT_MEDIUM);
+    orientationY = orientationGUI->addTextInput("Orientation Y", ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
+    orientationY->setAutoClear(false);
+    
+    orientationGUI->addLabel("Orientation Z",OFX_UI_FONT_MEDIUM);
+    orientationZ = orientationGUI->addTextInput("Orientation Z", ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
+    orientationZ->setAutoClear(false);
+    
+    orientationGUI->addLabel("Orientation W",OFX_UI_FONT_MEDIUM);
+    orientationW = orientationGUI->addTextInput("Orientation W", ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
+    orientationW->setAutoClear(false);
+    
+    orientationGUI->setPosition(212, 0);
+    orientationGUI->autoSizeToFitWidgets();
+    
+    orientationGUI->setVisible(false);
+	ofAddListener(orientationGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
+
+void ModelMapper::setViewportGUI(){
+    viewportGUI = new ofxUISuperCanvas("Viewport Position");
+    
+    viewportGUI->addSpacer();
+    viewportGUI->addLabel("(Arrow Keys) Adjust Viewport x/y", OFX_UI_FONT_SMALL);
+    viewportGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    viewportGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    viewportGUI->addSpacer();
+    viewportGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    
+    viewportGUI->addLabel("Viewport X",OFX_UI_FONT_MEDIUM);
+    viewportX = viewportGUI->addTextInput("Viewport X", ofToString(cameras[cameraSelect].viewport.x));
+    viewportX->setAutoClear(false);
+    
+    viewportGUI->addLabel("Viewport Y",OFX_UI_FONT_MEDIUM);
+    viewportY = viewportGUI->addTextInput("Viewport Y", ofToString(cameras[cameraSelect].viewport.y));
+    viewportY->setAutoClear(false);
+    
+    viewportGUI->setPosition(212, 0);
+    viewportGUI->autoSizeToFitWidgets();
+    
+    viewportGUI->setVisible(false);
+	ofAddListener(viewportGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
+
+void ModelMapper::setMeshGUI(){
+    meshGUI = new ofxUISuperCanvas("Mesh");
+    meshGUI->addSpacer();
+    meshGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    meshGUI->addLabel("Click vertices to select", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("Drag over to select multiple", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("Shift-click to remove multiple", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("(Arrow Keys) Adjust x/y", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("(z/a) Adjust z", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    meshGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    vector<string> magnetMethods;
+    magnetMethods.push_back("Pointer");
+    magnetMethods.push_back("Radius");
+    magnetMethods.push_back("Pen");
+    magnetMethods.push_back("Double Pen");
+    
+    meshGUI->addSpacer();
+    meshGUI->addLabel("Selection:",OFX_UI_FONT_MEDIUM);
+	meshGUI->addRadio("SELECTION TYPE", magnetMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM)->activateToggle("Pointer");
+    
+    meshGUI->addSpacer();
+    meshGUI->addLabelButton("CLEAR SELECTION", false);
+    
+    meshGUI->addSpacer();
+    meshGUI->addLabelButton("RELOAD MESH", false);
+    
+    meshGUI->setPosition(212, 0);
+    meshGUI->autoSizeToFitWidgets();
+    
+    meshGUI->setVisible(false);
+	ofAddListener(meshGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    
     
 }
 
+void ModelMapper::setMagnetGUI(){
+    magnetGUI = new ofxUISuperCanvas("Selection");
+    
+    vector<string> easeTypes;
+    easeTypes.push_back("None");
+    easeTypes.push_back("Ease In");
+    easeTypes.push_back("Ease Out");
+    easeTypes.push_back("Ease Both");
+    easeTypes.push_back("Ease Separate");
+    
+    magnetGUI->addSpacer();
+    magnetGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    magnetRadiusLabel=magnetGUI->addLabel("Selection Radius",OFX_UI_FONT_MEDIUM);
+    magnetRadiusSet = magnetGUI->addTextInput("Selection Radius", ofToString(magnetRadius));
+    magnetRadiusSet->setAutoClear(false);
+    
+    penButton=magnetGUI->addLabelButton("START SELECTION", OFX_UI_FONT_MEDIUM);
+    doublePenButton=magnetGUI->addLabelButton("START RADIUS", OFX_UI_FONT_MEDIUM);
+    
+    magnetRadiusSpacer=magnetGUI->addSpacer();
+    easeTypeLabel=magnetGUI->addLabel("Ease Type:");
+    easeType=magnetGUI->addRadio("EASE TYPE", easeTypes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    easeType->activateToggle("None");
+    
+    easeTypeSpacer=magnetGUI->addSpacer();
+    easeInLabel = magnetGUI->addLabel("Ease In Method:");
+    easeInMethod = magnetGUI->addRadio("EASE IN", easeMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    
+    easeOutLabel = magnetGUI->addLabel("Ease Out Method:");
+    easeOutMethod = magnetGUI->addRadio("EASE OUT", easeMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    
+    easeBothLabel = magnetGUI->addLabel("Ease Both Method:");
+    easeBothMethod = magnetGUI->addRadio("EASE BOTH", easeMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    
+    magnetGUI->setPosition(212*2, 0);
+    magnetGUI->setHeight(250);
+    
+    magnetGUI->setVisible(false);
+	ofAddListener(magnetGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
 
-float ModelMapper::mapVal(float in, float inMin, float inMax, float outMin, float outMax, float shaper){
-    // (1) convert to pct (0-1)
-    float pct = ofMap (in, inMin, inMax, 0, 1, true);
-    // raise this number to a power
-    pct = powf(pct, shaper);
-    float out = ofMap(pct, 0,1, outMin, outMax, true);
-    return out;
+void ModelMapper::guiEvent(ofxUIEventArgs &e)
+{
+	string name = e.getName();
+	int kind = e.getKind();
+    
+	cout << "got event from: " << name << endl;
+    cout<<"kind: "<<kind<<endl;
+    
+    
+    if(name=="TOGGLE WIREFRAME"){
+        if(adjustMode!=ADJUST_MODE_LOCKED){
+            bDrawWireframe=!bDrawWireframe;
+            if(bDrawWireframe==true){
+                wireframeButton->setColorBack(OFX_UI_COLOR_FILL);
+            }
+            else{
+                wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
+            }
+        }
+    }
+    
+    else if(name=="PERFORMANCE MODE"){
+        bDrawGui=false;
+        bDrawWireframe=false;
+        wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
+        performanceButton->setColorBack(OFX_UI_COLOR_BACK);
+        adjustMode=ADJUST_MODE_LOCKED;
+        mainGUI->setVisible(false);
+        positionGUI->setVisible(false);
+        orientationGUI->setVisible(false);
+        viewportGUI->setVisible(false);
+        meshGUI->setVisible(false);
+        magnetGUI->setVisible(false);
+    }
+    
+    else if(name == "Camera X")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
+            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().x)<<endl;
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Camera Y")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
+            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().y)<<endl;
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Camera Z")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
+            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().z)<<endl;
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Orientation X")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            ofQuaternion rot = ofQuaternion(ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().y(), cameras[cameraSelect].camera.getGlobalOrientation().z(), cameras[cameraSelect].camera.getGlobalOrientation().w());
+            
+            cameras[cameraSelect].camera.setGlobalOrientation(rot);
+
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Orientation Y")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(),ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().z(), cameras[cameraSelect].camera.getGlobalOrientation().w());
+            
+            cameras[cameraSelect].camera.setGlobalOrientation(rot);
+            
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Orientation Z")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(), cameras[cameraSelect].camera.getGlobalOrientation().y(),ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().w());
+            
+            cameras[cameraSelect].camera.setGlobalOrientation(rot);
+            
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Orientation W")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(), cameras[cameraSelect].camera.getGlobalOrientation().y(), cameras[cameraSelect].camera.getGlobalOrientation().z(),ofToFloat(ti->getTextString()));
+            
+            cameras[cameraSelect].camera.setGlobalOrientation(rot);
+            
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Viewport X")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].viewport.x=ofToFloat(ti->getTextString());
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "Viewport Y")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].viewport.y=ofToFloat(ti->getTextString());
+            cout<<"set"<<endl;
+        }
+    }
+    
+    else if(name == "SAVE ALL")
+	{
+		ofxUIButton *button = (ofxUIButton *) e.getButton();
+		if(button->getValue()==1){
+            saveCameras();
+        }
+	}
+    
+    else if(name == "SAVE CURRENT")
+	{
+		ofxUIButton *button = (ofxUIButton *) e.getButton();
+		if(button->getValue()==1){
+            saveCamera();
+        }
+	}
+    
+    else if(name == "CURRENT")
+    {
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        cameraSelect=ofToInt(currentRadio->getActiveName());
+        updateMasks();
+        if(positionX!=NULL){
+            positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
+        }
+        if(positionY!=NULL){
+            positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
+        }
+        if(positionZ!=NULL){
+            positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+        }
+        if(orientationX!=NULL){
+            orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
+        }
+        if(orientationY!=NULL){
+            orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
+        }
+        if(orientationZ!=NULL){
+            orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
+        }
+        if(orientationW!=NULL){
+            orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
+        }
+        if(viewportX!=NULL){
+            viewportX->setTextString(ofToString(cameras[cameraSelect].viewport.x));
+        }
+        if(viewportY!=NULL){
+            viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
+        }
+    }
+    
+    else if(name == "CHANGE MODE"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+        
+            positionGUI->setVisible(false);
+            orientationGUI->setVisible(false);
+            viewportGUI->setVisible(false);
+            meshGUI->setVisible(false);
+            magnetGUI->setVisible(false);
+        
+                if(selected=="Camera Position"){
+                    positionGUI->setVisible(true);
+                    adjustMode=ADJUST_MODE_CAMERA;
+                }
+        
+                else if(selected=="Camera Orientation"){
+                    orientationGUI->setVisible(true);
+                    adjustMode=ADJUST_MODE_LOOK_AT;
+                }
+        
+                else if(selected=="Viewport Position"){
+                    viewportGUI->setVisible(true);
+                    adjustMode=ADJUST_MODE_VIEWPORT;
+                }
+        
+                else if(selected=="Meshes"){
+                    meshGUI->setVisible(true);
+                    adjustMode=ADJUST_MODE_MESH;
+                    if(selectMode!=SELECT_MODE_POINTER){
+                        magnetGUI->setVisible(true);
+                    }
+                }
+    }
+    
+    else if(name=="SELECTION TYPE"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+        if(selected=="Pointer"){
+            magnetGUI->setVisible(false);
+            hideMagnetTypes();
+            selectMode=SELECT_MODE_POINTER;
+            setEaseHeights(false,false,false);
+        }
+        else{
+            magnetGUI->setVisible(true);
+            easeType->activateToggle("None");
+            hideMagnetTypes();
+            if(selected=="Radius"){
+                selectMode=SELECT_MODE_RADIUS;
+                magnetRadiusLabel->setVisible(true);
+                magnetRadiusSet->setVisible(true);
+                setEaseHeights(true,false,false);
+            }
+            else if(selected=="Pen"){
+                selectMode=SELECT_MODE_PEN;
+                magnetRadiusLabel->setVisible(true);
+                magnetRadiusSet->setVisible(true);
+                setEaseHeights(true,true,false);
+            }
+            else if(selected=="Double Pen"){
+                selectMode=SELECT_MODE_DOUBLE_PEN;
+                setEaseHeights(false, true, true);
+            }
+        }
+    }
+    
+    else if(name=="CLEAR SELECTION"){
+        moveVertices.clear();
+        tempVertices.clear();
+        magnetVertices.clear();
+    }
+    
+    else if(name=="RELOAD MESH"){
+        moveVertices.clear();
+        tempVertices.clear();
+        magnetVertices.clear();
+        ofxAssimpModelLoader reload;
+        if(meshType==MESH_DETAIL){
+            reload.loadModel(detailMesh);
+            for(int i=0; i<numMeshes;i++){
+                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
+            }
+        }
+        else if(meshType==MESH_MASS){
+            reload.loadModel(massMesh);
+            for(int i=0; i<numMeshes;i++){
+                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
+            }
+        }
+        cout<<"Reloaded Model"<<endl;
+    }
+    
+    else if(name=="EASE TYPE"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+                if(selected=="None"){
+                    hideMagnetTypes();
+                }
+                else if(selected=="Ease In"){
+                    hideMagnetTypes();
+                    easeInLabel->setVisible(true);
+                    easeInMethod->setVisible(true);
+                    easeInLabel->getRect()->setY(easeHeight);
+                    easeInMethod->getRect()->setY(easeHeight+20);
+                    magnetGUI->setHeight(400);
+                }
+                else if(selected=="Ease Out"){
+                    hideMagnetTypes();
+                    easeOutLabel->setVisible(true);
+                    easeOutMethod->setVisible(true);
+                    easeOutLabel->getRect()->setY(easeHeight);
+                    easeOutMethod->getRect()->setY(easeHeight+20);
+                    magnetGUI->setHeight(400);
+                }
+                else if(selected=="Ease Both"){
+                    hideMagnetTypes();
+                    easeBothLabel->setVisible(true);
+                    easeBothMethod->setVisible(true);
+                    easeBothLabel->getRect()->setY(easeHeight);
+                    easeBothMethod->getRect()->setY(easeHeight+20);
+                    magnetGUI->setHeight(400);
+                }
+                else if(selected=="Ease Separate"){
+                    hideMagnetTypes();
+                    easeInLabel->setVisible(true);
+                    easeInMethod->setVisible(true);
+                    easeOutLabel->setVisible(true);
+                    easeOutMethod->setVisible(true);
+                    easeInLabel->getRect()->setY(easeHeight);
+                    easeInMethod->getRect()->setY(easeHeight+20);
+                    easeOutLabel->getRect()->setY(easeHeight+170);
+                    easeOutMethod->getRect()->setY(easeHeight+190);
+                    magnetGUI->setHeight(580);
+                }
+    }
+    
+	
+}
+
+void ModelMapper::hideMagnetTypes(){
+    magnetGUI->setHeight(250);
+    easeInLabel->setVisible(false);
+    easeInMethod->setVisible(false);
+    easeInMethod->activateToggle("Linear");
+    easeOutLabel->setVisible(false);
+    easeOutMethod->setVisible(false);
+    easeOutMethod->activateToggle("Linear");
+    easeBothLabel->setVisible(false);
+    easeBothMethod->setVisible(false);
+    easeBothMethod->activateToggle("Linear");
+}
+
+void ModelMapper::setEaseHeights(bool radiusSpacer, bool pen1, bool pen2){
+    
+    magnetRadiusLabel->setVisible(radiusSpacer);
+    magnetRadiusSet->setVisible(radiusSpacer);
+    penButton->setVisible(pen1);
+    doublePenButton->setVisible(pen2);
+    int start;
+    
+    if(radiusSpacer){
+        start=80;
+    }
+    else{
+        start=30;
+    }
+    
+    if(pen2){
+        doublePenButton->getRect()->setY(start+30);
+        penButton->getRect()->setY(start);
+        easeTypeHeight=start+70;
+        magnetRadiusSpacer->getRect()->setY(start+66);
+    }
+    else if(pen1){
+        easeTypeHeight=start+30;
+        penButton->getRect()->setY(start);
+        magnetRadiusSpacer->getRect()->setY(start+26);
+    }
+    else{
+        easeTypeHeight=start;
+        magnetRadiusSpacer->getRect()->setY(start-8);
+    }
+    easeHeight=137+easeTypeHeight;
+    easeTypeLabel->getRect()->setY(easeTypeHeight);
+    easeType->getRect()->setY(easeTypeHeight+20);
+    easeTypeSpacer->getRect()->setY(easeTypeHeight+125);
+}
+
+void ModelMapper::setupGUI(){
+    cameraNames.push_back("1");cameraNames.push_back("2");cameraNames.push_back("3");
+    
+    adjustModes.push_back("Camera Position"); adjustModes.push_back("Camera Orientation"); adjustModes.push_back("Viewport Position");
+    adjustModes.push_back("Meshes"); adjustModes.push_back("Masks");
+    
+    easeMethods.push_back("Linear");
+    easeMethods.push_back("Quadratic");
+    easeMethods.push_back("Cubic");
+    easeMethods.push_back("Quartic");
+    easeMethods.push_back("Exponential");
+    easeMethods.push_back("Sine");
+    easeMethods.push_back("Circular");
+    
+    positionX=NULL;
+    positionY=NULL;
+    positionZ=NULL;
+    setMainGUI();
+    setPositionGUI();
+    setOrientationGUI();
+    setViewportGUI();
+    setMeshGUI();
+    setMagnetGUI();
 }

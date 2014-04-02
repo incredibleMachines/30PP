@@ -13,7 +13,7 @@ function SceneController(_clips,_files){
 	//console.log(_clips);
 	//console.log( window.location.hash.substr(1))
 	//check if we're looking for a scene
-
+	
 	if(window.location.hash){
 	
 		//console.log( window.location.hash.substr(1))
@@ -378,9 +378,10 @@ function SceneController(_clips,_files){
 				} 
 				
 				if(zone.locations){
+					zoneZero = zone;
 					console.log("Locations: "+zone.locations.length)
 					var type = (zone.locations.length>1)? 'multiple' : 'single'
-					console.log("type: "+type);
+					console.log("Type: "+type);
 					//val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(type)
 					var output = type.charAt(0).toUpperCase()+type.slice(1)
@@ -417,18 +418,35 @@ function SceneController(_clips,_files){
 	
 		
 		var current = $('select.zone-map-type').val()
-		console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x);
+		console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x+" | locPos.y: "+locPos.y);
 		if(current === 'single') $('section.location').remove()
 		var length = $('section.location').length;
+		
 		switch(eventType){
-			case 0: //remove location
-				//**** hardcoding the index to '0', assuming that sculpture will always be at index 0 ****//
-/* 				console.log($('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y)); */
-				//console.log("REMOVING LOC FROM FORM");
-				$('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y).remove();						
+			case 0: //---- remove location ----
+				//** hardcoding the index to '0', assuming that sculpture will always be at index 0 **//
+				
+				//remove the location just reported by map
+				$('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y).remove();
+				
+				//get all locations
+				var allLoc = $('.zone-single-0').find('section.location');
+				//console.log("allLoc.length: "+allLoc.length); 
+				
+				//go through all locations, reset their location index
+				//this is to prevent any 'null' objects in the locations array
+				for(var j=0; j<allLoc.length; j++){
+					var thisLoc = allLoc[j];
+					console.log("thisLoc "+j+": "+$(thisLoc));
+					var inputs = $(thisLoc).find('input');
+					$(inputs[0]).attr('name','zones[0][locations]['+j+'][x]');
+					$(inputs[1]).attr('name','zones[0][locations]['+j+'][y]');					
+				}
+							
 			break;
 			
-			case 1:
+			case 1: //---- add location ----
+				//add in this new location position to the form
 				//alert("adding: "+locPos.x+","+locPos.y+"  length: "+length);
 				var input  = '<section style="display:none;" class="location '+locPos.x+' '+locPos.y+'" >'
 				input += '<input type="hidden" value="'+locPos.x+'" name="zones[0][locations]['+length+'][x]">'
