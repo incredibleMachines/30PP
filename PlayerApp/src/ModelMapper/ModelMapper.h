@@ -12,14 +12,16 @@
 #include "Camera.h"
 #include "ofxLibwebsockets.h"
 #include "ofxAssimpModelLoader.h"
+#include "ofxTween.h"
+#include "ofxUI.h"
 //#include "ofAVQueuePlayer.h"
 //#include "../Compositor/Composite.h"
 
 //--------INTERNAL TYPE DEFS
 #define ADJUST_MODE_CAMERA 1
 #define ADJUST_MODE_LOOK_AT 2
-#define ADJUST_MODE_MESH 3
-#define ADJUST_MODE_VIEWPORT 4
+#define ADJUST_MODE_VIEWPORT 3
+#define ADJUST_MODE_MESH 4
 #define ADJUST_MODE_MASK 5
 #define ADJUST_MODE_LOCKED 6
 
@@ -28,7 +30,19 @@
 
 #define MAGNET_MODE_NONE 0
 #define MAGNET_MODE_LINEAR 1
-#define MAGNET_MODE_EASE 2
+#define MAGNET_MODE_QUAD 2
+#define MAGNET_MODE_EXPO 3
+
+#define SELECT_MODE_POINTER 0
+#define SELECT_MODE_RADIUS 1
+#define SELECT_MODE_PEN 2
+#define SELECT_MODE_DOUBLE_PEN 3
+
+#define EASE_MODE_NONE 0
+#define EASE_MODE_IN 1
+#define EASE_MODE_OUT 2
+#define EASE_MODE_BOTH 3
+#define EASE_MODE_SEPARATE 4
 
 class ModelMapper {
 public:
@@ -85,6 +99,7 @@ public:
     void setupCameras();
     //save camera data to json and meshes to .ply files
     void saveCameras();
+    void saveCamera();
     //sets file path for mesh to reload
     void setMassMesh(string _reloadMesh);
     //sets file path for detailed mesh
@@ -93,6 +108,8 @@ public:
     void adjustPosition(float x, float y, float z);
     //move camera orientation
     void adjustOrientation(float x, float y, float z);
+    //move mask point/entire mask
+    void adjustViewport(float x, float y);
     //move mesh point
     void adjustMesh(float x, float y, float z);
     //move mask point/entire mask
@@ -100,7 +117,8 @@ public:
     //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
     
-    float mapVal(float in, float inMin, float inMax, float outMin, float outMax, float shaper);
+    //setup GUI elements
+    void setupGUI();
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -127,8 +145,6 @@ public:
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
     
-    float magnetRadius;
-    int magnetMode;
     
     
     //---------MASK SETTINGS
@@ -153,4 +169,69 @@ public:
     bool bMipMap;
     
     vector<ofTexture *> textures;
+    
+    
+    
+    
+    float magnetRadius;
+    int magnetMode, selectMode, easeMode, easeInMode, easeOutMode, easeBothMode;
+    ofxEasingQuad easeQuad;
+    ofxTween::ofxEasingType easingType;
+    ofxEasingExpo easeExpo;
+    
+    
+    void guiEvent(ofxUIEventArgs &e);
+    vector<string> adjustModes;
+    vector<string> cameraNames;
+    vector<string> easeMethods;
+    
+    
+    ofxUISuperCanvas *mainGUI;
+    void setMainGUI();
+    ofxUIRadio *currentMode;
+    ofxUIButton *wireframeButton;
+    ofxUIButton *performanceButton;
+
+
+    void setPositionGUI();
+    ofxUISuperCanvas *positionGUI;
+    ofxUITextInput *positionX;
+    ofxUITextInput *positionY;
+    ofxUITextInput *positionZ;
+    
+    ofxUISuperCanvas *orientationGUI;
+    void setOrientationGUI();
+    ofxUITextInput *orientationX;
+    ofxUITextInput *orientationY;
+    ofxUITextInput *orientationZ;
+    ofxUITextInput *orientationW;
+    
+    ofxUISuperCanvas *viewportGUI;
+    void setViewportGUI();
+    ofxUITextInput *viewportX;
+    ofxUITextInput *viewportY;
+    
+    ofxUISuperCanvas *meshGUI;
+    void setMeshGUI();
+    
+    ofxUISuperCanvas *magnetGUI;
+    void setMagnetGUI();
+    void hideMagnetTypes();
+    void setEaseHeights(bool radiusSpacer, bool pen1, bool pen2);
+    ofxUILabel *magnetRadiusLabel;
+    ofxUITextInput *magnetRadiusSet;
+    ofxUISpacer *magnetRadiusSpacer;
+    ofxUIButton *penButton;
+    ofxUIButton *doublePenButton;
+    ofxUILabel *easeTypeLabel;
+    ofxUIRadio *easeType;
+    ofxUISpacer *easeTypeSpacer;
+    ofxUILabel *easeInLabel;
+    ofxUIRadio *easeInMethod;
+    ofxUILabel *easeOutLabel;
+    ofxUIRadio *easeOutMethod;
+    ofxUILabel *easeBothLabel;
+    ofxUIRadio *easeBothMethod;
+    int easeHeight, easeTypeHeight;
+    
 };

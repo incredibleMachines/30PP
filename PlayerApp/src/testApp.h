@@ -25,7 +25,6 @@ public:
     //ModelMapper object contains all cameras, meshes, and textures
     ModelMapper map;
     
-    
     //---------CONTENT TEXTURE
     vector<ofTexture *> meshTexture;
     
