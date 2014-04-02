@@ -142,44 +142,48 @@ exports.getCurrentFile = function(){
 var concurrency = 5; //number of tasks running in the queue at once
 
 var renderqueue = async.queue(renderWorker,concurrency)
-renderqueue.drain = function(){
-	console.log('Rendering Complete')
-	//call a concat function
-}
+
 //the worker function for our renderqueue
 function renderWorker(scene,callback){
-	console.log("Running New Process")
+	//console.log("Running New Process")
 	
 	var bError = null;
 	
 	utils.deleteFile( scene.output,function(err){
 		
 		
-		if(err) console.error("Delete File: "+scene.output)
-		else console.log("Delete File: "+scene.output)
+		if(err) console.error("Delete File: %s".grey,scene.output)
+		else console.log("Delete File: %s".grey,scene.output)
 		
 		//spawn a process to the aerender 
-		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project',scene.template,'-output',scene.output,'-comp', 'UV_OUT'])
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT'])
 		
-		console.log("AERENDER: "+aerender.pid)
+		console.log()
+		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
+		console.log()
 		
 		aerender.stdout.on('data', function (data) {
-		  console.log(aerender.pid+': ' + data)
-		});
+		  var string = data.toString().replace(/\n$/, "")
+		  //var newString = string.replace()
+		  //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline 
+		  var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
+		  console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, nstring)
+		})
 		
 		aerender.stderr.on('data', function (data) {
-		  console.log('stderr: ' + data)
+		  console.log('stderr: %s'.orange,  data)
 		  bError = true
-		});
+		})
+		
 		aerender.on('error',function(error){
 			console.error(error)
 			bError = true;
-		});
+		})
 		aerender.on('close', function (code) {
-		  console.log('AERENDER: '+aerender.pid+' exited with code ' + code)
+		  console.log('AERENDER PID: %s '.inverse+' exited with code %s '.cyan,aerender.pid,code)
 		  //callback once the process has finished
 		  callback(bError,scene)
-		});
+		})
 		
 		
 
@@ -187,11 +191,17 @@ function renderWorker(scene,callback){
 
 }
 
-exports.processRenderOutput = function(formattedScenes,cb){
+exports.processRenderOutput = function(formattedScenes,_Database,cb){
+	var renderError = null;
+	//console.log(JSON.stringify(formattedScenes))
 	
-	console.log(JSON.stringify(formattedScenes))
+	renderqueue.drain = function(){
+		console.log('Rendering Complete')
+		//call a concat function
+		cb(renderError)
+	}
 	
-	async.eachSeries(formattedScenes,renderContent,function(e){
+	async.eachSeries(formattedScenes,setRenderContent,function(e){
 		if(e){
 			console.error(e)
 			console.log("Error Launching AfterEffects".red.inverse);
@@ -201,24 +211,50 @@ exports.processRenderOutput = function(formattedScenes,cb){
 				console.log('After Effects Closed');
 				//render all files on the command line
 				renderqueue.push(formattedScenes,function(err,scene){
+					
+					//a callback emitted from each worker on completion
 					//connect to db and update render to true or false
-					
-					//if error add scene back into queue
-					
-				})
+					if(err){
+						//if error add scene back into queue
+						if(!scene.hasOwnProperty('counter')) scene.counter = 0;
+						else scene.counter++;
+						console.error("AERENDER: CALLBACK ERROR  Count: %s".red,scene.counter)
+
+						if(scene.counter>=3) {
+							//callback to different error
+							//wait for queue to drain and pass error back to 
+							console.error("AERENDER: CALLBACK ERROR END".red)
+
+							scene.error = err;
+							renderError = scene;
+							
+						}else{
+							//callback to the anonymous function itself
+							console.error("AERENDER: CALLBACK ERROR RETRY".green)
+							renderqueue.push(scene, arguments.callee(err,scene))
+						}
+					}else{//else if(err)
+						var clips_cb = 0;
+						//database set object to true
+						scene.ids.forEach(function(id,index){
+							
+							_Database.updateByID('clips',id,{$set:{render:false}},function(e){})
+							
+						})
+						
+					}//end if(err)
+				})//end renderqueue.push
 				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
-			})
+			})//end exit 
 		}
 		//else console.log('done');
 	})
 	
-	
 }
-
 
 //data to render as an array[]
 //render options
-function renderContent(scene,cb){
+function setRenderContent(scene,cb){
 	var timebetween = 1000;
 	scene.asset_loc = ASSET_FOLDER+'/'
 	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
@@ -226,7 +262,7 @@ function renderContent(scene,cb){
 	if(scene.type === 'default_gastronomy'||scene.type==='default_shopping'){
 	setTimeout(function(){
 
-		console.log(scene)
+		//console.log(scene)
 		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
 		console.log(" Function Call to AE ".inverse.cyan)
 		console.log(functionCall)		

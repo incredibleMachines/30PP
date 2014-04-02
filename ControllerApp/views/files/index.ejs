@@ -41,7 +41,7 @@
 		  		if(!file.last_edited) return new Date(file.created_at)
 		  		else return new Date(file.last_edited);
 		  	}) 
-		  		//files.reverse() //taking out reverse for pagination
+		  		files.reverse() //taking out reverse for pagination
 		  	%>
 		  	<% files.forEach(function(_file,i){%>
 		    <li class="list-group-item row">

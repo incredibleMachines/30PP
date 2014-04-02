@@ -12,7 +12,7 @@ exports.index = function(_Database){
 	
 	return function(req,res){
 		_Database.getAll('clips',function(e,_clips){
-			console.log(_clips)
+			//console.log(_clips)
 			if(e){ res.jsonp({"Error": "Query Collection Error: Scenes"})
 			}else{
 				_Database.getAll('scenes',function(_e, _scenes){
@@ -41,8 +41,13 @@ exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
 			formatJSONForAE(result, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 				
 				//console.log(JSON.stringify(formattedOutput))
-				_AfterEffects.processRenderOutput(formattedOutput,function(e){
-					
+				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
+					if(!e){
+						//concat files and document output
+
+					}else{
+						//what error'd?
+					}
 					
 				})
 				
@@ -270,13 +275,17 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 					currentGroup.template = type+".aep"
 					currentGroup.script = type+".jsx"
 					currentGroup.data = {}
+					currentGroup.ids = []
 					_.each(scene.clips,function(clip,index){
 						//console.log("formatJSONForAE STEP TWO".inverse.red)
 						//console.log(scene.slug)	
 						//console.log(order)
-						//console.log(clip.zones.length)
-	
-						console.log(clip)
+						//console.log(clip.zones.length)\
+						
+						//save our ids in the to surface them when the operation is done and set render to false dB
+						//console.log(clip)
+						currentGroup.ids.push(clip._id)
+
 						switch(clip.zones.length){
 							case 1:
 								if(!currentGroup.data.hasOwnProperty('source_image_LSR')) currentGroup.data.source_image_LSR = []	
@@ -401,79 +410,3 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 
 	
 }
-
-
-/*
-function parseRenderQueue(result,cb){
-	console.log(JSON.stringify(result))
-	cb()
-}
-*/
-/*
-function sortRenderEvents(queue, scenes, cb){
-	
-	//use underscore to sort through the events and see which ones are in need of render
-	var holder = [], 
-	counter = 0
-	
-	queue = JSON.stringify(queue)
-	queue = JSON.parse(queue)
-	
-	scenes = JSON.stringify(scenes)
-	scenes = JSON.parse(scenes)
-	
-	var scenesHolder = _.clone(scenes)
-	
-	queue.forEach(function(item,i){
-	
-		scenesHolder.forEach(function(scene,j){
-			
-			if(scene._id === item.scene_id){
-				scene.clips.forEach(function(clip,k){
-					
-					if(clip === item._id){
-						
-						scene.clips[k] = item
-						
-						counter++
-						
-						if(counter === queue.length) cb(scenesHolder)
-						
-					}
-					
-				})
-				
-			}
-		})
-		
-		
-	})
-	
-	
-
-	queue.forEach(function(item,i){
-		if(bDEBUG) console.log(item.scene_id.toString().green.inverse);
-		
-		var scene = _.findWhere(scenes,{_id:item.scene_id}) 
-		//var checkScene = _.findWhere(holder,{_id: scene._id});
-		
-		scene.clips.forEach(function(_clip,j){
-
-			if(_clip === item._id){
-				if(bDEBUG) console.log(" CLIP Match ".inverse.red)
-				scene.clips[j] = queue
-				counter++;
-				if(counter==queue.length){
-					cb(scenes)
-				
-					//console.log(scenes)
-				}
-			}
-			
-		})
-		
-	})
-
-	
-	
-}*/
