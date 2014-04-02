@@ -58,14 +58,16 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     numMeshes=_whichMeshes.size();
     whichMeshes=_whichMeshes;
     
-    easingType = ofxTween::easeIn;
-    
     //set default variable values
     //camera settings
     cameraSelect=1;
     adjustMode=ADJUST_MODE_CAMERA;
     meshType=MESH_MASS;
-    magnetMode=MAGNET_MODE_NONE;
+    selectMode=SELECT_MODE_POINTER;
+    easeMode=EASE_MODE_NONE;
+    easeInStyle=EASE_STYLE_LINEAR;
+    easeOutStyle=EASE_STYLE_LINEAR;
+    easeBothStyle=EASE_STYLE_LINEAR;
     
     //mouse settings
     bMouseDown=false;
@@ -290,13 +292,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 bDrawingMask=true;
                 updateMasks();
             }
-            else if (adjustMode==ADJUST_MODE_MESH){
-                magnetMode++;
-                if (magnetMode>3){
-                    magnetMode=0;
-                }
-                calculateMagnetPoints();
-            }
             break;
             
             //----------DELETE SELECTED MASK
@@ -419,35 +414,8 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
         {
             vector<meshVertex> tempVector;
             
-            //determine vertices inside drag box on camera viewport
-            for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
-                ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
-                if(selectRect.inside(cur)) {
-                    meshVertex tempVert;
-                    tempVert.vertex=cur;
-                    tempVert.index=j;
-                    bool included=false;
-                    if(tempVertices.size()>0){
-                        for(int k=0;k<tempVertices[i].size();k++){
-                            if(tempVertices[i][k].index==tempVert.index){
-                                included=true;
-                                if(bShiftPressed==true){
-                                    tempVertices[i].erase(tempVertices[i].begin()+k);
-                                }
-                            }
-                        }
-                        if(bShiftPressed==false&&included==false){
-                            tempVector.push_back(tempVert);
-                        }
-                    }
-                    else if(bShiftPressed==false){
-                        tempVector.push_back(tempVert);
-                    }
-                }
-            }
-            
             //determine vertices inside drag box on gui camera screen
-            for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
+            for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
                 ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
                 if(selectRect.inside(cur)) {
                     meshVertex tempVert;
@@ -483,7 +451,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             moveVertices.push_back(tempVector);
             tempVector.clear();
         }
-        if(magnetMode!=MAGNET_MODE_NONE){
+        if(selectMode!=SELECT_MODE_POINTER){
             calculateMagnetPoints();
         }
         
@@ -546,36 +514,8 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             for(int i=0;i<numMeshes;i++)
             {
                 vector<meshVertex> tempVector;
-                int n=cameras[cameraSelect].mesh[i].getNumVertices();
-                
-                //Check for mouse clicks on camera select screen if present highlight this particular vertex
-                for(int j = 0; j <n ; j++){
-                    ofVec3f cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
-                    float distance = cur.distance(ofVec2f(args.x,args.y));
-                    if(distance < clickThreshold) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
-                                    }
-                                }
-                            }
-                            if(bShiftPressed==false&&included==false){
-                                tempVector.push_back(tempVert);
-                            }
-                        }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
-                        }
-                    }
-                }
-                
+                int n=cameras[guiCam].mesh[i].getNumVertices();
+
                 //Check for mouse clicks on gui screen if present highlight this particular vertex
                 for(int j = 0; j < n; j++){
                     ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
@@ -614,7 +554,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 moveVertices.push_back(tempVector);
                 tempVector.clear();
                 
-                if(magnetMode!=MAGNET_MODE_NONE){
+                if(selectMode!=SELECT_MODE_POINTER){
                     calculateMagnetPoints();
                 }
         }
@@ -975,8 +915,11 @@ void ModelMapper::drawHighlights() {
                 for(int j=0;j<moveVertices[i].size();j++){
                     ofPushMatrix();
                     ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index),cameras[cameraSelect].viewport);
-                    ofTranslate(translate);
-                    ofCircle(0,0,4);
+                    
+                    if(translate.x>cameras[cameraSelect].viewport.x&&translate.x<cameras[cameraSelect].viewport.x+cameras[cameraSelect].viewport.width){
+                        ofTranslate(translate);
+                        ofCircle(0,0,4);
+                    }
                     ofPopMatrix();
                     
                     if(cameraSelect!=guiCam){
@@ -1010,7 +953,7 @@ void ModelMapper::drawHighlights() {
                 }
             }
             
-            if(adjustMode==ADJUST_MODE_MESH&&magnetMode!=MAGNET_MODE_NONE){
+            if(adjustMode==ADJUST_MODE_MESH&&selectMode!=SELECT_MODE_POINTER){
                 ofSetColor(255);
                 ofCircle(mouse, magnetRadius);
             }
@@ -1180,7 +1123,7 @@ void ModelMapper::adjustViewport(float x, float y){
 }
 
 void ModelMapper::adjustMesh(float x, float y, float z){
-    if(magnetMode==MAGNET_MODE_NONE){
+    if(selectMode==SELECT_MODE_POINTER){
         for(int i=0;i<moveVertices.size();i++){
             for(int j=0;j<moveVertices[i].size();j++){
                 cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(x,y,z));
@@ -1206,14 +1149,14 @@ void ModelMapper::calculateMagnetPoints(){
     for(int i=0;i<moveVertices.size();i++){
         vector<meshVertex> tempVector;
         for(int j=0;j<moveVertices[i].size();j++){
-            int n = cameras[cameraSelect].mesh[i].getNumVertices();
+            int n = cameras[guiCam].mesh[i].getNumVertices();
             //parse through all vertices to determine nearest, if exists
             
             int magnetCount;
             
             for(int k = 0; k < n; k++) {
-                ofVec3f check = cameras[cameraSelect].mesh[i].getVertex(k);
-                ofVec3f cur=cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index);
+                ofVec3f check = cameras[guiCam].mesh[i].getVertex(k);
+                ofVec3f cur=cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index);
                 float distance = cur.distance(check);
                 float maxDist = 0;
                 if (distance<magnetRadius&&distance!=0){
@@ -1227,14 +1170,8 @@ void ModelMapper::calculateMagnetPoints(){
                             duplicate=true;
                             if(distance>check.distance(tempVector[l].vertex)){
                                 tempVert.vertex=cur;
-                                if(magnetMode==MAGNET_MODE_LINEAR){
-                                    tempVert.modifier=ofMap(distance,0,magnetRadius,1,0);
-                                }
-                                else if(magnetMode==MAGNET_MODE_QUAD) {
-                                    tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeQuad, easingType);
-                                }
-                                else if(magnetMode==MAGNET_MODE_EXPO) {
-                                   tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeExpo, easingType);
+                                if(selectMode==SELECT_MODE_RADIUS||selectMode==SELECT_MODE_PEN){
+                                    tempVert.modifier=magnetMap(distance, magnetRadius);
                                 }
                             }
                             break;
@@ -1250,14 +1187,8 @@ void ModelMapper::calculateMagnetPoints(){
                     if(duplicate==false&&selected==false){
                         tempVert.vertex=cur;
                         tempVert.index=k;
-                        if(magnetMode==MAGNET_MODE_LINEAR){
-                            tempVert.modifier=ofMap(distance,0,magnetRadius,1,0);
-                        }
-                        else if(magnetMode==MAGNET_MODE_QUAD) {
-                            tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeQuad, easingType);
-                        }
-                        else if(magnetMode==MAGNET_MODE_EXPO) {
-                                   tempVert.modifier=ofxTween::map(distance, 0, magnetRadius, 1, 0, false, easeExpo, easingType);
+                        if(selectMode==SELECT_MODE_RADIUS||selectMode==SELECT_MODE_PEN){
+                            tempVert.modifier=magnetMap(distance, magnetRadius);
                         }
                         tempVector.push_back(tempVert);
                     }
@@ -1457,7 +1388,6 @@ void ModelMapper::setMeshGUI(){
     meshGUI->setVisible(false);
 	ofAddListener(meshGUI->newGUIEvent,this,&ModelMapper::guiEvent);
     
-    
 }
 
 void ModelMapper::setMagnetGUI(){
@@ -1481,8 +1411,8 @@ void ModelMapper::setMagnetGUI(){
     
     magnetRadiusSpacer=magnetGUI->addSpacer();
     easeTypeLabel=magnetGUI->addLabel("Ease Type:");
-    easeType=magnetGUI->addRadio("EASE TYPE", easeTypes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
-    easeType->activateToggle("None");
+    easeTypeRadio=magnetGUI->addRadio("EASE TYPE", easeTypes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    easeTypeRadio->activateToggle("None");
     
     easeTypeSpacer=magnetGUI->addSpacer();
     easeInLabel = magnetGUI->addLabel("Ease In Method:");
@@ -1733,27 +1663,40 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             hideMagnetTypes();
             selectMode=SELECT_MODE_POINTER;
             setEaseHeights(false,false,false);
+            calculateMagnetPoints();
         }
         else{
             magnetGUI->setVisible(true);
-            easeType->activateToggle("None");
+            easeTypeRadio->activateToggle("None");
             hideMagnetTypes();
             if(selected=="Radius"){
                 selectMode=SELECT_MODE_RADIUS;
                 magnetRadiusLabel->setVisible(true);
                 magnetRadiusSet->setVisible(true);
                 setEaseHeights(true,false,false);
+                calculateMagnetPoints();
             }
             else if(selected=="Pen"){
                 selectMode=SELECT_MODE_PEN;
                 magnetRadiusLabel->setVisible(true);
                 magnetRadiusSet->setVisible(true);
                 setEaseHeights(true,true,false);
+                calculateMagnetPoints();
             }
             else if(selected=="Double Pen"){
                 selectMode=SELECT_MODE_DOUBLE_PEN;
                 setEaseHeights(false, true, true);
+                calculateMagnetPoints();
             }
+        }
+    }
+    
+    else if(name=="Selection Radius"){
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            magnetRadius=ofToFloat(ti->getTextString());
+            calculateMagnetPoints();
         }
     }
     
@@ -1764,9 +1707,9 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name=="RELOAD MESH"){
-        moveVertices.clear();
-        tempVertices.clear();
-        magnetVertices.clear();
+//        moveVertices.clear();
+//        tempVertices.clear();
+//        magnetVertices.clear();
         ofxAssimpModelLoader reload;
         if(meshType==MESH_DETAIL){
             reload.loadModel(detailMesh);
@@ -1788,6 +1731,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         string selected=currentRadio->getActiveName();
                 if(selected=="None"){
                     hideMagnetTypes();
+                    easeMode=EASE_MODE_NONE;
+                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease In"){
                     hideMagnetTypes();
@@ -1796,6 +1741,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeInLabel->getRect()->setY(easeHeight);
                     easeInMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
+                    easeMode=EASE_MODE_IN;
+                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Out"){
                     hideMagnetTypes();
@@ -1804,6 +1751,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeOutLabel->getRect()->setY(easeHeight);
                     easeOutMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
+                    easeMode=EASE_MODE_OUT;
+                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Both"){
                     hideMagnetTypes();
@@ -1812,6 +1761,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeBothLabel->getRect()->setY(easeHeight);
                     easeBothMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
+                    easeMode=EASE_MODE_BOTH;
+                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Separate"){
                     hideMagnetTypes();
@@ -1824,10 +1775,89 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeOutLabel->getRect()->setY(easeHeight+170);
                     easeOutMethod->getRect()->setY(easeHeight+190);
                     magnetGUI->setHeight(580);
+                    easeMode==EASE_MODE_SEPARATE;
+                    calculateMagnetPoints();
                 }
     }
     
-	
+    else if(name=="EASE IN"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+        if(selected=="Linear"){
+            easeInStyle=EASE_STYLE_LINEAR;
+        }
+        else if(selected=="Quadratic"){
+            easeInStyle=EASE_STYLE_QUAD;
+        }
+        else if(selected=="Cubic"){
+            easeInStyle=EASE_STYLE_CUBIC;
+        }
+        else if(selected=="Quartic"){
+            easeInStyle=EASE_STYLE_QUART;
+        }
+        else if(selected=="Exponential"){
+            easeInStyle=EASE_STYLE_EXPO;
+        }
+        else if(selected=="Sine"){
+            easeInStyle=EASE_STYLE_SINE;
+        }
+        else if(selected=="Circular"){
+            easeInStyle=EASE_STYLE_CIRC;
+        }
+        calculateMagnetPoints();
+    }
+    else if(name=="EASE OUT"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+        if(selected=="Linear"){
+            easeOutStyle=EASE_STYLE_LINEAR;
+        }
+        else if(selected=="Quadratic"){
+            easeOutStyle=EASE_STYLE_QUAD;
+        }
+        else if(selected=="Cubic"){
+            easeOutStyle=EASE_STYLE_CUBIC;
+        }
+        else if(selected=="Quartic"){
+            easeOutStyle=EASE_STYLE_QUART;
+        }
+        else if(selected=="Exponential"){
+            easeOutStyle=EASE_STYLE_EXPO;
+        }
+        else if(selected=="Sine"){
+            easeOutStyle=EASE_STYLE_SINE;
+        }
+        else if(selected=="Circular"){
+            easeOutStyle=EASE_STYLE_CIRC;
+        }
+        calculateMagnetPoints();
+    }
+    else if(name=="EASE BOTH"){
+        ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        string selected=currentRadio->getActiveName();
+        if(selected=="Linear"){
+            easeBothStyle=EASE_STYLE_LINEAR;
+        }
+        else if(selected=="Quadratic"){
+            easeBothStyle=EASE_STYLE_QUAD;
+        }
+        else if(selected=="Cubic"){
+            easeBothStyle=EASE_STYLE_CUBIC;
+        }
+        else if(selected=="Quartic"){
+            easeBothStyle=EASE_STYLE_QUART;
+        }
+        else if(selected=="Exponential"){
+            easeBothStyle=EASE_STYLE_EXPO;
+        }
+        else if(selected=="Sine"){
+            easeBothStyle=EASE_STYLE_SINE;
+        }
+        else if(selected=="Circular"){
+            easeBothStyle=EASE_STYLE_CIRC;
+        }
+        calculateMagnetPoints();
+    }
 }
 
 void ModelMapper::hideMagnetTypes(){
@@ -1875,7 +1905,7 @@ void ModelMapper::setEaseHeights(bool radiusSpacer, bool pen1, bool pen2){
     }
     easeHeight=137+easeTypeHeight;
     easeTypeLabel->getRect()->setY(easeTypeHeight);
-    easeType->getRect()->setY(easeTypeHeight+20);
+    easeTypeRadio->getRect()->setY(easeTypeHeight+20);
     easeTypeSpacer->getRect()->setY(easeTypeHeight+125);
 }
 
@@ -1902,4 +1932,68 @@ void ModelMapper::setupGUI(){
     setViewportGUI();
     setMeshGUI();
     setMagnetGUI();
+}
+
+float ModelMapper::magnetMap(float distance, float radius){
+    float modifier;
+    
+    if (easeMode==EASE_MODE_NONE){
+        modifier=1;
+    }
+    else {
+        cout<<"mode"<<endl;
+        ofxTween::ofxEasingType easingType;
+        int currentEase;
+        
+        if(easeMode==EASE_MODE_IN){
+            easingType=ofxTween::easeIn;
+            currentEase=easeInStyle;
+        }
+        else if(easeMode==EASE_MODE_OUT){
+            easingType=ofxTween::easeOut;
+            currentEase=easeOutStyle;
+        }
+        else if(easeMode==EASE_MODE_BOTH){
+            easingType=ofxTween::easeInOut;
+            currentEase=easeBothStyle;
+        }
+        
+        else if(easeMode==EASE_MODE_SEPARATE){
+            if(distance>magnetRadius/2){
+                easingType=ofxTween::easeOut;
+                currentEase=easeOutStyle;
+            }
+            else{
+                easingType=ofxTween::easeIn;
+                currentEase=easeInStyle;
+            }
+        }
+        
+        if(currentEase==EASE_STYLE_LINEAR){
+            cout<<"LINEAR"<<endl;
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeLinear, easingType);
+        }
+        else if(currentEase==EASE_STYLE_QUAD){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeQuad, easingType);
+        }
+        else if(currentEase==EASE_STYLE_CUBIC){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeCubic, easingType);
+        }
+        else if(currentEase==EASE_STYLE_QUART){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeQuart, easingType);
+        }
+        else if(currentEase==EASE_STYLE_EXPO){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeExpo, easingType);
+        }
+        else if(currentEase==EASE_STYLE_SINE){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeSine, easingType);
+        }
+        else if(currentEase==EASE_STYLE_CIRC){
+            modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeCirc, easingType);
+        }
+        
+    }
+    
+    return modifier;
+
 }
