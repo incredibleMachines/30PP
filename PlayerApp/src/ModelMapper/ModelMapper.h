@@ -148,6 +148,7 @@ public:
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
+    bool bGuiCamAdjust;
     
     
     

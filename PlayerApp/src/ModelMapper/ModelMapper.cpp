@@ -61,6 +61,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //set default variable values
     //camera settings
     cameraSelect=1;
+    bGuiCamAdjust=false;
     adjustMode=ADJUST_MODE_CAMERA;
     meshType=MESH_MASS;
     selectMode=SELECT_MODE_POINTER;
@@ -130,9 +131,12 @@ void ModelMapper::update(vector<ofTexture *> tex){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
     cameras[guiCam].masks=cameras[cameraSelect].masks;
-    cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
-    cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
+    
+    if(bGuiCamAdjust==false){
+        cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
+        cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
+    }
 }
 
 void ModelMapper::draw(){
@@ -1076,8 +1080,15 @@ void ModelMapper::setDetailMesh(string _reloadMesh){
 }
 
 void ModelMapper::adjustPosition(float x, float y, float z){
-    cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
     
+    if(bGuiCamAdjust==true){
+        cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
+        
+    }
+    else{
+        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
+    }
+        
     if(positionX!=NULL){
         positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
     }
@@ -1094,7 +1105,12 @@ void ModelMapper::adjustOrientation(float x, float y, float z){
     ofQuaternion yRot(x, ofVec3f(0,1,0));
     ofQuaternion xRot(y, ofVec3f(1,0,0));
     ofQuaternion zRot(z, ofVec3f(0,0,1));
-    cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
+    if(bGuiCamAdjust==true){
+        cameras[guiCam].camera.setGlobalOrientation(cameras[guiCam].camera.getGlobalOrientation() *= yRot*xRot*zRot);
+    }
+    else{
+        cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
+    }
     
     if(orientationX!=NULL){
         orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
@@ -1245,6 +1261,8 @@ void ModelMapper::setMainGUI(){
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
 	mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
     
+    mainGUI->addSpacer();
+	mainGUI->addToggle("Adjust GUI Separately", false);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Adjust:",OFX_UI_FONT_MEDIUM);
@@ -1466,6 +1484,19 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         magnetGUI->setVisible(false);
     }
     
+    else if(name == "Adjust GUI Separately")
+    {
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        
+        if(toggle->getValue()==true){
+            bGuiCamAdjust=true;
+        }
+        
+        else{
+            bGuiCamAdjust=false;
+        }
+    }
+    
     else if(name == "Camera X")
     {
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
@@ -1591,6 +1622,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     {
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
         cameraSelect=ofToInt(currentRadio->getActiveName());
+        cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
+        cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
         updateMasks();
         if(positionX!=NULL){
             positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
@@ -1959,7 +1992,7 @@ float ModelMapper::magnetMap(float distance, float radius){
         }
         
         else if(easeMode==EASE_MODE_SEPARATE){
-            if(distance>magnetRadius/2){
+            if(distance>radius/2){
                 easingType=ofxTween::easeOut;
                 currentEase=easeOutStyle;
             }
