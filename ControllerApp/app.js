@@ -31,7 +31,8 @@ var concat = require('./routes/concat'); //*** NEW ***//
 var WebSocket = require('./modules/Websockets');
 var Database = require('./modules/DBConnection');
 var Folders = require('./modules/FolderStructure');
-var AfterEffects = require('./modules/AfterEffects')
+var AfterEffects = require('./modules/AfterEffects');
+var PathFinder = require('./modules/PathFinder')
 
 //AfterEffects.init(function(e){});
 /** 
@@ -54,6 +55,15 @@ Database.MongoConnect();
  */
 
 WebSocket.Connect(8080,Database); 
+
+/**
+ *	PathFinder
+ *
+ */
+ 
+PathFinder.setup(function(){
+	//PathFinder.returnPath(null)
+})
 
 /**
  * Basic Express Environment setup
