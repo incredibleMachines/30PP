@@ -151,7 +151,8 @@ public:
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
-    bool bGuiCamAdjust;
+    bool bGuiCamAdjust, bDrawingPen, bNewPen;
+    ofPolyline penPoly, radiusPoly;
     
     
     
@@ -165,6 +166,8 @@ public:
     vector<maskVertex> maskVertices;
     bool bNewMask, bDrawingMask, bMaskPoint;
     float mouseTimer;
+    
+    vector<maskVertex> penVertices;
     
     //---------HIGHLIGHT SETTINGS
     bool bMouseDown;

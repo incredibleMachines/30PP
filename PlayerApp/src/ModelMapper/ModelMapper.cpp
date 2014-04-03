@@ -28,6 +28,7 @@ void ModelMapper::setup(int _numCams){
     
     //pass through defaults
     setup(_numCams,0,1);
+
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam){
@@ -281,8 +282,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             break;
 
             
-            //----------DELETE SELECTED MASK
-            
+        //----------DELETE SELECTED MASK
         case OF_KEY_BACKSPACE:
             if(adjustMode==ADJUST_MODE_MASK){
                 if(cameras[cameraSelect].highlightMask!=-1){
@@ -356,7 +356,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
     //----------SELECT MESH ADJUSTMENT POINTS
     
     if(adjustMode==ADJUST_MODE_MESH){
-        
+        tempVertices=moveVertices;
         //clear point vector
         moveVertices.clear();
         
@@ -454,6 +454,85 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     
     if(adjustMode==ADJUST_MODE_MESH){
         
+        if(selectMode==SELECT_MODE_PEN||selectMode==SELECT_MODE_DOUBLE_PEN){
+            if(bDrawingPen==true){
+                    if(ofGetElapsedTimeMillis()-mouseTimer>250){
+                        cout<<"SINGLE"<<endl;
+                        mouseTimer=ofGetElapsedTimeMillis();
+                        if(bNewPen==true){
+                            penPoly.addVertex(mouse);
+                            bNewPen=false;
+                        }
+                        else{
+                            penPoly.lineTo(mouse);
+                        }
+                    }
+                    //double-click to finish mask
+                    else{
+                        cout<<"DOUBLE"<<endl;
+                        if(bNewPen==true){
+                            bNewPen=false;
+                            penPoly.clear();
+                            bDrawingPen=false;
+                        }
+                        else{
+                            penPoly.close();
+                            bDrawingPen=false;
+                            
+                            tempVertices=moveVertices;
+                            moveVertices.clear();
+                            
+                            for(int i=0;i<numMeshes;i++)
+                            {
+                                vector<meshVertex> tempVector;
+                                
+                                //determine vertices inside drag box on gui camera screen
+                                for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
+                                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                                    if(penPoly.inside(cur)) {
+                                        meshVertex tempVert;
+                                        tempVert.vertex=cur;
+                                        tempVert.index=j;
+                                        bool included=false;
+                                        if(tempVertices.size()>0){
+                                            for(int k=0;k<tempVertices[i].size();k++){
+                                                if(tempVertices[i][k].index==tempVert.index){
+                                                    included=true;
+                                                    if(bShiftPressed==true){
+                                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                                                    }
+                                                }
+                                            }
+                                            if(bShiftPressed==false&&included==false){
+                                                tempVector.push_back(tempVert);
+                                            }
+                                        }
+                                        else if(bShiftPressed==false){
+                                            tempVector.push_back(tempVert);
+                                        }
+                                    }
+                                }
+                                
+                                //push stored points into vector (to enable shift select command)
+                                if(tempVertices.size()>0){
+                                    for(int j=0;j < tempVertices[i].size();j++){
+                                        tempVector.push_back(tempVertices[i][j]);
+                                    }
+                                }
+                                
+                                moveVertices.push_back(tempVector);
+                                tempVector.clear();
+                            }
+                        }
+                        penPoly.clear();
+                        penButton->setColorFill(OFX_UI_COLOR_BACK);
+                    }
+                
+            }
+        }
+        
+        else{
+            cout<<"CLICK"<<endl;
             //clear selected vertex vector
             tempVertices=moveVertices;
             moveVertices.clear();
@@ -502,6 +581,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 tempVector.clear();
                 
 
+            }
         }
         
     }
@@ -596,7 +676,7 @@ void ModelMapper::mouseReleased(ofMouseEventArgs& args){
     if(bMouseDown==true){
         bMouseDown=false;
         if(adjustMode==ADJUST_MODE_MESH){
-            if(selectMode!=SELECT_MODE_POINTER){
+            if(selectMode==SELECT_MODE_RADIUS){
                 calculateMagnetPoints();
             }
         }
@@ -827,6 +907,11 @@ void ModelMapper::drawHighlights() {
     }
     
     if(adjustMode==ADJUST_MODE_MESH){
+        if(selectMode==SELECT_MODE_PEN){
+            ofSetColor(255);
+            ofSetLineWidth(1);
+            penPoly.draw();
+        }
         
         //----------DRAW NEAREST VERTEX
 
@@ -1686,6 +1771,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         moveVertices.clear();
         tempVertices.clear();
         magnetVertices.clear();
+        penPoly.clear();
     }
     
     else if(name=="RELOAD MESH"){
@@ -1703,6 +1789,14 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             }
         }
         cout<<"Reloaded Model"<<endl;
+    }
+    
+    else if(name=="START SELECTION"){
+        penPoly.clear();
+        bNewPen=true;
+        bDrawingPen=true;
+        penButton->setColorFill(OFX_UI_COLOR_FILL);
+        
     }
     
     else if(name=="EASE TYPE"){
