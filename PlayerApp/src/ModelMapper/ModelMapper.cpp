@@ -863,7 +863,7 @@ void ModelMapper::drawHighlights() {
             
             //draw selected circles on all vertices selected by clicking or via drag box on both gui camera and selected camera, set in mousePressed() and mouseDragged()
             ofSetColor(255,0,0);
-            if(moveVertices.size()>i){
+            if(moveVertices.size()>0){
                 for(int j=0;j<moveVertices[i].size();j++){
                     ofPushMatrix();
                     ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index),cameras[cameraSelect].viewport);
@@ -884,7 +884,7 @@ void ModelMapper::drawHighlights() {
                 }
             }
             
-            if(magnetVertices.size()>i){
+            if(magnetVertices.size()>0){
                 for(int j=0;j<magnetVertices[i].size();j++){
                     
                     ofSetColor(255,ofMap(magnetVertices[i][j].modifier,0,1,255,0),ofMap(magnetVertices[i][j].modifier,0,1,255,0));
@@ -1649,7 +1649,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             hideMagnetTypes();
             selectMode=SELECT_MODE_POINTER;
             setEaseHeights(false,false,false);
-            calculateMagnetPoints();
         }
         else{
             magnetGUI->setVisible(true);
@@ -1660,19 +1659,16 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                 magnetRadiusLabel->setVisible(true);
                 magnetRadiusSet->setVisible(true);
                 setEaseHeights(true,false,false);
-                calculateMagnetPoints();
             }
             else if(selected=="Pen"){
                 selectMode=SELECT_MODE_PEN;
                 magnetRadiusLabel->setVisible(true);
                 magnetRadiusSet->setVisible(true);
                 setEaseHeights(true,true,false);
-                calculateMagnetPoints();
             }
             else if(selected=="Double Pen"){
                 selectMode=SELECT_MODE_DOUBLE_PEN;
                 setEaseHeights(false, true, true);
-                calculateMagnetPoints();
             }
         }
     }
@@ -1715,7 +1711,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                 if(selected=="None"){
                     hideMagnetTypes();
                     easeMode=EASE_MODE_NONE;
-                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease In"){
                     hideMagnetTypes();
@@ -1725,7 +1720,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeInMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
                     easeMode=EASE_MODE_IN;
-                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Out"){
                     hideMagnetTypes();
@@ -1735,7 +1729,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeOutMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
                     easeMode=EASE_MODE_OUT;
-                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Both"){
                     hideMagnetTypes();
@@ -1745,7 +1738,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeBothMethod->getRect()->setY(easeHeight+20);
                     magnetGUI->setHeight(400);
                     easeMode=EASE_MODE_BOTH;
-                    calculateMagnetPoints();
                 }
                 else if(selected=="Ease Separate"){
                     hideMagnetTypes();
@@ -1759,7 +1751,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
                     easeOutMethod->getRect()->setY(easeHeight+190);
                     magnetGUI->setHeight(580);
                     easeMode==EASE_MODE_SEPARATE;
-                    calculateMagnetPoints();
                 }
     }
     
@@ -1787,7 +1778,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         else if(selected=="Circular"){
             easeInStyle=EASE_STYLE_CIRC;
         }
-        calculateMagnetPoints();
     }
     else if(name=="EASE OUT"){
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
@@ -1813,7 +1803,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         else if(selected=="Circular"){
             easeOutStyle=EASE_STYLE_CIRC;
         }
-        calculateMagnetPoints();
     }
     else if(name=="EASE BOTH"){
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
@@ -1839,7 +1828,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         else if(selected=="Circular"){
             easeBothStyle=EASE_STYLE_CIRC;
         }
-        calculateMagnetPoints();
     }
     
     else if(name=="START MASK"){
