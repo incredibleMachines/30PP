@@ -64,7 +64,7 @@ function SceneController(_clips,_files){
 			//check if element exists using length
 			if(!$('canvas#map').length){
 				
-				var canvas = '<canvas id="map" style="width: 100%; height: 200px;"> </canvas>'
+				var canvas = '<canvas id="map" style="width: 512px; height: 202px;"> </canvas>'
 				$this.parent().parent().append(canvas)
 				//init the map
 			}
@@ -392,7 +392,7 @@ function SceneController(_clips,_files){
 					
 					if(!$('canvas#map').length){
 				
-						var canvas = '<canvas id="map" style="width: 100%; height: 200px;"> </canvas>'
+						var canvas = '<canvas id="map" style="width: 512px; height: 202px;"> </canvas>'
 						$('.zone-single-'+index).find('select.zone-map-type').parent().append(canvas)
 						//init the map
 					}
