@@ -28,11 +28,6 @@
 #define MESH_MASS 0
 #define MESH_DETAIL 1
 
-#define MAGNET_MODE_NONE 0
-#define MAGNET_MODE_LINEAR 1
-#define MAGNET_MODE_QUAD 2
-#define MAGNET_MODE_EXPO 3
-
 #define SELECT_MODE_POINTER 0
 #define SELECT_MODE_RADIUS 1
 #define SELECT_MODE_PEN 2
@@ -43,6 +38,14 @@
 #define EASE_MODE_OUT 2
 #define EASE_MODE_BOTH 3
 #define EASE_MODE_SEPARATE 4
+
+#define EASE_STYLE_LINEAR 0
+#define EASE_STYLE_QUAD 1
+#define EASE_STYLE_CUBIC 2
+#define EASE_STYLE_QUART 3
+#define EASE_STYLE_EXPO 4
+#define EASE_STYLE_SINE 5
+#define EASE_STYLE_CIRC 6
 
 class ModelMapper {
 public:
@@ -116,6 +119,9 @@ public:
     void adjustMask(float x, float y);
     //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
+    float magnetMap(float distance, float radius);
+    
+    void setGUIVisible(bool hide);
     
     //setup GUI elements
     void setupGUI();
@@ -132,7 +138,8 @@ public:
     public:
         ofVec3f vertex;
         int index;
-        float modifier; 
+        float modifier;
+        float distance;
     };
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
@@ -144,6 +151,8 @@ public:
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
+    bool bGuiCamAdjust, bDrawingPen, bNewPen;
+    ofPolyline penPoly, radiusPoly;
     
     
     
@@ -158,6 +167,8 @@ public:
     bool bNewMask, bDrawingMask, bMaskPoint;
     float mouseTimer;
     
+    vector<maskVertex> penVertices;
+    
     //---------HIGHLIGHT SETTINGS
     bool bMouseDown;
     ofVec2f mouseDown;
@@ -170,15 +181,15 @@ public:
     
     vector<ofTexture *> textures;
     
-    
-    
-    
     float magnetRadius;
-    int magnetMode, selectMode, easeMode, easeInMode, easeOutMode, easeBothMode;
+    int selectMode, easeMode, easeInStyle, easeOutStyle, easeBothStyle;
+    ofxEasingLinear easeLinear;
     ofxEasingQuad easeQuad;
-    ofxTween::ofxEasingType easingType;
+    ofxEasingCubic easeCubic;
+    ofxEasingQuart easeQuart;
     ofxEasingExpo easeExpo;
-    
+    ofxEasingSine easeSine;
+    ofxEasingCirc easeCirc;
     
     void guiEvent(ofxUIEventArgs &e);
     vector<string> adjustModes;
@@ -224,7 +235,7 @@ public:
     ofxUIButton *penButton;
     ofxUIButton *doublePenButton;
     ofxUILabel *easeTypeLabel;
-    ofxUIRadio *easeType;
+    ofxUIRadio *easeTypeRadio;
     ofxUISpacer *easeTypeSpacer;
     ofxUILabel *easeInLabel;
     ofxUIRadio *easeInMethod;
@@ -233,5 +244,10 @@ public:
     ofxUILabel *easeBothLabel;
     ofxUIRadio *easeBothMethod;
     int easeHeight, easeTypeHeight;
+    
+    ofxUISuperCanvas *maskGUI;
+    void setMaskGUI();
+    ofxUIButton *maskButton;
+
     
 };
