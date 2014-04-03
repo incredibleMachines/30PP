@@ -62,7 +62,7 @@ WebSocket.Connect(8080,Database);
  */
  
 PathFinder.setup(function(){
-	//PathFinder.returnPath(null)
+	PathFinder.returnPath(null)
 })
 
 /**

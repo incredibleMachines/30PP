@@ -1,6 +1,7 @@
 var 		 fs = require('fs'),
 			PNG = require('pngjs').PNG,
 	PathFinding = require('pathfinding')
+	
 var matrix;
 var grid;
 exports.ready = false;
@@ -10,7 +11,7 @@ var finder = new PathFinding.AStarFinder();
 
 exports.setup =function(cb){
 	//load a black and white jpg image
-	fs.createReadStream('/Users/chris/Desktop/Untitled-2.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
+	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
 	
 		//create an array the size of our image	
 		matrix = new Array(this.height);
@@ -29,7 +30,7 @@ exports.setup =function(cb){
 				
 			}
 		}
-		grid = new PathFinding.Grid(this.height,this.width,matrix)
+		grid = new PathFinding.Grid(this.width,this.height,matrix)
 		exports.ready = true;
 		cb()
 		//matrix is now a 2 dimensional array of a black and white image 
@@ -56,5 +57,5 @@ exports.returnPath = function(endPoint){
 	//console.log(JSON.stringify(matrix))
 	var newGrid = grid.clone()
 	//need to preset 1,2 to be the location of 30PP
-	var path = finder.findPath(1, 2, endPoint.y, endPoint.x, newGrid);
+	//var path = finder.findPath(1, 2, endPoint.x, endPoint.y, newGrid);
 }
