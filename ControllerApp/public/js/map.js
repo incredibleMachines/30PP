@@ -7,11 +7,11 @@ function InitMapCanvas(_type, _locs, _cb){
 	var ctx = canvas.getContext("2d");
 	
 	//TODO: make this dynamic
-	canvas.width = 215;
-	canvas.height = 200;
+	canvas.width = 512;
+	canvas.height = 202;
 	
 	var bgImage = new Image();
-	bgImage.src = "/imgs/map.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202.png";
 	
 	var locs = _locs;
 	
@@ -22,7 +22,6 @@ function InitMapCanvas(_type, _locs, _cb){
 	var clickType = 1; // 0=delete  ,  1=add location
 	
 	var debugMsg; //holds debug mouse info
-	
 	
 	//  --- draw locations on load
 	function drawLocations(){
@@ -41,10 +40,10 @@ function InitMapCanvas(_type, _locs, _cb){
 			ctx.stroke();
 			ctx.fill();
 			
-			//draw coordinates as well
-/* 			ctx.font = '12pt Calibri'; */
-/* 			ctx.fillStyle = 'black'; */
-/* 			ctx.fillText(x+","+y, x+5, y+5); */
+			/*//draw coordinates as well
+ 			ctx.font = '12pt Calibri'; 
+ 			ctx.fillStyle = 'black'; 
+ 			ctx.fillText(x+","+y, x+5, y+5); */
 		}
 	}
 	
@@ -52,7 +51,7 @@ function InitMapCanvas(_type, _locs, _cb){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
 		ctx.fillStyle = 'black';
-		ctx.fillText("click to choose location", 33, 85);
+		ctx.fillText("click to choose location", 33, 105);
 		//ctx.fillText(type+" location", 57, 100);
 	}
 	
@@ -81,7 +80,6 @@ function InitMapCanvas(_type, _locs, _cb){
 				//console.log("ADD LOC");
 			break;	
 		}
-		
 		drawLocations();			
 	}
 	
@@ -91,10 +89,10 @@ function InitMapCanvas(_type, _locs, _cb){
 
 		if(typeof locs !== 'undefined'){ 
 			for(var i=0; i<locs.length; i++){
-				if( parseInt(mousePos.x) <= parseInt(locs[i].x)+locDiameter+3 && 
-					parseInt(mousePos.x) >= parseInt(locs[i].x)-locDiameter-3 &&
-					parseInt(mousePos.y) <= parseInt(locs[i].y)+locDiameter+3 && 
-					parseInt(mousePos.y) >= parseInt(locs[i].y)-locDiameter-3 ){
+				if( parseInt(mousePos.x) <= parseInt(locs[i].x)+locDiameter+2 && 
+					parseInt(mousePos.x) >= parseInt(locs[i].x)-locDiameter-2 &&
+					parseInt(mousePos.y) <= parseInt(locs[i].y)+locDiameter+2 && 
+					parseInt(mousePos.y) >= parseInt(locs[i].y)-locDiameter-2 ){
 					
 					clickType = 0;
 					selectionId = i;
@@ -120,7 +118,6 @@ function InitMapCanvas(_type, _locs, _cb){
 		
 		if(locs.length < 1){
 			clickType = 1;
-			//console.log("hover no locs found");
 			drawInstruction();
 		} 
 	}
