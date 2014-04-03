@@ -44,8 +44,6 @@ void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
     _whichMeshes.push_back(1);
     _whichMeshes.push_back(2);
     setup(_numCams,_guiCam,_whichMeshes);
-    
-    cout<<"setup"<<endl;
 }
 
 void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
@@ -105,9 +103,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
     
-    
     setupGUI();
-    
     
     //----------SETUP LISTENERS
     //Event Listeners for key and mouse events
@@ -406,10 +402,6 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             moveVertices.push_back(tempVector);
             tempVector.clear();
         }
-        if(selectMode!=SELECT_MODE_POINTER){
-            calculateMagnetPoints();
-        }
-        
     }
     
     //----------SELECT MASK ADJUSTMENT POINTS
@@ -509,9 +501,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 moveVertices.push_back(tempVector);
                 tempVector.clear();
                 
-                if(selectMode!=SELECT_MODE_POINTER){
-                    calculateMagnetPoints();
-                }
+
         }
         
     }
@@ -603,7 +593,14 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
 //--------------------------------------------------------------
 void ModelMapper::mouseReleased(ofMouseEventArgs& args){
     //reset drag box status
-    bMouseDown=false;
+    if(bMouseDown==true){
+        bMouseDown=false;
+        if(adjustMode==ADJUST_MODE_MESH){
+            if(selectMode!=SELECT_MODE_POINTER){
+                calculateMagnetPoints();
+            }
+        }
+    }
 }
 
 
@@ -626,7 +623,6 @@ void ModelMapper:: setupCameras() {
                 }
                 else if(meshType==MESH_MASS){
                     loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply");
-                    cout<<loader<<endl;
                 }
                 tempMesh.load(loader);
                 meshes.push_back(tempMesh);
@@ -714,7 +710,7 @@ void ModelMapper:: saveCameras() {
     else {
         Json::StyledWriter writer;
         file << writer.write(settings) << endl;
-        cout<<"settings.json SAVED";
+        cout<<"settings.json SAVED"<<endl;
         file.close();
     }
 }
@@ -767,12 +763,12 @@ void ModelMapper:: saveCamera() {
     
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
-		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
+		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << "."<<endl;
 	}
     else {
         Json::StyledWriter writer;
         file << writer.write(settings) << endl;
-        cout<<"settings.json SAVED";
+        cout<<"settings.json SAVED"<<endl;
         file.close();
     }
 }
@@ -1114,48 +1110,58 @@ void ModelMapper::adjustMesh(float x, float y, float z){
 }
 
 void ModelMapper::calculateMagnetPoints(){
+    
+    cout<<"CALCULATE MAGNET POINTS"<<endl;
     magnetVertices.clear();
+    
     for(int i=0;i<moveVertices.size();i++){
+        
         vector<meshVertex> tempVector;
+        
         for(int j=0;j<moveVertices[i].size();j++){
+            
             int n = cameras[guiCam].mesh[i].getNumVertices();
+            
             //parse through all vertices to determine nearest, if exists
-            
-            int magnetCount;
-            
             for(int k = 0; k < n; k++) {
+                
                 ofVec3f check = cameras[guiCam].mesh[i].getVertex(k);
                 ofVec3f cur=cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index);
-                float distance = cur.distance(check);
+                
+                float distance = abs(check.distance(cur));
                 float maxDist = 0;
+                
                 if (distance<magnetRadius&&distance!=0){
-                    magnetCount++;
                     meshVertex tempVert;
                     bool duplicate=false;
                     bool selected=false;
-                    for(int l=0;l<tempVector.size();l++){
-                        if(tempVector[l].index==k){
-                            cout<<"recheck: "<<k<<endl;
-                            duplicate=true;
-                            if(distance>check.distance(tempVector[l].vertex)){
-                                tempVert.vertex=cur;
-                                if(selectMode==SELECT_MODE_RADIUS||selectMode==SELECT_MODE_PEN){
-                                    tempVert.modifier=magnetMap(distance, magnetRadius);
-                                }
-                            }
-                            break;
-                        }
-                    }
                     
                     for(int l=0;l<moveVertices[i].size();l++){
                         if(moveVertices[i][l].index==k){
                             selected=true;
+//                            break;
+                        }
+                    }
+                    
+                    if(selected==false){
+                        for(int l=0;l<tempVector.size();l++){
+                            if(tempVector[l].index==k){
+                                duplicate=true;
+                                if(distance<tempVector[l].distance){
+                                    tempVector[l].distance=distance;
+                                    if(selectMode==SELECT_MODE_RADIUS||selectMode==SELECT_MODE_PEN){
+                                        tempVector[l].modifier=magnetMap(distance, magnetRadius);
+                                    }
+                                }
+//                                break;
+                            }
                         }
                     }
                     
                     if(duplicate==false&&selected==false){
                         tempVert.vertex=cur;
                         tempVert.index=k;
+                        tempVert.distance=distance;
                         if(selectMode==SELECT_MODE_RADIUS||selectMode==SELECT_MODE_PEN){
                             tempVert.modifier=magnetMap(distance, magnetRadius);
                         }
@@ -1433,8 +1439,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
 	int kind = e.getKind();
     
 	cout << "got event from: " << name << endl;
-    cout<<"kind: "<<kind<<endl;
-    
     
     if(name=="TOGGLE WIREFRAME"){
         if(adjustMode!=ADJUST_MODE_LOCKED){
@@ -1475,8 +1479,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
-            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().x)<<endl;
-            cout<<"set"<<endl;
         }
     }
     
@@ -1486,8 +1488,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
-            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().y)<<endl;
-            cout<<"set"<<endl;
         }
     }
     
@@ -1497,8 +1497,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
-            cout<<ofToString(cameras[cameraSelect].camera.getGlobalPosition().z)<<endl;
-            cout<<"set"<<endl;
         }
     }
     
@@ -1510,8 +1508,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             ofQuaternion rot = ofQuaternion(ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().y(), cameras[cameraSelect].camera.getGlobalOrientation().z(), cameras[cameraSelect].camera.getGlobalOrientation().w());
             
             cameras[cameraSelect].camera.setGlobalOrientation(rot);
-
-            cout<<"set"<<endl;
         }
     }
     
@@ -1523,8 +1519,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(),ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().z(), cameras[cameraSelect].camera.getGlobalOrientation().w());
             
             cameras[cameraSelect].camera.setGlobalOrientation(rot);
-            
-            cout<<"set"<<endl;
         }
     }
     
@@ -1536,8 +1530,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(), cameras[cameraSelect].camera.getGlobalOrientation().y(),ofToFloat(ti->getTextString()), cameras[cameraSelect].camera.getGlobalOrientation().w());
             
             cameras[cameraSelect].camera.setGlobalOrientation(rot);
-            
-            cout<<"set"<<endl;
         }
     }
     
@@ -1549,8 +1541,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             ofQuaternion rot = ofQuaternion(cameras[cameraSelect].camera.getGlobalOrientation().x(), cameras[cameraSelect].camera.getGlobalOrientation().y(), cameras[cameraSelect].camera.getGlobalOrientation().z(),ofToFloat(ti->getTextString()));
             
             cameras[cameraSelect].camera.setGlobalOrientation(rot);
-            
-            cout<<"set"<<endl;
         }
     }
     
@@ -1560,7 +1550,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].viewport.x=ofToFloat(ti->getTextString());
-            cout<<"set"<<endl;
         }
     }
     
@@ -1570,7 +1559,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].viewport.y=ofToFloat(ti->getTextString());
-            cout<<"set"<<endl;
         }
     }
     
@@ -1946,8 +1934,8 @@ float ModelMapper::magnetMap(float distance, float radius){
     if (easeMode==EASE_MODE_NONE){
         modifier=1;
     }
+    
     else {
-        cout<<"mode"<<endl;
         ofxTween::ofxEasingType easingType;
         int currentEase;
         
@@ -1976,7 +1964,6 @@ float ModelMapper::magnetMap(float distance, float radius){
         }
         
         if(currentEase==EASE_STYLE_LINEAR){
-            cout<<"LINEAR"<<endl;
             modifier=ofxTween::map(distance, 0, radius, 1, 0, false, easeLinear, easingType);
         }
         else if(currentEase==EASE_STYLE_QUAD){

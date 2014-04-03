@@ -138,7 +138,8 @@ public:
     public:
         ofVec3f vertex;
         int index;
-        float modifier; 
+        float modifier;
+        float distance;
     };
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
