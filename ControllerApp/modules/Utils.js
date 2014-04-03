@@ -26,5 +26,5 @@ exports.deleteFile = function(file,cb){
 exports.escapeChars = function(text){
 	var searchFor = "'";
 	var regex = new RegExp(searchFor, "g");
-	return text.replace(regex, "/'");
+	return text.replace(regex, "&quot;");
 }
