@@ -121,6 +121,8 @@ public:
     void calculateMagnetPoints();
     float magnetMap(float distance, float radius);
     
+    void setGUIVisible(bool hide);
+    
     //setup GUI elements
     void setupGUI();
     
@@ -238,5 +240,10 @@ public:
     ofxUILabel *easeBothLabel;
     ofxUIRadio *easeBothMethod;
     int easeHeight, easeTypeHeight;
+    
+    ofxUISuperCanvas *maskGUI;
+    void setMaskGUI();
+    ofxUIButton *maskButton;
+
     
 };

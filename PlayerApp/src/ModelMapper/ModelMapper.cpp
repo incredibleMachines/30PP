@@ -52,7 +52,6 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     
     //----------SETUP GLOBALS
-
     numCams=_numCams;
     guiCam=_guiCam;
     numMeshes=_whichMeshes.size();
@@ -74,7 +73,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     bMouseDown=false;
     clickThreshold=4;
     
-    //for checking for double click on mask creation
+    //for checking for double click
     mouseTimer=ofGetElapsedTimeMillis();
     
     //mask settings
@@ -83,7 +82,6 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     bMaskPoint=false;
     
     //draw settings
-    bDrawGui=true;
     bDrawWireframe=false;
     
     //adjustment settings
@@ -98,7 +96,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofBuffer buffer = ofBufferFromFile("settings.json");
     
     cout<< "buffer.getText.length(): "<< buffer.getText().length() <<endl;
-    
+
     Json::Reader reader;
     if(reader.parse(buffer.getText(), settings, false)){
         cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
@@ -107,12 +105,11 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
     
+    
     setupGUI();
     
-
     
     //----------SETUP LISTENERS
-    
     //Event Listeners for key and mouse events
     ofAddListener(ofEvents().keyPressed,this,&ModelMapper::keyPressed);
     ofAddListener(ofEvents().keyReleased,this,&ModelMapper::keyReleased);
@@ -286,17 +283,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMesh(0,0,-moveModifier);
             }
             break;
-        
-            //----------CREATE NEW MASK/SWITCH MAGNET MODE
-            
-        case 'm':
-            if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
-                cameras[cameraSelect].addMask();
-                bNewMask=true;
-                bDrawingMask=true;
-                updateMasks();
-            }
-            break;
+
             
             //----------DELETE SELECTED MASK
             
@@ -317,29 +304,11 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 'g':
             if(adjustMode!=ADJUST_MODE_LOCKED){
                 if(mainGUI->isVisible()){
-                    mainGUI->setVisible(false);
-                    positionGUI->setVisible(false);
-                    orientationGUI->setVisible(false);
-                    viewportGUI->setVisible(false);
-                    meshGUI->setVisible(false);
-                    magnetGUI->setVisible(false);
+                    setGUIVisible(false);
                 }
                 else{
-                    mainGUI->setVisible(true);
-                    if(adjustMode==ADJUST_MODE_CAMERA) positionGUI->setVisible(true);
-                    else if(adjustMode==ADJUST_MODE_LOOK_AT) orientationGUI->setVisible(true);
-                    else if(adjustMode==ADJUST_MODE_VIEWPORT) viewportGUI->setVisible(true);
-                    else if(adjustMode==ADJUST_MODE_MESH) {
-                        meshGUI->setVisible(true);
-                        if(selectMode!=SELECT_MODE_POINTER){
-                            magnetGUI->setVisible(true);
-                        }
-                    }
+                    setGUIVisible(true);
                 }
-            }
-            else if(bShiftPressed==true){
-                mainGUI->setVisible(true);
-                positionGUI->setVisible(true);
             }
             break;
             
@@ -347,34 +316,16 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case ' ':
             if(adjustMode!=ADJUST_MODE_LOCKED){
-                bDrawGui=false;
                 bDrawWireframe=false;
-                wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
+                wireframeButton->setColorFill(OFX_UI_COLOR_BACK);
                 adjustMode=ADJUST_MODE_LOCKED;
-                mainGUI->setVisible(false);
-                positionGUI->setVisible(false);
-                orientationGUI->setVisible(false);
-                viewportGUI->setVisible(false);
-                meshGUI->setVisible(false);
-                magnetGUI->setVisible(false);
+                setGUIVisible(false);
             }
             else if(bShiftPressed==true){
                 adjustMode=ADJUST_MODE_CAMERA;
-                bDrawGui=true;
-                mainGUI->setVisible(true);
-                
-                
-                if(adjustMode==ADJUST_MODE_CAMERA) positionGUI->setVisible(true);
-                else if(adjustMode==ADJUST_MODE_LOOK_AT) orientationGUI->setVisible(true);
-                else if(adjustMode==ADJUST_MODE_VIEWPORT) viewportGUI->setVisible(true);
-                else if(adjustMode==ADJUST_MODE_MESH) {
-                    meshGUI->setVisible(true);
-                    if(selectMode!=SELECT_MODE_POINTER){
-                        magnetGUI->setVisible(true);
-                    }
-                }
+                setGUIVisible(true);
                 currentMode->activateToggle("Camera Position");
-                performanceButton->setColorBack(OFX_UI_COLOR_BACK);
+                performanceButton->setColorFill(OFX_UI_COLOR_BACK);;
             }
             break;
             
@@ -592,6 +543,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                     bNewMask=false;
                     bDrawingMask=false;
                 }
+                maskButton->setColorFill(OFX_UI_COLOR_BACK);
             }
         }
         
@@ -1013,26 +965,27 @@ void ModelMapper::drawHighlights() {
 }
 
 void ModelMapper::drawMasks(){
-    
     //draw mask ofPaths
-    
     for(int i = 0; i < numCams; i++){
         for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
-            ofSetColor(0,0,0);
-            
-            //turn on outlines if adjusting
-            if(adjustMode==ADJUST_MODE_MASK){
-                cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
-                if(i==cameraSelect||i==guiCam){
-                    if(j==cameras[i].highlightMask&&bMaskPoint==false){
-                        cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
+            if(i!=guiCam||bGuiCamAdjust==false){
+                
+                ofSetColor(0,0,0);
+                
+                //turn on outlines if adjusting
+                if(adjustMode==ADJUST_MODE_MASK){
+                    cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
+                    if(i==cameraSelect||i==guiCam){
+                        if(j==cameras[i].highlightMask&&bMaskPoint==false){
+                            cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
+                        }
                     }
                 }
+                else{
+                    cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
+                }
+                cameras[i].drawMasks[j].draw();
             }
-            else{
-                cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
-            }
-            cameras[i].drawMasks[j].draw();
         }
     }
 }
@@ -1271,6 +1224,7 @@ void ModelMapper::setMainGUI(){
     
     mainGUI->addSpacer();
     wireframeButton=mainGUI->addLabelButton("TOGGLE WIREFRAME", false);
+    wireframeButton->setColorFill(OFX_UI_COLOR_BACK);
     
     mainGUI->addSpacer();
     mainGUI->addLabelButton("SAVE CURRENT", false);
@@ -1449,6 +1403,30 @@ void ModelMapper::setMagnetGUI(){
 	ofAddListener(magnetGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
+void ModelMapper::setMaskGUI(){
+    maskGUI= new ofxUISuperCanvas("Masks");
+    maskGUI->addSpacer();
+    maskGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    maskGUI->addLabel("Click mask point to adjust", OFX_UI_FONT_SMALL);
+    maskGUI->addLabel("Click inside mask to move", OFX_UI_FONT_SMALL);
+    maskGUI->addLabel("(Delete) to delete", OFX_UI_FONT_SMALL);
+    maskGUI->addLabel("(Arrow Keys) Adjust x/y", OFX_UI_FONT_SMALL);
+    maskGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    maskGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    maskGUI->addSpacer();
+    maskGUI->addLabel("Click for new mask",OFX_UI_FONT_MEDIUM);
+    maskGUI->addLabel("Double click to close", OFX_UI_FONT_SMALL);
+    maskButton=maskGUI->addLabelButton("START MASK", OFX_UI_FONT_MEDIUM);
+    maskButton->setColorFill(OFX_UI_COLOR_BACK);
+    
+    maskGUI->setPosition(212, 0);
+    maskGUI->autoSizeToFitWidgets();
+    
+    maskGUI->setVisible(false);
+	ofAddListener(maskGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+}
+
 void ModelMapper::guiEvent(ofxUIEventArgs &e)
 {
 	string name = e.getName();
@@ -1462,26 +1440,20 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(adjustMode!=ADJUST_MODE_LOCKED){
             bDrawWireframe=!bDrawWireframe;
             if(bDrawWireframe==true){
-                wireframeButton->setColorBack(OFX_UI_COLOR_FILL);
+                wireframeButton->setColorFill(OFX_UI_COLOR_FILL);
             }
             else{
-                wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
+                wireframeButton->setColorFill(OFX_UI_COLOR_BACK);
             }
         }
     }
     
     else if(name=="PERFORMANCE MODE"){
-        bDrawGui=false;
         bDrawWireframe=false;
         wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
         performanceButton->setColorBack(OFX_UI_COLOR_BACK);
         adjustMode=ADJUST_MODE_LOCKED;
-        mainGUI->setVisible(false);
-        positionGUI->setVisible(false);
-        orientationGUI->setVisible(false);
-        viewportGUI->setVisible(false);
-        meshGUI->setVisible(false);
-        magnetGUI->setVisible(false);
+        setGUIVisible(false);
     }
     
     else if(name == "Adjust GUI Separately")
@@ -1657,35 +1629,28 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     else if(name == "CHANGE MODE"){
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
         string selected=currentRadio->getActiveName();
+        setGUIVisible(false);
         
-            positionGUI->setVisible(false);
-            orientationGUI->setVisible(false);
-            viewportGUI->setVisible(false);
-            meshGUI->setVisible(false);
-            magnetGUI->setVisible(false);
-        
-                if(selected=="Camera Position"){
-                    positionGUI->setVisible(true);
-                    adjustMode=ADJUST_MODE_CAMERA;
-                }
-        
-                else if(selected=="Camera Orientation"){
-                    orientationGUI->setVisible(true);
-                    adjustMode=ADJUST_MODE_LOOK_AT;
-                }
-        
-                else if(selected=="Viewport Position"){
-                    viewportGUI->setVisible(true);
-                    adjustMode=ADJUST_MODE_VIEWPORT;
-                }
-        
-                else if(selected=="Meshes"){
-                    meshGUI->setVisible(true);
-                    adjustMode=ADJUST_MODE_MESH;
-                    if(selectMode!=SELECT_MODE_POINTER){
-                        magnetGUI->setVisible(true);
-                    }
-                }
+            if(selected=="Camera Position"){
+                adjustMode=ADJUST_MODE_CAMERA;
+            }
+    
+            else if(selected=="Camera Orientation"){
+                adjustMode=ADJUST_MODE_LOOK_AT;
+            }
+    
+            else if(selected=="Viewport Position"){
+                adjustMode=ADJUST_MODE_VIEWPORT;
+            }
+    
+            else if(selected=="Meshes"){
+                adjustMode=ADJUST_MODE_MESH;
+
+            }
+            else if (selected=="Masks"){
+                adjustMode=ADJUST_MODE_MASK;
+            }
+        setGUIVisible(true);
     }
     
     else if(name=="SELECTION TYPE"){
@@ -1740,9 +1705,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name=="RELOAD MESH"){
-//        moveVertices.clear();
-//        tempVertices.clear();
-//        magnetVertices.clear();
         ofxAssimpModelLoader reload;
         if(meshType==MESH_DETAIL){
             reload.loadModel(detailMesh);
@@ -1891,6 +1853,16 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
         calculateMagnetPoints();
     }
+    
+    else if(name=="START MASK"){
+        if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
+            cameras[cameraSelect].addMask();
+            bNewMask=true;
+            bDrawingMask=true;
+            updateMasks();
+            maskButton->setColorFill(OFX_UI_COLOR_FILL);
+        }
+    }
 }
 
 void ModelMapper::hideMagnetTypes(){
@@ -1965,6 +1937,7 @@ void ModelMapper::setupGUI(){
     setViewportGUI();
     setMeshGUI();
     setMagnetGUI();
+    setMaskGUI();
 }
 
 float ModelMapper::magnetMap(float distance, float radius){
@@ -2026,7 +1999,32 @@ float ModelMapper::magnetMap(float distance, float radius){
         }
         
     }
-    
     return modifier;
+}
 
+void ModelMapper::setGUIVisible(bool hide){
+    if(hide==false){
+        mainGUI->setVisible(false);
+        positionGUI->setVisible(false);
+        orientationGUI->setVisible(false);
+        viewportGUI->setVisible(false);
+        meshGUI->setVisible(false);
+        magnetGUI->setVisible(false);
+        maskGUI->setVisible(false);
+    }
+    else{
+        mainGUI->setVisible(true);
+        if(adjustMode==ADJUST_MODE_CAMERA) positionGUI->setVisible(true);
+        else if(adjustMode==ADJUST_MODE_LOOK_AT) orientationGUI->setVisible(true);
+        else if(adjustMode==ADJUST_MODE_VIEWPORT) viewportGUI->setVisible(true);
+        else if(adjustMode==ADJUST_MODE_MESH) {
+            meshGUI->setVisible(true);
+            if(selectMode!=SELECT_MODE_POINTER){
+                magnetGUI->setVisible(true);
+            }
+        }
+        else if(adjustMode==ADJUST_MODE_MASK){
+            maskGUI->setVisible(true);
+        }
+    }
 }
