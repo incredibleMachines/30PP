@@ -1,7 +1,10 @@
 var 		 fs = require('fs'),
 			PNG = require('pngjs').PNG,
 	PathFinding = require('pathfinding')
-	
+
+//pathfinding matrix creation threshold	
+var threshold = 255;
+
 var matrix;
 var grid;
 exports.ready = false;
@@ -10,8 +13,8 @@ var finder = new PathFinding.AStarFinder();
 
 
 exports.setup =function(cb){
-	//load a black and white jpg image
-	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
+	//load raster  grayscale png convert 
+	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202_raster.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
 	
 		//create an array the size of our image	
 		matrix = new Array(this.height);
@@ -26,7 +29,7 @@ exports.setup =function(cb){
 			for(var j = 0; j<this.width;j++){
 				var idx = (this.width*i+j)<<2
 				//populate our matrix with our grayscale pixel data
-				matrix[i][j] = ( (this.data[idx]+this.data[idx+1]+this.data[idx+2])/3 > 0 )? 1 : 0;
+				matrix[i][j] = ( (this.data[idx]+this.data[idx+1]+this.data[idx+2])/3 < threshold )? 0 : 1;
 				
 			}
 		}
@@ -50,7 +53,9 @@ var nmatrix = [
 ];
 
 //var grid = new PathFinding.Grid(5, 3, matrix);
-
+exports.returnMatrix = function(){
+	return matrix
+}
 exports.returnPath = function(endPoint){
 	//copy grid
 	//make new 
