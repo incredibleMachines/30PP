@@ -16,6 +16,7 @@ function InitMapCanvas(_type, _locs, _cb){
 		canvas.height = matrix.length //202;
 		
 		console.log("30_PP")
+		console.log("116 351")
 		console.log(matrix[116][351])
 	})
 	
