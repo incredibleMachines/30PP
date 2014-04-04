@@ -91,7 +91,7 @@ function InitMapCanvas(_type, _locs, _cb){
 							if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
 								var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 								_cb(thisLoc, clickType);
-								locs.push({"x":parseInt(mousePos.x), "y":parseInt(mousePos.y), "color":locColorOn});
+								locs.push({"x":parseInt(mousePos.x-1), "y":parseInt(mousePos.y-1), "color":locColorOn});
 								if(locs.length>1 && type === 'single'){
 									//console.log("map.js: single locs.shift");
 									locs.shift()

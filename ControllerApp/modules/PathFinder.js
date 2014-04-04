@@ -10,8 +10,8 @@ var grid;
 exports.ready = false;
 
 var finder = new PathFinding.AStarFinder({
-	allowDiagonal: true
-	//dontCrossCorners: false
+	allowDiagonal: true,
+	dontCrossCorners: false
 });
 
 
@@ -65,6 +65,6 @@ exports.returnPath = function(endPoint){
 	//console.log(JSON.stringify(matrix))
 	var newGrid = grid.clone()
 	//need to preset 1,2 to be the location of 30PP
-	console.log(finder.findPath(351,116 , endPoint.x, endPoint.y, grid));
+	return finder.findPath(351,116 , endPoint.x, endPoint.y, newGrid)
 	//cb(path)
 }
