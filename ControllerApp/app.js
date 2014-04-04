@@ -62,7 +62,7 @@ WebSocket.Connect(8080,Database);
  */
  
 PathFinder.setup(function(){
-	//PathFinder.returnPath(null)
+	PathFinder.returnPath(null)
 })
 
 /**
@@ -143,6 +143,11 @@ app.post('/clips/:id',clips.update(Database));
 app.delete('/clips/:id',clips.delete(Database));
 app.post('/clips/:id/delete',clips.delete(Database));
 
+app.get('/location/matrix',function(req,res){
+	
+	res.jsonp(PathFinder.returnMatrix())
+	
+})
 //api handling
 app.get('/api', api.index(Database));
 app.get('/api/control/:ctrl', api.control(WebSocket))
