@@ -32,7 +32,7 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 #import "ofConstants.h"
 #import <Cocoa/Cocoa.h>
@@ -99,10 +99,10 @@ void ofGLReadyCallback();
     CFMutableDictionaryRef dict;
     
     
-
+    
 }
 
-    /***** 30PP *****/
+/***** 30PP *****/
 - (NSDictionary *)pixelBufferAttributes;
 @property (nonatomic, retain)  AVPlayer * player;
 @property (nonatomic, retain)  AVPlayerItem * playerItem;
@@ -127,7 +127,7 @@ void ofGLReadyCallback();
 
 @property (nonatomic, assign, readonly) GLuint textureID;
 
-    /***** 30PP *****/
+/***** 30PP *****/
 
 
 @property (readonly) BOOL useDisplayLink;

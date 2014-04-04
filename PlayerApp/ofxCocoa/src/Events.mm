@@ -14,40 +14,40 @@ MSA::ofxCocoa::Events cocoaEvents;
 
 namespace MSA {
 	namespace ofxCocoa {
-               
+        
         void notifyMouseMovedOutside( int x, int y ){
             static ofMouseEventArgs	mouseEventArgs;
             mouseEventArgs.x = x;
             mouseEventArgs.y = y;
             
-            ofNotifyEvent(cocoaEvents.mouseMovedOutsideEvent, mouseEventArgs); 
+            ofNotifyEvent(cocoaEvents.mouseMovedOutsideEvent, mouseEventArgs);
         }
-
+        
         void notifyMousePressedOutside( int x, int y, int button ){
             static ofMouseEventArgs	mouseEventArgs;
             mouseEventArgs.x = x;
             mouseEventArgs.y = y;
             mouseEventArgs.button = button;
             
-            ofNotifyEvent(cocoaEvents.mousePressedOutsideEvent, mouseEventArgs); 
+            ofNotifyEvent(cocoaEvents.mousePressedOutsideEvent, mouseEventArgs);
         }
-
+        
         void notifyMouseDraggedOutside( int x, int y, int button ){
             static ofMouseEventArgs	mouseEventArgs;
             mouseEventArgs.x = x;
             mouseEventArgs.y = y;
             mouseEventArgs.button = button;
             
-            ofNotifyEvent(cocoaEvents.mouseDraggedOutsideEvent, mouseEventArgs); 
+            ofNotifyEvent(cocoaEvents.mouseDraggedOutsideEvent, mouseEventArgs);
         }
-
+        
         void notifyMouseReleasedOutside( int x, int y, int button ){
             static ofMouseEventArgs	mouseEventArgs;
             mouseEventArgs.x = x;
             mouseEventArgs.y = y;
             mouseEventArgs.button = button;
             
-            ofNotifyEvent(cocoaEvents.mouseReleasedOutsideEvent, mouseEventArgs); 
+            ofNotifyEvent(cocoaEvents.mouseReleasedOutsideEvent, mouseEventArgs);
         }
     }
 };

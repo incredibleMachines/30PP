@@ -32,13 +32,13 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 
 #import <Cocoa/Cocoa.h>
 
 @interface GLWindow : NSWindow <NSWindowDelegate> {
-
+    
 }
 
 -(id) initWithContentRect:(NSRect)windowRect styleMask:(int)styleMask;

@@ -12,19 +12,19 @@
 
 namespace MSA {
 	namespace ofxCocoa {
-
-    class Events {
-    public:
-        ofEvent<ofMouseEventArgs> 	mouseMovedOutsideEvent;
-        ofEvent<ofMouseEventArgs> 	mousePressedOutsideEvent;
-        ofEvent<ofMouseEventArgs> 	mouseDraggedOutsideEvent;
-        ofEvent<ofMouseEventArgs> 	mouseReleasedOutsideEvent;
-    };
-
-    void notifyMouseMovedOutside( int x, int y );
-    void notifyMousePressedOutside( int x, int y, int button );
-    void notifyMouseDraggedOutside( int x, int y, int button );
-    void notifyMouseReleasedOutside( int x, int y, int button );
+        
+        class Events {
+        public:
+            ofEvent<ofMouseEventArgs> 	mouseMovedOutsideEvent;
+            ofEvent<ofMouseEventArgs> 	mousePressedOutsideEvent;
+            ofEvent<ofMouseEventArgs> 	mouseDraggedOutsideEvent;
+            ofEvent<ofMouseEventArgs> 	mouseReleasedOutsideEvent;
+        };
+        
+        void notifyMouseMovedOutside( int x, int y );
+        void notifyMousePressedOutside( int x, int y, int button );
+        void notifyMouseDraggedOutside( int x, int y, int button );
+        void notifyMouseReleasedOutside( int x, int y, int button );
     };
 };
 

@@ -24,8 +24,8 @@ int main()
 	// to go fullscreen across all windows:
 	initSettings.windowStyle			= NSBorderlessWindowMask;
     /* xcdoc://osx//library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSWindow_Class/Reference/Reference.html# */
-
-//	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
+    
+    //	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
     NSLog(@"init width: %f", initSettings.initRect.size.width);
     NSLog(@"init height: %f", initSettings.initRect.size.height);
