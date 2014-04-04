@@ -64,7 +64,7 @@ ul.event{
 	li{
 		position: relative;
 		display: inline;
-		padding: 5px 15px;
+		padding: 0 15px 0 0;
 		font-weight: bold;
 	}
 
@@ -105,7 +105,7 @@ select.location {
 }
 
 .scenes-single .content {
-	padding-top: 20px;
+	/*padding-top: 20px;*/
 }
 
 .panel-heading {
@@ -118,10 +118,6 @@ select.location {
 
 .panel-default {
 		border: none;
-
-		#clip-contents {
-			margin-top: 20px;
-		}
 }
 
 aside header.panel-heading {
@@ -145,6 +141,8 @@ aside header.panel-heading {
 
 
 header.single-event-head {
+	margin-bottom: 20px;
+
 	h3 {
 		margin: 0px;
 		padding-left: 0px; 
@@ -189,12 +187,19 @@ label {
 	border-bottom: none;
 }
 
-li.list-group-item .btn-group-vertical .btn-xs {
-	padding: 3px 7px;
+li.list-group-item .btn-group-vertical {
+
+	padding-left: 20px;
+	margin-top: -10px;
+	padding-bottom: 10px;
+
+	.btn-xs {
+		padding: 3px 7px;
+	}
 }
 
 ul.list-group li.list-group-item {
-	padding: 10px 0;
+	padding: 20px 0 5px 0;
 }
 
 .active {
@@ -207,23 +212,41 @@ ul.list-group li.list-group-item {
 
 .panel-default header.scene-detail-head {
 	background-color: #fff;
-	padding: 10px 0;
+	margin-top: 80px;
+	margin-bottom: 20px;
+
+	h3 {
+		margin: 0;
+	}
 }
 
 
 .zone-single {
 	padding-bottom: 20px;
-
+	margin-bottom: 30px;
+	border-bottom: 1px solid #333;
+	
 	.zone-contents {
-		border-bottom: 1px solid #333;
 		padding-bottom: 10px;
 
 		input {
 			font-size: 18px;
-			font-weight: bold;
 		}
 	}
 }
+
+#zone-data {
+	margin-top: 80px;
+	.btn-xs {
+		padding: 0 6px;
+	}
+}
+
+canvas {
+	border: 1px solid #ccc;
+	margin-top: 10px;
+}
+
 
 /* -------------- FILE LIBRARY --------------*/
 
@@ -318,11 +341,12 @@ ul.list-group li.list-group-item {
 
 .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
 	border-radius: 17px;
-	margin-right: 10px;
+	margin-left: 10px;
 }
 
 .btn-group>.btn:last-child:not(:first-child), .btn-group>.dropdown-toggle:not(:first-child) {
 	border-radius: 17px;
+	margin-left: 10px;
 }
 
 .btn-group-vertical>.btn:last-child:not(:first-child) {
@@ -437,6 +461,24 @@ ul.list-group li.list-group-item {
 	canvas {
 		margin-top: 20px;
 	}
+	.input-group {
+		margin-top: 20px;
+		width: 100%;
+
+		input {
+			width: 70%;
+			float: left;
+		}
+
+		.btn-group {
+			float: right;
+			width: 30%;
+		}
+	}
+}
+
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child>.btn, .input-group-btn:first-child>.dropdown-toggle, .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
+		border-radius: 4px;
 }
 
 .modal-footer {

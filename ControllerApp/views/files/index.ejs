@@ -44,7 +44,7 @@
 		  		files.reverse() //taking out reverse for pagination
 		  	%>
 		  	<% files.forEach(function(_file,i){%>
-		    <li class="list-group-item row">
+		    <li class="list-group-item">
 			    	<ul class="event row" >
 			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
 							<input type="hidden" name="id" value="<%= _file._id%>">

@@ -122,7 +122,7 @@ function SceneController(_clips,_files){
 			case 'multiple':
 			
 				var text  = '<section class="zone-text input-group"><input name="zones['+index+'][text][0]" placeholder="Input Text" class="form-control zone-text"/>'
-					text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text">+</button><button type="button" class="btn remove-zone-text btn">-</button></div>'
+					text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text btn-default green">+</button><button type="button" class="btn remove-zone-text btn btn-default red">-</button></div>'
 					text += '</section>'
 				//set image to be multitext and file to be none
 				$this.closest('.zone-single').find('select.zone-file').val('none')
@@ -363,7 +363,7 @@ function SceneController(_clips,_files){
 						var text = '';
 						for(var i = 0; i<zone.text.length; i++){
 							    text  = '<section class="zone-text input-group"><input name="zones['+index+'][text]["'+i+'"]" value="'+zone.text[i]+'" class="form-control zone-text"/>'
-								text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text">+</button><button type="button" class="btn remove-zone-text btn">-</button></div>'
+								text +=	'<div class="btn-group"><button type="button" class="btn-xs btn-default green btn add-zone-text">+</button><button type="button" class="btn-xs btn remove-zone-text btn btn-default red">-</button></div>'
 								text += '</section>'
 								//console.log(text)
 								$('.zone-single-'+index).find('.zone-text-type').parent().append(text)  
