@@ -17,7 +17,7 @@ public:
 	void draw();
     void exit();
 	void keyPressed  (int key);
-
+    
 	//----------COCOA DRAW SETTING
 	float	lineWidth;
     

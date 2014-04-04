@@ -32,7 +32,7 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 
 #import "GLView.h"
@@ -65,7 +65,7 @@ using namespace ofxCocoa;
 
 //------ DISPLAY LINK STUFF ------
 -(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime {
-
+    
     /***** 30PP *****/
     
     CMTime outputItemTime = [self.playerItemVideoOutput itemTimeForCVTimeStamp:*outputTime];
@@ -100,7 +100,7 @@ using namespace ofxCocoa;
 
 // This is the renderer output callback function
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext){
-	   
+    
     CVReturn result = [(GLView*)displayLinkContext getFrameForTime:outputTime];
     return result;
     
@@ -174,7 +174,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			[self setupDisplayLink];
 		} else {
 			[self setupTimer];
-		}			
+		}
 	}
 }
 
@@ -271,7 +271,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         NSLog(@"      Multisampling supported");
         glEnable(GL_MULTISAMPLE);
 	}
-		
+    
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
 	
 	if (self = [super initWithFrame:frameRect]) {
@@ -279,16 +279,16 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
 		// set surface opacity
 		GLint i = appWindow()->initSettings().isOpaque;
-		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity]; 
+		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity];
 		
 		// enable vertical sync
 		i = 1;
-		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSwapInterval]; 
+		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSwapInterval];
 		
 		// Look for changes in view size
-		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override 
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(reshape) 
+		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(reshape)
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
         
@@ -298,7 +298,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     }
     
     NSLog(@"%s %s", glGetString(GL_RENDERER), glGetString(GL_VERSION));
- 
+    
     ofGLReadyCallback();
 	
 	return self;
@@ -324,7 +324,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewGlobalFrameDidChangeNotification object:self];
 	[super dealloc];
-}	
+}
 
 
 
@@ -341,8 +341,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	if([self respondsToSelector:@selector(isInFullScreenMode)]) {
 		[self enterFullScreenMode:screen
-					  withOptions:[NSDictionary dictionaryWithObjectsAndKeys: 
-								   [NSNumber numberWithBool: NO], NSFullScreenModeAllScreens, 
+					  withOptions:[NSDictionary dictionaryWithObjectsAndKeys:
+								   [NSNumber numberWithBool: NO], NSFullScreenModeAllScreens,
 								   nil]
 		 ];
 		
@@ -400,54 +400,54 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #pragma mark Events
 
 -(void)keyDown:(NSEvent *)theEvent {
-//	NSLog(@"%@", theEvent);
+    //	NSLog(@"%@", theEvent);
     
     if ([theEvent modifierFlags] & NSShiftKeyMask) {
-//        NSLog(@"Shift key pressed");
+        //        NSLog(@"Shift key pressed");
         ofNotifyKeyPressed(OF_KEY_SHIFT);
     }
     else{
-//        NSLog(@"Shift key not pressed");
+        //        NSLog(@"Shift key not pressed");
         ofNotifyKeyReleased(OF_KEY_SHIFT);
     }
     
     if ([theEvent modifierFlags] & NSCommandKeyMask) {
-//        NSLog(@"CMD key pressed");
+        //        NSLog(@"CMD key pressed");
         ofNotifyKeyPressed(OF_KEY_COMMAND);
     }
     else{
-//        NSLog(@"CMD key not pressed");
+        //        NSLog(@"CMD key not pressed");
         ofNotifyKeyReleased(OF_KEY_COMMAND);
     }
-
-        NSString *characters = [theEvent characters];
-        if ([characters length]) {
-            unichar key = [characters characterAtIndex:0];
-//            NSLog(@"key code pressed %hu", key);
-            switch(key) {
-                case OF_KEY_ESC:
-                    OF_EXIT_APP(0);
-                    break;
-                    
-                case 63232:
-                    key = OF_KEY_UP;
-                    break;
+    
+    NSString *characters = [theEvent characters];
+    if ([characters length]) {
+        unichar key = [characters characterAtIndex:0];
+        //            NSLog(@"key code pressed %hu", key);
+        switch(key) {
+            case OF_KEY_ESC:
+                OF_EXIT_APP(0);
+                break;
                 
-                case 63235:
-                    key = OF_KEY_RIGHT;
-                    break;
+            case 63232:
+                key = OF_KEY_UP;
+                break;
                 
-                case 63233:
-                    key = OF_KEY_DOWN;
-                    break;
-
-                case 63234:
-                    key = OF_KEY_LEFT;
-                    break;
+            case 63235:
+                key = OF_KEY_RIGHT;
+                break;
                 
-            }
-            ofNotifyKeyPressed(key);
+            case 63233:
+                key = OF_KEY_DOWN;
+                break;
+                
+            case 63234:
+                key = OF_KEY_LEFT;
+                break;
+                
         }
+        ofNotifyKeyPressed(key);
+    }
 }
 
 -(void)keyUp:(NSEvent *)theEvent {
@@ -545,7 +545,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                     CVReturn err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault, NULL,
                                                               CGLGetCurrentContext(), CGLGetPixelFormat(CGLGetCurrentContext()),
                                                               NULL, &_textureCache);
-
+                    
                     if (err != noErr) {
                         NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
                     }
@@ -575,7 +575,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 -(void) setCaptureExternalMouseEvents:(BOOL)b {
 	captureExternalMouseEvents = b;
 	
-	if (captureExternalMouseEvents){		
+	if (captureExternalMouseEvents){
 		mouseMoveHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent * mouseEvent) {
 			//NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseMoveOutside:mouseEvent];
@@ -584,7 +584,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		// down
 		
 		leftMouseDownHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask handler:^(NSEvent * mouseEvent) {
-//			NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
+            //			NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseDownOutside:mouseEvent];
 		}];
 		
@@ -752,13 +752,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 //------------------------------------------------------------
 -(void)mouseMoveOutside:(NSEvent *)theEvent {
 	ofPoint p = [self ofPointFromOutsideEvent:theEvent];
-	notifyMouseMovedOutside(p.x, p.y); 
+	notifyMouseMovedOutside(p.x, p.y);
 }
 
 //------------------------------------------------------------
 -(void)mouseDownOutside:(NSEvent *)theEvent {
 	ofPoint p = [self ofPointFromOutsideEvent:theEvent];
-	notifyMousePressedOutside(p.x, p.y, 0); 
+	notifyMousePressedOutside(p.x, p.y, 0);
 }
 
 //------------------------------------------------------------

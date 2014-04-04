@@ -32,7 +32,7 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 #pragma once
 
@@ -60,7 +60,7 @@ namespace MSA {
 		
 		NSString*			toNSString(string s);
 		string				fromNSString(NSString *s);
-
+        
 		NSScreen			*screen(int screenIndex);
 		NSScreen			*currentScreen();
 		NSScreen			*mainScreen();

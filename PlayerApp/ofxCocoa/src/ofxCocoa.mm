@@ -32,7 +32,7 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 
 #include "ofxCocoa.h"
@@ -86,7 +86,7 @@ namespace MSA {
 		string fromNSString(NSString *s) {
 			return string([s UTF8String]);
 		}
-
+        
 		
 		NSScreen *screen(int screenIndex) {
 			return [[NSScreen screens] objectAtIndex:screenIndex];
@@ -128,7 +128,7 @@ namespace MSA {
 		NSRect getWindowRect() {
 			return [glView() frame];
 		}
-
+        
 		
 		void goWindow() {
 			[glView() goWindow];
@@ -176,17 +176,17 @@ namespace MSA {
         bool getCaptureExternalMouseEvents(){
             return [glView() getCaptureExternalMouseEvents];
         }
-
+        
 		void setTransparent(bool b) {
 			[glWindow() setOpaque:!b];
 			if(b) {
-//				[glWindow() setBackgroundColor:[NSColor clearColor]]; 
+                //				[glWindow() setBackgroundColor:[NSColor clearColor]];
 				GLint i = 0;
-				[[glView() openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity]; 
+				[[glView() openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity];
 			} else {
-//				[glWindow() setBackgroundColor:[NSColor blackColor]]; 
+                //				[glWindow() setBackgroundColor:[NSColor blackColor]];
 				GLint i = 1;
-				[[glView() openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity]; 
+				[[glView() openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity];
 			}
 			
 		}
@@ -217,7 +217,7 @@ namespace MSA {
         }
         
         /***** 30PP *****/
-
+        
 		
 		
 		

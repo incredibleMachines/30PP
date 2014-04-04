@@ -29,7 +29,7 @@
 #define MESH_DETAIL 1
 
 #define SELECT_MODE_POINTER 0
-#define SELECT_MODE_RADIUS 1
+#define SELECT_MODE_PAINTBRUSH 1
 #define SELECT_MODE_PEN 2
 #define SELECT_MODE_DOUBLE_PEN 3
 
@@ -202,8 +202,8 @@ public:
     ofxUIRadio *currentMode;
     ofxUIButton *wireframeButton;
     ofxUIButton *performanceButton;
-
-
+    
+    
     void setPositionGUI();
     ofxUISuperCanvas *positionGUI;
     ofxUITextInput *positionX;
@@ -228,9 +228,11 @@ public:
     ofxUISuperCanvas *magnetGUI;
     void setMagnetGUI();
     void hideMagnetTypes();
-    void setEaseHeights(bool radiusSpacer, bool pen1, bool pen2);
+    void setEaseHeights(bool radiusSpacer, bool pen1, bool pen2, bool brushRadius);
     ofxUILabel *magnetRadiusLabel;
     ofxUITextInput *magnetRadiusSet;
+    ofxUILabel *brushRadiusLabel;
+    ofxUITextInput *brushRadiusSet;
     ofxUISpacer *magnetRadiusSpacer;
     ofxUIButton *penButton;
     ofxUIButton *doublePenButton;
@@ -245,9 +247,11 @@ public:
     ofxUIRadio *easeBothMethod;
     int easeHeight, easeTypeHeight;
     
+    int brushRadius;
+    
     ofxUISuperCanvas *maskGUI;
     void setMaskGUI();
     ofxUIButton *maskButton;
-
+    
     
 };

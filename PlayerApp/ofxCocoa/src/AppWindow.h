@@ -32,7 +32,7 @@
 /***************
  DEPENDENCIES:
  - NONE
- ***************/ 
+ ***************/
 
 
 
@@ -88,7 +88,7 @@ namespace MSA {
 			
 			// extras
 			void		updateAndDraw();
-
+            
 			void		setWindowMode(int newWindowMode);
 			
 			InitSettings& initSettings();
