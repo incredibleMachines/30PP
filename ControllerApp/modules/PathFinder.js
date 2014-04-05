@@ -10,8 +10,8 @@ var grid;
 exports.ready = false;
 
 var finder = new PathFinding.AStarFinder({
-	allowDiagonal: true,
-	dontCrossCorners: false
+	allowDiagonal: true
+	//,dontCrossCorners: false
 });
 
 

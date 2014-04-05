@@ -298,13 +298,14 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 								if(clip.zones[0].locations){
 									
 									if(clip.zones[0].locations.length>1){
-										if(!currentGroup.data.hasOwnProperty('source_location_multi')) currentGroup.data.source_location_multi = []
+										if(!currentGroup.data.hasOwnProperty('source_multi_location')) currentGroup.data.source_multi_location = []
 
-										currentGroup.data.source_location_multi.push(clip.zones[0].locations)
+										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
 									}else{
-										if(!currentGroup.data.hasOwnProperty('source_location_single')) currentGroup.data.source_location_single = []
+										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										currentGroup.data.source_location_single.push(loc)
+										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										currentGroup.data.source_single_location.push(obj)
 									}
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
@@ -350,13 +351,14 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 								if(clip.zones[0].locations){
 									
 									if(clip.zones[0].locations.length>1){
-										if(!currentGroup.data.hasOwnProperty('source_location_multi')) currentGroup.data.source_location_multi = []
+										if(!currentGroup.data.hasOwnProperty('source_multi_location')) currentGroup.data.source_multi_location = []
 
-										currentGroup.data.source_location_multi.push(clip.zones[0].locations)
+										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
 									}else{
-										if(!currentGroup.data.hasOwnProperty('source_location_single')) currentGroup.data.source_location_single = []
+										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										currentGroup.data.source_location_single.push(loc)
+										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										currentGroup.data.source_single_location.push(obj)
 									}
 									//currentGroup.data.source_location.push(clip.zones[0].locations)
 									/*

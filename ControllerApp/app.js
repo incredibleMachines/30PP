@@ -34,7 +34,6 @@ var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
 
-//AfterEffects.init(function(e){});
 /** 
  *	File Checking 	
  *
@@ -62,6 +61,7 @@ WebSocket.Connect(8080,Database);
  */
  
 PathFinder.setup(function(){
+	//test a path
 	//console.log(PathFinder.returnPath({x:322,y:74})) 
 })
 
@@ -86,7 +86,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({limit:'1000mb',uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
+app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
@@ -113,7 +113,7 @@ app.get('/', events.index(Database));
 //event options
 app.get('/events', events.index(Database));
 
-//migrate to scene object
+//scene object
 app.post('/scenes', scenes.add(Database));
 app.get('/scenes/:slug',scenes.single(Database));
 app.post('/scenes/:slug', scenes.update(Database));
