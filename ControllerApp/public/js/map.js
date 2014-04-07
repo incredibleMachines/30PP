@@ -4,7 +4,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	
 	var canvas = document.getElementById("map");
 	var ctx = canvas.getContext("2d");
-	//make ajax call for matrix
+	// make ajax call for matrix
 	var matrix = null;
 	
 	$.getJSON('/location/matrix',function(data){
@@ -16,12 +16,9 @@ function InitMapCanvas(_type, _locs, _cb){
 		canvas.height = matrix.length //202;
 		
 		console.log("30_PP")
+		console.log("116 351")
 		console.log(matrix[116][351])
 	})
-	
-
-	
-
 	
 	var bgImage = new Image();
 	bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
@@ -31,8 +28,8 @@ function InitMapCanvas(_type, _locs, _cb){
 	var locDiameter = 8; // size of circles
 	var locColorOn = "#0000FF";
 	
-	var selectionId; // index for selecting locations
-	var clickType = 1; // 0=delete  ,  1=add location
+	var selectionId; 	// index for selecting locations
+	var clickType = 1;  // 0=delete  ,  1=add location
 	
 	var debugMsg; //holds debug mouse info
 	
@@ -90,7 +87,7 @@ function InitMapCanvas(_type, _locs, _cb){
 							if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
 								var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 								_cb(thisLoc, clickType);
-								locs.push({"x":parseInt(mousePos.x), "y":parseInt(mousePos.y), "color":locColorOn});
+								locs.push({"x":parseInt(mousePos.x-1), "y":parseInt(mousePos.y-1), "color":locColorOn});
 								if(locs.length>1 && type === 'single'){
 									//console.log("map.js: single locs.shift");
 									locs.shift()

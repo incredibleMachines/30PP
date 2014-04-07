@@ -21,7 +21,7 @@ var files = require('./routes/files');
 var scenes = require('./routes/scenes');
 var clips = require('./routes/clips')
 var api = require('./routes/api');
-var concat = require('./routes/concat'); //*** NEW ***//
+var timeline = require('./routes/timeline'); //*** NEW ***//
 
 /**
  * Custom Modules
@@ -34,7 +34,6 @@ var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
 
-//AfterEffects.init(function(e){});
 /** 
  *	File Checking 	
  *
@@ -62,7 +61,8 @@ WebSocket.Connect(8080,Database);
  */
  
 PathFinder.setup(function(){
-	PathFinder.returnPath(null)
+	//test a path
+	//console.log(PathFinder.returnPath({x:322,y:74})) 
 })
 
 /**
@@ -77,7 +77,7 @@ var app = express();
 //allow our local express files to use underscore
 app.locals._ = require('underscore');
 app.locals.utils = require('./modules/Utils');
-app.locals.EVENT_TYPES = ["Default","Ambient","Gastronomy", "Parks and Leisure"]
+app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Fashion"]
 app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
  
 app.set('port', process.env.PORT || 3000);
@@ -86,7 +86,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({limit:'1000mb',uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
+app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
@@ -113,7 +113,7 @@ app.get('/', events.index(Database));
 //event options
 app.get('/events', events.index(Database));
 
-//migrate to scene object
+//scene object
 app.post('/scenes', scenes.add(Database));
 app.get('/scenes/:slug',scenes.single(Database));
 app.post('/scenes/:slug', scenes.update(Database));
@@ -123,10 +123,10 @@ app.post('/scenes/:slug/delete',scenes.delete(Database))
  
 //render handling
 app.get('/renderqueue', renderer.index(Database));
-app.post('/render',renderer.render(Database,AfterEffects,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
+app.post('/render',renderer.render(Database,AfterEffects,PathFinder,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
 
-//concat page
-app.get('/concat',concat.index(Database));
+//timeline page
+app.get('/timeline',timeline.index(Database));
 
 //asset handling pages
 app.get('/files', files.index(Database));
@@ -149,10 +149,10 @@ app.get('/location/matrix',function(req,res){
 	
 })
 //api handling
-app.get('/api', api.index(Database));
+app.get('/api', api.index(Database,app.locals.EVENT_TYPES));
 app.get('/api/control/:ctrl', api.control(WebSocket))
-app.get('/api/play/ambient',api.sendEvents('ambient',Database,WebSocket))
-app.get('/api/play/sales',api.sendEvents('sales',Database,WebSocket))
+app.get('/api/play/ambient', api.sendEvents('ambient',Database,WebSocket))
+app.get('/api/play/sales', api.sendEvents('sales',Database,WebSocket))
 app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))
 
 
@@ -188,6 +188,22 @@ app.get('/AfterEffects/script/:file',function(req,res){
 		else res.jsonp(500,{error:e})
 	}) 
 })
+
+//create fake content for timeline collection
+app.get('/timeline/make',function(req,res){
+	timeline.make(Database, app.locals.EVENT_TYPES, function (e){
+		if(!e){
+			var timeline = new Array;
+			Database.getAll('timeline',function(__e,_timeline){
+				_timeline.forEach(function(event){ timeline.push(event); })
+				res.jsonp({"timeline":timeline});
+			})
+		}
+		else res.jsonp(500,{error:e})
+	})
+})
+
+//app.get('/timeline/makeTimeline', timeline.makeTimeline(Database, app.locals.EVENT_TYPES));
 
 //implimentation wishlist
 app.get('/PlayerApp/close',function(req,res){res.jsonp(404,null)})

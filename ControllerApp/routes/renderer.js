@@ -29,7 +29,7 @@ exports.index = function(_Database){
 }
 
 //a function to facilitate the render process gathers all data and executes
-exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
+exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SCENE_TYPES){
 	
 	
 	return function(req,res){
@@ -38,7 +38,7 @@ exports.render = function(_Database, _AfterEffects, EVENT_TYPES, SCENE_TYPES){
 		parseRenderQueue(_Database, function(result){
 			//console.log("parseRenderQueue")
 			//console.log(result)
-			formatJSONForAE(result, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
+			formatJSONForAE(result, _PathFinder, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 				
 				//console.log(JSON.stringify(formattedOutput))
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
@@ -184,7 +184,7 @@ function sortRenderQueue(scenes,clips,files,cb){
 //function which takes formatted Scenes and outputs a JSON Array of 
 //formattedScenes is a binding of the MongoDB Scene,Clip and File documents
 //cb
-function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
+function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb){
 	
 	/* Sample JSON for AE Object */
 	/* Referenced From: https://docs.google.com/a/incrediblemachines.net/document/d/12J7cS7iemVJnBjicObgC-fdH1XKCbKJfY2_XMl1dwiA/edit
@@ -297,8 +297,16 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 							
 								if(clip.zones[0].locations){
 									
-									if(!currentGroup.data.hasOwnProperty('source_location')) currentGroup.data.source_location = []
-									currentGroup.data.source_location.push(clip.zones[0].locations)
+									if(clip.zones[0].locations.length>1){
+										if(!currentGroup.data.hasOwnProperty('source_multi_location')) currentGroup.data.source_multi_location = []
+
+										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
+									}else{
+										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
+										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
+										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										currentGroup.data.source_single_location.push(obj)
+									}
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
 										currentGroup.source_location.push(clip.zones[0].locations[i])
@@ -342,8 +350,17 @@ function formatJSONForAE(formattedScenes,EVENT_TYPES,SCENE_TYPES,cb){
 							case 3:
 								if(clip.zones[0].locations){
 									
-									if(!currentGroup.data.hasOwnProperty('source_location')) currentGroup.data.source_location = []
-									currentGroup.data.source_location.push(clip.zones[0].locations)
+									if(clip.zones[0].locations.length>1){
+										if(!currentGroup.data.hasOwnProperty('source_multi_location')) currentGroup.data.source_multi_location = []
+
+										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
+									}else{
+										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
+										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
+										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										currentGroup.data.source_single_location.push(obj)
+									}
+									//currentGroup.data.source_location.push(clip.zones[0].locations)
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
 										currentGroup.source_location.push(clip.zones[0].locations[i])

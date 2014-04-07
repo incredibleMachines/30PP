@@ -28,6 +28,7 @@ exports.MongoConnect = function(){
 		collection.files 	 = database.collection('files');
 		//collection.locations = database.collection('locations');
 		collection.renderqueue = database.collection('renderqueue')
+		collection.timeline	 = database.collection('timeline');
 		
 	})
 }
