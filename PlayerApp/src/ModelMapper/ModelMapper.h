@@ -120,6 +120,7 @@ public:
     //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
     float magnetMap(float distance, float radius);
+    void resetSelected();
     
     void setGUIVisible(bool hide);
     
@@ -191,11 +192,12 @@ public:
     ofxEasingSine easeSine;
     ofxEasingCirc easeCirc;
     
+    
+    //-----------GUI SETTINGS
     void guiEvent(ofxUIEventArgs &e);
     vector<string> adjustModes;
     vector<string> cameraNames;
     vector<string> easeMethods;
-    
     
     ofxUISuperCanvas *mainGUI;
     void setMainGUI();
