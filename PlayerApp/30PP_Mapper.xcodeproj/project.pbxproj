@@ -11,6 +11,10 @@
 		A9DD34891844EC8600A97DC4 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9DD34871844EC8600A97DC4 /* main.mm */; };
 		A9DD348A1844EC8600A97DC4 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9DD34881844EC8600A97DC4 /* testApp.mm */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		D311621518F33DC80066A9B2 /* UV_OUT_gastronomy.mov in Resources */ = {isa = PBXBuildFile; fileRef = D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */; };
+		D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7D18EF14C6001E501E /* 04_04.obj */; };
+		D320BB8018EF14EB001E501E /* 04_04.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7F18EF14EB001E501E /* 04_04.mov */; };
+		D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB8118EF1D23001E501E /* UV_OUT.mov */; };
 		D339C11918CFA0BB008E604C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC418CFA0BA008E604C /* .gitignore */; };
 		D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC518CFA0BA008E604C /* addon_config.mk */; };
 		D339C19418CFA0BB008E604C /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D339C09018CFA0BB008E604C /* jsoncpp.cpp */; };
@@ -199,6 +203,10 @@
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		C1C61C80A74C50ECFCC43958 /* MyUIDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = MyUIDelegate.mm; path = src/MyUIDelegate.mm; sourceTree = SOURCE_ROOT; };
 		C645F5078849E368239AADA3 /* MyUIDelegate.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = MyUIDelegate.h; path = src/MyUIDelegate.h; sourceTree = SOURCE_ROOT; };
+		D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT_gastronomy.mov; sourceTree = "<group>"; };
+		D320BB7D18EF14C6001E501E /* 04_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 04_04.obj; sourceTree = "<group>"; };
+		D320BB7F18EF14EB001E501E /* 04_04.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 04_04.mov; sourceTree = "<group>"; };
+		D320BB8118EF1D23001E501E /* UV_OUT.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT.mov; sourceTree = "<group>"; };
 		D339BFC418CFA0BA008E604C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		D339BFC518CFA0BA008E604C /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		D339C08E18CFA0BB008E604C /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
@@ -1295,6 +1303,10 @@
 		E2A6964C18CE7C9B008D8EF1 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */,
+				D320BB8118EF1D23001E501E /* UV_OUT.mov */,
+				D320BB7F18EF14EB001E501E /* 04_04.mov */,
+				D320BB7D18EF14C6001E501E /* 04_04.obj */,
 				D3CB1D5118DA21B60058D084 /* Big_optimized.obj */,
 				D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */,
 				E2A6965118CE7C9B008D8EF1 /* mesh */,
@@ -1448,7 +1460,10 @@
 				E2A691DA18CE6567008D8EF1 /* aiVector3D.inl in Resources */,
 				D339C1B518CFA0BB008E604C /* README.md in Resources */,
 				D3801D1D18EB00800006C493 /* .gitignore in Resources */,
+				D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */,
 				D33E96C918E07D5100CBB90F /* WithWindow.xib in Resources */,
+				D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */,
+				D311621518F33DC80066A9B2 /* UV_OUT_gastronomy.mov in Resources */,
 				D33E96B318E07D5100CBB90F /* .gitignore in Resources */,
 				E2A691D518CE6567008D8EF1 /* addon_config.mk in Resources */,
 				D33E96C818E07D5100CBB90F /* README.txt in Resources */,
@@ -1465,6 +1480,7 @@
 				D371D53E18E9B9F70085D1B5 /* iconbuilder.icns in Resources */,
 				D3CB1D5218DA21B60058D084 /* Big_optimized.obj in Resources */,
 				D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */,
+				D320BB8018EF14EB001E501E /* 04_04.mov in Resources */,
 				E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */,
 				E2A691D818CE6567008D8EF1 /* aiMatrix3x3.inl in Resources */,
 				D339C1A418CFA0BB008E604C /* zlib.pdb in Resources */,

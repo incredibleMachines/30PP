@@ -307,6 +307,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
+        case 'w':
+            bDrawWireframe=!bDrawWireframe;
+            break;
+            
             //----------TRIGGER ADJUST_MODE_LOCKED
             
         case ' ':
@@ -1595,6 +1599,7 @@ void ModelMapper::setMeshGUI(){
     
     meshGUI->addSpacer();
     meshGUI->addLabelButton("RELOAD MESH", false);
+    meshGUI->addLabelButton("RELOAD SELECTED", false);
     
     meshGUI->setPosition(212, 0);
     meshGUI->autoSizeToFitWidgets();
@@ -1959,6 +1964,11 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         cout<<"Reloaded Model"<<endl;
     }
     
+    else if(name=="RELOAD SELECTED"){
+        cout<<"trriger selected"<<endl;
+        resetSelected();
+    }
+    
     else if(name=="START SELECTION"){
         penPoly.clear();
         bNewPen=true;
@@ -2273,4 +2283,22 @@ void ModelMapper::setGUIVisible(bool hide){
             maskGUI->setVisible(true);
         }
     }
+}
+
+void ModelMapper::resetSelected(){
+    ofxAssimpModelLoader reload;
+    if(meshType==MESH_DETAIL){
+        reload.loadModel(detailMesh);
+    }
+    else if(meshType==MESH_MASS){
+        reload.loadModel(massMesh);
+    }
+    if(moveVertices.size()>0){
+        for(int j=0;j<numMeshes;j++){
+            for(int k=0;k<moveVertices[j].size();k++){
+                cameras[cameraSelect].mesh[j].setVertex(moveVertices[j][k].index,reload.getMesh(whichMeshes[j]).getVertex(moveVertices[j][k].index ));
+            }
+        }
+    }
+    cout<<"Reloaded Selected"<<endl;
 }
