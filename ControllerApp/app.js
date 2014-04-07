@@ -77,7 +77,7 @@ var app = express();
 //allow our local express files to use underscore
 app.locals._ = require('underscore');
 app.locals.utils = require('./modules/Utils');
-app.locals.EVENT_TYPES = ["Default","Ambient","Gastronomy", "Parks and Leisure"]
+app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Fashion"]
 app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
  
 app.set('port', process.env.PORT || 3000);
@@ -149,10 +149,10 @@ app.get('/location/matrix',function(req,res){
 	
 })
 //api handling
-app.get('/api', api.index(Database));
+app.get('/api', api.index(Database,app.locals.EVENT_TYPES));
 app.get('/api/control/:ctrl', api.control(WebSocket))
-app.get('/api/play/ambient',api.sendEvents('ambient',Database,WebSocket))
-app.get('/api/play/sales',api.sendEvents('sales',Database,WebSocket))
+app.get('/api/play/ambient', api.sendEvents('ambient',Database,WebSocket))
+app.get('/api/play/sales', api.sendEvents('sales',Database,WebSocket))
 app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))
 
 

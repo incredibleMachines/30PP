@@ -21,14 +21,29 @@ var utils = require('../modules/Utils');
 	
 */
 
-exports.index = function(_Database){
+exports.index = function(_Database,EVENT_TYPES){
 	return function(req,res){
 		//res.jsonp({success:'success'})
 		var structure = {};
 		structure.sales = {play_all: '/api/play/sales', play_single:[]};
 		structure.ambient = {play_all: '/api/play/ambient', play_single:[]};
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
-		_Database.queryCollection('events',{anim_type:'sales'},function(err,_sales){
+		
+		EVENT_TYPES.forEach(function(type,i){
+			
+			
+			if(type !== "Default" && type !== "Ambient"){
+			
+				//check if type is Ambient or not
+				//for now assumes that all content is sales
+				var temp={}
+				temp[type] = '/api/'+utils.makeSlug(type)
+				structure.sales.play_single.push(temp[type])	
+				
+			}		
+		})
+		res.jsonp(structure)
+		/*_Database.queryCollection('events',{anim_type:'sales'},function(err,_sales){
 			var sales_counter = 0;
 			//console.log(_sales);
 			//if we have sales content continue
@@ -82,12 +97,24 @@ exports.index = function(_Database){
 					}
 				})
 			}
-		})
+		})*/
 	}
 }
 exports.sendEvents = function(_type,_Database,_Websocket){
 	return function(req,res){
 	console.log('sending event')
+	_Websocket.status(function(status){
+							if(status ==true){
+								_Websocket.socket(function(socket){
+									socket.send(JSON.stringify(socketCommand))
+									res.jsonp(socketCommand)
+
+									//res.jsonp({success: 'Sent '+_type+' Event'})
+								})
+							}
+						})
+	//connect to websocket 
+/*
 		_Database.queryCollection('events',{anim_type:_type},function(err,_data){
 			var event_counter =0;
 			_data.forEach(function(_event,i){
@@ -115,6 +142,7 @@ exports.sendEvents = function(_type,_Database,_Websocket){
 				})
 			})
 		})
+*/
 	}	
 }
 
@@ -134,7 +162,7 @@ exports.control = function(_Websocket){
 	
 					})
 				}else{
-					res.jsonp({error:'PlayerApp Not Connected'})
+					res.jsonp({error:'PlayerApp Not Connected', command: control})
 				}
 			})
 		}else{
@@ -148,7 +176,20 @@ exports.control = function(_Websocket){
 exports.sendSingle = function(_Database, _Websocket){
 	return function(req,res){
 		var slug = req.params.slug;
-		_Database.getDocumentBySlug('events',slug,function(e,_event){
+		
+		_Websocket.status(function(status){
+						if(status ==true){
+							_Websocket.socket(function(socket){
+								socket.send(JSON.stringify(socketCommand))
+								res.jsonp(socketCommand)
+
+								//res.jsonp({success: 'Sent '+_type+' Event'})
+							})
+						}
+					})
+		
+		/*
+_Database.getDocumentBySlug('events',slug,function(e,_event){
 			
 			if(!e){
 				_Database.formatScenes(_event._id,_event.scenes,function(_e,_scenes){
@@ -179,6 +220,7 @@ exports.sendSingle = function(_Database, _Websocket){
 			}
 			
 		})
+*/
 		//res.jsonp({success: 'not implimented yet'})
 	}
 }

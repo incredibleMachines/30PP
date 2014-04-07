@@ -4,7 +4,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	
 	var canvas = document.getElementById("map");
 	var ctx = canvas.getContext("2d");
-	//make ajax call for matrix
+	// make ajax call for matrix
 	var matrix = null;
 	
 	$.getJSON('/location/matrix',function(data){
@@ -20,10 +20,6 @@ function InitMapCanvas(_type, _locs, _cb){
 		console.log(matrix[116][351])
 	})
 	
-
-	
-
-	
 	var bgImage = new Image();
 	bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
 	
@@ -32,8 +28,8 @@ function InitMapCanvas(_type, _locs, _cb){
 	var locDiameter = 8; // size of circles
 	var locColorOn = "#0000FF";
 	
-	var selectionId; // index for selecting locations
-	var clickType = 1; // 0=delete  ,  1=add location
+	var selectionId; 	// index for selecting locations
+	var clickType = 1;  // 0=delete  ,  1=add location
 	
 	var debugMsg; //holds debug mouse info
 	
