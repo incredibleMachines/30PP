@@ -21,7 +21,7 @@ var files = require('./routes/files');
 var scenes = require('./routes/scenes');
 var clips = require('./routes/clips')
 var api = require('./routes/api');
-var concat = require('./routes/concat'); //*** NEW ***//
+var timeline = require('./routes/timeline'); //*** NEW ***//
 
 /**
  * Custom Modules
@@ -125,8 +125,8 @@ app.post('/scenes/:slug/delete',scenes.delete(Database))
 app.get('/renderqueue', renderer.index(Database));
 app.post('/render',renderer.render(Database,AfterEffects,PathFinder,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
 
-//concat page
-app.get('/concat',concat.index(Database));
+//timeline page
+app.get('/timeline',timeline.index(Database));
 
 //asset handling pages
 app.get('/files', files.index(Database));
@@ -188,6 +188,22 @@ app.get('/AfterEffects/script/:file',function(req,res){
 		else res.jsonp(500,{error:e})
 	}) 
 })
+
+//create fake content for timeline collection
+app.get('/timeline/make',function(req,res){
+	timeline.make(Database, app.locals.EVENT_TYPES, function (e){
+		if(!e){
+			var timeline = new Array;
+			Database.getAll('timeline',function(__e,_timeline){
+				_timeline.forEach(function(event){ timeline.push(event); })
+				res.jsonp({"timeline":timeline});
+			})
+		}
+		else res.jsonp(500,{error:e})
+	})
+})
+
+//app.get('/timeline/makeTimeline', timeline.makeTimeline(Database, app.locals.EVENT_TYPES));
 
 //implimentation wishlist
 app.get('/PlayerApp/close',function(req,res){res.jsonp(404,null)})
