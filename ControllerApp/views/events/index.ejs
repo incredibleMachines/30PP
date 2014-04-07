@@ -23,7 +23,7 @@
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% scenes.forEach(function(scene,i){ %>
-		    <li class="list-group-item row">
+		    <li class="list-group-item">
 			    	<ul class="event row" data-id="<%= scene._id %>" >
 			    		<form class="event <%=scene.slug%>" method="post" action="/scenes/<%=scene.slug%>">
 							<li class="col-md-1">

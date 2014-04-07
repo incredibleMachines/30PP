@@ -73,7 +73,7 @@ ul.event {
 ul.event li {
   position: relative;
   display: inline;
-  padding: 5px 15px;
+  padding: 0 15px 0 0;
   font-weight: bold;
 }
 ul.event li.scene-num {
@@ -102,7 +102,7 @@ select.location {
   font-weight: bold;
 }
 .scenes-single .content {
-  padding-top: 20px;
+  /*padding-top: 20px;*/
 }
 .panel-heading {
   padding: 5px 0;
@@ -110,11 +110,20 @@ select.location {
 .panel-heading button {
   float: right;
 }
+.files-index .panel-heading {
+  padding: 5px 0 5px 20px;
+}
+.renderqueue-index .panel-heading {
+  padding: 5px 0 5px 20px;
+}
+.files-index .list-group {
+  padding-left: 20px;
+}
+.renderqueue-index .list-group-item {
+  padding-left: 20px;
+}
 .panel-default {
   border: none;
-}
-.panel-default #clip-contents {
-  margin-top: 20px;
 }
 aside header.panel-heading {
   padding: 10px 20px;
@@ -130,6 +139,9 @@ aside header.panel-heading {
 #scene-data .btn-group button {
   width: 40%;
   clear: both;
+}
+header.single-event-head {
+  margin-bottom: 20px;
 }
 header.single-event-head h3 {
   margin: 0px;
@@ -164,11 +176,19 @@ label {
 .asset-single:last-child {
   border-bottom: none;
 }
+li.list-group-item .btn-group-vertical {
+  padding-left: 20px;
+  margin-top: -10px;
+  padding-bottom: 10px;
+}
 li.list-group-item .btn-group-vertical .btn-xs {
   padding: 3px 7px;
 }
 ul.list-group li.list-group-item {
-  padding: 10px 0;
+  padding: 20px 0 5px 20px;
+}
+.events-index ul.list-group li.list-group-item {
+  padding: 20px 0 5px 0px;
 }
 .active {
   background-color: #f5f5f5;
@@ -178,18 +198,32 @@ ul.list-group li.list-group-item {
 }
 .panel-default header.scene-detail-head {
   background-color: #fff;
-  padding: 10px 0;
+  margin-top: 80px;
+  margin-bottom: 20px;
+}
+.panel-default header.scene-detail-head h3 {
+  margin: 0;
 }
 .zone-single {
   padding-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #333;
 }
 .zone-single .zone-contents {
-  border-bottom: 1px solid #333;
   padding-bottom: 10px;
 }
 .zone-single .zone-contents input {
   font-size: 18px;
-  font-weight: bold;
+}
+#zone-data {
+  margin-top: 80px;
+}
+#zone-data .btn-xs {
+  padding: 0 6px;
+}
+canvas {
+  border: 1px solid #ccc;
+  margin-top: 10px;
 }
 /* -------------- FILE LIBRARY --------------*/
 .event .file-title input,
@@ -208,7 +242,7 @@ ul.list-group li.list-group-item {
 }
 .asset-scene-list {
   width: 100%;
-  min-height: 140px;
+  min-height: 80px;
   overflow-y: scroll;
   border: 1px solid #ccc;
 }
@@ -264,11 +298,12 @@ ul.list-group li.list-group-item {
 }
 .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
   border-radius: 17px;
-  margin-right: 10px;
+  margin-left: 10px;
 }
 .btn-group > .btn:last-child:not(:first-child),
 .btn-group > .dropdown-toggle:not(:first-child) {
   border-radius: 17px;
+  margin-left: 10px;
 }
 .btn-group-vertical > .btn:last-child:not(:first-child) {
   border-bottom-left-radius: 17px;
@@ -381,6 +416,25 @@ fieldset[disabled] .btn-default.active .caret {
 }
 .form-group canvas {
   margin-top: 20px;
+}
+.form-group .input-group {
+  margin-top: 20px;
+  width: 100%;
+}
+.form-group .input-group input {
+  width: 70%;
+  float: left;
+}
+.form-group .input-group .btn-group {
+  float: right;
+  width: 30%;
+}
+.input-group .form-control:first-child,
+.input-group-addon:first-child,
+.input-group-btn:first-child > .btn,
+.input-group-btn:first-child > .dropdown-toggle,
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-radius: 4px;
 }
 .modal-footer {
   clear: both;
