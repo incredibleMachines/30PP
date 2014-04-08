@@ -130,6 +130,8 @@
 		D3801EB018EB02310006C493 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3801EAB18EB02310006C493 /* ofxXmlSettings.cpp */; };
 		D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */; };
 		D3CB1D5218DA21B60058D084 /* Big_optimized.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3CB1D5118DA21B60058D084 /* Big_optimized.obj */; };
+		E20462FE18F44E6D00F41A74 /* EventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E20462F918F44E6D00F41A74 /* EventHandler.cpp */; };
+		E20462FF18F44E6D00F41A74 /* SocketHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E20462FC18F44E6D00F41A74 /* SocketHandler.cpp */; };
 		E2A6919C18CE6328008D8EF1 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919818CE6328008D8EF1 /* Camera.cpp */; };
 		E2A6919D18CE6328008D8EF1 /* ModelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2A6919A18CE6328008D8EF1 /* ModelMapper.cpp */; };
 		E2A691D518CE6567008D8EF1 /* addon_config.mk in Resources */ = {isa = PBXBuildFile; fileRef = E2A6919F18CE6567008D8EF1 /* addon_config.mk */; };
@@ -469,6 +471,11 @@
 		D3801EAC18EB02310006C493 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Shape Test_01.obj"; sourceTree = "<group>"; };
 		D3CB1D5118DA21B60058D084 /* Big_optimized.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Big_optimized.obj; sourceTree = "<group>"; };
+		E20462F918F44E6D00F41A74 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandler.cpp; path = Handlers/EventHandler.cpp; sourceTree = "<group>"; };
+		E20462FA18F44E6D00F41A74 /* EventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventHandler.h; path = Handlers/EventHandler.h; sourceTree = "<group>"; };
+		E20462FB18F44E6D00F41A74 /* EventTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventTypes.h; path = Handlers/EventTypes.h; sourceTree = "<group>"; };
+		E20462FC18F44E6D00F41A74 /* SocketHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SocketHandler.cpp; path = Handlers/SocketHandler.cpp; sourceTree = "<group>"; };
+		E20462FD18F44E6D00F41A74 /* SocketHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SocketHandler.h; path = Handlers/SocketHandler.h; sourceTree = "<group>"; };
 		E2A6919818CE6328008D8EF1 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		E2A6919918CE6328008D8EF1 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		E2A6919A18CE6328008D8EF1 /* ModelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelMapper.cpp; sourceTree = "<group>"; };
@@ -1178,6 +1185,18 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		E20462F418F43EAA00F41A74 /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				E20462F918F44E6D00F41A74 /* EventHandler.cpp */,
+				E20462FA18F44E6D00F41A74 /* EventHandler.h */,
+				E20462FB18F44E6D00F41A74 /* EventTypes.h */,
+				E20462FC18F44E6D00F41A74 /* SocketHandler.cpp */,
+				E20462FD18F44E6D00F41A74 /* SocketHandler.h */,
+			);
+			name = Handlers;
+			sourceTree = "<group>";
+		};
 		E2A6919718CE6328008D8EF1 /* ModelMapper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1368,6 +1387,7 @@
 				A9DD34881844EC8600A97DC4 /* testApp.mm */,
 				C645F5078849E368239AADA3 /* MyUIDelegate.h */,
 				C1C61C80A74C50ECFCC43958 /* MyUIDelegate.mm */,
+				E20462F418F43EAA00F41A74 /* Handlers */,
 				E2A6919718CE6328008D8EF1 /* ModelMapper */,
 			);
 			path = src;
@@ -1537,9 +1557,11 @@
 				D3801E4518EB00800006C493 /* ofxUI2DGraph.cpp in Sources */,
 				D339C1A518CFA0BB008E604C /* websockets.exp in Sources */,
 				D3801E6418EB00800006C493 /* ofxUISortableList.cpp in Sources */,
+				E20462FE18F44E6D00F41A74 /* EventHandler.cpp in Sources */,
 				D3801E6118EB00800006C493 /* ofxUIRotarySlider.cpp in Sources */,
 				D33E96CF18E07D5100CBB90F /* GLWindow.mm in Sources */,
 				D339C1A918CFA0BB008E604C /* Client.cpp in Sources */,
+				E20462FF18F44E6D00F41A74 /* SocketHandler.cpp in Sources */,
 				D3801EAE18EB02310006C493 /* tinyxmlerror.cpp in Sources */,
 				D339C1AB18CFA0BB008E604C /* Events.cpp in Sources */,
 				D3801E6318EB00800006C493 /* ofxUISlider.cpp in Sources */,

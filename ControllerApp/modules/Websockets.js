@@ -78,13 +78,16 @@ function sendPlayerInit(){
 	
 	//console.log('Prepparing Init');
 	_Database.formatInit(function(e,_events){
-		if(!e) var resp = {command: 'init', events: _events};
+		if(!e) var resp = {
+			command: 'init', 
+			movie_file: 'data/file/path',
+			events:_events
+		};
 		else  var resp = {'command':'error', 'error': 'Database Error: '+JSON.stringify(e)};
 		
 		console.log(JSON.stringify(resp));
 		_socket.send(JSON.stringify(resp));
 		
 	});
-	
 }
 
