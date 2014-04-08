@@ -18,7 +18,7 @@ exports.index = function(_Database){
 	 	var title = utils.reverseSlug(type)
 	 	//query scenes by event type 
 	 	
-	 	_Database.queryCollectionWithOptions('files', {type: type}, {sort: 'order'}, function(e,_files){
+	 	_Database.queryCollectionWithOptions('timeline', {}, {sort: 'concat_queue'}, function(e,_files){
 			if(!e){ 
 				_Database.getAll('clips',function(__e,_clips){
 					if(!__e){
@@ -26,10 +26,10 @@ exports.index = function(_Database){
 							if(!___e){
 								var _queue = _.where(_clips,{render: true})
 								console.log("_queue: "+_queue);
-								res.render('renderqueue/timeline', { current:req.url, title:'Concat', page_slug:'renderqueue-timeline', 
+								res.render('renderqueue/timeline', { current:req.url, title:'Timeline', page_slug:'renderqueue-timeline', 
 								files:_files, clips:_clips, queue:_queue, scenes:_scenes, error:null });
 							}else{
-								res.render('renderqueue/timeline',{current: req.url, title: 'Concat', page_slug:'renderqueue-timeline', 
+								res.render('renderqueue/timeline',{current: req.url, title: 'Timeline', page_slug:'renderqueue-timeline', 
 								file:_files,clips:_clips, scenes:null, queue:null, error:'Return Scenes Error' });	
 							} 			
 						})
@@ -73,7 +73,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 						thisTimelineEvent.scenes.push(scene);
 					})
 				}
-				thisTimelineEvent.start_time = startTime; //TODO: add up all previous event durations
+				thisTimelineEvent.start_time = startTime;
 				thisTimelineEvent.concat_queue = i;
 				startTime += parseInt(thisTimelineEvent.duration);
 				
