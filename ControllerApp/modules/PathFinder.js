@@ -64,7 +64,18 @@ exports.returnPath = function(endPoint){
 	//make new 
 	//console.log(JSON.stringify(matrix))
 	var newGrid = grid.clone()
+	var compressGrid = grid.clone()
 	//need to preset 1,2 to be the location of 30PP
-	return finder.findPath(351,116 , endPoint.x, endPoint.y, newGrid)
+	
+	
+	//return finder.findPath(351,116 , endPoint.x, endPoint.y, newGrid)
 	//cb(path)
+	var empty = []
+	var tempFinder = finder.findPath(351,116,endPoint.x,endPoint.y,newGrid)
+	if(tempFinder.length>0){
+	//attempt to smooth path
+	return PathFinding.Util.smoothenPath(compressGrid,tempFinder)
+	}else{
+		return empty
+	}
 }
