@@ -175,28 +175,37 @@ function formatScenes(_scene_id,_clips,_cb){
 //async function which parses all events and assets and reorders them and sends them back to the socket
 //_cb=callback(err,_events[])
 exports.formatInit=function(_cb){
-	collection.events.find().toArray(function(e,_events){
+	collection.timeline.find().toArray(function(e,_events){
 		if(!e){
 			if(_events.length>0){
 				var events_counter = 0;
+				var eventsToSend = []
 				_events.forEach(function(event,i){
+						var thisEvent = {};
+						thisEvent.title= event.title;
+						thisEvent.duration= event.duration;
+						thisEvent.start_time= event.start_time;
+						
+						eventsToSend.push(thisEvent);
+						
+						
 					//console.log(i+' :: '+JSON.stringify(event))
-					if(event.scenes.length>0){
+					/*if(event.scenes.length>0){
 						formatScenes(event._id,event.scenes,function(_err,_scenes){
 							_events[i].scenes=_scenes;
 							events_counter++;
 							if(events_counter==_events.length) _cb(null,_events)
 						})
 					}else{ //no assets
-						   //console.log('EVENTS['+i+'] Contains No Assets');
-						   events_counter++;
-						   if(events_counter==_events.length){
-					   		//edge case - our last event doesn't have any assets
-					   		 _cb(null,_events); 
-						   }
-					}
-					
+						//console.log('EVENTS['+i+'] Contains No Assets');
+					   events_counter++;
+					   if(events_counter==_events.length){
+				   		//edge case - our last event doesn't have any assets
+				   		 _cb(null,_events); 
+					   }
+					}*/
 				})
+				_cb(null, eventsToSend);
 			}else{//if(_events>0)
 				//console.error('No Events');
 				_cb({'error':'No Events Loaded into Database'});
