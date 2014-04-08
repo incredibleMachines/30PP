@@ -113,39 +113,17 @@ exports.sendEvents = function(_type,_Database,_Websocket){
 								})
 							}
 						})
-	//connect to websocket 
-/*
-		_Database.queryCollection('events',{anim_type:_type},function(err,_data){
-			var event_counter =0;
-			_data.forEach(function(_event,i){
-				_Database.formatScenes(_event._id,_event.scenes,function(_err,_scenes){
-					_data[i].scenes = _scenes;
-					event_counter++;
-					if(event_counter == _data.length) {
-						var socketCommand = {command: _type, events:_data}
-						//currently responds on the frontend for debugging only. 
-						//This should send the message to the websocket and then confirm success to api
-						_Websocket.status(function(status){
-							if(status ==true){
-								_Websocket.socket(function(socket){
-									socket.send(JSON.stringify(socketCommand))
-									res.jsonp(socketCommand)
-
-									//res.jsonp({success: 'Sent '+_type+' Event'})
-								})
-							}else{
-								res.jsonp({error:'PlayerApp Not Connected'})	
-							}
-							
-						})
-					}
-				})
-			})
-		})
-*/
 	}	
 }
 
+/*
+Control Commands:
+
+	/api/control/pause
+	/api/control/resume
+	/api/control/end
+
+*/
 exports.control = function(_Websocket){
 	return function(req,res){
 		//get control from url parameter
@@ -168,59 +146,51 @@ exports.control = function(_Websocket){
 		}else{
 			res.jsonp({error:'Command Not Recognized: '+control})
 		}
-		
 	}
 }
 
 
-exports.sendSingle = function(_Database, _Websocket){
-	return function(req,res){
-		var slug = req.params.slug;
-		
-		_Websocket.status(function(status){
-						if(status ==true){
-							_Websocket.socket(function(socket){
-								socket.send(JSON.stringify(socketCommand))
-								res.jsonp(socketCommand)
 
-								//res.jsonp({success: 'Sent '+_type+' Event'})
-							})
-						}
-					})
-		
-		/*
-_Database.getDocumentBySlug('events',slug,function(e,_event){
-			
-			if(!e){
-				_Database.formatScenes(_event._id,_event.scenes,function(_e,_scenes){
-					if(!_e){ 
-						_event.scenes = _scenes;
-						var socketCommand = {command: _event.anim_type+'-single', events:[_event]}
-						//currently responds on the frontend for debugging only. 
-						//This should send the message to the websocket and then confirm success to api
-						_Websocket.status(function(status){
-							if(status ==true){
-								_Websocket.socket(function(socket){
-									socket.send(JSON.stringify(socketCommand))
-									res.jsonp(socketCommand)
-									//res.jsonp({success: 'Sent '+_type+' Event '+_event.title})
-								})
-							}else{
-								res.jsonp({error:'PlayerApp Not Connected'})	
-							}
-							
-						})
-							
-					}else{
-						console.error("Format Scenes Error: "+_e)
-					}
-				})
-			}else{
-				console.error("Get Document By Slug Error: "+e)
-			}
-			
-		})
+
+/* play single event --
+	ex:
+	/api/play/gastronomy
+	/api/play/parks-and-leisure
+	/api/play/default
+
 */
-		//res.jsonp({success: 'not implimented yet'})
+exports.sendSingle = function(_Database, _Websocket){
+
+	return function(req,res){
+		console.log("send single");
+		console.log("req: "+req);
+		var slug = req.params.slug;
+		console.log("slug: "+slug);		
+		
+		_Database.getDocumentBySlug('timeline',slug, function(e, _event){
+		
+			var socketCommand = 
+			{
+			"command": "play",
+			"event": {
+				"title": _event.title,å
+				"duration": _event.duration,
+				"start_time": _event.start_time	
+				}
+			};
+		
+			console.log("socketCommand: "+JSON.stringify(socketCommand));
+			
+			_Websocket.status(function(status){
+				if(status ==true){
+					_Websocket.socket(function(socket){
+						socket.send(JSON.stringify(socketCommand))
+						res.jsonp({success: {socketCommand: socketCommand}});
+					})
+				}else{
+					res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+				}
+			})			
+		})
 	}
 }
