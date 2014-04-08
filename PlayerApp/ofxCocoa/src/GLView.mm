@@ -318,12 +318,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 -(void)dealloc {
 	[self stopAnimation];
 	
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.player currentItem]];
+    
     CVOpenGLTextureRelease(_latestTextureFrame);
+    CVOpenGLTextureCacheFlush(_textureCache, 0);
 	[openGLContext release];
 	[pixelFormat release];
-	
+    [_player pause];
+    [_player release];
+    
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewGlobalFrameDidChangeNotification object:self];
-	[super dealloc];
+
+    [super dealloc];
 }
 
 

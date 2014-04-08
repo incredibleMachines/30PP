@@ -536,7 +536,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
         if(selectMode==SELECT_MODE_PEN||selectMode==SELECT_MODE_DOUBLE_PEN){
             if(bDrawingPen==true){
                 if(ofGetElapsedTimeMillis()-mouseTimer>250){
-                    cout<<"SINGLE"<<endl;
+                    cout<<ofGetElapsedTimeMillis()-mouseTimer<<endl;;
                     mouseTimer=ofGetElapsedTimeMillis();
                     if(bNewPen==true){
                         penPoly.addVertex(mouse);
@@ -606,6 +606,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                     }
                     penPoly.clear();
                     penButton->setColorFill(OFX_UI_COLOR_BACK);
+                    calculateMagnetPoints();
                 }
             }
         }
@@ -829,7 +830,9 @@ void ModelMapper::mouseReleased(ofMouseEventArgs& args){
     if(bMouseDown==true){
         bMouseDown=false;
         if(adjustMode==ADJUST_MODE_MESH){
-            calculateMagnetPoints();
+            if(selectMode==SELECT_MODE_POINTER||selectMode==SELECT_MODE_PAINTBRUSH){
+                calculateMagnetPoints();
+            }
         }
     }
 }
