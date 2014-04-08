@@ -7,6 +7,7 @@
 //
 
 /*
+ 
  ModelMapper class. This class loads meshes into user-defined number of cameras. Each camera's position and orientation can be set individually, as can all vertices on each cameras meshes. Masks can be added to each camera. All gui text drawn in this class.
  
  methods
@@ -20,6 +21,7 @@
  - drawMasks() draw ofPath for all masks
  - saveCameras() save camera data to JSON settings file and mesh data to ply files
  -setReloadMesh(string) pass in filepath to dae or obj file for reset mesh
+ 
  */
 
 #include "ModelMapper.h"
@@ -352,7 +354,7 @@ void ModelMapper::keyReleased(ofKeyEventArgs& args){
 
 void ModelMapper::mouseDragged(ofMouseEventArgs& args){
     
-        mouse=ofVec2f(args.x,args.y);
+    mouse=ofVec2f(args.x,args.y);
     
     //----------SELECT MESH ADJUSTMENT POINTS
     
@@ -534,6 +536,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     if(adjustMode==ADJUST_MODE_MESH){
         
         if(selectMode==SELECT_MODE_PEN||selectMode==SELECT_MODE_DOUBLE_PEN){
+            
             if(bDrawingPen==true){
                 if(ofGetElapsedTimeMillis()-mouseTimer>250){
                     cout<<ofGetElapsedTimeMillis()-mouseTimer<<endl;;
@@ -603,10 +606,88 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                             moveVertices.push_back(tempVector);
                             tempVector.clear();
                         }
+                        penPoly.clear();
+                        penButton->setColorFill(OFX_UI_COLOR_BACK);
+                        calculateMagnetPoints();
                     }
-                    penPoly.clear();
-                    penButton->setColorFill(OFX_UI_COLOR_BACK);
-                    calculateMagnetPoints();
+                }
+            }
+            
+            if (selectMode==SELECT_MODE_DOUBLE_PEN){
+                if(bDrawingDouble==true){
+                    if(ofGetElapsedTimeMillis()-mouseTimer>250){
+                        mouseTimer=ofGetElapsedTimeMillis();
+                        if(bNewDouble==true){
+                            doublePoly.addVertex(mouse);
+                            bNewDouble=false;
+                        }
+                        else{
+                            doublePoly.lineTo(mouse);
+                        }
+                    }
+                    
+                    //double-click to finish mask
+                    else{
+                        cout<<"DOUBLE"<<endl;
+                        if(bNewDouble==true){
+                            bNewDouble=false;
+                            doublePoly.clear();
+                            bDrawingDouble=false;
+                        }
+                        
+                        else{
+                            doublePoly.close();
+                            bDrawingDouble=false;
+                            
+                            tempDoubleVertices=doubleVertices;
+                            doubleVertices.clear();
+                            
+                            for(int i=0;i<numMeshes;i++)
+                            {
+                                vector<meshVertex> tempVector;
+                                
+                                //determine vertices inside drag box on gui camera screen
+                                for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
+                                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                                    if(doublePoly.inside(cur)) {
+                                        meshVertex tempVert;
+                                        tempVert.vertex=cur;
+                                        tempVert.index=j;
+                                        bool included=false;
+                                        if(tempDoubleVertices.size()>0){
+                                            for(int k=0;k<tempDoubleVertices[i].size();k++){
+                                                if(tempDoubleVertices[i][k].index==tempVert.index){
+                                                    included=true;
+                                                    if(bShiftPressed==true){
+                                                        tempDoubleVertices[i].erase(tempDoubleVertices[i].begin()+k);
+                                                    }
+                                                }
+                                            }
+                                            if(bShiftPressed==false&&included==false){
+                                                tempVector.push_back(tempVert);
+                                            }
+                                        }
+                                        else if(bShiftPressed==false){
+                                            tempVector.push_back(tempVert);
+                                        }
+                                    }
+                                }
+                                
+                                //push stored points into vector (to enable shift select command)
+                                if(tempDoubleVertices.size()>0){
+                                    for(int j=0;j < tempDoubleVertices[i].size();j++){
+                                        tempVector.push_back(tempDoubleVertices[i][j]);
+                                    }
+                                }
+                                
+                                doubleVertices.push_back(tempVector);
+                                tempVector.clear();
+                            }
+                        }
+                        doublePoly.clear();
+                        doublePenButton->setColorFill(OFX_UI_COLOR_BACK);
+                        calculateMagnetPoints();
+                    }
                 }
             }
         }
@@ -824,6 +905,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
     mouse=ofVec2f(args.x,args.y);
 }
 
+
 //--------------------------------------------------------------
 void ModelMapper::mouseReleased(ofMouseEventArgs& args){
     //reset drag box status
@@ -939,8 +1021,8 @@ void ModelMapper:: saveCameras() {
     
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
-		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
-	}
+        cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
+    }
     else {
         Json::StyledWriter writer;
         file << writer.write(settings) << endl;
@@ -997,8 +1079,8 @@ void ModelMapper:: saveCamera() {
     
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
-		cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << "."<<endl;
-	}
+        cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << "."<<endl;
+    }
     else {
         Json::StyledWriter writer;
         file << writer.write(settings) << endl;
@@ -1061,9 +1143,9 @@ void ModelMapper::drawHighlights() {
     }
     
     if(adjustMode==ADJUST_MODE_MESH){
-        if(selectMode==SELECT_MODE_PEN){
+        if(selectMode==SELECT_MODE_PEN||selectMode==SELECT_MODE_DOUBLE_PEN){
             if(bShiftPressed==true){
-                ofSetColor(255);
+                ofSetColor(0);
             }
             else{
                 ofSetColor(255,0,0);
@@ -1072,6 +1154,19 @@ void ModelMapper::drawHighlights() {
             penPoly.draw();
             ofSetColor(255);
         }
+        
+        if(selectMode==SELECT_MODE_DOUBLE_PEN){
+            if(bShiftPressed==true){
+                ofSetColor(0);
+            }
+            else{
+                ofSetColor(255);
+            }
+            ofSetLineWidth(1);
+            doublePoly.draw();
+            ofSetColor(255);
+        }
+        
         
         //----------DRAW NEAREST VERTEX
         
@@ -1153,7 +1248,7 @@ void ModelMapper::drawHighlights() {
                 }
             }
             
-
+            
         }
     }
     
@@ -1207,7 +1302,7 @@ void ModelMapper::drawHighlights() {
     }
     
     //reset line width
-	ofSetLineWidth(1);
+    ofSetLineWidth(1);
 }
 
 void ModelMapper::drawMasks(){
@@ -1357,64 +1452,68 @@ void ModelMapper::calculateMagnetPoints(){
     cout<<"CALCULATE MAGNET POINTS"<<endl;
     magnetVertices.clear();
     
-    for(int i=0;i<moveVertices.size();i++){
-        
-        vector<meshVertex> tempVector;
-        
-        for(int j=0;j<moveVertices[i].size();j++){
+    if(selectMode!=SELECT_MODE_DOUBLE_PEN){
+        for(int i=0;i<moveVertices.size();i++){
             
-            int n = cameras[guiCam].mesh[i].getNumVertices();
+            vector<meshVertex> tempVector;
             
-            //parse through all vertices to determine nearest, if exists
-            for(int k = 0; k < n; k++) {
+            for(int j=0;j<moveVertices[i].size();j++){
                 
-                ofVec3f check = cameras[guiCam].mesh[i].getVertex(k);
-                ofVec3f cur=cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index);
+                int n = cameras[guiCam].mesh[i].getNumVertices();
                 
-                float distance = abs(check.distance(cur));
-                float maxDist = 0;
-                
-                if (distance<magnetRadius&&distance!=0){
-                    meshVertex tempVert;
-                    bool duplicate=false;
-                    bool selected=false;
+                //parse through all vertices to determine nearest, if exists
+                for(int k = 0; k < n; k++) {
                     
-                    for(int l=0;l<moveVertices[i].size();l++){
-                        if(moveVertices[i][l].index==k){
-                            selected=true;
-                            //break;
-                        }
-                    }
+                    ofVec3f check = cameras[guiCam].mesh[i].getVertex(k);
+                    ofVec3f cur=cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index);
                     
-                    if(selected==false){
-                        for(int l=0;l<tempVector.size();l++){
-                            if(tempVector[l].index==k){
-                                duplicate=true;
-                                if(distance<tempVector[l].distance){
-                                    tempVector[l].distance=distance;
-                                    if(selectMode!=SELECT_MODE_DOUBLE_PEN){
-                                        tempVector[l].modifier=magnetMap(distance, magnetRadius);
-                                    }
-                                }
+                    float distance = abs(check.distance(cur));
+                    float maxDist = 0;
+                    
+                    if (distance<magnetRadius&&distance!=0){
+                        meshVertex tempVert;
+                        bool duplicate=false;
+                        bool selected=false;
+                        
+                        for(int l=0;l<moveVertices[i].size();l++){
+                            if(moveVertices[i][l].index==k){
+                                selected=true;
                                 //break;
                             }
                         }
-                    }
-                    
-                    if(duplicate==false&&selected==false){
-                        tempVert.vertex=cur;
-                        tempVert.index=k;
-                        tempVert.distance=distance;
-                        if(selectMode!=SELECT_MODE_DOUBLE_PEN){
-                            tempVert.modifier=magnetMap(distance, magnetRadius);
+                        
+                        if(selected==false){
+                            for(int l=0;l<tempVector.size();l++){
+                                if(tempVector[l].index==k){
+                                    duplicate=true;
+                                    if(distance<tempVector[l].distance){
+                                        tempVector[l].distance=distance;
+                                        tempVector[l].modifier=magnetMap(distance, magnetRadius);
+                                    }
+                                    //break;
+                                }
+                            }
                         }
-                        tempVector.push_back(tempVert);
+                        
+                        if(duplicate==false&&selected==false){
+                            tempVert.vertex=cur;
+                            tempVert.index=k;
+                            tempVert.distance=distance;
+                            tempVert.modifier=magnetMap(distance, magnetRadius);
+                            tempVector.push_back(tempVert);
+                        }
                     }
                 }
             }
+            magnetVertices.push_back(tempVector);
+            tempVector.clear();
         }
-        magnetVertices.push_back(tempVector);
-        tempVector.clear();
+    }
+    
+    else if (selectMode==SELECT_MODE_DOUBLE_PEN){
+        for(int i=0;i<doubleVertices.size();i++){
+            
+        }
     }
 }
 
@@ -1461,14 +1560,14 @@ void ModelMapper::setMainGUI(){
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
-	mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
+    mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
     
     mainGUI->addSpacer();
-	mainGUI->addToggle("Adjust GUI Separately", false);
+    mainGUI->addToggle("Adjust GUI Separately", false);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Adjust:",OFX_UI_FONT_MEDIUM);
-	currentMode=mainGUI->addRadio("CHANGE MODE", adjustModes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
+    currentMode=mainGUI->addRadio("CHANGE MODE", adjustModes, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
     currentMode->activateToggle("Camera Position");
     
     mainGUI->addSpacer();
@@ -1483,12 +1582,12 @@ void ModelMapper::setMainGUI(){
     performanceButton=mainGUI->addLabelButton("PERFORMANCE MODE", false);
     
     mainGUI->autoSizeToFitWidgets();
-	ofAddListener(mainGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(mainGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::setPositionGUI(){
-	
-	positionGUI = new ofxUISuperCanvas("Camera Position");
+    
+    positionGUI = new ofxUISuperCanvas("Camera Position");
     
     positionGUI->addSpacer();
     positionGUI->addLabel("(Arrow Keys) Adjust Camera x/y", OFX_UI_FONT_SMALL);
@@ -1511,7 +1610,7 @@ void ModelMapper::setPositionGUI(){
     positionGUI->setPosition(212, 0);
     
     positionGUI->autoSizeToFitWidgets();
-	ofAddListener(positionGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(positionGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::setOrientationGUI(){
@@ -1546,7 +1645,7 @@ void ModelMapper::setOrientationGUI(){
     orientationGUI->autoSizeToFitWidgets();
     
     orientationGUI->setVisible(false);
-	ofAddListener(orientationGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(orientationGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::setViewportGUI(){
@@ -1572,7 +1671,7 @@ void ModelMapper::setViewportGUI(){
     viewportGUI->autoSizeToFitWidgets();
     
     viewportGUI->setVisible(false);
-	ofAddListener(viewportGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(viewportGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::setMeshGUI(){
@@ -1595,7 +1694,7 @@ void ModelMapper::setMeshGUI(){
     
     meshGUI->addSpacer();
     meshGUI->addLabel("Selection:",OFX_UI_FONT_MEDIUM);
-	meshGUI->addRadio("SELECTION TYPE", magnetMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM)->activateToggle("Pointer");
+    meshGUI->addRadio("SELECTION TYPE", magnetMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM)->activateToggle("Pointer");
     
     meshGUI->addSpacer();
     meshGUI->addLabelButton("CLEAR SELECTION", false);
@@ -1608,7 +1707,7 @@ void ModelMapper::setMeshGUI(){
     meshGUI->autoSizeToFitWidgets();
     
     meshGUI->setVisible(false);
-	ofAddListener(meshGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(meshGUI->newGUIEvent,this,&ModelMapper::guiEvent);
     
 }
 
@@ -1636,7 +1735,7 @@ void ModelMapper::setMagnetGUI(){
     
     penButton=magnetGUI->addLabelButton("START SELECTION", OFX_UI_FONT_MEDIUM);
     penButton->setVisible(false);
-    doublePenButton=magnetGUI->addLabelButton("START BLEND", OFX_UI_FONT_MEDIUM);
+    doublePenButton=magnetGUI->addLabelButton("START OUTER", OFX_UI_FONT_MEDIUM);
     doublePenButton->setVisible(false);
     
     magnetRadiusSpacer=magnetGUI->addSpacer();
@@ -1663,7 +1762,7 @@ void ModelMapper::setMagnetGUI(){
     setEaseHeights(true,false,false,false);
     
     magnetGUI->setVisible(false);
-	ofAddListener(magnetGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(magnetGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::setMaskGUI(){
@@ -1687,15 +1786,15 @@ void ModelMapper::setMaskGUI(){
     maskGUI->autoSizeToFitWidgets();
     
     maskGUI->setVisible(false);
-	ofAddListener(maskGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    ofAddListener(maskGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
 void ModelMapper::guiEvent(ofxUIEventArgs &e)
 {
-	string name = e.getName();
-	int kind = e.getKind();
+    string name = e.getName();
+    int kind = e.getKind();
     
-	cout << "got event from: " << name << endl;
+    cout << "got event from: " << name << endl;
     
     if(name=="TOGGLE WIREFRAME"){
         if(adjustMode!=ADJUST_MODE_LOCKED){
@@ -1820,20 +1919,20 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name == "SAVE ALL")
-	{
-		ofxUIButton *button = (ofxUIButton *) e.getButton();
-		if(button->getValue()==1){
+    {
+        ofxUIButton *button = (ofxUIButton *) e.getButton();
+        if(button->getValue()==1){
             saveCameras();
         }
-	}
+    }
     
     else if(name == "SAVE CURRENT")
-	{
-		ofxUIButton *button = (ofxUIButton *) e.getButton();
-		if(button->getValue()==1){
+    {
+        ofxUIButton *button = (ofxUIButton *) e.getButton();
+        if(button->getValue()==1){
             saveCamera();
         }
-	}
+    }
     
     else if(name == "CURRENT")
     {
@@ -1968,7 +2067,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name=="RELOAD SELECTED"){
-        cout<<"trriger selected"<<endl;
         resetSelected();
     }
     
@@ -1977,6 +2075,14 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         bNewPen=true;
         bDrawingPen=true;
         penButton->setColorFill(OFX_UI_COLOR_FILL);
+    }
+    
+    else if(name=="START OUTER"){
+        cout<<"double button"<<endl;
+        doublePoly.clear();
+        bNewDouble=true;
+        bDrawingDouble=true;
+        doublePenButton->setColorFill(OFX_UI_COLOR_FILL);
     }
     
     else if(name=="EASE TYPE"){
