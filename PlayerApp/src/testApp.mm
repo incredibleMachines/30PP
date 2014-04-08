@@ -34,6 +34,9 @@ void testApp::setup() {
     //set path to obj file to use in setup
     map.setMassMesh("mesh/mesh.obj");
     
+    //----------SOCKET HANDLER SETUP
+    socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
+    
 }
 
 
@@ -56,6 +59,9 @@ void testApp::update(){
     //Pass texture into ModelMapper
     map.update(meshTexture);
     
+    
+    //------ UPDATE DEM SOCKETS
+    socketHandler.update();
 }
 
 //--------------------------------------------------------------

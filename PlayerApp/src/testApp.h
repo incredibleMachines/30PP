@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ModelMapper/ModelMapper.h"
+#include "Handlers/SocketHandler.h"
 
 #define BUFFER_SIZE 3
 #define MESH_NUM 1
@@ -31,6 +32,8 @@ public:
     //total number of meshes to be loaded
     int numMesh;
     
+    //---------SOCKET HANDLER
+    SocketHandler socketHandler;
 };
 
 

@@ -145,6 +145,9 @@ public:
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
     vector< vector<meshVertex> > magnetVertices;
+    vector< vector<meshVertex> > tempDoubleVertices;
+    vector< vector<meshVertex> > doubleVertices;
+    
     //holder for mesh filepaths
     string detailMesh;
     string massMesh;
@@ -152,8 +155,8 @@ public:
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
     ofPlanePrimitive plane;
-    bool bGuiCamAdjust, bDrawingPen, bNewPen;
-    ofPolyline penPoly, radiusPoly;
+    bool bGuiCamAdjust, bDrawingPen, bNewPen, bDrawingDouble, bNewDouble;
+    ofPolyline penPoly, doublePoly;
     
     
     

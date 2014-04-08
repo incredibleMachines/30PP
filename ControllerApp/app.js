@@ -203,7 +203,7 @@ app.get('/timeline/make',function(req,res){
 	})
 })
 
-//app.get('/timeline/makeTimeline', timeline.makeTimeline(Database, app.locals.EVENT_TYPES));
+//app.get('/timeline/make', timeline.make(Database, app.locals.EVENT_TYPES));
 
 //implimentation wishlist
 app.get('/PlayerApp/close',function(req,res){res.jsonp(404,null)})
