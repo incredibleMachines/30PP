@@ -99,6 +99,11 @@ namespace MSA {
         void                showCursor();
         void                hideCursor();
         GLuint               getTextureID();
+        
+        void                startPlayer();
+        void                pausePlayer();
+        void                setTime(float _millis);
+        
         /***** 30PP *****/
 	}
 }

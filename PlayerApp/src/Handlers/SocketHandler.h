@@ -42,6 +42,7 @@ public:
     void onIdle(ofxLibwebsockets::Event& args);
     void onMessage(ofxLibwebsockets::Event& args);
     void onBroadcast(ofxLibwebsockets::Event& args);
+    bool isInited();
     
     //socket debug
     void drawDebugInfo();

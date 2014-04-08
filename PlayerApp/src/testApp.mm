@@ -15,6 +15,8 @@ void testApp::setup() {
     
 	ofSetFrameRate(120);			// run as fast as you can
     
+    bInited=false;
+    
     meshTexture.push_back(new ofTexture());
     meshTexture[0]->allocate(TEX_WIDTH, TEX_HEIGHT, GL_RGB);
     MSA::ofxCocoa::initPlayer("long_2048.mov", meshTexture[0]->texData.textureID);
@@ -42,6 +44,31 @@ void testApp::setup() {
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
+        bInited=true;
+//        MSA::ofxCocoa::initPlayer(socketHandler.eventHandler.movieFile, meshTexture[0]->texData.textureID);
+//        MSA::ofxCocoa::pausePlayer();
+//        MSA::ofxCocoa::setTime(time);
+//        MSA::ofxCocoa::startPlayer();
+    }
+    
+    if(socketHandler.eventHandler.bTriggerEvent==true){
+        
+        socketHandler.eventHandler.bTriggerEvent=false;
+        
+        if(socketHandler.eventHandler.bPlayEvent==true){
+            MSA::ofxCocoa::setTime(socketHandler.eventHandler.currentStart);
+        }
+        
+        if(socketHandler.eventHandler.bPlaying==true){
+            MSA::ofxCocoa::startPlayer();
+        }
+        else{
+            MSA::ofxCocoa::pausePlayer();
+        }
+        
+    }
     
     //Get Texture data from CVOpenGLTexture in ofxCocoa
     meshTexture[0]->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());

@@ -216,6 +216,19 @@ namespace MSA {
             return [glView() textureID];
         }
         
+        void startPlayer(){
+            [glView() startPlayer];
+        }
+        
+        void pausePlayer(){
+            NSLog(@"COCOA:pause");
+            [glView() pausePlayer];
+        }
+        
+        void setTime(float _millis){
+            [glView() setTime:_millis];
+        }
+        
         /***** 30PP *****/
         
 		

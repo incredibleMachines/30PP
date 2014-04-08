@@ -25,6 +25,8 @@ EventHandler::EventHandler(){
     
     //allEvents = &((playerApp*)ofGetAppPtr())->events;
     eventsInited = false;
+    bPlayEvent = false;
+    bPlaying=false;
     
 }
 
@@ -98,7 +100,7 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
     cout<<">>> num events received: "<< numEvents <<endl<<endl;
     cout<<"\t>>--------------START ALL EVENT INIT--------------<<"<<endl<<endl;
     
-    string movieFile = args.json["movie_file"].asString();
+    movieFile = args.json["movie_file"].asString();
     cout <<"movieFilePath: " << movieFile << endl << endl;
     
     for (int e=0; e<numEvents; e++) {
@@ -141,6 +143,12 @@ void EventHandler::playEvent(ofxLibwebsockets::Event &args){
         cout << "\t\tduration: "<< eDuration << endl;
         cout << endl;
     }
+    
+    currentStart=eStartTime/1000;
+    bTriggerEvent=true;
+    bPlayEvent=true;
+    bPlaying=true;
+    
 
     //TODO: GOOOOOO
 }
@@ -154,6 +162,10 @@ void EventHandler::salesEvent(ofxLibwebsockets::Event &args){
     // cout<<">>> num events received: "<< numEvents <<endl<<endl;
     cout<<"\t>>--------------START SALES EVENT--------------<<"<<endl<<endl;
     
+//    currentStart=salesStartTime;
+    bTriggerEvent=true;
+    bPlayEvent=true;
+    bPlaying=true;
 }
 
 //--------------------------------------------------------------
@@ -165,6 +177,9 @@ void EventHandler::pauseEvent(ofxLibwebsockets::Event &args){
     // cout<<">>> num events received: "<< numEvents <<endl<<endl;
     cout<<"\t>>-------------- PAUSE EVENT--------------<<"<<endl<<endl;
     
+    bTriggerEvent=true;
+    bPlayEvent=false;
+    bPlaying=false;
 }
 
 //--------------------------------------------------------------
@@ -176,6 +191,9 @@ void EventHandler::resumeEvent(ofxLibwebsockets::Event &args){
     // cout<<">>> num events received: "<< numEvents <<endl<<endl;
     cout<<"\t>>-------------- RESUME EVENT --------------<<"<<endl<<endl;
     
+    bTriggerEvent=true;
+    bPlayEvent=false;
+    bPlaying=true;
 }
 
 //--------------------------------------------------------------
@@ -187,6 +205,10 @@ void EventHandler::endEvent(ofxLibwebsockets::Event &args){
     // cout<<">>> num events received: "<< numEvents <<endl<<endl;
     cout<<"\t>>-------------- END EVENT --------------<<"<<endl<<endl;
     
+//    currentStart=endTime;
+    bTriggerEvent=true;
+    bPlayEvent=true;
+    bPlaying=true;
 }
 
 //--------------------------------------------------------------

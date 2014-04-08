@@ -34,6 +34,8 @@ public:
     
     //---------SOCKET HANDLER
     SocketHandler socketHandler;
+    bool bInited;
+    
 };
 
 
