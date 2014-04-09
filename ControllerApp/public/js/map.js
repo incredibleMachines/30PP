@@ -20,9 +20,19 @@ function InitMapCanvas(_type, _locs, _cb){
 		console.log(matrix[123][363])
 	})
 	
-	var bgImage = new Image();
-	bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
+/*
+	var grid = Class.New("Grid", [matrix]);
+	grid.pathfinding(0, 0, 2, 4);
 	
+	// returns : [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4]]
+	
+	grid.setPropertyByCell(0, 1, 1);
+	grid.pathfinding(0, 0, 2, 4);
+*/
+	
+	var bgImage = new Image();
+	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202_JK.png";
 	var locs = _locs;
 	
 	var locDiameter = 8; // size of circles
