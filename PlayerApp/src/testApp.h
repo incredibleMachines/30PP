@@ -6,8 +6,8 @@
 
 #define BUFFER_SIZE 3
 #define MESH_NUM 1
-#define TEX_WIDTH 2048
-#define TEX_HEIGHT 3078
+#define TEX_WIDTH 1920
+#define TEX_HEIGHT 2500
 
 class testApp : public ofBaseApp{
 	
