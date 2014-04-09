@@ -28,4 +28,19 @@ public:
     
     //vector <Event> allEvents;
     bool eventsInited;
+    
+    string movieFile;
+    
+    class event{
+        float startTime;
+        float endTime;
+        string title;
+        vector<int> pauseTimes;
+    };
+    
+    vector<event> events;
+    
+    bool bTriggerEvent, bPlayEvent, bPlaying;
+    float currentStart;
+    
 };

@@ -571,6 +571,22 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [self.player play];
 }
 
+-(void)startPlayer
+{
+    [self.player play];
+}
+
+-(void)pausePlayer
+{
+    NSLog(@"GLVIEW:pause");
+    [self.player pause];
+}
+
+-(void)setTime:(float)millis
+{
+    [self.player seekToTime:CMTimeMakeWithSeconds(millis, _duration.timescale)];
+}
+
 /***** 30PP *****/
 
 

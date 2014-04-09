@@ -149,7 +149,6 @@ void ofGLReadyCallback();
 
 -(void) setFrameRate:(float)rate;
 
-
 -(void)goFullscreen:(NSScreen*)screen;
 -(void)goWindow;
 -(void)toggleFullscreen;
@@ -159,6 +158,9 @@ void ofGLReadyCallback();
 
 /***** 30PP *****/
 -(void) initPlayer:(NSString*)path ID:(int)ID;
+-(void) startPlayer;
+-(void) pausePlayer;
+-(void) setTime:(float)_millis;
 /***** 30PP *****/
 
 
