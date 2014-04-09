@@ -16,13 +16,23 @@ function InitMapCanvas(_type, _locs, _cb){
 		canvas.height = matrix.length //202;
 		
 		console.log("30_PP")
-		console.log("116 351")
-		console.log(matrix[116][351])
+		console.log("y:123 x:363")
+		console.log(matrix[123][363])
 	})
 	
-	var bgImage = new Image();
-	bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
+/*
+	var grid = Class.New("Grid", [matrix]);
+	grid.pathfinding(0, 0, 2, 4);
 	
+	// returns : [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4]]
+	
+	grid.setPropertyByCell(0, 1, 1);
+	grid.pathfinding(0, 0, 2, 4);
+*/
+	
+	var bgImage = new Image();
+	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202_JK.png";
 	var locs = _locs;
 	
 	var locDiameter = 8; // size of circles
@@ -59,12 +69,13 @@ function InitMapCanvas(_type, _locs, _cb){
 			ctx.fill();
 	}
 	
-	function drawInstruction(){
+	function drawInstruction(x,y){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
 		ctx.fillStyle = 'black';
 		ctx.fillText("click to choose location", 33, 105);
 		//ctx.fillText(type+" location", 57, 100);
+		if(x&&y) drawSingleLoc(x,y,"#000000")
 	}
 	
 	
@@ -84,6 +95,7 @@ function InitMapCanvas(_type, _locs, _cb){
 					
 					case 1: //adding a location
 						if(matrix){
+						console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
 							if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
 								var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 								_cb(thisLoc, clickType);
@@ -145,7 +157,7 @@ function InitMapCanvas(_type, _locs, _cb){
 		
 		if(locs.length < 1){
 			clickType = 1;
-			drawInstruction();
+			drawInstruction(X,Y);
 		} 
 	}
 
@@ -170,7 +182,7 @@ function InitMapCanvas(_type, _locs, _cb){
 			drawLocations(null,null);
 			locationChosen = true;	
 		} else {
-			drawInstruction();
+			drawInstruction(null,null);
 		}
 		
 		// -- mouse click event listener

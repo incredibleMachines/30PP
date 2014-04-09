@@ -3,7 +3,7 @@ var 		 fs = require('fs'),
 	PathFinding = require('pathfinding')
 
 //pathfinding matrix creation threshold	
-var threshold = 255;
+var threshold = 250;
 
 var matrix;
 var grid;
@@ -17,7 +17,7 @@ var finder = new PathFinding.AStarFinder({
 
 exports.setup =function(cb){
 	//load raster  grayscale png convert 
-	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202_raster.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
+	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202_JK.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
 	
 		//create an array the size of our image	
 		matrix = new Array(this.height);
@@ -70,12 +70,10 @@ exports.returnPath = function(endPoint){
 	
 	//return finder.findPath(351,116 , endPoint.x, endPoint.y, newGrid)
 	//cb(path)
-	var empty = []
-	var tempFinder = finder.findPath(351,116,endPoint.x,endPoint.y,newGrid)
-	if(tempFinder.length>0){
+	var tempFinder = finder.findPath(363,123,endPoint.x,endPoint.y,newGrid)
+	//ensure we have something
 	//attempt to smooth path
-	return PathFinding.Util.smoothenPath(compressGrid,tempFinder)
-	}else{
-		return empty
-	}
+	if(tempFinder.length>0) return PathFinding.Util.smoothenPath(compressGrid,tempFinder)
+	else return tempFinder
+	
 }

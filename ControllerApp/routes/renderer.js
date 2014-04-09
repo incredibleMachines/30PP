@@ -304,7 +304,12 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										console.log(loc)
+										
+										var uniqloc = _.uniq(loc, function(item){ return item[0]+','+item[1] } )
+										console.log(uniqloc)
+										
+										var obj = {pos: clip.zones[0].locations[0], directions: uniqloc}
 										currentGroup.data.source_single_location.push(obj)
 									}
 									/*
@@ -357,7 +362,12 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										var obj = {pos: clip.zones[0].locations[0], directions: loc}
+										console.log(loc)
+										
+										var uniqloc = _.uniq(loc, function(item){ return item[0]+','+item[1] } )
+										console.log(uniqloc)
+										
+										var obj = {pos: clip.zones[0].locations[0], directions: uniqloc}
 										currentGroup.data.source_single_location.push(obj)
 									}
 									//currentGroup.data.source_location.push(clip.zones[0].locations)
