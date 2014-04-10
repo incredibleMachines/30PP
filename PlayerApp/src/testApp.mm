@@ -19,7 +19,7 @@ void testApp::setup() {
     
     meshTexture.push_back(new ofTexture());
     meshTexture[0]->allocate(TEX_WIDTH, TEX_HEIGHT, GL_RGB);
-    MSA::ofxCocoa::initPlayer("long_2048.mov", meshTexture[0]->texData.textureID);
+    MSA::ofxCocoa::initPlayer("04_04.mov", meshTexture[0]->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -34,7 +34,7 @@ void testApp::setup() {
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("mesh/mesh.obj");
+    map.setMassMesh("04_04.obj");
     
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)

@@ -221,7 +221,6 @@ namespace MSA {
         }
         
         void pausePlayer(){
-            NSLog(@"COCOA:pause");
             [glView() pausePlayer];
         }
         
