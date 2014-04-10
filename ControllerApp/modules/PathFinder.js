@@ -17,7 +17,7 @@ var finder = new PathFinding.AStarFinder({
 
 exports.setup =function(cb){
 	//load raster  grayscale png convert 
-	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202_JK.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
+	fs.createReadStream(__dirname+'/../public/imgs/ManhattanStreets_512_202_bitmap.png').pipe( new PNG({filterType:4}) ).on('parsed',function(){
 	
 		//create an array the size of our image	
 		matrix = new Array(this.height);
@@ -73,7 +73,11 @@ exports.returnPath = function(endPoint){
 	var tempFinder = finder.findPath(363,123,endPoint.x,endPoint.y,newGrid)
 	//ensure we have something
 	//attempt to smooth path
-	if(tempFinder.length>0) return PathFinding.Util.smoothenPath(compressGrid,tempFinder)
-	else return tempFinder
+	if(tempFinder.length>0){
+		return PathFinding.Util.compressPath(tempFinder)
+		//var compress =  PathFinding.Util.compressPath(tempFinder) 
+		//return PathFinding.Util.smoothenPath(compressGrid,tempFinder)
+
+	} 	else return tempFinder
 	
 }
