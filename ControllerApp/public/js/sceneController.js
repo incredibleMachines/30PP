@@ -1,7 +1,7 @@
-/* A function to manipulate scenes on the front-end. 
+/* A function to manipulate scenes on the front-end.
 
   _scenes = function({OBJ}) Takes a JSON Object of _scenes directly from scene render.
-  
+
   ** See views/includes/footer.ejs  **
 
 */
@@ -13,62 +13,62 @@ function SceneController(_clips,_files){
 	//console.log(_clips);
 	//console.log( window.location.hash.substr(1))
 	//check if we're looking for a scene
-	
+
 	if(window.location.hash){
-	
+
 		//console.log( window.location.hash.substr(1))
-		/* this is where we could check for multiple hashes in the URL 
+		/* this is where we could check for multiple hashes in the URL
 			for example #new-clip#file-532b4e82efd9bea254a6ef75
 		*/
 		var slug = window.location.hash.substr(1)
 		var clip = _.findWhere(_clips, {slug: slug});
-		//var clip _.findWhere( _clips, {slug:slug} ) 
+		//var clip _.findWhere( _clips, {slug:slug} )
 
 		if(typeof clip !== 'undefined') currentClip = clip
 
 	}
-	
+
 	formatClip(currentClip)
-	
+
 	clipNav()
 	firstOn(currentClip.slug)
-		
+
 	//if a scene title button is pressed in the sidebar
 	//change the scene with javascript
 	$('button.scene-title').click(function(e){
-		
+
 		//alert($(this).data('scene-id'))
 		var id = $(this).data('scene-id');
-		
+
 		//associate ID with obj
 		_clips.forEach(function(clip,i){
 			//we will always get a match here
-			if(clip._id == id ){ 
+			if(clip._id == id ){
 				currentClip = clip;
-				
+
 				formatClip(currentClip)
 			}
 		})
-		
+
 	});
 	$(document).delegate('select.zone-map-type','change', function(e){
 		$this = $(this)
-				
-		if($this.val() === 'none'){ 
+
+		if($this.val() === 'none'){
 					$('canvas#map').remove()
 					$this.closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
 					Holder.run({
 						images: $this.closest('.zone-single').find('img')[0]
-					})				
+					})
 		}else{
 			//check if element exists using length
 			if(!$('canvas#map').length){
-				
+
 				var canvas = '<canvas id="map" style="width: 512px; height: 202px;"> </canvas>'
 				$this.parent().parent().append(canvas)
 				//init the map
 			}
-			
+
 			$this.closest('.zone-single').find('select.zone-file').val('none')
 			var val = $this.val();
 
@@ -78,20 +78,20 @@ function SceneController(_clips,_files){
 			Holder.run({
 						images: $this.closest('.zone-single').find('img')[0]
 					})
-					
+
 			var locs;
-			
+
 			/* changed to raw val, was type */
 			InitMapCanvas(val, locs, mapCallback); //see mapCallback defined below
 		}
 	})
-	
-	
+
+
 	//toggle of text options
 	$(document).delegate('select.zone-text-type','change', function(e){
-			
+
 		var $this = $(this)
-				
+
 		var classes = $this.closest('.zone-single').attr('class')
 		//alert(classes)
 		var index
@@ -107,20 +107,20 @@ function SceneController(_clips,_files){
 			}
 			//console.log(c)
 		})
-		
+
 		$('.zone-single-'+index).find('.zone-text').remove()
-		
+
 		switch($this.val()){
 			case 'single':
-				
+
 				var text = $('textarea').attr('name', 'zones['+index+'][text]').attr('placeholder','Enter your text now').addClass('zone-text-0 zone-text')
 				console.log(text)
 				//alert(text)
 				var text = '<section class="zone-text input-group"><textarea name="zones['+index+'][text]" placeholder="Enter your text now" class="form-control zone-text"></textarea></section>'
-				
+
 			break;
 			case 'multiple':
-			
+
 				var text  = '<section class="zone-text input-group"><input name="zones['+index+'][text][0]" placeholder="Input Text" class="form-control zone-text"/>'
 					text +=	'<div class="btn-group"><button type="button" class="btn add-zone-text btn-default green">+</button><button type="button" class="btn remove-zone-text btn btn-default red">-</button></div>'
 					text += '</section>'
@@ -129,21 +129,21 @@ function SceneController(_clips,_files){
 				$this.closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
 					Holder.run({
 						images: $this.closest('.zone-single').find('img')[0]
-					})		
+					})
 			break;
 		}
-		
+
 		$this.parent().append(text)
-				
+
 	})
 	$(document).delegate('button.add-zone-text','click',function(e){
-	
+
 		$this = $(this)
-		
+
 		var _new = $this.parent().parent().clone()
-		
-		
-		
+
+
+
 		var name = $(_new).find('input').attr("name")
 		//get last index num
 		var lastOpenBracket = name.lastIndexOf("[");
@@ -151,25 +151,25 @@ function SceneController(_clips,_files){
 		var diff = lastClosedBracket - lastOpenBracket
 		var n = parseInt(name.substr(lastOpenBracket+1,diff-1))
 		//console.log(n)
-		
-		
+
+
 		var texts = $this.closest(".form-group").find('input.zone-text')
 		//console.log(texts.length)
-		
+
 		var name_updated = name.substr(0,lastOpenBracket+1)+(texts.length)+"]"
 		console.log(name_updated)
-		
-		
+
+
 		$(_new).find('input').attr("name",name_updated).val("")
-		
+
 		$this.closest(".form-group").append(_new)
-		
-			
-		
+
+
+
 	})
-	
+
 	$(document).delegate('button.remove-zone-text','click',function(e){
-		
+
 		$this = $(this)
 		input =  $this.parent().siblings('input')
 		//alert(input.attr('name'))
@@ -178,56 +178,56 @@ function SceneController(_clips,_files){
 		lastClosedBracket = name.lastIndexOf("]")
 		diff = lastClosedBracket - lastOpenBracket
 		index = parseInt(name.substr(lastOpenBracket+1,diff-1))
-		
+
 		//console.log("Current Index: "+index)
-		
+
 		//input.parent().remove()
-		
+
 		totalTexts = $this.closest(".form-group").find('input.zone-text')
 		//console.log(totalTexts)
-		
-		for(var i = index+1; i< totalTexts.length; i++){ 
-		
+
+		for(var i = index+1; i< totalTexts.length; i++){
+
 				//console.log(totalTexts[i])
 				//console.log(i-1)
 				var name_updated = name.substr(0,lastOpenBracket+1)+(i-1)+"]"
 				$(totalTexts[i]).attr("name", name_updated)
 		}
-		
+
 		input.parent().remove()
 	})
-	
+
 	//toggle of map options
-	
+
 	//scene order button press
 	$('button.scene-order').click(function(e){
 		var $this = $(this);
 		var direction;
-	
+
 		if($this.hasClass('scene-order-up')){
 			direction = "up"
 		}else{
 			direction = "down"
 		}
 		var scene_id = $this.parent().siblings('button').data('scene-id')
-		
+
 		var form = $('<form action="/clips/reorder/'+scene_id+'" method="post"><input type="hidden" name="type" value="'+direction+'"></form>')
 		$(form).submit();
 	})
-	
+
 	$('select.clip-layout').change(function(e){
-		
+
 		//console.log($(this).val())
 		currentClip.layout = $(this).val()
 		formatClip(currentClip)
-		
-		
+
+
 	})
 	$(document).delegate('select.zone-file','change', function(e){
 		$this =$(this)
 		var file = _.findWhere(_files,{_id:$(this).val()})
 
-		if(typeof file !=='undefined'){ 
+		if(typeof file !=='undefined'){
 			if(file.type.indexOf('video')>=0){
 				$(this).closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No Video Preview")
 				Holder.run({
@@ -239,9 +239,9 @@ function SceneController(_clips,_files){
 			}
 			$(this).closest('.zone-single').find('select.zone-map-type').val('none')
 			$(this).closest('.zone-single').find('select.zone-map-type').siblings('section.location').remove()
-			
+
 			if($(this).closest('.zone-single').hasClass('zone-single-0')) $('canvas#map').remove()
-			//$('canvas#map').remove()		
+			//$('canvas#map').remove()
 			}
 		else{
 			$(this).closest('.zone-single').find('img').attr("data-src","holder.js/100%x150/industrial/text:No File Associated")
@@ -255,19 +255,78 @@ function SceneController(_clips,_files){
 		}
 	})
 
+  //grab the submit of the upload from this page and hijack it to process via an ajax request
+  $(document).delegate('button.file-upload','click', function(e){
+    //alert()
+    var classes = $(this).closest('.zone-single').attr('class')
+    //alert(classes)
+    var index
+    //'asset-single-0'
+    $(classes.split(' ')).each(function(){
+      var c = this.trim();
+      //console.log(c)
+      if(c.indexOf('zone-single-')>=0){
+        //console.log("Match :: "+c)
+        /* _this.removeClass(c) */
+        index = c.substr(-1)
+        //alert(index)
+      }
+      //console.log(c)
+    })
+    //alert(index)
+    var hiddenInput = '<input type="hidden" name="zone_index" value="'+index+'"/>'
+    $('form.modal-body').append(hiddenInput)
+
+  })
+  $('form.modal-body').submit(function(e){
+    e.preventDefault();
+    //alert('this')
+    //create a reference to the object
+    var _this = $(this)
+    var data = $(this).serialize()
+    var formData = new FormData($(this)[0])
+    console.log(data)
+    console.log(formData)
+    $.ajax({
+      url: '/files/ajax',
+      type: 'POST',
+      async: false,
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: formData,
+      success: function(res){
+        console.log('success')
+        $('#new_file_modal').modal('hide')
+        //console.log(res)
+        console.log(res.success)
+        var option = '<option value="'+res.success._id+'">'+res.success.title+'</option>'
+        $('select.zone-file').append(option)
+
+        //must select the closest upload item selected
+        $('.zone-single-'+res.success.zone_index).find('select.zone-file option[value="'+res.success._id+'"]').attr('selected','selected')
+        $('.zone-single-'+res.success.zone_index).find('img').attr('src','/'+res.success.path).height("auto")
+        
+      },
+      error:function(jqXHR, textStatus, errorThrown){
+        console.log(textStatus)
+      }
+    })
+  })
+
 	/*
 		formatClip(_clip)
-		_clip =	The current clip to format 
+		_clip =	The current clip to format
 	*/
-	
+
 	function formatClip(_clip){
 		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+_clip.layout+".jpg")
 		console.log(_clip)
 		$('#clip-contents form').attr('action', '/clips/'+_clip._id);
 		$('h3.clip-title').html(_clip.title)
-		$('input.clip-title').val(_clip.title)				
+		$('input.clip-title').val(_clip.title)
 		$('select.clip-layout').val(_clip.layout);
-		
+
 		var clip = $('article.zone-single-0').clone()
 
 		//clear all the old assets from the HTML
@@ -288,47 +347,47 @@ function SceneController(_clips,_files){
 					title = "Right Wall"
 				break;
 			}
-			
+
 
 			var newClip = $(clip).clone();
 			$(newClip).removeClass('zone-single-0').addClass('zone-single-'+i);
 			$(newClip).find('section.location').remove()
-					
+
 			$(newClip).find('select.zone-file').attr('name','zones['+i+'][file]')
 			$(newClip).find('select.zone-file option:selected').removeAttr('selected')
-			
+
 			$(newClip).find('select.zone-map-type').attr('name', 'zones['+i+'][map_type]')
 			$(newClip).find('select.zone-map-type option:selected').removeAttr('selected')
-			
+
 			$(newClip).find('select.zone-text-type').attr('name','zones['+i+'][text_type]')
 			$(newClip).find('select.zone-text-type option:selected').removeAttr('selected')
-			
-			
+
+
 			$(newClip).find('input.zone-title').attr('value',title).attr('name','zones['+i+'][title]')
-			
+
 			//showing and hiding shit
-			
+
 			if(title === "Sculpture and Walls"){
 				$(newClip).find("select.zone-map-type").parent().hide()
 				$(newClip).find("select.zone-text-type").parent().hide()
 				$(newClip).find("textarea.zone-caption").parent().hide()
 			}else if(title==="Sculpture"){
-				
+
 				$(newClip).find("select.zone-map-type").parent().show()
 				$(newClip).find("select.zone-text-type").parent().hide()
 				$(newClip).find("textarea.zone-caption").parent().hide()
-				
+
 			}else{
 				//dealing with an error or walls
 				$(newClip).find("select.zone-map-type").parent().hide()
 				$(newClip).find("select.zone-text-type").parent().show()
 				$(newClip).find("textarea.zone-caption").parent().hide()
-				
+
 			}
-			
+
 			$('#zone-data').append(newClip);
 		}
-		
+
 		if(_clip.zones.length>0){
 			console.log(_clip.zones)
 			_clip.zones.forEach(function(zone,index){
@@ -349,16 +408,16 @@ function SceneController(_clips,_files){
 					Holder.run({
 								images: $('.zone-single-'+index).find('img')[0]
 							})
-					
+
 				}
 				if(zone.text){
 					console.log(typeof zone.text)
-					if(typeof zone.text !== 'object'){ 
+					if(typeof zone.text !== 'object'){
 						console.log('Text at zone: '+index)
 						var text = '<section class="zone-text input-group"><textarea name="zones['+index+'][text]" placeholder="Enter your text now" class="form-control zone-text">'+zone.text+'</textarea></section>'
-						$('.zone-single-'+index).find('.zone-text-type').parent().append(text)  
+						$('.zone-single-'+index).find('.zone-text-type').parent().append(text)
 						$('.zone-single-'+index).find('.zone-text-type').val('single')
-					
+
 					}else{
 						var text = '';
 						for(var i = 0; i<zone.text.length; i++){
@@ -366,7 +425,7 @@ function SceneController(_clips,_files){
 								text +=	'<div class="btn-group"><button type="button" class="btn-xs btn-default green btn add-zone-text">+</button><button type="button" class="btn-xs btn remove-zone-text btn btn-default red">-</button></div>'
 								text += '</section>'
 								//console.log(text)
-								$('.zone-single-'+index).find('.zone-text-type').parent().append(text)  
+								$('.zone-single-'+index).find('.zone-text-type').parent().append(text)
 
 						}
 						$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
@@ -375,8 +434,8 @@ function SceneController(_clips,_files){
 						})
 						$('.zone-single-'+index).find('select.zone-text-type').val('multiple')
 					}
-				} 
-				
+				}
+
 				if(zone.locations){
 					zoneZero = zone;
 					console.log("Locations: "+zone.locations.length)
@@ -389,50 +448,50 @@ function SceneController(_clips,_files){
 					Holder.run({
 						images: $('.zone-single-'+index).find('img')[0]
 					})
-					
+
 					if(!$('canvas#map').length){
-				
+
 						var canvas = '<canvas id="map" style="width: 512px; height: 202px;"> </canvas>'
 						$('.zone-single-'+index).find('select.zone-map-type').parent().append(canvas)
 						//init the map
 					}
-					
+
 					for(var i = 0; i<zone.locations.length;i++){
 						var input  = '<section style="display:none;" class="location '+zone.locations[i].x+' '+zone.locations[i].y+'" >'
 							input += '<input type="hidden" value="'+zone.locations[i].x+'" name="zones[0][locations]['+i+'][x]">'
 							input += '<input type="hidden" value="'+zone.locations[i].y+'" name="zones[0][locations]['+i+'][y]"/> </section>';
-							
+
 							$('.zone-single-'+index).find('select.zone-map-type').parent().append(input)
 					}
-					
+
 					var locs = zone.locations;
-					
+
 					InitMapCanvas(type, locs, mapCallback); //see mapCallback defined below
 				}
 			})
 		}
 	}
-	
-	
+
+
 	function mapCallback(locPos, eventType){
-	
-		
+
+
 		var current = $('select.zone-map-type').val()
 		console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x+" | locPos.y: "+locPos.y);
 		if(current === 'single') $('section.location').remove()
 		var length = $('section.location').length;
-		
+
 		switch(eventType){
 			case 0: //---- remove location ----
 				//** hardcoding the index to '0', assuming that sculpture will always be at index 0 **//
-				
+
 				//remove the location just reported by map
 				$('.zone-single-0').find('section.location.'+locPos.x+'.'+locPos.y).remove();
-				
+
 				//get all locations
 				var allLoc = $('.zone-single-0').find('section.location');
-				//console.log("allLoc.length: "+allLoc.length); 
-				
+				//console.log("allLoc.length: "+allLoc.length);
+
 				//go through all locations, reset their location index
 				//this is to prevent any 'null' objects in the locations array
 				for(var j=0; j<allLoc.length; j++){
@@ -440,11 +499,11 @@ function SceneController(_clips,_files){
 					console.log("thisLoc "+j+": "+$(thisLoc));
 					var inputs = $(thisLoc).find('input');
 					$(inputs[0]).attr('name','zones[0][locations]['+j+'][x]');
-					$(inputs[1]).attr('name','zones[0][locations]['+j+'][y]');					
+					$(inputs[1]).attr('name','zones[0][locations]['+j+'][y]');
 				}
-							
+
 			break;
-			
+
 			case 1: //---- add location ----
 				//add in this new location position to the form
 				//alert("adding: "+locPos.x+","+locPos.y+"  length: "+length);
@@ -456,20 +515,20 @@ function SceneController(_clips,_files){
 			break;
 		}
 	}
-	
+
 	/* By Jenn: For making selected clip name in scene sub-nav turn black when active */
 	function clipNav() {
 		$('.sub-nav').click(function() {
 			$(this).closest('ul.list-group').find('.active').removeClass("active");
 			$(this).closest('.list-group-item').addClass( "active");
 		});
-		
+
 	}
-	
+
 	/* By Jenn: For making 1st sub-nav item be active on page load */
 	function firstOn(slug) {
 		console.log(slug)
 		$('button.'+slug).closest('.list-group-item').addClass("active");
 	}
-	
+
 }
