@@ -36,6 +36,9 @@ public:
     SocketHandler socketHandler;
     bool bInited;
     
+    ofImage test;
+
+    
 };
 
 

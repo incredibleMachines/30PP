@@ -1090,6 +1090,9 @@ void ModelMapper:: saveCamera() {
 }
 
 void ModelMapper:: drawCameras() {
+    
+//        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    		glMatrixMode(GL_MODELVIEW);
     for(int i = 0; i < numCams; i++){
         
         if(adjustMode!=ADJUST_MODE_LOCKED||i!=guiCam){

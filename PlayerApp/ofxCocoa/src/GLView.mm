@@ -73,6 +73,7 @@ using namespace ofxCocoa;
     if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime]){
         
         glEnable(GL_MULTISAMPLE);
+        glMatrixMode(GL_PROJECTION);
 		
         CVPixelBufferRef pixBuff = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
         
@@ -264,6 +265,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             NSOpenGLPFAMultisample,
             NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
             NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)8,
+            NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)8,
             (NSOpenGLPixelFormatAttribute)0
         };
 		
@@ -276,6 +278,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	if (self = [super initWithFrame:frameRect]) {
 		[[self openGLContext] makeCurrentContext];
+//        [self setOpenGLContext:(NSOpenGLContext) ]
         
 		// set surface opacity
 		GLint i = appWindow()->initSettings().isOpaque;
@@ -284,6 +287,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		// enable vertical sync
 		i = 1;
 		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSwapInterval];
+        
 		
 		// Look for changes in view size
 		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override
