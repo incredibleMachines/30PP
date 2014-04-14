@@ -114,24 +114,24 @@ function InitMapCanvas(_type, _locs, _cb){
 						console.log(testLoc);
 						/* FOR TESTING */
 						//pass this loc out as a POST
-						$.ajax({
-							url:'/location/pathTest',
-							type: 'POST',
-							data: testLoc,
-							success: function(result){
-									console.log(result);
-									if(result.length<1){
-										console.log("EMPTY ARRAY RETURNED FROM PFINDER");
-									}else{
-										console.log("length: ");
-										console.log(result.length);
-										drawPFinderTest(result);
-									}
-							},
-							error: function( jqXHR, textStatus, errorThrown ){
-									console.log(jqXHR);
-							}
-						});
+						// $.ajax({
+						// 	url:'/location/pathTest',
+						// 	type: 'POST',
+						// 	data: testLoc,
+						// 	success: function(result){
+						// 			for(var i=0; i<result.length; i++) console.log(result[i][0]+","+result[i][1]);
+						// 			if(result.length<1){
+						// 				console.log("EMPTY ARRAY RETURNED FROM PFINDER");
+						// 			}else{
+						// 				console.log("length: ");
+						// 				console.log(result.length);
+						// 				drawPFinderTest(result);
+						// 			}
+						// 	},
+						// 	error: function( jqXHR, textStatus, errorThrown ){
+						// 			console.log(jqXHR);
+						// 	}
+						// });
 						/**************/
 
 						_cb(thisLoc, clickType);

@@ -43,22 +43,7 @@ exports.setup =function(cb){
 		grid = new PathFinding.Grid(this.width,this.height,matrix)
 
 
-		fs.createReadStream(__dirname+'/../public/imgs/map_pixel_coordinates_20140410.png').pipe(new PNG({filterType:4})).on('parsed',function(){
-
-			intersections = new Array()
-
-			for(var i =0; i<this.height; i++){
-				for(var j =0; j<this.width; j++){
-					var idx = (this.width*i+j)<<2
-					if(this.data[idx]+this.data[idx+1]+this.data[idx+2]/3<threshold) intersections.push([j,i])
-				}
-			}
-
-			exports.ready = true;
-			cb()
-
-		})
-
+		populateIntersections(cb);
 
 		//matrix is now a 2 dimensional array of a black and white image
 		//0/black is walkable
@@ -69,6 +54,32 @@ exports.setup =function(cb){
 	})
 
 }
+
+function populateIntersections(cb){
+	fs.createReadStream(__dirname+'/../public/imgs/map_pixel_coordinates_20140410.png').pipe(new PNG({filterType:4})).on('parsed',function(){
+
+		intersections = new Array()
+
+		for(var i =0; i<this.height; i++){
+			for(var j =0; j<this.width; j++){
+				var idx = (this.width*i+j)<<2
+				//if(this.data[idx]+this.data[idx+1]+this.data[idx+2]/3<threshold) intersections.push([j,i])
+				if((this.data[idx]+this.data[idx+1]+this.data[idx+2])/3 < threshold){
+
+					intersections.push([j,i])
+				}
+				//console.log((this.data[idx]+this.data[idx+1]+this.data[idx+2])/3);
+			}
+		}
+
+		//console.log("intersections: ");
+		//console.log(intersections);
+		exports.ready = true;
+		cb()
+
+	})
+}
+
 exports.returnMatrix = function(){
 	return matrix
 }
@@ -90,7 +101,7 @@ exports.returnPath = function(endPoint){
 	if(tempFinder.length>0){
 		//sort out the array to see if it exists inside of an intersection
 		//var compressedPath =PathFinding.Util.compressPath(tempFinder)
-		// var cleanPath = new Array()
+		var cleanPath = new Array()
 		//
 		//making a path object off our intersections
 		//this is beta
@@ -100,14 +111,22 @@ exports.returnPath = function(endPoint){
 				cleanPath.push(tempFinder[i])
 			}else{
 				for(var j = 0; j<intersections.length;j++){
-					if(_.isEqual(tempFinder[i],intersections[j])) {
+					if(_.isEqual(tempFinder[i],intersections[j]) === true) {
 
 						//if current tempFinder is < 2 away from the next tempFinder
-						if(getDistance(tempFinder[i],tempFinder[i+1] < 2){
-							break; //then skip this one
-						}
-						else{
-							cleanPath.push(tempFinder[i]);
+						//if(cleanPath.length>1){
+						//if(getDistance(cleanPath[cleanPath.length-1],tempFinder[i]) < 4){
+						if(i >= 2){
+							if(getDistance(tempFinder[i],tempFinder[i-1]) < 2){
+								if(getDistance(tempFinder[i],tempFinder[i-2]) < 2){
+									break; //then skip this one
+								}
+								break;
+							}
+							else{
+								//console.log("dist: "+getDistance(tempFinder[i],tempFinder[i-1]));
+								cleanPath.push(tempFinder[i]);
+							}
 						}
 					}
 				}
@@ -129,13 +148,15 @@ function getDistance( p1, p2 ) {
   var xs = 0;
   var ys = 0;
 
-  xs = p2.x - p1.x;
+  xs = p2[0] - p1[0];
   xs = xs * xs;
 
-  ys = p2.y - p1.y;
+  ys = p2[1] - p1[1];
   ys = ys * ys;
 
-  return Math.sqrt( xs + ys );
+	var dist = parseInt(Math.ceil(Math.sqrt( xs + ys )));
+	//console.log("getDistance: "+ dist);
+  return dist
 }
 
 exports.returnIntersection = function(){
