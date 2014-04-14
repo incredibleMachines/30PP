@@ -91,6 +91,7 @@ exports.add = function(_Database){
 exports.addAJAX = function(_Database){
 	return function(req,res){
 		var post = req.body;
+		post.slug = utils.makeSlug(post.title);
 		console.log("post: ")
 		console.log(post)
 
@@ -146,6 +147,7 @@ exports.update = function(_Database){
 exports.delete = function(_Database){
 
 	return function(req,res){
+		console.log('delete')
 		//res.jsonp({message:'delete'});
 		//res.render('events/index', { current: req.url, title: 'add event' });
 		var file = req.params.slug;

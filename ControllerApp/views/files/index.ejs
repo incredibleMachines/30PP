@@ -1,7 +1,7 @@
 <%/* FILES INDEX PAGE */%>
 <% include ../includes/header %>
 
-<% 
+<%
 	/* for sorting mongo db items as elements */
 	clips = JSON.stringify(clips)
 	clips = JSON.parse(clips)
@@ -32,7 +32,7 @@
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
-		
+
 		  <!-- Table body -->
 		  <ul class="list-group row">
 		  	<% /* begin for loop */ %>
@@ -40,7 +40,7 @@
 		  		//
 		  		if(!file.last_edited) return new Date(file.created_at)
 		  		else return new Date(file.last_edited);
-		  	}) 
+		  	})
 		  		files.reverse() //taking out reverse for pagination
 		  	%>
 		  	<% files.forEach(function(_file,i){%>
@@ -48,7 +48,7 @@
 			    	<ul class="event row" >
 			    		<form class="file <%= _file.slug %>" method="post" enctype="multipart/form-data" action="/files/<%= _file.slug %>">
 							<input type="hidden" name="id" value="<%= _file._id%>">
-							<li class="col-md-3 file-title"> <!-- TITLE -->						
+							<li class="col-md-3 file-title"> <!-- TITLE -->
 								<input class="form-control" type="text" name="title" value="<%= _file.title %>">
 								<p>File type: <%= _file.type %></p>
 								<p>Size: <%= Math.round(_file.size/1000) %> KB</p>
@@ -69,8 +69,8 @@
 							<li class="col-md-4 scene-num"><!-- ASSOCIATED SCENES -->
 								<div class="asset-scene-list">
 									<ul>
-									
-										<%	
+
+										<%
 										var matchedClips = [];
 										var matchedScenes = [];
 										/* go through all clips, find ones that contain this file */
@@ -78,13 +78,13 @@
 											var zones = clips[c].zones;
 											var matched = false;
 											for(var d=0; d<zones.length; d++){
-												if(zones[d].file === _file._id) matched = true; 
+												if(zones[d].file === _file._id) matched = true;
 											} //underscore can help all this malarky be more efficient
 											if(matched) matchedClips.push(clips[c]);
 										}
 										//console.log("matchedClips: "+matchedClips);
 										//console.log("---------");
-										
+
 										/* now go through all scenes to see who has this clip */
 										scenes.forEach(function(scene,k){
 											var theseClips = scene.clips;
@@ -97,12 +97,12 @@
 												})
 											})
 										})
-																					
+
 										matchedScenes.forEach(function(scene,j){ %>
-										
+
 										<li><a href= "/scenes/<%=scene.slug%>#<%=matchedClips[j].slug%>">
-											<%=scene.type%>: <%=scene.title%> - <%=matchedClips[j].title%></a></li><br />	
-										
+											<%=scene.type%>: <%=scene.title%> - <%=matchedClips[j].title%></a></li><br />
+
 										<%})%>
 									</ul>
 								</div>
@@ -120,7 +120,7 @@
 		    <% /* end for loop */ %>
 		  </ul><!-- ul.list-group -->
 	</div>
-	
+
     </section>
   	<div class="text-center pagination-wrap">
 	    <ul class="pagination">
@@ -133,15 +133,14 @@
 					<li><a href="/files/<%=i%>"><%=i%></a></li>
 				<% } %>
 			<% } %>
-			
+
 	  		<li <% if(parseInt(page_num) === parseInt(num_pages)){ %> class="disabled" <% } %> >
 	  		<a <% if(parseInt(page_num) !== parseInt(num_pages)){ %> href="/files/<%= parseInt(page_num)+1 %>" <%}%> >&raquo;</a></li>
 		</ul>
 	</div>
-	
-</section> <!-- .<%= page_slug %> -->   
+
+</section> <!-- .<%= page_slug %> -->
 
 
-	
+
 <% include ../includes/footer %>
-
