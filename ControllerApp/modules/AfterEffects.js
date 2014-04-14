@@ -29,6 +29,8 @@ var AEPROJECT_FOLDER = __dirname+"/../includes/aeprojects";
 var OUTPUT_FOLDER = __dirname+"/../includes/videos";//folders.outputDir;
 var ASSET_FOLDER = __dirname+"/../public";
 
+
+var OM_TEMPLATE = 'ProRes222';
 //notes:
 
 // After Effects Object for handling and processing AE Scripts ETC.
@@ -156,7 +158,7 @@ function renderWorker(scene,callback){
 		else console.log("Delete File: %s".grey,scene.output)
 		
 		//options for render process
-		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', 'ProRes222']
+		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', OM_TEMPLATE]
 		//spawn a process to the aerender 
 		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
 		
@@ -262,7 +264,7 @@ function setRenderContent(scene,cb){
 	scene.asset_loc = ASSET_FOLDER+'/'
 	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
 	scene.template = AEPROJECT_FOLDER+'/'+scene.template
-	if(scene.type === 'default_gastronomy'||scene.type==='default_shopping'){
+	if(scene.type === 'default_gastronomy' || scene.type==='default_shopping' || scene.type==='default_activities' || scene.type==='default_fashion' || scene.type==='default_parks' || scene.type==='default_artdesign'){
 	setTimeout(function(){
 
 		//console.log(scene)

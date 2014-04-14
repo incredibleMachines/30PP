@@ -377,8 +377,10 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}*/
 										
 								}else{
+									if(clip.zones[0].file){
 									if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
 									currentGroup.data.source_image_S.push(clip.zones[0].file.path)
+									}
 								}
 								if(clip.zones[1].file){
 									if(!currentGroup.data.hasOwnProperty('source_sequence_image_L')) currentGroup.data.source_sequence_image_L = []

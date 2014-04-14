@@ -15,7 +15,7 @@
     "async":"*",
     "underscore": "1.6.x",
     "spawn-async":"*",
-    "pathfinding":"0.4.x",
+    "pathfinding": "git://github.com/qiao/PathFinding.js.git",
     "pngjs":"0.4.x"
   }
 }

@@ -8,6 +8,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	var matrix = null;
 	
 	$.getJSON('/location/matrix',function(data){
+	
 		console.log('got matrix')
 		//console.log(data)
 		matrix = data
@@ -18,17 +19,24 @@ function InitMapCanvas(_type, _locs, _cb){
 		console.log("30_PP")
 		console.log("y:123 x:363")
 		console.log(matrix[123][363])
+		
+		if(typeof locs !== 'undefined'){ //if we received locations previously stored
+			console.log("numLocs: "+ locs.length);
+			ctx.drawImage(bgImage, 0, 0);
+			drawLocations(null,null);
+			locationChosen = true;	
+		} else {
+			drawInstruction(null,null);
+		}
 	})
 	
-/*
-	var grid = Class.New("Grid", [matrix]);
+/*  var grid = Class.New("Grid", [matrix]);
 	grid.pathfinding(0, 0, 2, 4);
 	
 	// returns : [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4]]
 	
 	grid.setPropertyByCell(0, 1, 1);
-	grid.pathfinding(0, 0, 2, 4);
-*/
+	grid.pathfinding(0, 0, 2, 4);*/
 	
 	var bgImage = new Image();
 	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
@@ -62,11 +70,11 @@ function InitMapCanvas(_type, _locs, _cb){
 	}
 	
 	function drawSingleLoc(x,y,color){
-			ctx.fillStyle = color;
-			ctx.beginPath();
-			ctx.arc(x, y, 5, 0, 2*Math.PI);
-			ctx.stroke();
-			ctx.fill();
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.arc(x, y, 5, 0, 2*Math.PI);
+		ctx.stroke();
+		ctx.fill();
 	}
 	
 	function drawInstruction(x,y){
@@ -83,32 +91,34 @@ function InitMapCanvas(_type, _locs, _cb){
 	//--- process any click on the canvas
 	function processClick(mousePos){
 		
-				if(typeof locs === 'undefined') locs = new Array();
-				switch (clickType){
-					case 0: //removing a location
-						var thisLoc = {"x":locs[selectionId].x, "y":locs[selectionId].y};
+		if(typeof locs === 'undefined') locs = new Array();
+		switch (clickType){
+			case 0: //removing a location
+				var thisLoc = {"x":locs[selectionId].x, "y":locs[selectionId].y};
+				_cb(thisLoc, clickType);
+				locs.splice(selectionId, 1);
+
+				//console.log("REMOVE LOC");
+			break;
+			
+			case 1: //adding a location
+				if(matrix){
+				console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
+					if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
+						var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 						_cb(thisLoc, clickType);
-						locs.splice(selectionId, 1);
-		
-						//console.log("REMOVE LOC");
-					break;
-					
-					case 1: //adding a location
-						if(matrix){
-						console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
-							if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
-								var thisLoc = {"x":mousePos.x, "y":mousePos.y};
-								_cb(thisLoc, clickType);
-								locs.push({"x":parseInt(mousePos.x-1), "y":parseInt(mousePos.y-1), "color":locColorOn});
-								if(locs.length>1 && type === 'single'){
-									//console.log("map.js: single locs.shift");
-									locs.shift()
-								} 
-							}//if(matrix)
-						}else alert("No Matrix")
-						//console.log("ADD LOC");
-					break;	
-				}
+						locs.push({"x":parseInt(mousePos.x-1), 
+							"y":parseInt(mousePos.y-1), 
+							"color":locColorOn});
+						if(locs.length>1 && type === 'single'){
+							//console.log("map.js: single locs.shift");
+							locs.shift()
+						} 
+					}//if(matrix)
+				}else alert("No Matrix")
+				//console.log("ADD LOC");
+			break;	
+		}
 			
 		drawLocations(null,null);			
 	}
@@ -119,14 +129,17 @@ function InitMapCanvas(_type, _locs, _cb){
 		var X = null,
 			Y = null;
 		if(matrix){
-			if(mousePos.y-1>0&&mousePos.y-1<canvas.height && mousePos.x-1>0 && mousePos.x-1<canvas.width){
+			if(mousePos.y-1 > 0
+				&&mousePos.y-1 < canvas.height 
+				&& mousePos.x-1 > 0 
+				&& mousePos.x-1 < canvas.width){
 				if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)]==0) {
 					X = parseInt(mousePos.x-1)
 					Y = parseInt(mousePos.y-1)
 				}
 			}
 		}
-		if(typeof locs !== 'undefined'){ 
+		if(typeof locs !== 'undefined' || typeof locs === 'undefined'){ 
 			for(var i=0; i<locs.length; i++){
 				if( parseInt(mousePos.x) <= parseInt(locs[i].x)+locDiameter+2 && 
 					parseInt(mousePos.x) >= parseInt(locs[i].x)-locDiameter-2 &&
@@ -174,17 +187,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	
 	// -- onload of bg image
 	bgImage.onload = function(){
-	
-		ctx.drawImage(bgImage, 0, 0);
-		//console.log(load)
-		if(typeof locs !== 'undefined'){ //if we received locations previously stored
-			console.log("numLocs: "+ locs.length);
-			drawLocations(null,null);
-			locationChosen = true;	
-		} else {
-			drawInstruction(null,null);
-		}
-		
+
 		// -- mouse click event listener
 		canvas.addEventListener('click', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
@@ -199,7 +202,7 @@ function InitMapCanvas(_type, _locs, _cb){
 			debugMsg = 'Loc: ' + mousePos.x + ', ' + mousePos.y;
 			if(typeof locs !== 'undefined') checkHover(mousePos);
 			}, false);
-			
+		
 	} //end bgImage.onLoad
 }
 
