@@ -14,8 +14,8 @@ exports.ready = false;
 var intersections;
 
 var finder = new PathFinding.AStarFinder({
-	allowDiagonal: true
-	//,dontCrossCorners: false
+	allowDiagonal: true,
+	dontCrossCorners: false
 });
 
 
@@ -92,27 +92,52 @@ exports.returnPath = function(endPoint){
 		//var compressedPath =PathFinding.Util.compressPath(tempFinder)
 		// var cleanPath = new Array()
 		//
-		// //making a path object off our intersections
-		// //this is beta
-		// for(var i = 0; i<tempFinder.length; i++){
-		// 	if(i ==0 || i == tempFinder.length-1){
-		// 		//push our first and last items into the DB
-		// 		cleanPath.push(tempFinder[i])
-		// 	}else{
-		// 		for(var j = 0; j<intersections.length;j++){
-		// 			if(_.isEqual(tempFinder[i],intersections[j])) {
-		// 				cleanPath.push(tempFinder[i])
-		// 			}
-		// 		}
-		// 	}
-		// }
-		var smoothenPath = PathFinding.Util.smoothenPath(smoothGrid,tempFinder)
-		return smoothenPath
+		//making a path object off our intersections
+		//this is beta
+		for(var i = 0; i<tempFinder.length; i++){
+			if(i == 0 || i == tempFinder.length-1){
+				//push our first and last items into the DB
+				cleanPath.push(tempFinder[i])
+			}else{
+				for(var j = 0; j<intersections.length;j++){
+					if(_.isEqual(tempFinder[i],intersections[j])) {
+
+						//if current tempFinder is < 2 away from the next tempFinder
+						if(getDistance(tempFinder[i],tempFinder[i+1] < 2){
+							break; //then skip this one
+						}
+						else{
+							cleanPath.push(tempFinder[i]);
+						}
+					}
+				}
+			}
+		}
+
+		//var compressedPath = PathFinding.Util.compressPath(tempFinder)
+		//var smoothenPath = PathFinding.Util.smoothenPath(smoothGrid,tempFinder)
+		//var compSmoothed = PathFinding.Util.compressPath(smoothenPath);
+		//return compSmoothed;
+		return cleanPath;
 
 
 	} 	else return tempFinder
 
 }
+
+function getDistance( p1, p2 ) {
+  var xs = 0;
+  var ys = 0;
+
+  xs = p2.x - p1.x;
+  xs = xs * xs;
+
+  ys = p2.y - p1.y;
+  ys = ys * ys;
+
+  return Math.sqrt( xs + ys );
+}
+
 exports.returnIntersection = function(){
 	return intersection
 }

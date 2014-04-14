@@ -149,6 +149,14 @@ app.get('/location/matrix',function(req,res){
 	res.jsonp(PathFinder.returnMatrix())
 
 })
+
+app.post('/location/pathTest',function(req,res){
+
+  var post = req.body;
+  console.log("pathTest: "+post);
+  res.jsonp(PathFinder.returnPath(post));
+})
+
 //api handling
 app.get('/api', api.index(Database,app.locals.EVENT_TYPES));
 app.get('/api/control/:ctrl', api.control(WebSocket))
