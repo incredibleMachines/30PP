@@ -30,7 +30,7 @@
 		<% if(scene.clips.length > 0){ %>
 		<section class="col-md-9 col-md-offset-3 clip-view">
 			<section class="panel panel-default">
-				<section id="clip-contents" class="">						
+				<section id="clip-contents" class="">
 					<form action="/scenes/<%=scene.clips[0]._id%>" method="post">
 						<input type="hidden" name="scene_id" value="<%= scene._id %>">
 						<article data-spy="affix" id="clip-data" class="row col-md-3">
@@ -64,20 +64,20 @@
 									<button type="button" class="btn btn-danger btn-block btn-sm red scene-delete">Delete This Clip</button>
 								</section>
 						</article><!-- #scene-data -->
-						
-						
+
+
 						<article id="zone-data" class="row col-md-8 col-md-offset-5">
-								
+
 								<article class="row col-md-12 zone-single zone-single-0">
 										<section class="col-md-6 zone-contents row">
-										
+
 											<section class="form-group">
 												<%  var title = "Title"; %>
 												<input class="zone-title" name="zones[0][title]" value="<%= title %>" />
 											</section>
 											<section class="form-group">
 												<label for="name" class="col-md-12 row">File
-													<button type="button" class="pull-right btn btn-xs btn-link" data-toggle="modal" data-target="#new_file_modal">Upload</button>
+													<button type="button" class="pull-right btn btn-xs btn-link file-upload" data-toggle="modal" data-target="#new_file_modal">Upload</button>
 												</label>
 												<select name="zones[0][file]" class="form-control zone-file show-tick">
 													<option value="none">No File</option>
@@ -86,7 +86,7 @@
 													<% } %>
 												</select>
 											</section><!--.form-group -->
-											
+
 											<section class="form-group">
 												<label>Map Locations</label>
 												<select name="zones[0][map_type]" class="form-control zone-map-type">
@@ -95,7 +95,7 @@
 													<option value="multiple">Multiple</option>
 												</select>
 											</section>
-											
+
 											<section class="form-group">
 												<label>Text</label>
 												<select name="zones[0][text_type]" class="form-control zone-text-type">
@@ -104,7 +104,7 @@
 													<option value="multiple">Multiple</option>
 												</select>
 											</section>
-											
+
 										</section><!-- .zone-contents -->
 										<section class="col-md-5 col-md-offset-1 zone-image">
 											<a class="thumbnail">
@@ -112,7 +112,7 @@
 											</a>
 										</section><!-- .zone-image -->
 									</article> <!-- .row .zone-single -->
-							
+
 						</article><!-- #zone-data -->
 					</form>
 				</section> <!-- #scene-contents .row -->

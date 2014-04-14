@@ -132,6 +132,7 @@ app.get('/timeline',timeline.index(Database));
 app.get('/files', files.index(Database));
 app.get('/files/:page',files.index(Database));
 app.post('/files', files.add(Database));
+app.post('/files/ajax', files.addAJAX(Database));
 app.post('/files/:slug', files.update(Database));
 app.delete('/files/:slug', files.delete(Database));
 app.post('/files/:slug/delete',files.delete(Database));
