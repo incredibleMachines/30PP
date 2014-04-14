@@ -128,6 +128,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		$(this).parents('form').submit();
 	});
+	
 	$("button.file-delete").click(function(e){
 
 		if(confirm("You are about to Delete this File, Proceed?")){
