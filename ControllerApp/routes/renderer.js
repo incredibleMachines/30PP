@@ -288,10 +288,10 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 
 						switch(clip.zones.length){
 							case 1:
-								if(!currentGroup.data.hasOwnProperty('source_image_LSR')) currentGroup.data.source_image_LSR = []	
-								
-								currentGroup.data.source_image_LSR.push(clip.zones[0].file.path)
-								
+								if(clip.zones[0].file){
+									if(!currentGroup.data.hasOwnProperty('source_image_LSR')) currentGroup.data.source_image_LSR = []	
+									currentGroup.data.source_image_LSR.push(clip.zones[0].file.path)
+								}
 							break;
 							case 2:
 							
@@ -318,8 +318,10 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}*/
 										
 								}else{
-									if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
-									currentGroup.data.source_image_S.push(clip.zones[0].file.path)
+									if(clip.zones[0].file){
+										if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
+										currentGroup.data.source_image_S.push(clip.zones[0].file.path)
+									}
 								}
 								if(clip.zones[1].file){
 									if(!currentGroup.data.hasOwnProperty('source_image_LR')) currentGroup.data.source_image_LR = []
@@ -378,8 +380,8 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										
 								}else{
 									if(clip.zones[0].file){
-									if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
-									currentGroup.data.source_image_S.push(clip.zones[0].file.path)
+										if(!currentGroup.data.hasOwnProperty('source_image_S')) currentGroup.data.source_image_S = []
+										currentGroup.data.source_image_S.push(clip.zones[0].file.path)
 									}
 								}
 								if(clip.zones[1].file){
