@@ -14,7 +14,7 @@ var path = require('path');
  * Site Route Responses
  *
  */
- 
+
 var events = require('./routes/events');
 var renderer = require('./routes/renderer')
 var files = require('./routes/files');
@@ -34,18 +34,18 @@ var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
 
-/** 
- *	File Checking 	
+/**
+ *	File Checking
  *
- */ 
- 
+ */
+
 Folders.setup();
 
 /**
  * Setup Database
  *
  */
- 
+
 Database.MongoConnect();
 
 /**
@@ -53,16 +53,16 @@ Database.MongoConnect();
  *
  */
 
-WebSocket.Connect(8080,Database); 
+WebSocket.Connect(8080,Database);
 
 /**
  *	PathFinder
  *
  */
- 
+
 PathFinder.setup(function(){
 	//test a path
-	//console.log(PathFinder.returnPath({x:322,y:74})) 
+	//console.log(PathFinder.returnPath({x:322,y:74}))
 })
 
 /**
@@ -79,7 +79,7 @@ app.locals._ = require('underscore');
 app.locals.utils = require('./modules/Utils');
 app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Fashion"]
 app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
- 
+
 app.set('port', process.env.PORT || 3000);
 app.set('title', '30 Park Place Controller');
 app.set('views', __dirname + '/views');
@@ -103,7 +103,7 @@ app.use(function(req, res, next){
   res.render('404', {current: req.url});
 });
 
-/** 
+/**
  * HTTP Routes Handled by Express
  *
  */
@@ -120,7 +120,7 @@ app.post('/scenes/:slug', scenes.update(Database));
 app.post('/scenes/reorder/:id',scenes.reorder(Database));
 app.delete('/scenes/:slug', scenes.delete(Database));
 app.post('/scenes/:slug/delete',scenes.delete(Database))
- 
+
 //render handling
 app.get('/renderqueue', renderer.index(Database));
 app.post('/render',renderer.render(Database,AfterEffects,PathFinder,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
@@ -144,9 +144,9 @@ app.delete('/clips/:id',clips.delete(Database));
 app.post('/clips/:id/delete',clips.delete(Database));
 
 app.get('/location/matrix',function(req,res){
-	
+
 	res.jsonp(PathFinder.returnMatrix())
-	
+
 })
 //api handling
 app.get('/api', api.index(Database,app.locals.EVENT_TYPES));
@@ -172,12 +172,12 @@ app.get('/AfterEffects/open',function(req,res){
 	})
 })
 
-//open a file in AE 
+//open a file in AE
 app.get('/AfterEffects/open/:file',function(req,res){
-	AfterEffects.open('/Users/chris/Desktop/Template_Test_Folder_3/Template_Test.aep',function(e,stdout){ 
+	AfterEffects.open('/Users/chris/Desktop/Template_Test_Folder_3/Template_Test.aep',function(e,stdout){
 		if(!e) res.jsonp({result:'After Effects Opened File.',stdout:stdout})
 		else res.jsonp(500,{error:e})
-	}) 
+	})
 })
 
 //open run a jsx funtion
@@ -186,7 +186,7 @@ app.get('/AfterEffects/script/:file',function(req,res){
 	AfterEffects.runScriptFunction('updateAndRender.jsx',functionCall,function(e,stdout){
 		if(!e) res.jsonp({result:'After Effects Ran Script', stdout: stdout})
 		else res.jsonp(500,{error:e})
-	}) 
+	})
 })
 
 //create fake content for timeline collection

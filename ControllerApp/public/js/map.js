@@ -1,74 +1,74 @@
 
-function InitMapCanvas(_type, _locs, _cb){ 
+function InitMapCanvas(_type, _locs, _cb){
 	var type = _type; //single or multi
-	
+
 	var canvas = document.getElementById("map");
 	var ctx = canvas.getContext("2d");
 	// make ajax call for matrix
 	var matrix = null;
-	
+
 	$.getJSON('/location/matrix',function(data){
-	
+
 		console.log('got matrix')
 		//console.log(data)
 		matrix = data
 		//TODO: make this dynamic
 		canvas.width  = matrix[0].length //512;
 		canvas.height = matrix.length //202;
-		
+
 		console.log("30_PP")
 		console.log("y:123 x:363")
 		console.log(matrix[123][363])
-		
+
 		if(typeof locs !== 'undefined'){ //if we received locations previously stored
 			console.log("numLocs: "+ locs.length);
 			ctx.drawImage(bgImage, 0, 0);
 			drawLocations(null,null);
-			locationChosen = true;	
+			locationChosen = true;
 		} else {
 			drawInstruction(null,null);
 		}
 	})
-	
+
 /*  var grid = Class.New("Grid", [matrix]);
 	grid.pathfinding(0, 0, 2, 4);
-	
+
 	// returns : [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4]]
-	
+
 	grid.setPropertyByCell(0, 1, 1);
 	grid.pathfinding(0, 0, 2, 4);*/
-	
+
 	var bgImage = new Image();
 	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
-	bgImage.src = "/imgs/ManhattanStreets_512_202_JK.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202_smooth.png";
 	var locs = _locs;
-	
+
 	var locDiameter = 8; // size of circles
 	var locColorOn = "#0000FF";
-	
+
 	var selectionId; 	// index for selecting locations
 	var clickType = 1;  // 0=delete  ,  1=add location
-	
+
 	var debugMsg; //holds debug mouse info
-	
+
 	//  --- draw locations on load
 	function drawLocations(x,y){
 
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.fillStyle = locColorOn;
-		
+
 		for(var i=0; i<locs.length; i++){
 			//console.log(locs[i])
 			drawSingleLoc(locs[i].x,locs[i].y,locs[i].color)
-			
+
 			/*//draw coordinates as well
- 			ctx.font = '12pt Calibri'; 
- 			ctx.fillStyle = 'black'; 
+ 			ctx.font = '12pt Calibri';
+ 			ctx.fillStyle = 'black';
  			ctx.fillText(x+","+y, x+5, y+5); */
 		}
 		if(x&&y) drawSingleLoc(x,y,"#000000")
 	}
-	
+
 	function drawSingleLoc(x,y,color){
 		ctx.fillStyle = color;
 		ctx.beginPath();
@@ -76,7 +76,7 @@ function InitMapCanvas(_type, _locs, _cb){
 		ctx.stroke();
 		ctx.fill();
 	}
-	
+
 	function drawInstruction(x,y){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
@@ -85,12 +85,12 @@ function InitMapCanvas(_type, _locs, _cb){
 		//ctx.fillText(type+" location", 57, 100);
 		if(x&&y) drawSingleLoc(x,y,"#000000")
 	}
-	
-	
-	
+
+
+
 	//--- process any click on the canvas
 	function processClick(mousePos){
-		
+
 		if(typeof locs === 'undefined') locs = new Array();
 		switch (clickType){
 			case 0: //removing a location
@@ -100,38 +100,38 @@ function InitMapCanvas(_type, _locs, _cb){
 
 				//console.log("REMOVE LOC");
 			break;
-			
+
 			case 1: //adding a location
 				if(matrix){
 				console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
-					if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){ 
+					if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){
 						var thisLoc = {"x":mousePos.x, "y":mousePos.y};
 						_cb(thisLoc, clickType);
-						locs.push({"x":parseInt(mousePos.x-1), 
-							"y":parseInt(mousePos.y-1), 
+						locs.push({"x":parseInt(mousePos.x-1),
+							"y":parseInt(mousePos.y-1),
 							"color":locColorOn});
 						if(locs.length>1 && type === 'single'){
 							//console.log("map.js: single locs.shift");
 							locs.shift()
-						} 
+						}
 					}//if(matrix)
 				}else alert("No Matrix")
 				//console.log("ADD LOC");
-			break;	
+			break;
 		}
-			
-		drawLocations(null,null);			
+
+		drawLocations(null,null);
 	}
-	
-	
+
+
 	//--- process hovering of mouse on canvas
 	function checkHover(mousePos){
 		var X = null,
 			Y = null;
 		if(matrix){
 			if(mousePos.y-1 > 0
-				&&mousePos.y-1 < canvas.height 
-				&& mousePos.x-1 > 0 
+				&&mousePos.y-1 < canvas.height
+				&& mousePos.x-1 > 0
 				&& mousePos.x-1 < canvas.width){
 				if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)]==0) {
 					X = parseInt(mousePos.x-1)
@@ -139,19 +139,19 @@ function InitMapCanvas(_type, _locs, _cb){
 				}
 			}
 		}
-		if(typeof locs !== 'undefined' || typeof locs === 'undefined'){ 
+		if(typeof locs !== 'undefined' || typeof locs === 'undefined'){
 			for(var i=0; i<locs.length; i++){
-				if( parseInt(mousePos.x) <= parseInt(locs[i].x)+locDiameter+2 && 
+				if( parseInt(mousePos.x) <= parseInt(locs[i].x)+locDiameter+2 &&
 					parseInt(mousePos.x) >= parseInt(locs[i].x)-locDiameter-2 &&
-					parseInt(mousePos.y) <= parseInt(locs[i].y)+locDiameter+2 && 
+					parseInt(mousePos.y) <= parseInt(locs[i].y)+locDiameter+2 &&
 					parseInt(mousePos.y) >= parseInt(locs[i].y)-locDiameter-2 ){
-					
+
 					clickType = 0;
 					selectionId = i;
 					locs[i].color = "#FF0000";
-					
+
 					drawLocations(X,Y);
-					
+
 					ctx.font = '12pt Calibri';
 					ctx.fillStyle = 'black';
 					ctx.fillText("remove", parseInt(locs[i].x)-24, parseInt(locs[i].y)-8);
@@ -166,15 +166,15 @@ function InitMapCanvas(_type, _locs, _cb){
 					//console.log("type ADD");
 				}
 			}
-		} 
-		
+		}
+
 		if(locs.length < 1){
 			clickType = 1;
 			drawInstruction(X,Y);
-		} 
+		}
 	}
 
-	
+
 	// -- get mousePosition function
 	function getMousePos(canvas, evt) {
 		var rect = canvas.getBoundingClientRect();
@@ -183,8 +183,8 @@ function InitMapCanvas(_type, _locs, _cb){
 		  y: Math.floor(evt.clientY - rect.top)
 		};
 	}
-	
-	
+
+
 	// -- onload of bg image
 	bgImage.onload = function(){
 
@@ -195,15 +195,13 @@ function InitMapCanvas(_type, _locs, _cb){
 			processClick(mousePos);
 			//_cb(mousePos, clickType); //clickType 0=delete, 1=add
 			}, false);
-		
+
 	   // mousemove event listener
 		canvas.addEventListener('mousemove', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
 			debugMsg = 'Loc: ' + mousePos.x + ', ' + mousePos.y;
 			if(typeof locs !== 'undefined') checkHover(mousePos);
 			}, false);
-		
+
 	} //end bgImage.onLoad
 }
-
-
