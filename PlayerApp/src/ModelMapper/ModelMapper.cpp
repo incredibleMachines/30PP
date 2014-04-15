@@ -118,10 +118,10 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
 }
 
-void ModelMapper::update(vector<ofTexture *> tex){
+void ModelMapper::update(ofTexture * tex){
     
     //update gui camera to display selected camera graphics
-    textures=tex;
+    texture=tex;
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
     }
@@ -1091,8 +1091,6 @@ void ModelMapper:: saveCamera() {
 
 void ModelMapper:: drawCameras() {
     
-//        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    		glMatrixMode(GL_MODELVIEW);
     for(int i = 0; i < numCams; i++){
         
         if(adjustMode!=ADJUST_MODE_LOCKED||i!=guiCam){
@@ -1104,14 +1102,13 @@ void ModelMapper:: drawCameras() {
             
             for(int j=0;j<numMeshes;j++){
                 
-                
-                textures[0]->bind();
+                texture->bind();
                 
                 ofSetColor(255,255,255);
                 
                 cameras[i].mesh[j].draw();
                 
-                textures[0]->unbind();
+                texture->unbind();
                 
                 //draw mesh wireframe
                 if(bDrawWireframe==true){

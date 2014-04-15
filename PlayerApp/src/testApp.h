@@ -27,7 +27,7 @@ public:
     ModelMapper map;
     
     //---------CONTENT TEXTURE
-    vector<ofTexture *> meshTexture;
+    ofTexture * meshTexture;
     
     //total number of meshes to be loaded
     int numMesh;
@@ -37,8 +37,7 @@ public:
     bool bInited;
     
     ofImage test;
-
-    
+        
 };
 
 
