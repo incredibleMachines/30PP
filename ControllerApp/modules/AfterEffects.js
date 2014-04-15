@@ -1,27 +1,27 @@
 var util 	= require('util'),
-	exec	= require('child_process').exec, 
+	exec	= require('child_process').exec,
 	spawn   = require('child_process').spawn,
-	fs		= require('fs'), 
+	fs		= require('fs'),
 	async 	= require('async'),
 	folders = require('../modules/FolderStructure'),
 	utils 	= require('../modules/Utils');
-	
 
-	
 
-	
-//NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler	
-var AFTEREFFECTS, 
+
+
+
+//NEED TO HAVE AE CURRENTLY RENDERING VARIABLE & Handler
+var AFTEREFFECTS,
 	bRendering = false,
 	bOpen = false,
 	currentFile;
 
 /*
-	
+
 	Filepath Globals
 	Takes into account the ControllerApp file structure
-	
-	needs modifications to ControllerApp Route 
+
+	needs modifications to ControllerApp Route
 */
 var APPLESCRIPT_FOLDER = __dirname+"/../includes/applescripts";
 var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
@@ -41,13 +41,13 @@ var OM_TEMPLATE = 'ProRes222';
 var sample = {
 	file: "/Users/chris/oF/080/apps/30PP/ControllerApp/includes/aeprojects/Seamless_L-R/Seamless_L-R.aep",
 	modifications: {	//modifications key specifies the composition names in the AE file to be modified and the updated image to be replaced.
-						Source_Text: 	"So much new text is here now!", 
+						Source_Text: 	"So much new text is here now!",
 						Source_Image1: 	"/Users/chris/Desktop/images/image2.jpg",
 						Source_Image2: 	"/Users/chris/Desktop/images/image5.jpg"
 	},
     output_options:{		// output_options key specifies the composition names in the AE file to render - as well as the root folder and file name for its render location
                             UV_L: "/Users/chris/Desktop/filename_1",
-                            UV_R: "/Users/chris/Desktop/filename_1", 
+                            UV_R: "/Users/chris/Desktop/filename_1",
                             UV_LR: "/Users/chris/Desktop/filename_1",
                             //UV_S: "/Users/chris/Desktop/filename_1"
      }
@@ -57,24 +57,24 @@ var sample = {
 
 /** Deprecated **/
 //an object to contain all of our applescript commands.
-//may need to be modified 
+//may need to be modified
 var AERunDoScript = { begin: "osascript -e 'tell application \"Adobe After Effects CC\"'",
 					doscript:{	begin : " -e 'DoScriptFile \"",
 								file: "/Users/chris/Documents/Adobe Scripts/TestScript1.jsx",
 								end:"\"'" },
 					end:" -e 'end tell'"
 					}
-					
+
 
 //spin up after effects from commandline applescript
 exports.init = function(cb){
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AEInit.scpt";
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
-						bOpen = true; 
+						bOpen = true;
 						if(err) console.error(err)
 						cb(err)
 						})
-	
+
 }
 //_script = the jsx script to load;
 //_call = the jsx function to call as a string containing the JSON Object of the result
@@ -82,22 +82,22 @@ exports.init = function(cb){
 
 //script = 'updateAndRenderBasic.jsx'
 
-//_call = 'updateAndRenderBasic('+JSON.stringify(sample)+')' 
+//_call = 'updateAndRenderBasic('+JSON.stringify(sample)+')'
 
 //_cb = callback(err, stdout)
 
 exports.runScriptFunction = function(_script,_call,_cb){
-	
+
 	runScriptFunction(_script,_call,_cb);
-	
+
 }
 
 function runScriptFunction(_script,_call,_cb){
 
-	
+
 	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/"+_script+"' '"+_call+"'";
 	//console.log(script)
-	
+
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 						if(err) console.error(err)
 						_cb(err,stdout)
@@ -148,37 +148,37 @@ var renderqueue = async.queue(renderWorker,concurrency)
 //the worker function for our renderqueue
 function renderWorker(scene,callback){
 	//console.log("Running New Process")
-	
+
 	var bError = null;
-	
+
 	utils.deleteFile( scene.output,function(err){
-		
-		
+
+
 		if(err) console.error("Delete File: %s".grey,scene.output)
 		else console.log("Delete File: %s".grey,scene.output)
-		
+
 		//options for render process
 		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', OM_TEMPLATE]
-		//spawn a process to the aerender 
+		//spawn a process to the aerender
 		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
-		
+
 		console.log()
 		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
 		console.log()
-		
+
 		aerender.stdout.on('data', function (data) {
 		  var string = data.toString().replace(/\n$/, "")
 		  //var newString = string.replace()
-		  //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline 
+		  //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline
 		  var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
 		  console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, nstring)
 		})
-		
+
 		aerender.stderr.on('data', function (data) {
 		  console.log('stderr: %s'.orange,  data)
 		  bError = true
 		})
-		
+
 		aerender.on('error',function(error){
 			console.error(error)
 			bError = true;
@@ -189,8 +189,8 @@ function renderWorker(scene,callback){
 		  //callback once the process has finished
 		  callback(bError,scene)
 		})
-		
-		
+
+
 
 	})
 
@@ -199,13 +199,13 @@ function renderWorker(scene,callback){
 exports.processRenderOutput = function(formattedScenes,_Database,cb){
 	var renderError = null;
 	//console.log(JSON.stringify(formattedScenes))
-	
+
 	renderqueue.drain = function(){
 		console.log('Rendering Complete')
 		//call a concat function
 		cb(renderError)
 	}
-	
+
 	async.eachSeries(formattedScenes,setRenderContent,function(e){
 		if(e){
 			console.error(e)
@@ -216,7 +216,7 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 				console.log('After Effects Closed');
 				//render all files on the command line
 				renderqueue.push(formattedScenes,function(err,scene){
-					
+
 					//a callback emitted from each worker on completion
 					//connect to db and update render to true or false
 					if(err){
@@ -227,12 +227,12 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 
 						if(scene.counter>=3) {
 							//callback to different error
-							//wait for queue to drain and pass error back to 
+							//wait for queue to drain and pass error back to
 							console.error("AERENDER: CALLBACK ERROR END".red)
 
 							scene.error = err;
 							renderError = scene;
-							
+
 						}else{
 							//callback to the anonymous function itself
 							console.error("AERENDER: CALLBACK ERROR RETRY".green)
@@ -242,19 +242,19 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 						var clips_cb = 0;
 						//database set object to true
 						scene.ids.forEach(function(id,index){
-							
+
 							_Database.updateByID('clips',id,{$set:{render:false}},function(e){})
-							
+
 						})
-						
+
 					}//end if(err)
 				})//end renderqueue.push
 				//aerender -project PROJECT/default_gastronomy.aep -output OUTPUT/default_gastronomy.mov -comp UV_O
-			})//end exit 
+			})//end exit
 		}
 		//else console.log('done');
 	})
-	
+
 }
 
 //data to render as an array[]
@@ -270,20 +270,21 @@ function setRenderContent(scene,cb){
 		//console.log(scene)
 		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
 		console.log(" Function Call to AE ".inverse.cyan)
-		console.log(functionCall)		
-		
+		console.log(functionCall)
+
 		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
 							if(err){
 								console.error(err)
-								cb(err);	
-							}else{ 
+								cb(err);
+							}else{
 								cb(null)
 							}
 							})
-		
+
 	},timebetween)
 	}else{
-	cb(null)
+		console.log("Files ".inverse.yellow)
+		cb(null)
 	}
 	//cb(null)
 }
@@ -293,11 +294,11 @@ function setRenderContent(scene,cb){
 
 //put togeher ae script osascript based off of using the AERunDoScript Object.
 function runScriptFile(file){
-	
+
 	AERunDoScript.doscript.file = file;
-	
+
 	return AERunDoScript.begin+AERunDoScript.doscript.begin+AERunDoScript.doscript.file+AERunDoScript.doscript.end+AERunDoScript.end;
-	
+
 }
 
 //old test to create loop of movies
@@ -307,7 +308,7 @@ exports.createMovie = function(){
 	var array =[];
 
 	for(var i = 1; i<6;i++){
-		
+
 		var data = {};
 		data.file = "~/Downloads/AERenderTest/AeRenderTest.aep";
 		data.image="~/Desktop/images/image"+i+".jpg";
@@ -315,12 +316,12 @@ exports.createMovie = function(){
 		data.output="~/Desktop/node-test"+i+".mov";
 		array.push(data)
 	}
-	
+
 	//use asyn to run creation of single movies
 	async.eachSeries(array,createMovie,function(e){
 		if(e) console.error(e);
 	})
-	
+
 }
 
 //old test to create loop of movies
@@ -332,22 +333,22 @@ function createMovie(data,cb){
 		//make temp file to open and pass data
 		fs.writeFile('../temp.txt',JSON.stringify(data),function(e){
 			if(e){
-				console.log("error: "+e); 
+				console.log("error: "+e);
 				cb(e)
 			}else{
 				//execute script via cli
 				child = exec(makeScript(),function(err,stdout,stderr){
 					if(err){
 						console.error(err)
-						cb(e);	
-					}else{ 
+						cb(e);
+					}else{
 						cb()
 					}
 				})
-				
+
 			}
 		})
-		
+
 	}, 5000)
-	
+
 }

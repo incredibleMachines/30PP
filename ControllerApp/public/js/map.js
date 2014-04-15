@@ -6,6 +6,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	var ctx = canvas.getContext("2d");
 	// make ajax call for matrix
 	var matrix = null;
+  var path = null;
 
 	$.getJSON('/location/matrix',function(data){
 
@@ -67,6 +68,7 @@ function InitMapCanvas(_type, _locs, _cb){
  			ctx.fillText(x+","+y, x+5, y+5); */
 		}
 		if(x&&y) drawSingleLoc(x,y,"#000000")
+		drawPFinderTest(path);
 	}
 
 	function drawSingleLoc(x,y,color){
@@ -84,6 +86,7 @@ function InitMapCanvas(_type, _locs, _cb){
 		ctx.fillText("click to choose location", 33, 105);
 		//ctx.fillText(type+" location", 57, 100);
 		if(x&&y) drawSingleLoc(x,y,"#000000")
+		drawPFinderTest(path);
 	}
 
 
@@ -97,7 +100,7 @@ function InitMapCanvas(_type, _locs, _cb){
 				var thisLoc = {"x":locs[selectionId].x, "y":locs[selectionId].y};
 				_cb(thisLoc, clickType);
 				locs.splice(selectionId, 1);
-
+				path = null;
 				//console.log("REMOVE LOC");
 			break;
 
@@ -106,7 +109,7 @@ function InitMapCanvas(_type, _locs, _cb){
 				console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
 					if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){
 
-						var thisLoc = {"x":mousePos.x, "y":mousePos.y};
+						var thisLoc = {"x":mousePos.x-1, "y":mousePos.y-1};
 
 						var testLoc = {"x":mousePos.x-1, "y":mousePos.y-1};
 
@@ -114,24 +117,25 @@ function InitMapCanvas(_type, _locs, _cb){
 						console.log(testLoc);
 						/* FOR TESTING */
 						//pass this loc out as a POST
-						// $.ajax({
-						// 	url:'/location/pathTest',
-						// 	type: 'POST',
-						// 	data: testLoc,
-						// 	success: function(result){
-						// 			for(var i=0; i<result.length; i++) console.log(result[i][0]+","+result[i][1]);
-						// 			if(result.length<1){
-						// 				console.log("EMPTY ARRAY RETURNED FROM PFINDER");
-						// 			}else{
-						// 				console.log("length: ");
-						// 				console.log(result.length);
-						// 				drawPFinderTest(result);
-						// 			}
-						// 	},
-						// 	error: function( jqXHR, textStatus, errorThrown ){
-						// 			console.log(jqXHR);
-						// 	}
-						// });
+						$.ajax({
+							url:'/location/pathTest',
+							type: 'POST',
+							data: testLoc,
+							success: function(result){
+									for(var i=0; i<result.length; i++) console.log(result[i][0]+","+result[i][1]);
+									if(result.length<1){
+										console.log("EMPTY ARRAY RETURNED FROM PFINDER");
+									}else{
+										console.log("length: ");
+										console.log(result.length);
+										path = result;
+										drawPFinderTest(path)
+									}
+							},
+							error: function( jqXHR, textStatus, errorThrown ){
+									console.log(jqXHR);
+							}
+						});
 						/**************/
 
 						_cb(thisLoc, clickType);
@@ -152,12 +156,13 @@ function InitMapCanvas(_type, _locs, _cb){
 	}
 
 	function drawPFinderTest(locs){
-
-		for(var i=0; i<locs.length; i++){
-			x = locs[i][0];
-			y = locs[i][1];
-			ctx.fillStyle = "rgb(200,0,0)";
-			ctx.fillRect(x,y,3,3);
+		if(locs){
+			for(var i=0; i<locs.length; i++){
+				x = locs[i][0];
+				y = locs[i][1];
+				ctx.fillStyle = "rgb(200,0,0)";
+				ctx.fillRect(x,y,3,3);
+			}
 		}
 	}
 

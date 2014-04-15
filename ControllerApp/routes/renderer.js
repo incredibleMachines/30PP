@@ -303,14 +303,11 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
-										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										console.log(loc)
-
-										var uniqloc = _.uniq(loc, function(item){ return item[0]+','+item[1] } )
-										console.log(uniqloc)
-
-										var obj = {pos: clip.zones[0].locations[0], directions: uniqloc}
-										currentGroup.data.source_single_location.push(obj)
+										_PathFinder.returnPath(clip.zones[0].locations[0],function(loc){
+											console.log(loc)
+											var obj = {pos: clip.zones[0].locations[0], directions: loc}
+											currentGroup.data.source_single_location.push(obj)
+										})
 									}
 									/*
 									for(var i =0; i<clip.zones[0].locations.length;i++){
@@ -363,14 +360,17 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										currentGroup.data.source_multi_location.push(clip.zones[0].locations)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
-										var loc = _PathFinder.returnPath(clip.zones[0].locations[0])
-										console.log(loc)
+										_PathFinder.returnPath(clip.zones[0].locations[0],function(loc){
+											console.log(loc)
+											var obj = {pos: clip.zones[0].locations[0], directions: loc}
+											currentGroup.data.source_single_location.push(obj)
+										})
 
-										var uniqloc = _.uniq(loc, function(item){ return item[0]+','+item[1] } )
-										console.log(uniqloc)
 
-										var obj = {pos: clip.zones[0].locations[0], directions: uniqloc}
-										currentGroup.data.source_single_location.push(obj)
+										//var uniqloc = _.uniq(loc, function(item){ return item[0]+','+item[1] } )
+										//console.log(uniqloc)
+
+
 									}
 									//currentGroup.data.source_location.push(clip.zones[0].locations)
 									/*

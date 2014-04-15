@@ -83,7 +83,7 @@ function populateIntersections(cb){
 exports.returnMatrix = function(){
 	return matrix
 }
-exports.returnPath = function(endPoint){
+exports.returnPath = function(endPoint,cb){
 	//copy grid
 	//make new
 	//console.log(JSON.stringify(matrix))
@@ -137,11 +137,13 @@ exports.returnPath = function(endPoint){
 		//var smoothenPath = PathFinding.Util.smoothenPath(smoothGrid,tempFinder)
 		//var compSmoothed = PathFinding.Util.compressPath(smoothenPath);
 		//return compSmoothed;
-		return cleanPath;
+		if(!cb) return cleanPath;
+		else cb(cleanPath)
 
-
-	} 	else return tempFinder
-
+	}else{
+						if(!cb) return tempFinder
+						else cb(cleanPath)
+				}
 }
 
 function getDistance( p1, p2 ) {
