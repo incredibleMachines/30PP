@@ -10,7 +10,7 @@
 int main()
 {
 	
-	
+//    ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
 	MSA::ofxCocoa::InitSettings			initSettings;
 	
 	initSettings.isOpaque				= true;

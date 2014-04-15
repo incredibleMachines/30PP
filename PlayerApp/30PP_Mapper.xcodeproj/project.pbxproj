@@ -15,6 +15,7 @@
 		D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7D18EF14C6001E501E /* 04_04.obj */; };
 		D320BB8018EF14EB001E501E /* 04_04.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7F18EF14EB001E501E /* 04_04.mov */; };
 		D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB8118EF1D23001E501E /* UV_OUT.mov */; };
+		D334C30718FDBAFC0071EA7B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D334C2FA18FDBAFC0071EA7B /* README.md */; };
 		D339C11918CFA0BB008E604C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC418CFA0BA008E604C /* .gitignore */; };
 		D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC518CFA0BA008E604C /* addon_config.mk */; };
 		D339C19418CFA0BB008E604C /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D339C09018CFA0BB008E604C /* jsoncpp.cpp */; };
@@ -131,6 +132,7 @@
 		D3801EAF18EB02310006C493 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3801EA918EB02310006C493 /* tinyxmlparser.cpp */; };
 		D3801EB018EB02310006C493 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3801EAB18EB02310006C493 /* ofxXmlSettings.cpp */; };
 		D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */; };
+		D3B52A8018FC7FAE00015B97 /* UV walls_05.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3B52A7F18FC7FAE00015B97 /* UV walls_05.obj */; };
 		D3CB1D5218DA21B60058D084 /* Big_optimized.obj in Resources */ = {isa = PBXBuildFile; fileRef = D3CB1D5118DA21B60058D084 /* Big_optimized.obj */; };
 		D3CFDDA818F8922300C8552F /* output.mov in Resources */ = {isa = PBXBuildFile; fileRef = D3CFDDA718F8922300C8552F /* output.mov */; };
 		E20462FE18F44E6D00F41A74 /* EventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E20462F918F44E6D00F41A74 /* EventHandler.cpp */; };
@@ -212,6 +214,8 @@
 		D320BB7D18EF14C6001E501E /* 04_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 04_04.obj; sourceTree = "<group>"; };
 		D320BB7F18EF14EB001E501E /* 04_04.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 04_04.mov; sourceTree = "<group>"; };
 		D320BB8118EF1D23001E501E /* UV_OUT.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT.mov; sourceTree = "<group>"; };
+		D334C2FA18FDBAFC0071EA7B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		D334C2FE18FDBAFC0071EA7B /* ofxHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHomography.h; sourceTree = "<group>"; };
 		D339BFC418CFA0BA008E604C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		D339BFC518CFA0BA008E604C /* addon_config.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addon_config.mk; sourceTree = "<group>"; };
 		D339C08E18CFA0BB008E604C /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
@@ -475,6 +479,7 @@
 		D3801EAB18EB02310006C493 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		D3801EAC18EB02310006C493 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		D3A3099118D8EAD7006C13BC /* Shape Test_01.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Shape Test_01.obj"; sourceTree = "<group>"; };
+		D3B52A7F18FC7FAE00015B97 /* UV walls_05.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "UV walls_05.obj"; sourceTree = "<group>"; };
 		D3CB1D5118DA21B60058D084 /* Big_optimized.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Big_optimized.obj; sourceTree = "<group>"; };
 		D3CFDDA718F8922300C8552F /* output.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = output.mov; sourceTree = "<group>"; };
 		E20462F918F44E6D00F41A74 /* EventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventHandler.cpp; path = Handlers/EventHandler.cpp; sourceTree = "<group>"; };
@@ -616,6 +621,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				D334C2E818FDBAFC0071EA7B /* ofxHomography */,
 				D3801EA418EB02310006C493 /* ofxXmlSettings */,
 				D3801AF418EB007E0006C493 /* ofxUI */,
 				D3801A8A18EA455C0006C493 /* ofxTween */,
@@ -654,6 +660,23 @@
 				BBAB23BE13894E4700AA2426 /* GLUT.framework */,
 			);
 			name = "3rd party frameworks";
+			sourceTree = "<group>";
+		};
+		D334C2E818FDBAFC0071EA7B /* ofxHomography */ = {
+			isa = PBXGroup;
+			children = (
+				D334C2FA18FDBAFC0071EA7B /* README.md */,
+				D334C2FD18FDBAFC0071EA7B /* src */,
+			);
+			path = ofxHomography;
+			sourceTree = "<group>";
+		};
+		D334C2FD18FDBAFC0071EA7B /* src */ = {
+			isa = PBXGroup;
+			children = (
+				D334C2FE18FDBAFC0071EA7B /* ofxHomography.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		D339BFC318CFA0BA008E604C /* ofxLibwebsockets */ = {
@@ -1328,6 +1351,7 @@
 		E2A6964C18CE7C9B008D8EF1 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D3B52A7F18FC7FAE00015B97 /* UV walls_05.obj */,
 				D3CFDDA718F8922300C8552F /* output.mov */,
 				D371D7A018F74C04006173E6 /* Sequence 01.jpg */,
 				D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */,
@@ -1498,6 +1522,7 @@
 				E2A691D518CE6567008D8EF1 /* addon_config.mk in Resources */,
 				D33E96C818E07D5100CBB90F /* README.txt in Resources */,
 				D3801ACC18EA455C0006C493 /* .gitignore in Resources */,
+				D334C30718FDBAFC0071EA7B /* README.md in Resources */,
 				D339C19518CFA0BB008E604C /* COPYING in Resources */,
 				D339C1A218CFA0BB008E604C /* websockets_static.pdb in Resources */,
 				D3801ADD18EA455C0006C493 /* LICENSE in Resources */,
@@ -1515,6 +1540,7 @@
 				E2A6965918CE7C9B008D8EF1 /* settings.json in Resources */,
 				E2A691D818CE6567008D8EF1 /* aiMatrix3x3.inl in Resources */,
 				D339C1A418CFA0BB008E604C /* zlib.pdb in Resources */,
+				D3B52A8018FC7FAE00015B97 /* UV walls_05.obj in Resources */,
 				D3A3099218D8EAD7006C13BC /* Shape Test_01.obj in Resources */,
 				D3801ACB18EA455C0006C493 /* .cproject in Resources */,
 				D371D7A118F74C04006173E6 /* Sequence 01.jpg in Resources */,

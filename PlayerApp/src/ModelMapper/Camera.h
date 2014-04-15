@@ -25,6 +25,22 @@ public:
     //-----------MESH OBJECT
     vector<ofMesh> mesh;
     
+    struct texture2D{
+        ofPoint pos;
+        int width;
+        int height;
+    };
+    
+    struct meshObject{
+        bool isMesh;
+        ofMesh mesh;
+        texture2D tex;
+        ofPoint translate;
+        int horizPoints, vertPoints;
+        vector<ofPoint> pointsOrig;
+        vector<ofPoint> pointsCurr;
+    };
+    
     //-----------MASK OBJECTS
     vector<ofPolyline> masks;
     vector<ofPath> drawMasks;

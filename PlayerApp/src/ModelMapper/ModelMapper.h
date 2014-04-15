@@ -55,7 +55,7 @@ public:
     void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
     void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
     
-    void update(vector<ofTexture *> tex);
+    void update(ofTexture * tex);
     void draw();
     
     void keyPressed(ofKeyEventArgs& args);
@@ -121,6 +121,7 @@ public:
     void calculateMagnetPoints();
     float magnetMap(float distance, float radius);
     void resetSelected();
+    void set2D(int _meshNum, ofPoint start, ofPoint size);
     
     void setGUIVisible(bool hide);
     
@@ -183,7 +184,7 @@ public:
     //    vector<Composite> compositeTexture;
     bool bMipMap;
     
-    vector<ofTexture *> textures;
+    ofTexture * texture;
     
     float magnetRadius;
     int selectMode, easeMode, easeInStyle, easeOutStyle, easeBothStyle;
