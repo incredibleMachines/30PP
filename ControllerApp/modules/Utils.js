@@ -8,7 +8,6 @@ exports.makeSlug = function(title){
 
   title = title.replace(/[^\w\s]/gi,'')
   title = title.replace( / +/g, ' ' )
-  console.log("MAKE SLUG: ".inverse+title)
 
 	return title.toLowerCase().replace(/ /g,'-');
 }
