@@ -31,6 +31,11 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     viewport.height=_viewSize.y;
     
     mesh=_mesh;
+    for (int i=0; i<mesh.size();i++){
+        meshObject newObject;
+        newObject.isMesh=true;
+        meshObjects.push_back(newObject);
+    }
     highlightMask=-1;
     for(int i=0; i<_masks.size();i++){
         ofPath tempDrawMask;
@@ -47,4 +52,19 @@ void Camera::addMask(){
     masks.push_back(tempMask);
     drawMasks.push_back(tempDrawMask);
     highlightMask=masks.size()-1;
+}
+
+void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped){
+    
+    meshObjects[_meshNum].translate=translate;
+    meshObjects[_meshNum].scale=scale;
+    meshObjects[_meshNum].horizGrid=horizGrid;
+    meshObjects[_meshNum].vertGrid=vertGrid;
+    meshObjects[_meshNum].tex.pos=texPos;
+    meshObjects[_meshNum].tex.width=texWidth;
+    meshObjects[_meshNum].tex.height=texHeight;
+    meshObjects[_meshNum].originals=originals;
+    meshObjects[_meshNum].warped=warped;
+    meshObjects[_meshNum].isMesh=false;
+    
 }
