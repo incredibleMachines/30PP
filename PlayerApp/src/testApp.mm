@@ -132,6 +132,12 @@ void testApp::keyPressed(int key){
                 MSA::ofxCocoa::showCursor();
             }
             break;
+        case 'p':
+            MSA::ofxCocoa::pausePlayer();
+            break;
+        case 'P':
+            MSA::ofxCocoa::startPlayer();
+            break;
     }
     
 }

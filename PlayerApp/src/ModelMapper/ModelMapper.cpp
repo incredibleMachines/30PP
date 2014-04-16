@@ -101,7 +101,9 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     if(reader.parse(buffer.getText(), settings, false)){
         cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
         setupCameras();
-    } else {
+    }
+    
+    else {
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
     
@@ -124,11 +126,13 @@ void ModelMapper::update(ofTexture * tex){
     //update gui camera to display selected camera graphics
     texture=tex;
     cameras[guiCam].which=cameras[cameraSelect].which;
+
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
         cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
         cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
     }
+    
     cameras[guiCam].masks=cameras[cameraSelect].masks;
     cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
     
@@ -136,6 +140,7 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
         cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     }
+
 }
 
 void ModelMapper::draw(){
@@ -1280,8 +1285,8 @@ void ModelMapper:: drawCameras() {
             for(int j=0;j<numMeshes;j++){
                 
                 bool drawMesh=false;
-                for(int k=0;k<cameras[cameraSelect].which.size();k++){
-                    if(cameras[cameraSelect].which[k]==j){
+                for(int k=0;k<cameras[i].which.size();k++){
+                    if(cameras[i].which[k]==j){
                         drawMesh=true;
                     }
                 }
@@ -1309,7 +1314,6 @@ void ModelMapper:: drawCameras() {
             }
             
             
-            
             //End camera object
             cameras[i].camera.end();
             
@@ -1317,8 +1321,8 @@ void ModelMapper:: drawCameras() {
             for(int j=0;j<numMeshes;j++){
                 
                 bool drawMesh=false;
-                for(int k=0;k<cameras[cameraSelect].which.size();k++){
-                    if(cameras[cameraSelect].which[k]==j){
+                for(int k=0;k<cameras[i].which.size();k++){
+                    if(cameras[i].which[k]==j){
                         drawMesh=true;
                     }
                 }
@@ -2050,6 +2054,10 @@ void ModelMapper::setMesh2DGUI(){
     scale2D = mesh2DGUI->addTextInput("Scale", ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
     scale2D->setAutoClear(false);
     
+    mesh2DGUI->addSpacer();
+    mesh2DGUI->addLabelButton("CLEAR SELECTION", false);
+    mesh2DGUI->addSpacer();
+    mesh2DGUI->addLabelButton("RESET WARP", false);
     
     mesh2DGUI->setPosition(212, 0);
     mesh2DGUI->autoSizeToFitWidgets();
@@ -2309,6 +2317,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
     }
     
+    
+    
     else if(name == "CURRENT")
     {
         for(int i=0;i<vertices2D.size();i++){
@@ -2321,7 +2331,9 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         tempVertices2D.clear();
         
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        
         cameraSelect=ofToInt(currentRadio->getActiveName());
+        
         currentMesh=ofToInt(currentRadio->getActiveName())-1;
         
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
@@ -2451,6 +2463,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         tempVertices.clear();
         magnetVertices.clear();
         penPoly.clear();
+        vertices2D.clear();
+        tempVertices2D.clear();
     }
     
     else if(name=="RELOAD MESH"){
@@ -2472,6 +2486,14 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     
     else if(name=="RELOAD SELECTED"){
         resetSelected();
+    }
+    
+    else if(name == "RESET WARP")
+    {
+        ofxUIButton *button = (ofxUIButton *) e.getButton();
+        if(button->getValue()==1){
+            cameras[cameraSelect].meshObjects[currentMesh].warped=cameras[cameraSelect].meshObjects[currentMesh].originals;
+        }
     }
     
     else if(name=="START SELECTION"){
