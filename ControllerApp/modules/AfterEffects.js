@@ -264,18 +264,17 @@ function setRenderContent(scene,cb){
 	scene.asset_loc = ASSET_FOLDER+'/'
 	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
 	scene.template = AEPROJECT_FOLDER+'/'+scene.template
-	if(scene.type === 'default_gastronomy' || scene.type==='default_markets' || scene.type==='default_activities' || scene.type==='default_fashion' || scene.type==='default_parks' || scene.type==='default_artdesign'){
+	if(scene.type === 'default_gastronomy' || scene.type==='default_markets' || scene.type==='default_activities' || scene.type==='default_fashion' || scene.type==='default_parks' || scene.type==='default_art- design'){
 	setTimeout(function(){
 
 		//console.log(scene)
-		var functionCall = scene.type+"("+JSON.stringify(scene)+")";
+		var functionCall = "main("+JSON.stringify(scene)+")" //scene.type+"("+JSON.stringify(scene)+")";
 		console.log(" Function Call to AE ".inverse.cyan)
 		console.log(functionCall)
 
 		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
 							if(err){
 								console.error(err)
-								cb(err);
 							}else{
 								cb(null)
 							}
