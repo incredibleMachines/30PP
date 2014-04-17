@@ -53,10 +53,10 @@ void testApp::setup() {
     which.push_back(0);
     map.setMeshDraw(1,which);
     which.clear();
-    which.push_back(1);
+    which.push_back(2);
     map.setMeshDraw(2,which);
     which.clear();
-    which.push_back(2);
+    which.push_back(1);
     map.setMeshDraw(3,which);
     
     //----------SOCKET HANDLER SETUP
@@ -119,6 +119,10 @@ void testApp::draw(){
     
     map.draw();
     
+//    glDepthFunc(GL_ALWAYS);
+//    ofSetColor(255);
+//    ofCircle(100,100,100);
+//    glDepthFunc(GL_LESS);
 }
 
 //--------------------------------------------------------------

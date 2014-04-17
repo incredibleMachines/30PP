@@ -90,7 +90,7 @@ app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir, keepExte
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
-app.use(express.session());
+app.use(express.session({secret: '!@#$%^&*()1234567890qwerty'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
@@ -127,6 +127,14 @@ app.post('/render',renderer.render(Database,AfterEffects,PathFinder,app.locals.E
 
 //timeline page
 app.get('/timeline',timeline.index(Database));
+app.post('/timeline/update', timeline.update(Database));
+app.get('/timeline/make',function(req,res){
+  timeline.make(Database, app.locals.EVENT_TYPES, function (e){
+    if(!e)res.redirect('/timeline');// res.jsonp({result: "MADE timeline"});
+    else res.jsonp(500,{error:e});
+  })
+})
+
 
 //asset handling pages
 app.get('/files', files.index(Database));
@@ -198,19 +206,8 @@ app.get('/AfterEffects/script/:file',function(req,res){
 	})
 })
 
-//create fake content for timeline collection
-app.get('/timeline/make',function(req,res){
-	timeline.make(Database, app.locals.EVENT_TYPES, function (e){
-		if(!e){
-			var timeline = new Array;
-			Database.getAll('timeline',function(__e,_timeline){
-				_timeline.forEach(function(event){ timeline.push(event); })
-				res.jsonp({"timeline":timeline});
-			})
-		}
-		else res.jsonp(500,{error:e})
-	})
-})
+
+
 
 //app.get('/timeline/make', timeline.make(Database, app.locals.EVENT_TYPES));
 

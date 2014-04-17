@@ -1346,7 +1346,7 @@ void ModelMapper:: drawCameras() {
                             ofPushMatrix();
                             glMultMatrixf(homography.getPtr());
                             //                            texture->drawSubsection(0,0,cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height,cameras[i].meshObjects[j].tex.pos.x,cameras[i].meshObjects[j].tex.pos.y, cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height);
-                            
+                            if(i!=guiCam){
                             texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
                                                     cameras[i].meshObjects[j].originals[k][0].y,
                                                     cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
@@ -1355,6 +1355,7 @@ void ModelMapper:: drawCameras() {
                                                     cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
                                                     cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                     cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            }
                             glDepthFunc(GL_ALWAYS);
                             ofEnableAlphaBlending();
                             
@@ -1374,7 +1375,7 @@ void ModelMapper:: drawCameras() {
                             glDepthFunc(GL_LESS);
                             
                             if(bDrawWireframe==true){
-                                ofSetColor(255,255,255);
+                                ofSetColor(0,255,0);
                                 ofNoFill();
                                 glDepthFunc(GL_ALWAYS);
                                 ofRect(cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][1].x-cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][2].y-cameras[i].meshObjects[j].originals[k][0].y);
@@ -1390,9 +1391,9 @@ void ModelMapper:: drawCameras() {
         }
         
         //ADJUST_MODE_LOCKED guiCam text
-        else{
-            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
-        }
+//        else{
+//            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
+//        }
         
         
     }
@@ -1602,6 +1603,9 @@ void ModelMapper::drawHighlights() {
                 
                 if(vertices2D.size()>0){
                     for(int j=0;j<vertices2D[i].size();j++){
+                        ofSetColor(0,255,0);
+                        ofNoFill();
+                        ofSetLineWidth(2);
                         ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,4);
                         if(cameraSelect!=guiCam){
                             ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,4);
@@ -1617,7 +1621,7 @@ void ModelMapper::drawHighlights() {
         ofNoFill();
         ofSetLineWidth(2);
         if(drawNearest==true){
-            ofSetColor(ofColor::yellow);
+            ofSetColor(0,255,0);
             ofCircle(nearestVertex, 4);
         }
     }
