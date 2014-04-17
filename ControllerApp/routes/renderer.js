@@ -273,7 +273,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 					var currentGroup = _.findWhere(holder,{type:type})
 
 					currentGroup.template = type+".aep"
-					currentGroup.script = type+".jsx"
+					currentGroup.script = "default_scene.jsx"//type+".jsx"
 					currentGroup.data = {}
 					currentGroup.ids = []
 					_.each(scene.clips,function(clip,index){
