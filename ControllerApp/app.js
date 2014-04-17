@@ -90,7 +90,7 @@ app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir, keepExte
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
-app.use(express.session());
+app.use(express.session({secret: '!@#$%^&*()1234567890qwerty'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
