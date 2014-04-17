@@ -1375,7 +1375,7 @@ void ModelMapper:: drawCameras() {
                             glDepthFunc(GL_LESS);
                             
                             if(bDrawWireframe==true){
-                                ofSetColor(255,255,255);
+                                ofSetColor(0,255,0);
                                 ofNoFill();
                                 glDepthFunc(GL_ALWAYS);
                                 ofRect(cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][1].x-cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][2].y-cameras[i].meshObjects[j].originals[k][0].y);
@@ -1603,6 +1603,9 @@ void ModelMapper::drawHighlights() {
                 
                 if(vertices2D.size()>0){
                     for(int j=0;j<vertices2D[i].size();j++){
+                        ofSetColor(0,255,0);
+                        ofNoFill();
+                        ofSetLineWidth(2);
                         ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,4);
                         if(cameraSelect!=guiCam){
                             ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,4);
@@ -1618,7 +1621,7 @@ void ModelMapper::drawHighlights() {
         ofNoFill();
         ofSetLineWidth(2);
         if(drawNearest==true){
-            ofSetColor(ofColor::yellow);
+            ofSetColor(0,255,0);
             ofCircle(nearestVertex, 4);
         }
     }
