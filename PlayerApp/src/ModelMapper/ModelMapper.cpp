@@ -1346,7 +1346,7 @@ void ModelMapper:: drawCameras() {
                             ofPushMatrix();
                             glMultMatrixf(homography.getPtr());
                             //                            texture->drawSubsection(0,0,cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height,cameras[i].meshObjects[j].tex.pos.x,cameras[i].meshObjects[j].tex.pos.y, cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height);
-                            
+                            if(i!=guiCam){
                             texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
                                                     cameras[i].meshObjects[j].originals[k][0].y,
                                                     cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
@@ -1355,6 +1355,7 @@ void ModelMapper:: drawCameras() {
                                                     cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
                                                     cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                     cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            }
                             glDepthFunc(GL_ALWAYS);
                             ofEnableAlphaBlending();
                             
