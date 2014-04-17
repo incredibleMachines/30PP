@@ -18,6 +18,8 @@ public:
     //create additional mask
     void addMask();
     
+    void set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped);
+    
     //-----------CAMERA DATA
     ofEasyCam camera;
     ofRectangle viewport;
@@ -26,25 +28,31 @@ public:
     vector<ofMesh> mesh;
     
     struct texture2D{
+    public:
         ofPoint pos;
         int width;
         int height;
     };
     
     struct meshObject{
+    public:
         bool isMesh;
-        ofMesh mesh;
         texture2D tex;
         ofPoint translate;
-        int horizPoints, vertPoints;
-        vector<ofPoint> pointsOrig;
-        vector<ofPoint> pointsCurr;
+        float scale;
+        int horizGrid, vertGrid;
+        vector< vector<ofPoint> > originals;
+        vector< vector<ofPoint> > warped;
     };
+    
+    vector<meshObject> meshObjects;
     
     //-----------MASK OBJECTS
     vector<ofPolyline> masks;
     vector<ofPath> drawMasks;
     int highlightMask;
+    
+    vector<int> which;
 };
 
 

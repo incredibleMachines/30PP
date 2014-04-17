@@ -15,6 +15,7 @@
 		D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7D18EF14C6001E501E /* 04_04.obj */; };
 		D320BB8018EF14EB001E501E /* 04_04.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7F18EF14EB001E501E /* 04_04.mov */; };
 		D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB8118EF1D23001E501E /* UV_OUT.mov */; };
+		D32673AD18FF42100036A1F9 /* multi.mov in Resources */ = {isa = PBXBuildFile; fileRef = D32673AC18FF42100036A1F9 /* multi.mov */; };
 		D334C30718FDBAFC0071EA7B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D334C2FA18FDBAFC0071EA7B /* README.md */; };
 		D339C11918CFA0BB008E604C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC418CFA0BA008E604C /* .gitignore */; };
 		D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */ = {isa = PBXBuildFile; fileRef = D339BFC518CFA0BA008E604C /* addon_config.mk */; };
@@ -214,6 +215,7 @@
 		D320BB7D18EF14C6001E501E /* 04_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 04_04.obj; sourceTree = "<group>"; };
 		D320BB7F18EF14EB001E501E /* 04_04.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 04_04.mov; sourceTree = "<group>"; };
 		D320BB8118EF1D23001E501E /* UV_OUT.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT.mov; sourceTree = "<group>"; };
+		D32673AC18FF42100036A1F9 /* multi.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = multi.mov; sourceTree = "<group>"; };
 		D334C2FA18FDBAFC0071EA7B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D334C2FE18FDBAFC0071EA7B /* ofxHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxHomography.h; sourceTree = "<group>"; };
 		D339BFC418CFA0BA008E604C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -1351,6 +1353,7 @@
 		E2A6964C18CE7C9B008D8EF1 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D32673AC18FF42100036A1F9 /* multi.mov */,
 				D3B52A7F18FC7FAE00015B97 /* UV walls_05.obj */,
 				D3CFDDA718F8922300C8552F /* output.mov */,
 				D371D7A018F74C04006173E6 /* Sequence 01.jpg */,
@@ -1515,6 +1518,7 @@
 				D3801D1D18EB00800006C493 /* .gitignore in Resources */,
 				D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */,
 				D33E96C918E07D5100CBB90F /* WithWindow.xib in Resources */,
+				D32673AD18FF42100036A1F9 /* multi.mov in Resources */,
 				D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */,
 				D311621518F33DC80066A9B2 /* UV_OUT_gastronomy.mov in Resources */,
 				D371D7A318F7513A006173E6 /* mesh_2.obj in Resources */,

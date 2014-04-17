@@ -91,7 +91,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //texture settings
     bMipMap=true;
     
-    //----------LOAD SETTINGS JSON
+    //----------LOAD settings JSON
     
     ofBuffer buffer = ofBufferFromFile("settings.json");
     
@@ -101,7 +101,9 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     if(reader.parse(buffer.getText(), settings, false)){
         cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
         setupCameras();
-    } else {
+    }
+    
+    else {
         cout  << "Failed to parse JSON: " <<  reader.getFormatedErrorMessages() << endl;
 	}
     
@@ -116,15 +118,21 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
     
+    currentMesh=0;
 }
 
 void ModelMapper::update(ofTexture * tex){
     
     //update gui camera to display selected camera graphics
     texture=tex;
+    cameras[guiCam].which=cameras[cameraSelect].which;
+
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
+        cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
+        cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
     }
+    
     cameras[guiCam].masks=cameras[cameraSelect].masks;
     cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
     
@@ -132,6 +140,7 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
         cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     }
+
 }
 
 void ModelMapper::draw(){
@@ -194,6 +203,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMask(0,-moveModifier);
             }
             
+            else if(adjustMode==ADJUST_MODE_2D){
+                adjust2D(0,-moveModifier);
+            }
+            
             //Adjust Mesh Point Positions
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,moveModifier,0);
@@ -216,6 +229,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,-moveModifier,0);
             }
+            else if(adjustMode==ADJUST_MODE_2D){
+                adjust2D(0,moveModifier);
+            }
             break;
             
         case OF_KEY_RIGHT:
@@ -235,6 +251,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(-moveModifier,0,0);
             }
+            else if(adjustMode==ADJUST_MODE_2D){
+                adjust2D(moveModifier,0);
+            }
             break;
             
         case OF_KEY_LEFT:
@@ -252,6 +271,9 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(moveModifier,0,0);
+            }
+            else if(adjustMode==ADJUST_MODE_2D){
+                adjust2D(-moveModifier,0);
             }
             break;
             
@@ -369,31 +391,40 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             //TODO: add shift-drag to deselect functionality?
             for(int i=0;i<numMeshes;i++)
             {
-                vector<meshVertex> tempVector;
+                bool drawMesh=false;
+                for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                    if(cameras[cameraSelect].which[j]==i){
+                        drawMesh=true;
+                    }
+                }
                 
-                //determine vertices inside drag box on gui camera screen
-                for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
-                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                    if(selectRect.inside(cur)) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                vector<meshVertex> tempVector;
+                if(drawMesh==true){
+                    
+                    //determine vertices inside drag box on gui camera screen
+                    for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
+                        ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                        if(selectRect.inside(cur)) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
                                     }
                                 }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
                             }
-                            if(bShiftPressed==false&&included==false){
+                            else if(bShiftPressed==false){
                                 tempVector.push_back(tempVert);
                             }
-                        }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
                         }
                     }
                 }
@@ -417,55 +448,66 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                vector<meshVertex> tempVector;
-                int n=cameras[guiCam].mesh[i].getNumVertices();
-                
-                //Check for mouse clicks on gui screen if present highlight this particular vertex
-                for(int j = 0; j < n; j++){
-                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                    float distance = cur.distance(ofVec2f(args.x,args.y));
-                    if(distance < clickThreshold) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
-                                    }
-                                }
-                            }
-                            if(bShiftPressed==false&&included==false){
-                                tempVector.push_back(tempVert);
-                            }
-                        }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
-                        }
+                bool drawMesh=false;
+                for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                    if(cameras[cameraSelect].which[j]==i){
+                        drawMesh=true;
                     }
-                    else if(distance < brushRadius) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                }
+                
+                vector<meshVertex> tempVector;
+                
+                if(drawMesh==true){
+                    
+                    int n=cameras[guiCam].mesh[i].getNumVertices();
+                    
+                    //Check for mouse clicks on gui screen if present highlight this particular vertex
+                    for(int j = 0; j < n; j++){
+                        ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                        float distance = cur.distance(ofVec2f(args.x,args.y));
+                        if(distance < clickThreshold) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
                                     }
                                 }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
                             }
-                            if(bShiftPressed==false&&included==false){
+                            else if(bShiftPressed==false){
                                 tempVector.push_back(tempVert);
                             }
                         }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
+                        else if(distance < brushRadius) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
+                                    }
+                                }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
+                            }
+                            else if(bShiftPressed==false){
+                                tempVector.push_back(tempVert);
+                            }
                         }
                     }
                 }
@@ -482,6 +524,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                 
                 
             }
+            
         }
         
     }
@@ -567,31 +610,40 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                         
                         for(int i=0;i<numMeshes;i++)
                         {
-                            vector<meshVertex> tempVector;
+                            bool drawMesh=false;
+                            for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                                if(cameras[cameraSelect].which[j]==i){
+                                    drawMesh=true;
+                                }
+                            }
                             
-                            //determine vertices inside drag box on gui camera screen
-                            for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
-                                ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                                if(penPoly.inside(cur)) {
-                                    meshVertex tempVert;
-                                    tempVert.vertex=cur;
-                                    tempVert.index=j;
-                                    bool included=false;
-                                    if(tempVertices.size()>0){
-                                        for(int k=0;k<tempVertices[i].size();k++){
-                                            if(tempVertices[i][k].index==tempVert.index){
-                                                included=true;
-                                                if(bShiftPressed==true){
-                                                    tempVertices[i].erase(tempVertices[i].begin()+k);
+                            vector<meshVertex> tempVector;
+                            if(drawMesh==true){
+                                
+                                //determine vertices inside drag box on gui camera screen
+                                for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
+                                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                                    if(penPoly.inside(cur)) {
+                                        meshVertex tempVert;
+                                        tempVert.vertex=cur;
+                                        tempVert.index=j;
+                                        bool included=false;
+                                        if(tempVertices.size()>0){
+                                            for(int k=0;k<tempVertices[i].size();k++){
+                                                if(tempVertices[i][k].index==tempVert.index){
+                                                    included=true;
+                                                    if(bShiftPressed==true){
+                                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                                                    }
                                                 }
                                             }
+                                            if(bShiftPressed==false&&included==false){
+                                                tempVector.push_back(tempVert);
+                                            }
                                         }
-                                        if(bShiftPressed==false&&included==false){
+                                        else if(bShiftPressed==false){
                                             tempVector.push_back(tempVert);
                                         }
-                                    }
-                                    else if(bShiftPressed==false){
-                                        tempVector.push_back(tempVert);
                                     }
                                 }
                             }
@@ -644,31 +696,42 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                             
                             for(int i=0;i<numMeshes;i++)
                             {
+                                bool drawMesh=false;
+                                for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                                    if(cameras[cameraSelect].which[j]==i){
+                                        drawMesh=true;
+                                    }
+                                }
+                                
                                 vector<meshVertex> tempVector;
                                 
-                                //determine vertices inside drag box on gui camera screen
-                                for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
-                                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                                    if(doublePoly.inside(cur)) {
-                                        meshVertex tempVert;
-                                        tempVert.vertex=cur;
-                                        tempVert.index=j;
-                                        bool included=false;
-                                        if(tempDoubleVertices.size()>0){
-                                            for(int k=0;k<tempDoubleVertices[i].size();k++){
-                                                if(tempDoubleVertices[i][k].index==tempVert.index){
-                                                    included=true;
-                                                    if(bShiftPressed==true){
-                                                        tempDoubleVertices[i].erase(tempDoubleVertices[i].begin()+k);
+                                if(drawMesh==true){
+                                    
+                                    //determine vertices inside drag box on gui camera screen
+                                    for(int j = 0; j < cameras[guiCam].mesh[i].getNumVertices(); j++){
+                                        ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                                        if(doublePoly.inside(cur)) {
+                                            meshVertex tempVert;
+                                            tempVert.vertex=cur;
+                                            tempVert.index=j;
+                                            bool included=false;
+                                            if(tempDoubleVertices.size()>0){
+                                                for(int k=0;k<tempDoubleVertices[i].size();k++){
+                                                    if(tempDoubleVertices[i][k].index==tempVert.index){
+                                                        included=true;
+                                                        if(bShiftPressed==true){
+                                                            tempDoubleVertices[i].erase(tempDoubleVertices[i].begin()+k);
+                                                        }
                                                     }
                                                 }
+                                                if(bShiftPressed==false&&included==false){
+                                                    tempVector.push_back(tempVert);
+                                                }
                                             }
-                                            if(bShiftPressed==false&&included==false){
+                                            else if(bShiftPressed==false){
                                                 tempVector.push_back(tempVert);
                                             }
-                                        }
-                                        else if(bShiftPressed==false){
-                                            tempVector.push_back(tempVert);
+                                            
                                         }
                                     }
                                 }
@@ -699,33 +762,44 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                vector<meshVertex> tempVector;
-                int n=cameras[guiCam].mesh[i].getNumVertices();
+                bool drawMesh=false;
+                for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                    if(cameras[cameraSelect].which[j]==i){
+                        drawMesh=true;
+                    }
+                }
                 
-                //Check for mouse clicks on gui screen if present highlight this particular vertex
-                for(int j = 0; j < n; j++){
-                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                    float distance = cur.distance(ofVec2f(args.x,args.y));
-                    if(distance < clickThreshold) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                vector<meshVertex> tempVector;
+                
+                if(drawMesh==true){
+                    
+                    int n=cameras[guiCam].mesh[i].getNumVertices();
+                    
+                    //Check for mouse clicks on gui screen if present highlight this particular vertex
+                    for(int j = 0; j < n; j++){
+                        ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                        float distance = cur.distance(ofVec2f(args.x,args.y));
+                        if(distance < clickThreshold) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
                                     }
                                 }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
                             }
-                            if(bShiftPressed==false&&included==false){
+                            else if(bShiftPressed==false){
                                 tempVector.push_back(tempVert);
                             }
-                        }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
                         }
                     }
                 }
@@ -751,55 +825,64 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                vector<meshVertex> tempVector;
-                int n=cameras[guiCam].mesh[i].getNumVertices();
-                
-                //Check for mouse clicks on gui screen if present highlight this particular vertex
-                for(int j = 0; j < n; j++){
-                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                    float distance = cur.distance(ofVec2f(args.x,args.y));
-                    if(distance < clickThreshold) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
-                                    }
-                                }
-                            }
-                            if(bShiftPressed==false&&included==false){
-                                tempVector.push_back(tempVert);
-                            }
-                        }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
-                        }
+                bool drawMesh=false;
+                for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                    if(cameras[cameraSelect].which[j]==i){
+                        drawMesh=true;
                     }
-                    else if(distance < brushRadius) {
-                        meshVertex tempVert;
-                        tempVert.vertex=cur;
-                        tempVert.index=j;
-                        bool included=false;
-                        if(tempVertices.size()>0){
-                            for(int k=0;k<tempVertices[i].size();k++){
-                                if(tempVertices[i][k].index==tempVert.index){
-                                    included=true;
-                                    if(bShiftPressed==true){
-                                        tempVertices[i].erase(tempVertices[i].begin()+k);
+                }
+                
+                vector<meshVertex> tempVector;
+                if(drawMesh==true){
+                    int n=cameras[guiCam].mesh[i].getNumVertices();
+                    
+                    //Check for mouse clicks on gui screen if present highlight this particular vertex
+                    for(int j = 0; j < n; j++){
+                        ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                        float distance = cur.distance(ofVec2f(args.x,args.y));
+                        if(distance < clickThreshold) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
                                     }
                                 }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
                             }
-                            if(bShiftPressed==false&&included==false){
+                            else if(bShiftPressed==false){
                                 tempVector.push_back(tempVert);
                             }
                         }
-                        else if(bShiftPressed==false){
-                            tempVector.push_back(tempVert);
+                        else if(distance < brushRadius) {
+                            meshVertex tempVert;
+                            tempVert.vertex=cur;
+                            tempVert.index=j;
+                            bool included=false;
+                            if(tempVertices.size()>0){
+                                for(int k=0;k<tempVertices[i].size();k++){
+                                    if(tempVertices[i][k].index==tempVert.index){
+                                        included=true;
+                                        if(bShiftPressed==true){
+                                            tempVertices[i].erase(tempVertices[i].begin()+k);
+                                        }
+                                    }
+                                }
+                                if(bShiftPressed==false&&included==false){
+                                    tempVector.push_back(tempVert);
+                                }
+                            }
+                            else if(bShiftPressed==false){
+                                tempVector.push_back(tempVert);
+                            }
                         }
                     }
                 }
@@ -814,8 +897,8 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 moveVertices.push_back(tempVector);
                 tempVector.clear();
                 
-                
             }
+            
         }
         
     }
@@ -902,6 +985,79 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
         }
         updateMasks();
     }
+    
+    else if (adjustMode==ADJUST_MODE_2D){
+        
+        tempVertices2D=vertices2D;
+        vertices2D.clear();
+        vector<vertex2D> tempVector;
+        
+        ofVec3f nearestVertex;
+        float drawNearest=false;
+        for(int i=0;i<numMeshes;i++){
+            bool drawMesh=false;
+            for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                if(cameras[cameraSelect].which[j]==i){
+                    drawMesh=true;
+                }
+            }
+            
+            if(drawMesh==true){
+                if(cameras[guiCam].meshObjects[i].isMesh==false){
+                    float nearestDistance = 15;
+                    //parse through all vertices to determine nearest, if exists
+                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
+                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                            if(distance < nearestDistance) {
+                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
+                                
+                                vertex2D tempVert;
+                                tempVert.vertex=nearestVertex;
+                                tempVert.index=k;
+                                tempVert.box=j;
+                                bool included=false;
+                                if(tempVertices2D.size()>0){
+                                    for(int l=0;l<tempVertices2D[i].size();l++){
+                                        if(tempVertices2D[i][l].box==tempVert.box&&tempVertices2D[i][l].index==tempVert.index){
+                                            included=true;
+                                            if(bShiftPressed==true){
+                                                tempVertices2D[i].erase(tempVertices2D[i].begin()+l);
+                                            }
+                                        }
+                                    }
+                                    if(bShiftPressed==false&&included==false){
+                                        tempVector.push_back(tempVert);
+                                    }
+                                    
+                                }
+                                else if(bShiftPressed==false){
+                                    tempVector.push_back(tempVert);
+                                }
+                                
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            
+                
+                //vector of save selected points
+                if(tempVertices2D.size()>0){
+                    for(int j=0;j < tempVertices2D[i].size();j++){
+                        tempVector.push_back(tempVertices2D[i][j]);
+                    }
+                }
+                
+                vertices2D.push_back(tempVector);
+                tempVector.clear();
+            }
+        
+        
+        
+    }
+    
     mouse=ofVec2f(args.x,args.y);
 }
 
@@ -991,6 +1147,8 @@ void ModelMapper:: saveCameras() {
         settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
         settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
         
+        
+        
         //mask vertices
         settings["cameras"][i]["mask"].clear();
         for(int j=0;j<cameras[i].masks.size();j++){
@@ -998,6 +1156,30 @@ void ModelMapper:: saveCameras() {
             for(int k=0;k<vertices.size();k++){
                 settings["cameras"][i]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
                 settings["cameras"][i]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
+            }
+        }
+        
+        for(int j=0; j<numMeshes;j++){
+        
+            settings["cameras"][i]["meshes"][j]["translate"]["x"] = cameras[i].meshObjects[j].translate.x;
+            settings["cameras"][i]["meshes"][j]["translate"]["y"] = cameras[i].meshObjects[j].translate.y;
+            settings["cameras"][i]["meshes"][j]["scale"] = cameras[i].meshObjects[j].scale;
+            
+            settings["cameras"][i]["meshes"][j]["grid"]["x"] = cameras[i].meshObjects[j].horizGrid;
+            settings["cameras"][i]["meshes"][j]["grid"]["y"] = cameras[i].meshObjects[j].vertGrid;
+            
+            settings["cameras"][i]["meshes"][j]["texPos"]["x"] = cameras[i].meshObjects[j].tex.pos.x;
+            settings["cameras"][i]["meshes"][j]["texPos"]["y"] = cameras[i].meshObjects[j].tex.pos.y;
+            
+            settings["cameras"][i]["meshes"][j]["texWidth"] = cameras[i].meshObjects[j].tex.width;
+            settings["cameras"][i]["meshes"][j]["texHeight"] = cameras[i].meshObjects[j].tex.height;
+            
+            
+            for(int k=0; k<cameras[i].meshObjects[j].warped.size(); k++){
+                for(int l=0; l<cameras[i].meshObjects[j].warped[k].size();l++){
+                    settings["cameras"][i]["meshes"][j]["warped"][k][l]["x"]=cameras[i].meshObjects[j].warped[k][l].x;
+                    settings["cameras"][i]["meshes"][j]["warped"][k][l]["y"]=cameras[i].meshObjects[j].warped[k][l].y;
+                }
             }
         }
         
@@ -1075,7 +1257,7 @@ void ModelMapper:: saveCamera() {
         cameras[cameraSelect].mesh[j].save(meshname);
     }
     
-    //----------SAVE JSON SETTINGS DOCUMENT
+    //----------SAVE JSON settings DOCUMENT
     
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
@@ -1102,25 +1284,89 @@ void ModelMapper:: drawCameras() {
             
             for(int j=0;j<numMeshes;j++){
                 
-                texture->bind();
+                bool drawMesh=false;
+                for(int k=0;k<cameras[i].which.size();k++){
+                    if(cameras[i].which[k]==j){
+                        drawMesh=true;
+                    }
+                }
                 
-                ofSetColor(255,255,255);
-                
-                cameras[i].mesh[j].draw();
-                
-                texture->unbind();
-                
-                //draw mesh wireframe
-                if(bDrawWireframe==true){
-                    ofSetColor(255,255,255,100);
-                    ofSetLineWidth(2);
-                    cameras[i].mesh[j].drawWireframe();
+                if(drawMesh==true){
+                    
+                    if(cameras[i].meshObjects[j].isMesh==true){
+                        ofEnableNormalizedTexCoords();
+                        texture->bind();
+                        
+                        ofSetColor(255,255,255);
+                        
+                        cameras[i].mesh[j].draw();
+                        
+                        texture->unbind();
+                        
+                        //draw mesh wireframe
+                        if(bDrawWireframe==true){
+                            ofSetColor(255,255,255,100);
+                            ofSetLineWidth(2);
+                            cameras[i].mesh[j].drawWireframe();
+                        }
+                    }
                 }
             }
+            
             
             //End camera object
             cameras[i].camera.end();
             
+            
+            for(int j=0;j<numMeshes;j++){
+                
+                bool drawMesh=false;
+                for(int k=0;k<cameras[i].which.size();k++){
+                    if(cameras[i].which[k]==j){
+                        drawMesh=true;
+                    }
+                }
+                
+                if(drawMesh==true){
+                    
+                    if(cameras[i].meshObjects[j].isMesh==false){
+                        for(int k=0; k<cameras[i].meshObjects[j].originals.size();k++){
+                            
+                            ofDisableNormalizedTexCoords();
+                            ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].meshObjects[j].originals[k], cameras[i].meshObjects[j].warped[k]);
+                            
+                            ofPushMatrix();
+                            ofSetColor(255,255,255);
+                            
+                            ofTranslate(cameras[i].meshObjects[j].translate+ofPoint(cameras[i].viewport.x,cameras[i].viewport.y));
+                            ofScale(cameras[i].meshObjects[j].scale,cameras[i].meshObjects[j].scale);
+                            
+                            ofPushMatrix();
+                            glMultMatrixf(homography.getPtr());
+                            //                            texture->drawSubsection(0,0,cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height,cameras[i].meshObjects[j].tex.pos.x,cameras[i].meshObjects[j].tex.pos.y, cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height);
+                            
+                            texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                                    cameras[i].meshObjects[j].originals[k][0].y,
+                                                    cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                    cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                                    cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                                    cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                                    cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                    cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            
+                            if(bDrawWireframe==true){
+                                ofNoFill();
+                                glDepthFunc(GL_ALWAYS);
+                                ofRect(cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][1].x-cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][2].y-cameras[i].meshObjects[j].originals[k][0].y);
+                                glDepthFunc(GL_LESS);
+                            }
+                            ofPopMatrix();
+                            
+                            ofPopMatrix();
+                        }
+                    }
+                }
+            }
         }
         
         //ADJUST_MODE_LOCKED guiCam text
@@ -1172,78 +1418,87 @@ void ModelMapper::drawHighlights() {
         
         //determine nearest vertex and highlight yellow, if within clickThreshold distance of vertex
         for(int i=0;i<numMeshes;i++){
-            //set up local variables for determining nearest
-            ofVec3f nearestVertex;
-            int nearestIndex = 0;
-            float nearestDistance = clickThreshold;
-            float drawNearest=false;
-            int n = cameras[cameraSelect].mesh[i].getNumVertices();
-            //parse through all vertices to determine nearest, if exists
-            for(int j = 0; j < n; j++) {
-                ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
-                float distance = cur.distance(mouse);
-                if(distance < nearestDistance) {
-                    nearestDistance = distance;
-                    nearestVertex = cur;
-                    nearestIndex=j;
-                    drawNearest=true;
+            bool drawMesh=false;
+            for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                if(cameras[cameraSelect].which[j]==i){
+                    drawMesh=true;
                 }
             }
             
-            ofNoFill();
-            ofSetLineWidth(1);
-            
-            if(selectMode==SELECT_MODE_POINTER||selectMode==SELECT_MODE_PAINTBRUSH){
-                //draw nearest highlight circle on both gui camera and selected camera
-                if(drawNearest==true){
-                    ofSetColor(ofColor::yellow);
-                    ofCircle(nearestVertex, 4);
-                    ofCircle(cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(nearestIndex),cameras[cameraSelect].viewport),4);
-                }
-            }
-            
-            //----------DRAW SELECTED VERTICES
-            
-            //draw selected circles on all vertices selected by clicking or via drag box on both gui camera and selected camera, set in mousePressed() and mouseDragged()
-            ofSetColor(255,0,0);
-            if(moveVertices.size()>0){
-                for(int j=0;j<moveVertices[i].size();j++){
-                    ofPushMatrix();
-                    ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index),cameras[cameraSelect].viewport);
-                    
-                    if(translate.x>cameras[cameraSelect].viewport.x&&translate.x<cameras[cameraSelect].viewport.x+cameras[cameraSelect].viewport.width){
-                        ofTranslate(translate);
-                        ofCircle(0,0,4);
+            if(drawMesh==true){
+                //set up local variables for determining nearest
+                ofVec3f nearestVertex;
+                int nearestIndex = 0;
+                float nearestDistance = clickThreshold;
+                float drawNearest=false;
+                int n = cameras[cameraSelect].mesh[i].getNumVertices();
+                //parse through all vertices to determine nearest, if exists
+                for(int j = 0; j < n; j++) {
+                    ofVec3f cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
+                    float distance = cur.distance(mouse);
+                    if(distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestVertex = cur;
+                        nearestIndex=j;
+                        drawNearest=true;
                     }
-                    ofPopMatrix();
-                    
-                    if(cameraSelect!=guiCam){
+                }
+                
+                ofNoFill();
+                ofSetLineWidth(1);
+                
+                if(selectMode==SELECT_MODE_POINTER||selectMode==SELECT_MODE_PAINTBRUSH){
+                    //draw nearest highlight circle on both gui camera and selected camera
+                    if(drawNearest==true){
+                        ofSetColor(ofColor::yellow);
+                        ofCircle(nearestVertex, 4);
+                        ofCircle(cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(nearestIndex),cameras[cameraSelect].viewport),4);
+                    }
+                }
+                
+                //----------DRAW SELECTED VERTICES
+                
+                //draw selected circles on all vertices selected by clicking or via drag box on both gui camera and selected camera, set in mousePressed() and mouseDragged()
+                ofSetColor(255,0,0);
+                if(moveVertices.size()>0){
+                    for(int j=0;j<moveVertices[i].size();j++){
                         ofPushMatrix();
-                        ofVec3f translate=cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index),cameras[guiCam].viewport);
+                        ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index),cameras[cameraSelect].viewport);
+                        
+                        if(translate.x>cameras[cameraSelect].viewport.x&&translate.x<cameras[cameraSelect].viewport.x+cameras[cameraSelect].viewport.width){
+                            ofTranslate(translate);
+                            ofCircle(0,0,4);
+                        }
+                        ofPopMatrix();
+                        
+                        if(cameraSelect!=guiCam){
+                            ofPushMatrix();
+                            ofVec3f translate=cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(moveVertices[i][j].index),cameras[guiCam].viewport);
+                            ofTranslate(translate);
+                            ofCircle(0,0,4);
+                            ofPopMatrix();
+                        }
+                    }
+                }
+                
+                if(magnetVertices.size()>0){
+                    for(int j=0;j<magnetVertices[i].size();j++){
+                        
+                        ofSetColor(255,ofMap(magnetVertices[i][j].modifier,0,1,255,0),ofMap(magnetVertices[i][j].modifier,0,1,255,0));
+                        
+                        ofPushMatrix();
+                        ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(magnetVertices[i][j].index),cameras[cameraSelect].viewport);
                         ofTranslate(translate);
                         ofCircle(0,0,4);
                         ofPopMatrix();
-                    }
-                }
-            }
-            
-            if(magnetVertices.size()>0){
-                for(int j=0;j<magnetVertices[i].size();j++){
-                    
-                    ofSetColor(255,ofMap(magnetVertices[i][j].modifier,0,1,255,0),ofMap(magnetVertices[i][j].modifier,0,1,255,0));
-                    
-                    ofPushMatrix();
-                    ofVec3f translate=cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(magnetVertices[i][j].index),cameras[cameraSelect].viewport);
-                    ofTranslate(translate);
-                    ofCircle(0,0,4);
-                    ofPopMatrix();
-                    
-                    if(cameraSelect!=guiCam){
-                        ofPushMatrix();
-                        ofVec3f translate=cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(magnetVertices[i][j].index),cameras[guiCam].viewport);
-                        ofTranslate(translate);
-                        ofCircle(0,0,4);
-                        ofPopMatrix();
+                        
+                        if(cameraSelect!=guiCam){
+                            ofPushMatrix();
+                            ofVec3f translate=cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(magnetVertices[i][j].index),cameras[guiCam].viewport);
+                            ofTranslate(translate);
+                            ofCircle(0,0,4);
+                            ofPopMatrix();
+                        }
                     }
                 }
             }
@@ -1252,7 +1507,7 @@ void ModelMapper::drawHighlights() {
         }
     }
     
-    if(adjustMode==ADJUST_MODE_MASK){
+    else if(adjustMode==ADJUST_MODE_MASK){
         
         //-----------DRAW NEAREST VERTEX
         
@@ -1294,6 +1549,57 @@ void ModelMapper::drawHighlights() {
             ofCircle(maskVertices[i].vertex,4);
         }
         
+    }
+    
+    else if (adjustMode==ADJUST_MODE_2D){
+        ofVec3f nearestVertex;
+        float drawNearest=false;
+        for(int i=0;i<numMeshes;i++){
+            bool drawMesh=false;
+            for(int j=0;j<cameras[cameraSelect].which.size();j++){
+                if(cameras[cameraSelect].which[j]==i){
+                    drawMesh=true;
+                }
+            }
+            
+            if(drawMesh==true){
+                
+                if(cameras[guiCam].meshObjects[i].isMesh==false){
+                    float nearestDistance = 15;
+                    
+                    //parse through all vertices to determine nearest, if exists
+                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
+                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                            if(distance < nearestDistance) {
+                                nearestDistance = distance;
+                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
+                                drawNearest=true;
+                            }
+                        }
+                    }
+                }
+                
+                if(vertices2D.size()>0){
+                    for(int j=0;j<vertices2D[i].size();j++){
+                        ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,4);
+                        if(cameraSelect!=guiCam){
+                            ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,4);
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        
+        //draw nearest highlight circle on both gui camera and selected camera
+        ofNoFill();
+        ofSetLineWidth(2);
+        if(drawNearest==true){
+            ofSetColor(ofColor::yellow);
+            ofCircle(nearestVertex, 4);
+        }
     }
     
     if(adjustMode==ADJUST_MODE_MESH&&selectMode==SELECT_MODE_PAINTBRUSH){
@@ -1445,6 +1751,19 @@ void ModelMapper::adjustMesh(float x, float y, float z){
             cameras[cameraSelect].mesh[i].setVertex(magnetVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(magnetVertices[i][j].index)+ofVec3f(x*magnetVertices[i][j].modifier,y*magnetVertices[i][j].modifier,z*magnetVertices[i][j].modifier));
         }
     }
+}
+
+void ModelMapper::adjust2D(float x, float y){
+    
+    for(int i=0;i<vertices2D.size();i++){
+        for(int j=0;j<vertices2D[i].size();j++){
+            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].x+=x;
+            vertices2D[i][j].vertex.x+=x*cameras[cameraSelect].meshObjects[i].scale;
+            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].y+=y;
+            vertices2D[i][j].vertex.y+=y*cameras[cameraSelect].meshObjects[i].scale;
+        }
+    }
+    
 }
 
 void ModelMapper::calculateMagnetPoints(){
@@ -1711,6 +2030,43 @@ void ModelMapper::setMeshGUI(){
     
 }
 
+void ModelMapper::setMesh2DGUI(){
+    mesh2DGUI = new ofxUISuperCanvas("Mesh 2D");
+    mesh2DGUI->addSpacer();
+    mesh2DGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
+    mesh2DGUI->addLabel("Click vertices to select", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("Drag over to select multiple", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("Shift-click to remove", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("(Arrow Keys) Adjust x/y", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("(z/a) Adjust z", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("(Shift) for fast move", OFX_UI_FONT_SMALL);
+    mesh2DGUI->addLabel("(Cmd) for slow move", OFX_UI_FONT_SMALL);
+    
+    mesh2DGUI->addLabel("Translate X",OFX_UI_FONT_MEDIUM);
+    translateX2D = mesh2DGUI->addTextInput("Translate X", ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
+    translateX2D->setAutoClear(false);
+    
+    mesh2DGUI->addLabel("Translate Y",OFX_UI_FONT_MEDIUM);
+    translateY2D = mesh2DGUI->addTextInput("Translate Y", ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
+    translateY2D->setAutoClear(false);
+    
+    mesh2DGUI->addLabel("Scale",OFX_UI_FONT_MEDIUM);
+    scale2D = mesh2DGUI->addTextInput("Scale", ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+    scale2D->setAutoClear(false);
+    
+    mesh2DGUI->addSpacer();
+    mesh2DGUI->addLabelButton("CLEAR SELECTION", false);
+    mesh2DGUI->addSpacer();
+    mesh2DGUI->addLabelButton("RESET WARP", false);
+    
+    mesh2DGUI->setPosition(212, 0);
+    mesh2DGUI->autoSizeToFitWidgets();
+    
+    mesh2DGUI->setVisible(false);
+    ofAddListener(mesh2DGUI->newGUIEvent,this,&ModelMapper::guiEvent);
+    
+}
+
 void ModelMapper::setMagnetGUI(){
     magnetGUI = new ofxUISuperCanvas("Selection");
     
@@ -1918,6 +2274,33 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
     }
     
+    else if(name == "Translate X")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].meshObjects[currentMesh].translate.x=ofToFloat(ti->getTextString());
+        }
+    }
+    
+    else if(name == "Translate Y")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].meshObjects[currentMesh].translate.y=ofToFloat(ti->getTextString());
+        }
+    }
+    
+    else if(name == "Scale")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].meshObjects[currentMesh].scale=ofToFloat(ti->getTextString());
+        }
+    }
+    
     else if(name == "SAVE ALL")
     {
         ofxUIButton *button = (ofxUIButton *) e.getButton();
@@ -1934,10 +2317,25 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
     }
     
+    
+    
     else if(name == "CURRENT")
     {
+        for(int i=0;i<vertices2D.size();i++){
+            vertices2D[i].clear();
+        }
+        for(int i=0;i<vertices2D.size();i++){
+            tempVertices2D[i].clear();
+        }
+        vertices2D.clear();
+        tempVertices2D.clear();
+        
         ofxUIRadio *currentRadio = (ofxUIRadio *) e.widget;
+        
         cameraSelect=ofToInt(currentRadio->getActiveName());
+        
+        currentMesh=ofToInt(currentRadio->getActiveName())-1;
+        
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
         cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
         updateMasks();
@@ -1968,6 +2366,15 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(viewportY!=NULL){
             viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
         }
+        if(translateX2D!=NULL){
+        translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
+        }
+        if(translateY2D!=NULL){
+        translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
+        }
+        if(scale2D!=NULL){
+        scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+        }
     }
     
     else if(name == "CHANGE MODE"){
@@ -1987,10 +2394,19 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             adjustMode=ADJUST_MODE_VIEWPORT;
         }
         
-        else if(selected=="Meshes"){
+        else if(selected=="3D Meshes"){
             adjustMode=ADJUST_MODE_MESH;
             
         }
+        
+        else if(selected=="2D Meshes"){
+            adjustMode=ADJUST_MODE_2D;
+            translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
+            translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
+            scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+            
+        }
+        
         else if (selected=="Masks"){
             adjustMode=ADJUST_MODE_MASK;
         }
@@ -2047,6 +2463,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         tempVertices.clear();
         magnetVertices.clear();
         penPoly.clear();
+        vertices2D.clear();
+        tempVertices2D.clear();
     }
     
     else if(name=="RELOAD MESH"){
@@ -2068,6 +2486,14 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     
     else if(name=="RELOAD SELECTED"){
         resetSelected();
+    }
+    
+    else if(name == "RESET WARP")
+    {
+        ofxUIButton *button = (ofxUIButton *) e.getButton();
+        if(button->getValue()==1){
+            cameras[cameraSelect].meshObjects[currentMesh].warped=cameras[cameraSelect].meshObjects[currentMesh].originals;
+        }
     }
     
     else if(name=="START SELECTION"){
@@ -2286,7 +2712,7 @@ void ModelMapper::setupGUI(){
     cameraNames.push_back("1");cameraNames.push_back("2");cameraNames.push_back("3");
     
     adjustModes.push_back("Camera Position"); adjustModes.push_back("Camera Orientation"); adjustModes.push_back("Viewport Position");
-    adjustModes.push_back("Meshes"); adjustModes.push_back("Masks");
+    adjustModes.push_back("3D Meshes"); adjustModes.push_back("2D Meshes");adjustModes.push_back("Masks");
     
     easeMethods.push_back("Linear");
     easeMethods.push_back("Quadratic");
@@ -2306,6 +2732,7 @@ void ModelMapper::setupGUI(){
     setMeshGUI();
     setMagnetGUI();
     setMaskGUI();
+    setMesh2DGUI();
 }
 
 float ModelMapper::magnetMap(float distance, float radius){
@@ -2376,6 +2803,7 @@ void ModelMapper::setGUIVisible(bool hide){
         orientationGUI->setVisible(false);
         viewportGUI->setVisible(false);
         meshGUI->setVisible(false);
+        mesh2DGUI->setVisible(false);
         magnetGUI->setVisible(false);
         maskGUI->setVisible(false);
     }
@@ -2388,9 +2816,8 @@ void ModelMapper::setGUIVisible(bool hide){
             meshGUI->setVisible(true);
             magnetGUI->setVisible(true);
         }
-        else if(adjustMode==ADJUST_MODE_MASK){
-            maskGUI->setVisible(true);
-        }
+        else if(adjustMode==ADJUST_MODE_MASK)maskGUI->setVisible(true);
+        else if(adjustMode==ADJUST_MODE_2D) mesh2DGUI->setVisible(true);
     }
 }
 
@@ -2410,4 +2837,105 @@ void ModelMapper::resetSelected(){
         }
     }
     cout<<"Reloaded Selected"<<endl;
+}
+
+void ModelMapper::set2D(int _meshNum){
+    
+    for(int c=0;c<numCams;c++){
+        cout<<"camera:"<<c<<endl;
+        
+        ofPoint translate = ofPoint(settings["cameras"][c]["meshes"][_meshNum]["translate"]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["translate"]["y"].asFloat());
+        float scale = settings["cameras"][c]["meshes"][_meshNum]["scale"].asFloat();
+        int horizGrid = settings["cameras"][c]["meshes"][_meshNum]["grid"]["x"].asInt();
+        int vertGrid = settings["cameras"][c]["meshes"][_meshNum]["grid"]["y"].asInt();
+        ofPoint texPos = ofPoint(settings["cameras"][c]["meshes"][_meshNum]["texPos"]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["texPos"]["y"].asFloat());
+        int texWidth = settings["cameras"][c]["meshes"][_meshNum]["texWidth"].asInt();
+        int texHeight = settings["cameras"][c]["meshes"][_meshNum]["texHeight"].asInt();
+        vector< vector<ofPoint> > originals;
+        vector< vector<ofPoint> > warped;
+        int count = 0;
+        
+        for(int i=0; i<vertGrid-1; i++){
+            for(int j=0; j<horizGrid-1; j++){
+                if(count<(horizGrid-1)*(vertGrid-1)){
+                    vector<ofPoint> loadOrig, loadWarped;
+                    ofPoint tempPoint;
+                    ofPoint warpedPos;
+                    tempPoint.x=j*(texWidth/(horizGrid-1));
+                    tempPoint.y=i*(texHeight/(vertGrid-1));
+                    loadOrig.push_back(tempPoint);
+                    
+                    
+                    if(settings["cameras"][c]["meshes"][_meshNum]["warped"].size()==((vertGrid-1)*(horizGrid-1))){
+                        warpedPos=ofPoint(settings["cameras"][c]["meshes"][_meshNum]["warped"][count][0]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["warped"][count][0]["y"].asFloat());
+                        loadWarped.push_back(warpedPos);
+                    }
+                    
+                    else{
+                        loadWarped.push_back(tempPoint);
+                    }
+                    
+                    tempPoint.x=(j+1)*(texWidth/(horizGrid-1));
+                    tempPoint.y=i*(texHeight/(vertGrid-1));
+                    loadOrig.push_back(tempPoint);
+                    
+                    if(settings["cameras"][c]["meshes"][_meshNum]["warped"].size()==((vertGrid-1)*(horizGrid-1))){
+                        warpedPos=ofPoint(settings["cameras"][c]["meshes"][_meshNum]["warped"][count][1]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["warped"][count][1]["y"].asFloat());
+                        loadWarped.push_back(warpedPos);
+                    }
+                    
+                    else{
+                        loadWarped.push_back(tempPoint);
+                    }
+                    
+                    tempPoint.x=(j+1)*(texWidth/(horizGrid-1));
+                    tempPoint.y=(i+1)*(texHeight/(vertGrid-1));
+                    loadOrig.push_back(tempPoint);
+                    
+                    if(settings["cameras"][c]["meshes"][_meshNum]["warped"].size()==((vertGrid-1)*(horizGrid-1))){
+                        warpedPos=ofPoint(settings["cameras"][c]["meshes"][_meshNum]["warped"][count][2]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["warped"][count][2]["y"].asFloat());
+                        loadWarped.push_back(warpedPos);
+                    }
+                    
+                    else{
+                        loadWarped.push_back(tempPoint);
+                    }
+                    
+                    tempPoint.x=j*(texWidth/(horizGrid-1));
+                    tempPoint.y=(i+1)*(texHeight/(vertGrid-1));
+                    loadOrig.push_back(tempPoint);
+                    
+                    if(settings["cameras"][c]["meshes"][_meshNum]["warped"].size()==((vertGrid-1)*(horizGrid-1))){
+                        warpedPos=ofPoint(settings["cameras"][c]["meshes"][_meshNum]["warped"][count][3]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["warped"][count][3]["y"].asFloat());
+                        loadWarped.push_back(warpedPos);
+                    }
+                    
+                    else{
+                        loadWarped.push_back(tempPoint);
+                    }
+                    
+                    originals.push_back(loadOrig);
+                    
+                    warped.push_back(loadWarped);
+                    loadOrig.clear();
+                    loadWarped.clear();
+                    count++;
+                    
+                    
+                }
+            }
+        }
+        cameras[c].set2D(_meshNum, translate, scale, horizGrid, vertGrid, texPos, texWidth, texHeight, originals, warped);
+        originals.clear();
+        warped.clear();
+    }
+    
+}
+
+void ModelMapper::setMeshDraw(int _cam, vector<int> which){
+    cameras[_cam].which=which;
+    cout<<"set Cam:"<<_cam<<endl;
+    for(int i=0;i<which.size();i++){
+        cout<<"show Mesh:"<<which[i]<<endl;
+    }
 }
