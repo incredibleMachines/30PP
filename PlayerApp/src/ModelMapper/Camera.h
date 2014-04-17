@@ -18,7 +18,7 @@ public:
     //create additional mask
     void addMask();
     
-    void set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped);
+    void set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, float featherRight, float featherLeft, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped);
     
     //-----------CAMERA DATA
     ofEasyCam camera;
@@ -33,7 +33,7 @@ public:
         int width;
         int height;
     };
-    
+
     struct meshObject{
     public:
         bool isMesh;
@@ -43,6 +43,8 @@ public:
         int horizGrid, vertGrid;
         vector< vector<ofPoint> > originals;
         vector< vector<ofPoint> > warped;
+        float left;
+        float right;
     };
     
     vector<meshObject> meshObjects;
@@ -53,6 +55,7 @@ public:
     int highlightMask;
     
     vector<int> which;
+    
 };
 
 

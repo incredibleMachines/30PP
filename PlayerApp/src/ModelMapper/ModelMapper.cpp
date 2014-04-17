@@ -126,7 +126,7 @@ void ModelMapper::update(ofTexture * tex){
     //update gui camera to display selected camera graphics
     texture=tex;
     cameras[guiCam].which=cameras[cameraSelect].which;
-
+    
     for(int i=0;i<numMeshes;i++){
         cameras[guiCam].mesh[i]=cameras[cameraSelect].mesh[i];
         cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
@@ -140,7 +140,7 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
         cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     }
-
+    
 }
 
 void ModelMapper::draw(){
@@ -1042,17 +1042,17 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 }
             }
             
-                
-                //vector of save selected points
-                if(tempVertices2D.size()>0){
-                    for(int j=0;j < tempVertices2D[i].size();j++){
-                        tempVector.push_back(tempVertices2D[i][j]);
-                    }
+            
+            //vector of save selected points
+            if(tempVertices2D.size()>0){
+                for(int j=0;j < tempVertices2D[i].size();j++){
+                    tempVector.push_back(tempVertices2D[i][j]);
                 }
-                
-                vertices2D.push_back(tempVector);
-                tempVector.clear();
             }
+            
+            vertices2D.push_back(tempVector);
+            tempVector.clear();
+        }
         
         
         
@@ -1160,10 +1160,12 @@ void ModelMapper:: saveCameras() {
         }
         
         for(int j=0; j<numMeshes;j++){
-        
+            
             settings["cameras"][i]["meshes"][j]["translate"]["x"] = cameras[i].meshObjects[j].translate.x;
             settings["cameras"][i]["meshes"][j]["translate"]["y"] = cameras[i].meshObjects[j].translate.y;
             settings["cameras"][i]["meshes"][j]["scale"] = cameras[i].meshObjects[j].scale;
+            settings["cameras"][i]["meshes"][j]["feather"]["right"] = cameras[i].meshObjects[j].right;
+            settings["cameras"][i]["meshes"][j]["feather"]["left"] = cameras[i].meshObjects[j].left;
             
             settings["cameras"][i]["meshes"][j]["grid"]["x"] = cameras[i].meshObjects[j].horizGrid;
             settings["cameras"][i]["meshes"][j]["grid"]["y"] = cameras[i].meshObjects[j].vertGrid;
@@ -1353,8 +1355,26 @@ void ModelMapper:: drawCameras() {
                                                     cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
                                                     cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                     cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            glDepthFunc(GL_ALWAYS);
+                            ofEnableAlphaBlending();
+                            
+                            for(int l=0; l<cameras[i].meshObjects[j].left; l++){
+                                ofSetLineWidth(1);
+                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].left,255,0));
+                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            }
+                            
+                            for(int l=0; l<cameras[i].meshObjects[j].right; l++){
+                                ofSetLineWidth(1);
+                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].right,255,0));
+                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            }
+                            
+                            ofDisableAlphaBlending();
+                            glDepthFunc(GL_LESS);
                             
                             if(bDrawWireframe==true){
+                                ofSetColor(255,255,255);
                                 ofNoFill();
                                 glDepthFunc(GL_ALWAYS);
                                 ofRect(cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][1].x-cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][2].y-cameras[i].meshObjects[j].originals[k][0].y);
@@ -2054,6 +2074,12 @@ void ModelMapper::setMesh2DGUI(){
     scale2D = mesh2DGUI->addTextInput("Scale", ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
     scale2D->setAutoClear(false);
     
+    mesh2DGUI->addLabel("Feather",OFX_UI_FONT_MEDIUM);
+    featherRight2D = mesh2DGUI->addTextInput("Feather Right", ofToString(cameras[cameraSelect].meshObjects[currentMesh].right));
+    featherRight2D->setAutoClear(false);
+    featherLeft2D = mesh2DGUI->addTextInput("Feather Left", ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
+    featherLeft2D->setAutoClear(false);
+    
     mesh2DGUI->addSpacer();
     mesh2DGUI->addLabelButton("CLEAR SELECTION", false);
     mesh2DGUI->addSpacer();
@@ -2301,6 +2327,24 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
     }
     
+    else if(name == "Feather Right")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].meshObjects[currentMesh].right=ofToFloat(ti->getTextString());
+        }
+    }
+    
+    else if(name == "Feather Left")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].meshObjects[currentMesh].left=ofToFloat(ti->getTextString());
+        }
+    }
+    
     else if(name == "SAVE ALL")
     {
         ofxUIButton *button = (ofxUIButton *) e.getButton();
@@ -2321,12 +2365,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     
     else if(name == "CURRENT")
     {
-        for(int i=0;i<vertices2D.size();i++){
-            vertices2D[i].clear();
-        }
-        for(int i=0;i<vertices2D.size();i++){
-            tempVertices2D[i].clear();
-        }
+        //        for(int i=0;i<vertices2D.size();i++){
+        //            vertices2D[i].clear();
+        //        }
+        //        for(int i=0;i<vertices2D.size();i++){
+        //            tempVertices2D[i].clear();
+        //        }
         vertices2D.clear();
         tempVertices2D.clear();
         
@@ -2367,13 +2411,19 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
         }
         if(translateX2D!=NULL){
-        translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
+            translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
         }
         if(translateY2D!=NULL){
-        translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
+            translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
         }
         if(scale2D!=NULL){
-        scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+            scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+        }
+        if(featherRight2D!=NULL){
+            featherRight2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].right));
+        }
+        if(featherLeft2D!=NULL){
+            featherLeft2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
         }
     }
     
@@ -2404,7 +2454,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
             translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
             translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
             scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
-            
+            featherRight2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].right));
+            featherLeft2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
         }
         
         else if (selected=="Masks"){
@@ -2854,6 +2905,8 @@ void ModelMapper::set2D(int _meshNum){
         vector< vector<ofPoint> > originals;
         vector< vector<ofPoint> > warped;
         int count = 0;
+        float featherRight=settings["cameras"][c]["meshes"][_meshNum]["feather"]["right"].asFloat();
+        float featherLeft=settings["cameras"][c]["meshes"][_meshNum]["feather"]["left"].asFloat();
         
         for(int i=0; i<vertGrid-1; i++){
             for(int j=0; j<horizGrid-1; j++){
@@ -2925,7 +2978,7 @@ void ModelMapper::set2D(int _meshNum){
                 }
             }
         }
-        cameras[c].set2D(_meshNum, translate, scale, horizGrid, vertGrid, texPos, texWidth, texHeight, originals, warped);
+        cameras[c].set2D(_meshNum, translate, scale, horizGrid, vertGrid, texPos, texWidth, texHeight, featherRight, featherLeft, originals, warped);
         originals.clear();
         warped.clear();
     }

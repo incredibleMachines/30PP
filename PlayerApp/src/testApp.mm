@@ -29,7 +29,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("output.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     

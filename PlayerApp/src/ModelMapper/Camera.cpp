@@ -54,7 +54,7 @@ void Camera::addMask(){
     highlightMask=masks.size()-1;
 }
 
-void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped){
+void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, float featherRight, float featherLeft, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped){
     
     meshObjects[_meshNum].translate=translate;
     meshObjects[_meshNum].scale=scale;
@@ -66,5 +66,7 @@ void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, 
     meshObjects[_meshNum].originals=originals;
     meshObjects[_meshNum].warped=warped;
     meshObjects[_meshNum].isMesh=false;
+    meshObjects[_meshNum].right=featherRight;
+    meshObjects[_meshNum].left=featherLeft;
     
 }

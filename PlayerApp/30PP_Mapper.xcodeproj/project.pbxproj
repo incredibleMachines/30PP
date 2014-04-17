@@ -12,6 +12,7 @@
 		A9DD348A1844EC8600A97DC4 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = A9DD34881844EC8600A97DC4 /* testApp.mm */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		D311621518F33DC80066A9B2 /* UV_OUT_gastronomy.mov in Resources */ = {isa = PBXBuildFile; fileRef = D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */; };
+		D31FA3BF19001805008E2042 /* checker.mov in Resources */ = {isa = PBXBuildFile; fileRef = D31FA3BE19001805008E2042 /* checker.mov */; };
 		D320BB7E18EF14C6001E501E /* 04_04.obj in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7D18EF14C6001E501E /* 04_04.obj */; };
 		D320BB8018EF14EB001E501E /* 04_04.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB7F18EF14EB001E501E /* 04_04.mov */; };
 		D320BB8218EF1D23001E501E /* UV_OUT.mov in Resources */ = {isa = PBXBuildFile; fileRef = D320BB8118EF1D23001E501E /* UV_OUT.mov */; };
@@ -212,6 +213,7 @@
 		C1C61C80A74C50ECFCC43958 /* MyUIDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = MyUIDelegate.mm; path = src/MyUIDelegate.mm; sourceTree = SOURCE_ROOT; };
 		C645F5078849E368239AADA3 /* MyUIDelegate.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = MyUIDelegate.h; path = src/MyUIDelegate.h; sourceTree = SOURCE_ROOT; };
 		D311621418F33DC80066A9B2 /* UV_OUT_gastronomy.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT_gastronomy.mov; sourceTree = "<group>"; };
+		D31FA3BE19001805008E2042 /* checker.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = checker.mov; sourceTree = "<group>"; };
 		D320BB7D18EF14C6001E501E /* 04_04.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 04_04.obj; sourceTree = "<group>"; };
 		D320BB7F18EF14EB001E501E /* 04_04.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 04_04.mov; sourceTree = "<group>"; };
 		D320BB8118EF1D23001E501E /* UV_OUT.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = UV_OUT.mov; sourceTree = "<group>"; };
@@ -1353,6 +1355,7 @@
 		E2A6964C18CE7C9B008D8EF1 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				D31FA3BE19001805008E2042 /* checker.mov */,
 				D32673AC18FF42100036A1F9 /* multi.mov */,
 				D3B52A7F18FC7FAE00015B97 /* UV walls_05.obj */,
 				D3CFDDA718F8922300C8552F /* output.mov */,
@@ -1526,6 +1529,7 @@
 				E2A691D518CE6567008D8EF1 /* addon_config.mk in Resources */,
 				D33E96C818E07D5100CBB90F /* README.txt in Resources */,
 				D3801ACC18EA455C0006C493 /* .gitignore in Resources */,
+				D31FA3BF19001805008E2042 /* checker.mov in Resources */,
 				D334C30718FDBAFC0071EA7B /* README.md in Resources */,
 				D339C19518CFA0BB008E604C /* COPYING in Resources */,
 				D339C1A218CFA0BB008E604C /* websockets_static.pdb in Resources */,

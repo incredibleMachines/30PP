@@ -252,6 +252,8 @@ public:
     ofxUITextInput *translateX2D;
     ofxUITextInput *translateY2D;
     ofxUITextInput *scale2D;
+    ofxUITextInput *featherRight2D;
+    ofxUITextInput *featherLeft2D;
     
     
     ofxUISuperCanvas *magnetGUI;
