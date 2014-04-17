@@ -264,23 +264,23 @@ function setRenderContent(scene,cb){
 	scene.asset_loc = ASSET_FOLDER+'/'
 	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
 	scene.template = AEPROJECT_FOLDER+'/'+scene.template
-	if(scene.type === 'default_gastronomy' || scene.type==='default_markets' || scene.type==='default_activities' || scene.type==='default_fashion' || scene.type==='default_parks' || scene.type==='default_art- design'){
-	setTimeout(function(){
+	if( scene.type.indexOf('default') != -1){
+		setTimeout(function(){
 
-		//console.log(scene)
-		var functionCall = "main("+JSON.stringify(scene)+")" //scene.type+"("+JSON.stringify(scene)+")";
-		console.log(" Function Call to AE ".inverse.cyan)
-		console.log(functionCall)
+			//console.log(scene)
+			var functionCall = "main("+JSON.stringify(scene)+")" //scene.type+"("+JSON.stringify(scene)+")";
+			console.log(" Function Call to AE ".inverse.cyan)
+			console.log(functionCall)
 
-		runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
-							if(err){
-								console.error(err)
-							}else{
-								cb(null)
-							}
-							})
+			runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){
+								if(err){
+									console.error(err)
+								}else{
+									cb(null)
+								}
+								})
 
-	},timebetween)
+		},timebetween)
 	}else{
 		console.log("Files ".inverse.yellow)
 		cb(null)
