@@ -1390,9 +1390,9 @@ void ModelMapper:: drawCameras() {
         }
         
         //ADJUST_MODE_LOCKED guiCam text
-        else{
-            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
-        }
+//        else{
+//            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
+//        }
         
         
     }
