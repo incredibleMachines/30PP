@@ -6,7 +6,7 @@
 
 #define BUFFER_SIZE 3
 #define MESH_NUM 1
-#define TEX_WIDTH 1920
+#define TEX_WIDTH 2048
 #define TEX_HEIGHT 2500
 
 class testApp : public ofBaseApp{
@@ -27,7 +27,7 @@ public:
     ModelMapper map;
     
     //---------CONTENT TEXTURE
-    vector<ofTexture *> meshTexture;
+    ofTexture * meshTexture;
     
     //total number of meshes to be loaded
     int numMesh;
@@ -37,8 +37,7 @@ public:
     bool bInited;
     
     ofImage test;
-
-    
+        
 };
 
 

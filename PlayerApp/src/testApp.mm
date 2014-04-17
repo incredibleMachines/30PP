@@ -15,7 +15,6 @@ void testApp::setup() {
     
     bInited=false;
     
-    meshTexture.push_back(new ofTexture());
     
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
@@ -26,29 +25,39 @@ void testApp::setup() {
 	data.tex_h = TEX_HEIGHT;
 	data.tex_t = TEX_WIDTH;
 	data.tex_u = TEX_HEIGHT;
-    
-//    meshTexture[0]->allocate(TEX_WIDTH, TEX_HEIGHT, GL_TEXTURE_2D, GL_TEXTURE_2D, GL_RGB);
 
-    meshTexture[0]->allocate(data);
-//    test.loadImage("Sequence 01.jpg");
-//    meshTexture[0]=&test.getTextureReference();
-//    
-    MSA::ofxCocoa::initPlayer("output.mov", meshTexture[0]->texData.textureID);
+    meshTexture = new ofTexture();
+    meshTexture->allocate(data);
+    
+    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
     //Load mesh vector to select which meshes within obj to use
     vector<int> _meshesLoad;
     _meshesLoad.push_back(0);
-//    _meshesLoad.push_back(1);
-//    _meshesLoad.push_back(2);
+    _meshesLoad.push_back(1);
+    _meshesLoad.push_back(2);
     numMesh=_meshesLoad.size();
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("04_04.obj");
+    map.setMassMesh("UV walls_05.obj");
+    map.set2D(0);
+    map.set2D(1);
+    map.set2D(2);
+    
+    vector<int> which;
+    which.push_back(0);
+    map.setMeshDraw(1,which);
+    which.clear();
+    which.push_back(1);
+    map.setMeshDraw(2,which);
+    which.clear();
+    which.push_back(2);
+    map.setMeshDraw(3,which);
     
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
@@ -89,8 +98,8 @@ void testApp::update(){
 //    cout<<data.textureTarget<<endl;
     
     //Get Texture data from CVOpenGLTexture in ofxCocoa
-    meshTexture[0]->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
-    ofTextureData data=meshTexture[0]->getTextureData();
+    meshTexture->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
+    ofTextureData data=meshTexture->getTextureData();
     data.textureTarget=GL_TEXTURE_RECTANGLE;
     
     //Make sure texture data has correct settings for display
@@ -122,6 +131,12 @@ void testApp::keyPressed(int key){
             else if(map.bShiftPressed==true){
                 MSA::ofxCocoa::showCursor();
             }
+            break;
+        case 'p':
+            MSA::ofxCocoa::pausePlayer();
+            break;
+        case 'P':
+            MSA::ofxCocoa::startPlayer();
             break;
     }
     

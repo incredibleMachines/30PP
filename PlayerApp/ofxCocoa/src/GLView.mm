@@ -266,7 +266,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             NSOpenGLPFASampleBuffers, (NSOpenGLPixelFormatAttribute)1,
             NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)8,
             NSOpenGLPFASamples, (NSOpenGLPixelFormatAttribute)8,
-            (NSOpenGLPixelFormatAttribute)0
+//         NSOpenGLPFAOpenGLProfile,
+//         NSOpenGLProfileVersion3_2Core,
+//        (NSOpenGLPixelFormatAttribute)0
         };
 		
 		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
