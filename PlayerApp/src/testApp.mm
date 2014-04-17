@@ -29,7 +29,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("output.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -37,7 +37,7 @@ void testApp::setup() {
     vector<int> _meshesLoad;
     _meshesLoad.push_back(0);
     _meshesLoad.push_back(1);
-//    _meshesLoad.push_back(2);
+    _meshesLoad.push_back(2);
     numMesh=_meshesLoad.size();
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
@@ -45,6 +45,19 @@ void testApp::setup() {
     
     //set path to obj file to use in setup
     map.setMassMesh("UV walls_05.obj");
+    map.set2D(0);
+    map.set2D(1);
+    map.set2D(2);
+    
+    vector<int> which;
+    which.push_back(0);
+    map.setMeshDraw(1,which);
+    which.clear();
+    which.push_back(1);
+    map.setMeshDraw(2,which);
+    which.clear();
+    which.push_back(2);
+    map.setMeshDraw(3,which);
     
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
@@ -118,6 +131,12 @@ void testApp::keyPressed(int key){
             else if(map.bShiftPressed==true){
                 MSA::ofxCocoa::showCursor();
             }
+            break;
+        case 'p':
+            MSA::ofxCocoa::pausePlayer();
+            break;
+        case 'P':
+            MSA::ofxCocoa::startPlayer();
             break;
     }
     

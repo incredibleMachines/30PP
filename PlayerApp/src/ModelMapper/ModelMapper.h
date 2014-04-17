@@ -14,6 +14,7 @@
 #include "ofxAssimpModelLoader.h"
 #include "ofxTween.h"
 #include "ofxUI.h"
+#include "ofxHomography.h"
 //#include "ofAVQueuePlayer.h"
 //#include "../Compositor/Composite.h"
 
@@ -22,8 +23,9 @@
 #define ADJUST_MODE_LOOK_AT 2
 #define ADJUST_MODE_VIEWPORT 3
 #define ADJUST_MODE_MESH 4
-#define ADJUST_MODE_MASK 5
-#define ADJUST_MODE_LOCKED 6
+#define ADJUST_MODE_2D 5
+#define ADJUST_MODE_MASK 6
+#define ADJUST_MODE_LOCKED 7
 
 #define MESH_MASS 0
 #define MESH_DETAIL 1
@@ -115,13 +117,18 @@ public:
     void adjustViewport(float x, float y);
     //move mesh point
     void adjustMesh(float x, float y, float z);
+    //move mesh point
+    void adjust2D(float x, float y);
     //move mask point/entire mask
     void adjustMask(float x, float y);
     //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
     float magnetMap(float distance, float radius);
     void resetSelected();
-    void set2D(int _meshNum, ofPoint start, ofPoint size);
+    
+    void set2D(int _meshNum);
+    
+    void setMeshDraw(int _cam, vector<int> _whichMeshes);
     
     void setGUIVisible(bool hide);
     
@@ -143,11 +150,21 @@ public:
         float modifier;
         float distance;
     };
+    
+    class vertex2D{
+    public:
+        ofVec3f vertex;
+        int box;
+        int index;
+    };
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
     vector< vector<meshVertex> > magnetVertices;
     vector< vector<meshVertex> > tempDoubleVertices;
     vector< vector<meshVertex> > doubleVertices;
+    
+    vector< vector<vertex2D> > vertices2D;
+    vector< vector<vertex2D> > tempVertices2D;
     
     //holder for mesh filepaths
     string detailMesh;
@@ -158,7 +175,6 @@ public:
     ofPlanePrimitive plane;
     bool bGuiCamAdjust, bDrawingPen, bNewPen, bDrawingDouble, bNewDouble;
     ofPolyline penPoly, doublePoly;
-    
     
     
     //---------MASK SETTINGS
@@ -231,6 +247,15 @@ public:
     ofxUISuperCanvas *meshGUI;
     void setMeshGUI();
     
+    ofxUISuperCanvas *mesh2DGUI;
+    void setMesh2DGUI();
+    ofxUITextInput *translateX2D;
+    ofxUITextInput *translateY2D;
+    ofxUITextInput *scale2D;
+    ofxUITextInput *featherRight2D;
+    ofxUITextInput *featherLeft2D;
+    
+    
     ofxUISuperCanvas *magnetGUI;
     void setMagnetGUI();
     void hideMagnetTypes();
@@ -258,6 +283,8 @@ public:
     ofxUISuperCanvas *maskGUI;
     void setMaskGUI();
     ofxUIButton *maskButton;
+    
+    int currentMesh;
     
     
 };
