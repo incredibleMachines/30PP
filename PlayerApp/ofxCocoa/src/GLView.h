@@ -70,6 +70,7 @@ void ofGLReadyCallback();
     int _glFormat;
     int _glType;
     BOOL _bPixelsAllocated;
+    int _numScreens;
     
     unsigned char * _pix;
     
@@ -124,6 +125,7 @@ void ofGLReadyCallback();
 @property (nonatomic, assign) int currentFrame;
 @property (nonatomic, assign) double position;
 @property (nonatomic, assign) double playbackRate;
+@property (nonatomic, assign) int numScreens;
 
 @property (nonatomic, assign, readonly) GLuint textureID;
 
