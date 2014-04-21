@@ -6,17 +6,6 @@ var _ 		= require('underscore');
 exports.index = function(_Database){
 
 	return function(req,res){
-
-		// var type = req.query.type;
-		// console.log("type: ");
-		// console.log(type);
-		//
-		// if(typeof type === 'undefined' || type === "") type = 'default';
-		// console.log(utils.toTitleCase(type))
-		// var title = utils.reverseSlug(type)
-		// console.log("title: ");
-		// console.log(title);
-		// get all timeline events
 		_Database.queryCollectionWithOptions('timeline', {}, {sort: 'concat_queue'}, function(e,tEvents){
 
 			if(!e){
@@ -119,7 +108,7 @@ exports.update = function(_Database){
 
 
 
-/* function to create and store fake data in timeline collection */
+/* function to create and populate 'timeline' collection */
 exports.make = function(_Database, EVENT_TYPES, cb){
 
 	//return function(req, res){
@@ -192,4 +181,11 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 			}
 		})
 	//}
+}
+
+/*function to call FFMPEG and concatenate all video files */
+exports.concat = function(_Database, EVENT_TYPES, cb){
+	return function(req,res){
+		res.jsonp({error: "Not Implemented Yet!"});
+	}
 }

@@ -13,8 +13,11 @@ scenes = JSON.parse(scenes)
 
 	<header>
 		<h1 class="col-md-6 pull-left">Timeline<small>&nbsp;Total Scenes: <%= scenes.length%></small></h1>
-		<section class="col-md-2 pull-right add-btn">
-						<a href="/timeline/make" type="button" class="btn btn-default navbar-btn render-content" >MAKE Timeline</a>
+		<section class="col-md-4 pull-right add-btn">
+				<a href="/timeline/concat" type="button" class="btn btn-default navbar-btn concatenate green" >Concatenate</a>
+		</section>
+		<section class="col-md-4 pull-right add-btn">
+			<a href="/timeline/make" type="button" class="btn btn-default navbar-btn make-timeline" >MAKE Timeline</a>
 		</section>
 	</header>
 	<section class='current_events row col-md-12'>
@@ -47,7 +50,7 @@ scenes = JSON.parse(scenes)
 								<li class="col-md-3"><%= scene.type %></li>
 								<li class="col-md-3"><%= scene.title %></li>
 								<li class="col-md-4">
-									<div class="col-lg-4">
+									<div class="col-lg-3">
 										<input class="form-control" type="text" name="duration" value="<%= scene.duration %>"/>
 										<input type="hidden" value="<%= scene._id %>" name="scene_id"/>
 									</div>milliseconds</li>

@@ -128,6 +128,7 @@ app.post('/render',renderer.render(Database,AfterEffects,PathFinder,app.locals.E
 //timeline page
 app.get('/timeline',timeline.index(Database));
 app.post('/timeline/update', timeline.update(Database));
+app.get('/timeline/concat',timeline.concat(Database));
 app.get('/timeline/make',function(req,res){
   timeline.make(Database, app.locals.EVENT_TYPES, function (e){
     if(!e)res.redirect('/timeline');// res.jsonp({result: "MADE timeline"});
