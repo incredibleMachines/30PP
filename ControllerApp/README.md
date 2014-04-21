@@ -28,7 +28,6 @@ View system by opening a browser and directing it to __[http://localhost:3000](h
 A method for restoring your database from a dump on github.
 
 
-
 ##### Manually Removing DB Items
 
 Open Terminal and ensure that Mongod is running *See Above*
@@ -52,5 +51,18 @@ _Optionally remove all items from render queue_
 ```bash
 #assuming you are still in mongo 30_PP
 >db.clips.update({render:true},{render:false},true,true)
+
+```
+##### Open hidden assets folder 
+Open Terminal and ensure you are in 30_PP/ControllerApp/ 
+```javascript
+$ open public/.assets
+
+```
+##### Kill process by PID
+First, find the process PID using Activity Monitor.
+In terminal, type  
+```javascript
+$ sudo kill -SIGTERM [PID]
 
 ```
