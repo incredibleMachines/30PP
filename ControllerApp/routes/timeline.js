@@ -75,9 +75,14 @@ exports.update = function(_Database){
 		//console.log("timeline.update req.body: ");
 		//console.log(req.body);
 		var post = req.body;
-		var newDuration = post.duration;
+		var newDuration = parseInt(post.duration);
 		var sceneId	= post.scene_id;
-		//console.log("sceneId: "+sceneId);
+
+		if(isNaN(newDuration)){
+			console.log("NAN DETECTED!  Setting duration to 0.");
+			newDuration = 0;
+		}
+
 		var obj = {
 			$set: {
 				"scenes.$.duration": newDuration
@@ -174,7 +179,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 				} else {
 					//res.redirect('/timeline');
 					console.log("DID NOT MAKE - TIMELINE CURRENTLY EXISTS");
-					cb("did not make-timeline already exists.   mongo db.timeline.remove() to re-make");
+					cb("did not MAKE because timeline already exists.   mongo db.timeline.remove() before re-make");
 				}
 			} else {
 				console.log("ERROR QUERYING FOR TIMELINE...");
