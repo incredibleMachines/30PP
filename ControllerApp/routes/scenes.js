@@ -103,9 +103,12 @@ exports.delete = function(_Database){
 		var type ='';
 		_Database.getDocumentBySlug('scenes',slug,function(e,_scene){
 			type = _scene.type
-			_Database.remove('clips',{scene_id: _scene._id},function(_e){
-				_Database.remove('scenes',{_id:_scene._id},function(__e){
-					res.redirect('/events/?type='+type)
+			order = _scene.order
+			_Database.update('scenes',{type: _scene.type, order:{$gt:_scene.order}}, {$inc:{order:-1}},function(_e){
+				_Database.remove('clips',{scene_id: _scene._id},function(_e){
+					_Database.remove('scenes',{_id:_scene._id},function(__e){
+						res.redirect('/events/?type='+type)
+					})
 				})
 			})
 		})
