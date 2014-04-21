@@ -131,7 +131,7 @@ app.post('/render',auth.index(Database), renderer.render(Database,AfterEffects,P
 //timeline page
 app.get('/timeline',auth.index(Database), timeline.index(Database));
 app.post('/timeline/update',auth.index(Database), timeline.update(Database));
-app.get('/timeline/concat',auth.index(Databast), timeline.concat(Database));
+app.get('/timeline/concat',auth.index(Database), timeline.concat(Database));
 app.get('/timeline/make',auth.index(Database),function(req,res){
   timeline.make(Database, app.locals.EVENT_TYPES, function (e){
     if(!e)res.redirect('/timeline');// res.jsonp({result: "MADE timeline"});
