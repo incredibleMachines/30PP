@@ -5,11 +5,11 @@ ControllerApp/Media Manager Application
 	http://nodejs.org/
  	http://brew.sh/
  	http://www.mongodb.org/
-		
-### Instructions:	 
-Ensure you have node.js homebrew and mongodb installed. 
+
+### Instructions:
+Ensure you have node.js homebrew and mongodb installed.
 _*Note Recommended to install Mongodb via Homebrew_
-		
+
 Make sure that mongod is running, open terminal and type:
 ```bash
 $ mongod
@@ -17,19 +17,40 @@ $ mongod
 Running the application, open terminal and type:
 ```bash
 $ cd /path/to/30_PP/ControllerApp
-		
-$ npm install 
-		
+
+$ npm install
+
 $ node app.js
 ```
 View system by opening a browser and directing it to __[http://localhost:3000](http://localhost:3000)__
 
-#### Manually Removing DB Items
+#### Reload Mongo
+A method for restoring your database from a dump on github.
+
+
+
+##### Manually Removing DB Items
 
 Open Terminal and ensure that Mongod is running *See Above*
-```bash
+```javascript
 $ mongo 30_PP
 
-> for(var i= 0; i< db.getCollectionNames().length; i++){ db[db.getCollectionNames()[i]].remove() }
+> db.dropDatabase()
+
+```
+_In another Tab_
+
+```bash
+
+$ cd /path/to/30PP/ControllerApp
+
+$ mongorestore
+
+```
+_Optionally remove all items from render queue_
+
+```javascript
+#assuming you are still in mongo 30_PP
+>db.clips.update({render:true},{render:false},true,true)
 
 ```

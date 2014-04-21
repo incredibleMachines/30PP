@@ -141,7 +141,7 @@ exports.getCurrentFile = function(){
 
 //function to delete old file and render new one
 //using async queue processes
-var concurrency = 5; //number of tasks running in the queue at once
+var concurrency = 3; //number of tasks running in the queue at once
 
 var renderqueue = async.queue(renderWorker,concurrency)
 
