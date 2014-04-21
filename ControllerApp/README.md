@@ -49,7 +49,7 @@ $ mongorestore
 ```
 _Optionally remove all items from render queue_
 
-```javascript
+```bash
 #assuming you are still in mongo 30_PP
 >db.clips.update({render:true},{render:false},true,true)
 
