@@ -91,6 +91,16 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //texture settings
     bMipMap=true;
     
+    //transition settings
+    transitionTime=1000;
+    loadTime=750;
+    ofLoadImage(ambientGradientFrame,"Ambient_Frame.jpg");
+    ofLoadImage(artsFrame,"Ambient_Frame.jpg");
+    bTransitioning=false;
+    bTransitionStarted=false;
+    bTransitionFinished=false;
+    bTransitionLoading=false;
+    
     //----------LOAD settings JSON
     
     ofBuffer buffer = ofBufferFromFile("settings.json");
@@ -120,6 +130,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     currentMesh=0;
     setGUIVisible(false);
+    
 }
 
 void ModelMapper::update(ofTexture * tex){
@@ -1334,7 +1345,7 @@ void ModelMapper:: drawCameras() {
                     
                     if(cameras[i].meshObjects[j].isMesh==false){
                         for(int k=0; k<cameras[i].meshObjects[j].originals.size();k++){
-                            
+                            ofEnableAlphaBlending();
                             ofDisableNormalizedTexCoords();
                             ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].meshObjects[j].originals[k], cameras[i].meshObjects[j].warped[k]);
                             
@@ -1346,34 +1357,99 @@ void ModelMapper:: drawCameras() {
                             
                             ofPushMatrix();
                             glMultMatrixf(homography.getPtr());
-                            //                            texture->drawSubsection(0,0,cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height,cameras[i].meshObjects[j].tex.pos.x,cameras[i].meshObjects[j].tex.pos.y, cameras[i].meshObjects[j].tex.width,cameras[i].meshObjects[j].tex.height);
                             if(i!=guiCam){
-                            texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
-                                                    cameras[i].meshObjects[j].originals[k][0].y,
-                                                    cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                    cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
-                                                    cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
-                                                    cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
-                                                    cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                    cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                                
+                                
+                                ofSetColor(255,255,255,255);
+                                texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                                        cameras[i].meshObjects[j].originals[k][0].y,
+                                                        cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                        cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                                        cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                                        cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                                        cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                        cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                                
+                                if(bTransitioning==true){
+                                    if(bTransitionStarted==true){
+                                        cout<<"in"<<endl;
+                                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                                            bTransitionStarted=false;
+                                            ofSetColor(255,255,255,255);
+                                        }
+                                            cout<<int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255))<<endl;
+                                            ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255)));
+                                            glDepthFunc(GL_ALWAYS);
+                                            fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                                            glDepthFunc(GL_LESS);
+                                    }
+                                    
+                                    else if(bTransitionLoading==true){
+                                        cout<<"wait"<<endl;
+                                        if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
+                                            bTransitionFinished=true;
+                                            bTransitionLoading=false;
+                                            transitionTimer=ofGetElapsedTimeMillis();
+                                        }
+                                            ofSetColor(255,255,255,255);
+                                            glDepthFunc(GL_ALWAYS);
+                                            fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                                            glDepthFunc(GL_LESS);
+                                        
+                                    }
+                                    
+                                    else if(bTransitionFinished==true){
+                                        cout<<"go"<<endl;
+                                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                                            bTransitionFinished=false;
+                                            bTransitioning=false;
+                                            ofSetColor(255,255,255,255);
+                                        }
+                                            cout<<int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255))<<endl;
+                                            ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
+                                            
+                                            glDepthFunc(GL_ALWAYS);
+                                            fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                                                      cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                                                      cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                                                      cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                                            glDepthFunc(GL_LESS);
+                                    }
+                                }
+                                
                             }
-                            glDepthFunc(GL_ALWAYS);
-                            ofEnableAlphaBlending();
+                            //                            glDepthFunc(GL_ALWAYS);
+                            //                            for(int l=0; l<cameras[i].meshObjects[j].left; l++){
+                            //                                ofSetLineWidth(1);
+                            //                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].left,255,0));
+                            //                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            //                            }
+                            //
+                            //                            for(int l=0; l<cameras[i].meshObjects[j].right; l++){
+                            //                                ofSetLineWidth(1);
+                            //                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].right,255,0));
+                            //                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                            //                            }
+                            //                            glDepthFunc(GL_LESS);
                             
-                            for(int l=0; l<cameras[i].meshObjects[j].left; l++){
-                                ofSetLineWidth(1);
-                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].left,255,0));
-                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                            }
-                            
-                            for(int l=0; l<cameras[i].meshObjects[j].right; l++){
-                                ofSetLineWidth(1);
-                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].right,255,0));
-                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                            }
-                            
-                            ofDisableAlphaBlending();
-                            glDepthFunc(GL_LESS);
                             
                             if(bDrawWireframe==true){
                                 ofSetColor(0,255,0);
@@ -1383,8 +1459,9 @@ void ModelMapper:: drawCameras() {
                                 glDepthFunc(GL_LESS);
                             }
                             ofPopMatrix();
-                            
                             ofPopMatrix();
+                            
+                            ofDisableAlphaBlending();
                         }
                     }
                 }
@@ -1392,9 +1469,9 @@ void ModelMapper:: drawCameras() {
         }
         
         //ADJUST_MODE_LOCKED guiCam text
-//        else{
-//            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
-//        }
+        //        else{
+        //            ofDrawBitmapString("Presentation Mode Active. Press Shift + Spacebar to unlock and edit", cameras[guiCam].viewport.x+cameras[guiCam].viewport.width/2-300, cameras[guiCam].viewport.y+cameras[guiCam].viewport.height/2);
+        //        }
         
         
     }
@@ -2995,5 +3072,18 @@ void ModelMapper::setMeshDraw(int _cam, vector<int> which){
     cout<<"set Cam:"<<_cam<<endl;
     for(int i=0;i<which.size();i++){
         cout<<"show Mesh:"<<which[i]<<endl;
+    }
+}
+
+void ModelMapper::fadeIn(int type){
+    bTransitioning=true;
+    bTransitionStarted=true;
+    bTransitionFinished=false;
+    transitionTimer=ofGetElapsedTimeMillis();
+    if (type==TRANSITION_AMBIENT_GRADIENT){
+        fadeFrame=&ambientGradientFrame;
+    }
+    else if(type==TRANSITION_ARTS){
+        fadeFrame=&artsFrame;
     }
 }
