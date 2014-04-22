@@ -64,11 +64,9 @@ $ cd /path/to/30PP/ControllerApp
 
 $ mongorestore
 ```
-_Optionally remove all items from render queue_
+Optionally remove all items from render queue _Go back to the Mongo Terminal Tab_
 
 ```javascript
-$ mongo 30_PP
-
 > db.clips.update({render:true},{render:false},true,true)
 ```
 
