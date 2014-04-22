@@ -24,65 +24,45 @@ $ node app.js
 ```
 View system by opening a browser and directing it to __[http://localhost:3000](http://localhost:3000)__
 
-#### Creating a backup of your Mongo database
-Steps to duplicate your database and share it on git
-
-##### Delete the dump folder and create a new one
-
-```bash
-$ cd /path/to/30PP/ControllerApp
-
-$ rm -rf dump/
-
-$ mongodump -db 30_PP
-```
-
-__Copy your .assets folder to Dropbox__
-
-```bash
-$ cd /path/to/30PP/ControllerApp
-
-$ cp -r public/.assets path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets
-```
-
-#### Reload Mongo from git store
+#### Reload Mongo
 A method for restoring your database from a dump on github.
 
 
 ##### Manually Removing DB Items
 
 Open Terminal and ensure that Mongod is running *See Above*
-```bash
+```javascript
 $ mongo 30_PP
 
 > db.dropDatabase()
+
 ```
 _In another Tab_
 
 ```bash
+
 $ cd /path/to/30PP/ControllerApp
 
 $ mongorestore
+
 ```
-Optionally remove all items from render queue _Go back to the Mongo Terminal Tab_
+_Optionally remove all items from render queue_
 
-```javascript
-> db.clips.update({render:true},{render:false},true,true)
-```
-
-##### Helpful Bash Commands
-
-A few random but very helpful commands to manage the development process
-
-##### Open hidden assets folder
-Open Terminal and ensure you are in 30_PP/ControllerApp/
 ```bash
-$ open public/.assets
-```
+#assuming you are still in mongo 30_PP
+>db.clips.update({render:true},{render:false},true,true)
 
+```
+##### Open hidden assets folder 
+Open Terminal and ensure you are in 30_PP/ControllerApp/ 
+```javascript
+$ open public/.assets
+
+```
 ##### Kill process by PID
 First, find the process PID using Activity Monitor.
 In terminal, type  
-```bash
+```javascript
 $ sudo kill -SIGTERM [PID]
+
 ```
