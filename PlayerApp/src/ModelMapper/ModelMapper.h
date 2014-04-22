@@ -49,6 +49,14 @@
 #define EASE_STYLE_SINE 5
 #define EASE_STYLE_CIRC 6
 
+#define TRANSITION_DEFAULT 0
+#define TRANSITION_GASTRONOMY 1
+#define TRANSITION_MARKETS 2
+#define TRANSITION_SHOPPING 3
+#define TRANSITION_ARTS 4
+#define TRANSITION_LEISURE 5
+#define TRANSITION_AMBIENT_GRADIENT 6
+
 class ModelMapper {
 public:
     //overloaded setup allowing different data to be passed
@@ -286,5 +294,18 @@ public:
     
     int currentMesh;
     
+    //----------------TRANSITIONS
+    void fadeIn(int type);
+    void fadeOut(int type);
+    bool bTransitioning;
+    bool bTransitionStarted;
+    bool bTransitionLoading;
+    bool bTransitionFinished;
+    float opacity;
+    int transitionTime;
+    int loadTime;
+    int transitionTimer;
+    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame;
+    ofTexture * fadeFrame;
     
 };

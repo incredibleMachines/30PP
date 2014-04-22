@@ -37,6 +37,9 @@ public:
     bool bInited;
     
     ofImage test;
+    
+    int currentTransition;
+    float loadTime;
         
 };
 

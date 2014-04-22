@@ -6,7 +6,7 @@
 void testApp::setup() {
 	printf("Window dimensions: %i %i\n", ofGetWidth(), ofGetHeight());
 	
-	ofBackground(0, 0, 0);
+	ofBackground(0,0,0);
     
 	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
@@ -69,10 +69,6 @@ void testApp::update(){
     
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
-//        MSA::ofxCocoa::initPlayer(socketHandler.eventHandler.movieFile, meshTexture[0]->texData.textureID);
-//        MSA::ofxCocoa::pausePlayer();
-//        MSA::ofxCocoa::setTime(time);
-//        MSA::ofxCocoa::startPlayer();
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
@@ -92,22 +88,20 @@ void testApp::update(){
         
     }
     
-//    ofTextureData data=meshTexture[0]->getTextureData();
-//    data.textureTarget=GL_TEXTURE_2D;
-//    cout<<data.textureTarget<<endl;
+    if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
+        cout<<"trigger"<<endl;
+        MSA::ofxCocoa::setTime(loadTime);
+        map.bTransitionLoading=true;
+        map.transitionTimer=ofGetElapsedTimeMillis();
+    }
     
     //Get Texture data from CVOpenGLTexture in ofxCocoa
     meshTexture->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
     ofTextureData data=meshTexture->getTextureData();
     data.textureTarget=GL_TEXTURE_RECTANGLE;
     
-    //Make sure texture data has correct settings for display
-//    data.tex_t = (float)(data.width) / (float)data.tex_w;
-//    data.tex_u = (float)(data.height) / (float)data.tex_h;
-    
     //Pass texture into ModelMapper
     map.update(meshTexture);
-    
     
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
@@ -116,13 +110,15 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    cout<<MSA::ofxCocoa::getScreens()<<endl;
-    
-    if(MSA::ofxCocoa::getScreens()>1){
+    if(MSA::ofxCocoa::getScreens()>0){
         map.draw();
     }
     else{
         ofDrawBitmapString("OOOOPS", 100,100);
+    }
+    
+    if(map.bTransitionStarted){
+        
     }
     
 //    glDepthFunc(GL_ALWAYS);
@@ -148,6 +144,9 @@ void testApp::keyPressed(int key){
         case 'P':
             MSA::ofxCocoa::startPlayer();
             break;
+        case '[':
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            loadTime=100;
     }
     
 }
