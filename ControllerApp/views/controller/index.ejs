@@ -16,30 +16,30 @@
       $(document).ready(function(){
         $.getJSON('/api',function(data){
           console.log(data)
-          var playSales = '<p>Sales</p><a class="btn btn-default" href="'+data.sales.play_all+'">Play All</a>'
-          var playAmbient = '<p>Ambient</p><a class="btn btn-default" href="'+data.ambient.play_all+'">Play All</a>'
+          var playSales = '<h4>Sales</h4><p><a class="btn btn-default" href="'+data.sales.play_all+'">Play All</a></p>'
+          var playAmbient = '<h4>Ambient</h4><p><a class="btn btn-default" href="'+data.ambient.play_all+'">Play All</a></p>'
 
-          var salesSingles = '<p>Single Sales</p>';
+          var salesSingles = '<h4>Single Sales</h4>';
           for(var i = 0; i< data.sales.play_single.length; i++){
 
             for(var key in data.sales.play_single[i]){
-              salesSingles+= '<a class="btn btn-default" href="'+data.sales.play_single[i][key]+'">Play '+key+'</a>'
+              salesSingles+= '<p><a class="btn btn-default" href="'+data.sales.play_single[i][key]+'">Play '+key+'</a></p>'
             }
 
           }
-          var ambientSingles = "<p>Single Ambient</p>";
+          var ambientSingles = "<h4>Single Ambient</h4>";
           for(var i = 0; i< data.ambient.play_single.length; i++){
 
             for(var key in data.ambient.play_single[i]){
-              ambientSingles+= '<a class="btn btn-default" href="'+data.ambient.play_single[i][key]+'">Play '+key+'</a>'
+              ambientSingles+= '<p><a class="btn btn-default" href="'+data.ambient.play_single[i][key]+'">Play '+key+'</a></p>'
             }
 
           }
 
-          var controlsButtons = '<p>Commands</p>'
+          var controlsButtons = '<h4>Commands</h4>'
 
           for(var key in data.commands){
-            controlsButtons+= '<a class="btn btn-default" href="'+data.commands[key]+'">'+key+'</a>'
+            controlsButtons+= '<p><a class="btn btn-default" href="'+data.commands[key]+'">'+ key[0].toUpperCase()+ key.slice(1)+'</a></p>'
           }
           var html = '<article>'
           html+= '<section>'+playSales+'</section>'
