@@ -31,17 +31,18 @@ Steps to duplicate your database and share it on git
 
 ```bash
 $ cd /path/to/30PP/ControllerApp
-$ rm -rf dump/
-$ mongodump -db 30_PP
 
+$ rm -rf dump/
+
+$ mongodump -db 30_PP
 ```
 
 __Copy your .assets folder to Dropbox__
 
 ```bash
 $ cd /path/to/30PP/ControllerApp
-$ cp -r public/.assets path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets
 
+$ cp -r public/.assets path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets
 ```
 
 #### Reload Mongo from git store
@@ -55,23 +56,20 @@ Open Terminal and ensure that Mongod is running *See Above*
 $ mongo 30_PP
 
 > db.dropDatabase()
-
 ```
 _In another Tab_
 
 ```bash
-
 $ cd /path/to/30PP/ControllerApp
 
 $ mongorestore
-
 ```
 _Optionally remove all items from render queue_
 
-```bash
-#assuming you are still in mongo 30_PP
-> db.clips.update({render:true},{render:false},true,true)
+```javascript
+$ mongo 30_PP
 
+> db.clips.update({render:true},{render:false},true,true)
 ```
 
 ##### Helpful Bash Commands
@@ -82,12 +80,11 @@ A few random but very helpful commands to manage the development process
 Open Terminal and ensure you are in 30_PP/ControllerApp/
 ```bash
 $ open public/.assets
-
 ```
+
 ##### Kill process by PID
 First, find the process PID using Activity Monitor.
 In terminal, type  
 ```bash
 $ sudo kill -SIGTERM [PID]
-
 ```
