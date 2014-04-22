@@ -228,6 +228,10 @@ namespace MSA {
             [glView() setTime:_millis];
         }
         
+        int getScreens(){
+            return [glView() numScreens];
+        }
+        
         /***** 30PP *****/
         
 		

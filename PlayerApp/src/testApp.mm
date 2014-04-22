@@ -15,7 +15,6 @@ void testApp::setup() {
     
     bInited=false;
     
-    
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
     cout<<data.textureTarget<<endl;
@@ -29,7 +28,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("default.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -117,7 +116,14 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    map.draw();
+    cout<<MSA::ofxCocoa::getScreens()<<endl;
+    
+    if(MSA::ofxCocoa::getScreens()>1){
+        map.draw();
+    }
+    else{
+        ofDrawBitmapString("OOOOPS", 100,100);
+    }
     
 //    glDepthFunc(GL_ALWAYS);
 //    ofSetColor(255);

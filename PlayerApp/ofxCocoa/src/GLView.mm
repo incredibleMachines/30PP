@@ -298,12 +298,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
         
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector (didChangeScreenParameters:)
+                                                     name: NSApplicationDidChangeScreenParametersNotification
+                                                   object: nil];
+        
+        
         
 	} else {
         cout << "ERROR SETTING UP WINDOW" << endl;
     }
     
     NSLog(@"%s %s", glGetString(GL_RENDERER), glGetString(GL_VERSION));
+    NSArray *screens = [NSScreen screens];
+    NSLog(@"Screen Count: %i",[screens count]);
+    _numScreens=[screens count];
     
     ofGLReadyCallback();
 	
@@ -314,6 +323,32 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	self = [self initWithFrame:frameRect shareContext:nil];
 	return self;
 }
+
+
+- (void) didChangeScreenParameters: (NSNotification *) notification
+{
+    NSArray *screens = [NSScreen screens];
+    
+    
+    NSLog(@"New Screen Count: %i",[screens count]);
+    
+    for(int i=0; i<[screens count];i++){
+        NSScreen *screen = [screens objectAtIndex:i];
+        NSRect screenFrame = [screen frame];
+        NSLog(@"Width: %f", NSWidth(screenFrame));
+    }
+    
+    NSLog(@"Total Width: %f",NSWidth(rectForAllScreens()));
+    CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
+    
+    ofSetWindowPosition(0,0);
+    ofSetWindowShape(NSWidth(rectForAllScreens()),NSHeight(rectForAllScreens()));
+    
+    CGLUnlockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
+    
+    _numScreens=[screens count];
+}
+
 
 -(void)lockFocus {
 	[super lockFocus];
@@ -326,6 +361,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.player currentItem]];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewGlobalFrameDidChangeNotification object:self];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver: self
+                                                    name: NSApplicationDidChangeScreenParametersNotification
+                                                  object: self];
+
+    
     CVOpenGLTextureRelease(_latestTextureFrame);
     CVOpenGLTextureCacheFlush(_textureCache, 0);
 	[openGLContext release];
@@ -333,8 +375,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [_player pause];
     [_player release];
     
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewGlobalFrameDidChangeNotification object:self];
-
     [super dealloc];
 }
 
@@ -912,6 +952,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 -(BOOL) bLoaded
 {
     return _bLoaded;
+}
+
+-(int) numScreens
+{
+    return _numScreens;
 }
 
 //--------------------------------------------------------------

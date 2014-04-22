@@ -61,7 +61,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //camera settings
     cameraSelect=1;
     bGuiCamAdjust=false;
-    adjustMode=ADJUST_MODE_CAMERA;
+    adjustMode=ADJUST_MODE_LOCKED;
     meshType=MESH_MASS;
     selectMode=SELECT_MODE_POINTER;
     easeMode=EASE_MODE_NONE;
@@ -119,6 +119,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
     
     currentMesh=0;
+    setGUIVisible(false);
 }
 
 void ModelMapper::update(ofTexture * tex){
