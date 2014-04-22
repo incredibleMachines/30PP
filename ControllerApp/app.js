@@ -160,6 +160,9 @@ app.get('/login', admin.index)
 app.post('/login',admin.login(Database))
 app.get('/logout',admin.logout(Database))
 
+app.get('/controller',function(req,res){
+  res.render('controller/index')
+})
 
 app.get('/location/matrix',function(req,res){
 
