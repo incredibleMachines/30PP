@@ -5,15 +5,15 @@ var MongoClient = require('mongodb').MongoClient,
 	mongo = new MongoClient(new Server('localhost', 27017)),
 	BSON = require('mongodb').BSONPure,
 	colors = require('colors');
-	
+
 var database,
 	collection = {};
 
 
-//make a class of Mongo connect 
+//make a class of Mongo connect
 //ghetto constructor
 exports.MongoConnect = function(){
-	
+
 	mongo.open(function(err,mongo){
 		//connected to database
 		console.log('connected to db'.grey);
@@ -29,19 +29,19 @@ exports.MongoConnect = function(){
 		//collection.locations = database.collection('locations');
 		collection.renderqueue = database.collection('renderqueue')
 		collection.timeline	 = database.collection('timeline');
-		
+
 	})
 }
 
 //_doc = mongo document to add
 //_type = collection name
-//_cb = callback(err,db_document{}) 
+//_cb = callback(err,db_document{})
 
 //returns mongo Document inserted
 exports.add= function(_type,_doc,_cb){
 
 	collection[_type].insert(_doc,function(e){
-		
+
 		if(!e) _cb(null,_doc);
 		else _cb(e);
 	})
@@ -54,7 +54,7 @@ exports.add= function(_type,_doc,_cb){
 exports.getAll=function(_type,_cb){
 
 	collection[_type].find().toArray(function(e,_data){
-	
+
 		if(!e) _cb(null,_data);
 		else _cb(e);
 	})
@@ -68,14 +68,14 @@ exports.queryCollection=function(_type,_query,_cb){
 //_cb = callback(err,collection[])
 //returns mongodb Collection as an Array
 function queryCollection(_type, _query, _cb){
-	
+
 	collection[_type].find(_query).toArray(function(e,_data){
-	
+
 		if(!e) _cb(null,_data);
 		else _cb(e);
 	})
 
-	
+
 }
 exports.queryCollectionWithOptions = function(_type,_query,_options,_cb){
 	queryCollectionWithOptions(_type, _query, _options, _cb)
@@ -85,35 +85,35 @@ exports.queryCollectionWithOptions = function(_type,_query,_options,_cb){
 //_cb = callback(err,collection[])
 //returns mongodb Collection as an Array
 function queryCollectionWithOptions(_type, _query, _options, _cb){
-	
+
 	collection[_type].find(_query,_options).toArray(function(e,_data){
-	
+
 		if(!e) _cb(null,_data);
 		else _cb(e);
 	})
 
-	
+
 }
 
 //remove a document
 //_type = collection name
-//_what = collection query 
+//_what = collection query
 //_cb = callback(e)
 exports.remove = function(_type,_what,_cb){
-	
+
 	collection[_type].remove(_what,function(e){
 		if(!e) _cb(null)
 		else _cb(e)
 	})
 }
 
-//update a document 
+//update a document
 //_type = collection name
 //_what = collection query
 //_updateObj = the update operation which needs to take place
 exports.update=function(_type,_what,_updateObj,_cb){
-	
-	collection[_type].update(_what,_updateObj,true,function(e){
+
+	collection[_type].update(_what,_updateObj,{upsert:true,multi:true},function(e){
 		//needs to be tested and finished
 		if(!e) _cb(null);
 		else _cb(e)
@@ -126,11 +126,11 @@ exports.update=function(_type,_what,_updateObj,_cb){
 //_updateObj = the update operation which needs to take place
 //_cb = callback(err)
 exports.updateByID=function(_type,_id,_updateObj,_cb){
-	
+
 	//convert _id to MongoObject
 	//var o_id = new BSON.ObjectID(_id.toString());
-	
-	collection[_type].update({_id: makeMongoID(_id)},_updateObj,true,function(e){
+
+	collection[_type].update({_id: makeMongoID(_id)},_updateObj,{upsert:true,multi:true},function(e){
 		if(!e) _cb(null);
 		else _cb(e)
 	})
@@ -160,7 +160,7 @@ function formatScenes(_scene_id,_clips,_cb){
 							if(clip_counter == _clips.length){
 								_cb(null,_clips)
 							}
-						}	
+						}
 					})
 				})
 			}else{//if(!e)
@@ -185,10 +185,10 @@ exports.formatInit=function(_cb){
 						thisEvent.title= event.title;
 						thisEvent.duration= event.duration;
 						thisEvent.start_time= event.start_time;
-						
+
 						eventsToSend.push(thisEvent);
-						
-						
+
+
 					//console.log(i+' :: '+JSON.stringify(event))
 					/*if(event.scenes.length>0){
 						formatScenes(event._id,event.scenes,function(_err,_scenes){
@@ -201,7 +201,7 @@ exports.formatInit=function(_cb){
 					   events_counter++;
 					   if(events_counter==_events.length){
 				   		//edge case - our last event doesn't have any assets
-				   		 _cb(null,_events); 
+				   		 _cb(null,_events);
 					   }
 					}*/
 				})
@@ -215,7 +215,7 @@ exports.formatInit=function(_cb){
 			console.error(e);
 			_cb(e)
 		}
-	});	
+	});
 }
 //get a mongo document by collection and slug string
 //_type = collection type
@@ -232,7 +232,7 @@ exports.getDocumentByID= function(_type,__id,_cb){
 	getDocumentByID(_type,__id,_cb);
 }
 
-//get a mongo document by collection and string id 
+//get a mongo document by collection and string id
 //_type = collection type
 //_id = mongodb id as string
 //_cb = callback(err,_document)
@@ -242,7 +242,7 @@ function getDocumentByID(_type,__id,_cb){
 		if(!e) _cb(null,_doc)
 		else _cb(e);
 	})
-	
+
 }
 //making global
 exports.makeMongoID=function(_id){
@@ -274,12 +274,8 @@ function formatAsset(_asset,cb){
 			}
 		})
 	}else{
-		
+
 		cb(_asset)
 	}
-	
+
 }
-
-
-
-

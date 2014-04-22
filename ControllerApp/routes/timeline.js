@@ -6,17 +6,6 @@ var _ 		= require('underscore');
 exports.index = function(_Database){
 
 	return function(req,res){
-
-		// var type = req.query.type;
-		// console.log("type: ");
-		// console.log(type);
-		//
-		// if(typeof type === 'undefined' || type === "") type = 'default';
-		// console.log(utils.toTitleCase(type))
-		// var title = utils.reverseSlug(type)
-		// console.log("title: ");
-		// console.log(title);
-		// get all timeline events
 		_Database.queryCollectionWithOptions('timeline', {}, {sort: 'concat_queue'}, function(e,tEvents){
 
 			if(!e){
@@ -86,9 +75,14 @@ exports.update = function(_Database){
 		//console.log("timeline.update req.body: ");
 		//console.log(req.body);
 		var post = req.body;
-		var newDuration = post.duration;
+		var newDuration = parseInt(post.duration);
 		var sceneId	= post.scene_id;
-		//console.log("sceneId: "+sceneId);
+
+		if(isNaN(newDuration)){
+			console.log("NAN DETECTED!  Setting duration to 0.");
+			newDuration = 0;
+		}
+
 		var obj = {
 			$set: {
 				"scenes.$.duration": newDuration
@@ -119,7 +113,7 @@ exports.update = function(_Database){
 
 
 
-/* function to create and store fake data in timeline collection */
+/* function to create and populate 'timeline' collection */
 exports.make = function(_Database, EVENT_TYPES, cb){
 
 	//return function(req, res){
@@ -185,11 +179,18 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 				} else {
 					//res.redirect('/timeline');
 					console.log("DID NOT MAKE - TIMELINE CURRENTLY EXISTS");
-					cb("did not make-timeline already exists.   mongo db.timeline.remove() to re-make");
+					cb("did not MAKE because timeline already exists.   mongo db.timeline.remove() before re-make");
 				}
 			} else {
 				console.log("ERROR QUERYING FOR TIMELINE...");
 			}
 		})
 	//}
+}
+
+/*function to call FFMPEG and concatenate all video files */
+exports.concat = function(_Database, EVENT_TYPES, cb){
+	return function(req,res){
+		res.jsonp({error: "Not Implemented Yet!"});
+	}
 }

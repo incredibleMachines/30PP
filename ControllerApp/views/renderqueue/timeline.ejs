@@ -13,8 +13,11 @@ scenes = JSON.parse(scenes)
 
 	<header>
 		<h1 class="col-md-6 pull-left">Timeline<small>&nbsp;Total Scenes: <%= scenes.length%></small></h1>
-		<section class="col-md-2 pull-right add-btn">
-						<a href="/timeline/make" type="button" class="btn btn-default navbar-btn render-content" >MAKE Timeline</a>
+		<section class="col-md-4 pull-right add-btn">
+				<a href="/timeline/concat" type="button" class="btn btn-default navbar-btn concatenate green" >Concatenate</a>
+		</section>
+		<section class="col-md-4 pull-right add-btn">
+			<a href="/timeline/make" type="button" class="btn btn-default navbar-btn make-timeline" >MAKE Timeline</a>
 		</section>
 	</header>
 	<section class='current_events row col-md-12'>
@@ -24,10 +27,10 @@ scenes = JSON.parse(scenes)
 			<div class="panel-heading">
 				<ul class="event row panel-title" >
 					<!-- <li class="col-md-1 panel-title">+</li>-->
-					<li class="col-md-3 panel-title">Event</li>
-					<li class="col-md-3 panel-title">Scene Title</li>
-					<!-- <li class="col-md-3 panel-title">Clip Title</li> -->
-					<li class="col-md-2 panel-title">Duration</li>
+					<li class="col-md-2 panel-title">Event</li>
+					<li class="col-md-2 panel-title">Scene Title</li>
+					<li class="col-md-2 panel-title">Order</li>
+					<li class="col-md-4 panel-title">Duration</li>
 					<!-- <li class="col-md-1 panel-title">Actions</li> -->
 				</ul>
 			</div><!-- .panel-heading -->
@@ -36,7 +39,18 @@ scenes = JSON.parse(scenes)
 			<% if(scenes.length> 0){ %>
 				<ul class="list-group">
 					<%
-					scenes.forEach(function(scene,i){
+					scenes = _.sortBy(scenes, function(scene){
+						return scene.order;
+					});
+					scenes.reverse();
+					
+					scenes = _.sortBy(scenes, function(scene){
+						return scene.type;
+					});
+
+					scenes.reverse();
+					//scenes.forEach(function(scene,i){
+					for (var i=0; i<scenes.length; i++){
 						// var scene = _.findWhere(scenes,{_id:item.scene_id})
 						//console.log("scene: "+i);
 						//console.log(scene);
@@ -44,18 +58,19 @@ scenes = JSON.parse(scenes)
 						<li class="list-group-item">
 							<ul class="event row" >
 								<form method="POST" action="/timeline/update">
-								<li class="col-md-3"><%= scene.type %></li>
-								<li class="col-md-3"><%= scene.title %></li>
+								<li class="col-md-2"><%= scenes[i].type %></li>
+								<li class="col-md-2"><%= scenes[i].title %></li>
+								<li class="col-md-2"><%= scenes[i].order %></li>
 								<li class="col-md-4">
-									<div class="col-lg-4">
-										<input class="form-control" type="text" name="duration" value="<%= scene.duration %>"/>
-										<input type="hidden" value="<%= scene._id %>" name="scene_id"/>
-									</div>milliseconds</li>
-								<li class="col-md-2"><button type="submit" class="btn btn-default btn-xs scene-view">Save &raquo; </button></li>
+									<div class="col-lg-3">
+										<input class="form-control" type="text" name="duration" value="<%= scenes[i].duration %>"/>
+										<input type="hidden" value="<%= scenes[i]._id %>" name="scene_id"/>
+									</div>millis</li>
+								<li class="col-md-1"><button type="submit" class="btn btn-default btn-xs scene-view">Save &raquo; </button></li>
 								</form>
 							</ul>
 						</li><!-- .list-group-item -->
-						<% }) %>
+						<% } %>
 					</ul><!-- .list-group -->
 				<% }else{ %>
 					<h3>Nothing in Timeline.</h3>

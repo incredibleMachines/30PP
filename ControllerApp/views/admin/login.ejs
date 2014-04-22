@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title><%= locals.title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/css/vendor/bootstrap.min.css' />
+    <link rel='stylesheet' href='/css/vendor/bootstrap-select.min.css'/>
+
+    <link rel="stylesheet/less" type="text/css" href="/stylesheets/style.less" />
+    <link rel='stylesheet' href='/css/style.css'/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <section class="container">
+      <section class="col-md-5">
+        <h2>Welcome</h2>
+        <h4>Please login to get started</h4>
+        <form method="POST">
+          <article class="form-group">
+            <input class="form-control" type="text" name="name" placeholder="Username"/>
+            <p class="help-block">Please Enter Your Username.</p>
+          </article>
+          <article class="form-group">
+            <input class="form-control" type="password" name="creds" placeholder="Credentials" />
+            <p class="help-block">Please Enter Your Credentials.</p>
+          </article>
+          <button type="submit" class="btn btn-default">Submit</button>
+          <input>
+        </form>
+      </section>
+    </section>
+  </body>
+</html>
