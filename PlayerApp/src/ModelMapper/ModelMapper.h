@@ -55,7 +55,8 @@
 #define TRANSITION_SHOPPING 3
 #define TRANSITION_ARTS 4
 #define TRANSITION_LEISURE 5
-#define TRANSITION_AMBIENT_GRADIENT 6
+#define TRANSITION_END 6
+#define TRANSITION_AMBIENT_GRADIENT 7
 
 class ModelMapper {
 public:
@@ -305,7 +306,7 @@ public:
     int transitionTime;
     int loadTime;
     int transitionTimer;
-    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame;
+    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame, endFrame;
     ofTexture * fadeFrame;
     
 };

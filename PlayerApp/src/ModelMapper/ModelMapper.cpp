@@ -95,7 +95,12 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     transitionTime=1000;
     loadTime=750;
     ofLoadImage(ambientGradientFrame,"Ambient_Frame.jpg");
-    ofLoadImage(artsFrame,"Ambient_Frame.jpg");
+    ofLoadImage(artsFrame,"Arts_Frame.jpg");
+    ofLoadImage(gastronomyFrame,"Gastronomy_Frame.jpg");
+    ofLoadImage(leisureFrame,"Leisure_Frame.jpg");
+    ofLoadImage(shoppingFrame,"Shopping_Frame.jpg");
+    ofLoadImage(marketsFrame,"Markets_Frame.jpg");
+    ofLoadImage(endFrame,"End_Frame.jpg");
     bTransitioning=false;
     bTransitionStarted=false;
     bTransitionFinished=false;
@@ -594,7 +599,6 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             
             if(bDrawingPen==true){
                 if(ofGetElapsedTimeMillis()-mouseTimer>250){
-                    cout<<ofGetElapsedTimeMillis()-mouseTimer<<endl;;
                     mouseTimer=ofGetElapsedTimeMillis();
                     if(bNewPen==true){
                         penPoly.addVertex(mouse);
@@ -1372,12 +1376,10 @@ void ModelMapper:: drawCameras() {
                                 
                                 if(bTransitioning==true){
                                     if(bTransitionStarted==true){
-                                        cout<<"in"<<endl;
                                         if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
                                             bTransitionStarted=false;
                                             ofSetColor(255,255,255,255);
                                         }
-                                            cout<<int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255))<<endl;
                                             ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255)));
                                             glDepthFunc(GL_ALWAYS);
                                             fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
@@ -1392,7 +1394,6 @@ void ModelMapper:: drawCameras() {
                                     }
                                     
                                     else if(bTransitionLoading==true){
-                                        cout<<"wait"<<endl;
                                         if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
                                             bTransitionFinished=true;
                                             bTransitionLoading=false;
@@ -1413,13 +1414,11 @@ void ModelMapper:: drawCameras() {
                                     }
                                     
                                     else if(bTransitionFinished==true){
-                                        cout<<"go"<<endl;
                                         if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
                                             bTransitionFinished=false;
                                             bTransitioning=false;
                                             ofSetColor(255,255,255,255);
                                         }
-                                            cout<<int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255))<<endl;
                                             ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
                                             
                                             glDepthFunc(GL_ALWAYS);
@@ -2975,7 +2974,6 @@ void ModelMapper::resetSelected(){
 void ModelMapper::set2D(int _meshNum){
     
     for(int c=0;c<numCams;c++){
-        cout<<"camera:"<<c<<endl;
         
         ofPoint translate = ofPoint(settings["cameras"][c]["meshes"][_meshNum]["translate"]["x"].asFloat(), settings["cameras"][c]["meshes"][_meshNum]["translate"]["y"].asFloat());
         float scale = settings["cameras"][c]["meshes"][_meshNum]["scale"].asFloat();
@@ -3069,10 +3067,6 @@ void ModelMapper::set2D(int _meshNum){
 
 void ModelMapper::setMeshDraw(int _cam, vector<int> which){
     cameras[_cam].which=which;
-    cout<<"set Cam:"<<_cam<<endl;
-    for(int i=0;i<which.size();i++){
-        cout<<"show Mesh:"<<which[i]<<endl;
-    }
 }
 
 void ModelMapper::fadeIn(int type){
@@ -3085,5 +3079,20 @@ void ModelMapper::fadeIn(int type){
     }
     else if(type==TRANSITION_ARTS){
         fadeFrame=&artsFrame;
+    }
+    else if(type==TRANSITION_GASTRONOMY){
+        fadeFrame=&gastronomyFrame;
+    }
+    else if(type==TRANSITION_LEISURE){
+        fadeFrame=&leisureFrame;
+    }
+    else if(type==TRANSITION_SHOPPING){
+        fadeFrame=&shoppingFrame;
+    }
+    else if(type==TRANSITION_MARKETS){
+        fadeFrame=&marketsFrame;
+    }
+    else if(type==TRANSITION_END){
+        fadeFrame=&endFrame;
     }
 }

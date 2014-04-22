@@ -89,7 +89,6 @@ void testApp::update(){
     }
     
     if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
-        cout<<"trigger"<<endl;
         MSA::ofxCocoa::setTime(loadTime);
         map.bTransitionLoading=true;
         map.transitionTimer=ofGetElapsedTimeMillis();
@@ -116,15 +115,6 @@ void testApp::draw(){
     else{
         ofDrawBitmapString("OOOOPS", 100,100);
     }
-    
-    if(map.bTransitionStarted){
-        
-    }
-    
-//    glDepthFunc(GL_ALWAYS);
-//    ofSetColor(255);
-//    ofCircle(100,100,100);
-//    glDepthFunc(GL_LESS);
 }
 
 //--------------------------------------------------------------
@@ -144,9 +134,26 @@ void testApp::keyPressed(int key){
         case 'P':
             MSA::ofxCocoa::startPlayer();
             break;
-        case '[':
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-            loadTime=100;
+        case '1':
+            map.fadeIn(TRANSITION_MARKETS);
+            loadTime=44;
+            break;
+        case '2':
+            map.fadeIn(TRANSITION_ARTS);
+            loadTime=79;
+            break;
+        case '3':
+            map.fadeIn(TRANSITION_SHOPPING);
+            loadTime=114;
+            break;
+        case '4':
+            map.fadeIn(TRANSITION_LEISURE);
+            loadTime=149;
+            break;
+        case '5':
+            map.fadeIn(TRANSITION_END);
+            loadTime=184;
+            break;
     }
     
 }
