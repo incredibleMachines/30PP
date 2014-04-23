@@ -63,16 +63,16 @@ exports.concat = function(_Database, cb){
 		},
 		function executeConcat(callback){
 
-			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"concat_list.txt -c copy "+OUTPUT_FOLDER+"concatOutput.mov";
+			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput.mov";
 
 			console.log("allfilenames from execConcat: ");
 			console.log(JSON.stringify(allSceneFileNames));
 
 			//**** UNCOMMENT ME *****//
-			// var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
-			//  	if(err) console.error(err);
-			//  	cb(err);
-			// })
+			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
+			  	if(err) console.error(err);
+			  	cb(err);
+			})
 			//************************//
 
 			/*************************************************/

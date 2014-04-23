@@ -18,6 +18,7 @@ public:
 	void draw();
     void exit();
 	void keyPressed  (int key);
+    void initVariables();
     
 	//----------COCOA DRAW SETTING
 	float	lineWidth;
@@ -40,6 +41,9 @@ public:
     
     int currentTransition;
     float loadTime;
+    
+    vector<float> pauseTimes;
+    
         
 };
 
