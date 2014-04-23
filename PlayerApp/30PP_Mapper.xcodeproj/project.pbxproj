@@ -1635,8 +1635,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxCocoa/libs,
-					../../../addons/ofxCocoa/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1672,8 +1670,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxCocoa/libs,
-					../../../addons/ofxCocoa/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1702,17 +1698,16 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxCocoa/libs,
-					../../../addons/ofxCocoa/src,
-					../../../addons/ofxLibwebsockets/libs/jsoncpp,
-					../../../addons/ofxLibwebsockets/libs/libwebsockets/include/,
-					../../../addons/ofxLibwebsockets/libs/jsoncpp/json,
-					../../../addons/ofxLibwebsockets/libs/openssl/openssl,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
-					../../../addons/ofxLibwebsockets/src,
-					../../../addons/ofxAVFVideoPlayer/src,
+					ofxCocoa/libs,
+					ofxCocoa/src,
+					ofxLibwebsockets/libs/jsoncpp,
+					ofxLibwebsockets/libs/libwebsockets/include/,
+					ofxLibwebsockets/libs/jsoncpp/json,
+					ofxLibwebsockets/libs/openssl/openssl,
+					ofxLibwebsockets/libs/ofxLibwebsockets/include,
+					ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
+					ofxLibwebsockets/libs/ofxLibwebsockets/src,
+					ofxLibwebsockets/src,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -1800,9 +1795,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
-					../../../addons/ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,
-					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
-					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
+					ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,
+					ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
+					ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
 				PRODUCT_NAME = 30PP_MapperDebug;
 				WRAPPER_EXTENSION = app;
@@ -1825,17 +1820,16 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxCocoa/libs,
-					../../../addons/ofxCocoa/src,
-					../../../addons/ofxLibwebsockets/libs/jsoncpp,
-					../../../addons/ofxLibwebsockets/libs/libwebsockets/include/,
-					../../../addons/ofxLibwebsockets/libs/jsoncpp/json,
-					../../../addons/ofxLibwebsockets/libs/openssl/openssl,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
-					../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src,
-					../../../addons/ofxLibwebsockets/src,
-					../../../addons/ofxAVFVideoPlayer/src,
+					ofxCocoa/libs,
+					ofxCocoa/src,
+					ofxLibwebsockets/libs/jsoncpp,
+					ofxLibwebsockets/libs/libwebsockets/include/,
+					ofxLibwebsockets/libs/jsoncpp/json,
+					ofxLibwebsockets/libs/openssl/openssl,
+					ofxLibwebsockets/libs/ofxLibwebsockets/include,
+					ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets,
+					ofxLibwebsockets/libs/ofxLibwebsockets/src,
+					ofxLibwebsockets/src,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -1923,9 +1917,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_LIBS)",
-					../../../addons/ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,
-					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
-					../../../addons/ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
+					ofxLibwebsockets/libs/libwebsockets/lib/osx/libwebsockets.a,
+					ofxLibwebsockets/libs/openssl/lib/osx/libcrypto.a,
+					ofxLibwebsockets/libs/openssl/lib/osx/libssl.a,
 				);
 				PRODUCT_NAME = 30PP_Mapper;
 				WRAPPER_EXTENSION = app;
