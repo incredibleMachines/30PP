@@ -139,22 +139,25 @@ void testApp::keyPressed(int key){
             MSA::ofxCocoa::startPlayer();
             break;
         case '1':
+            map.fadeIn(TRANSITION_GASTRONOMY);
+            loadTime=0;
+        case '2':
             map.fadeIn(TRANSITION_MARKETS);
             loadTime=44;
             break;
-        case '2':
+        case '3':
             map.fadeIn(TRANSITION_ARTS);
             loadTime=79;
             break;
-        case '3':
+        case '4':
             map.fadeIn(TRANSITION_SHOPPING);
             loadTime=114;
             break;
-        case '4':
+        case '5':
             map.fadeIn(TRANSITION_LEISURE);
             loadTime=149;
             break;
-        case '5':
+        case '6':
             map.fadeIn(TRANSITION_END);
             loadTime=184;
             break;

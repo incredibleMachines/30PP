@@ -285,6 +285,7 @@ public:
     ofxUIRadio *currentMode;
     ofxUIButton *wireframeButton;
     ofxUIButton *performanceButton;
+    ofxUITextInput *fps;
     
     //camera position gui, setup fuction, and globals
     void setPositionGUI();

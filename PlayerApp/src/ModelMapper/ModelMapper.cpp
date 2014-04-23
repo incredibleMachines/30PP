@@ -158,6 +158,13 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
     }
     
+    //update FPS in gui
+    if(adjustMode!=ADJUST_MODE_LOCKED){
+        if(fps!=NULL){
+            fps->setTextString(ofToString(ofGetFrameRate()));
+        }
+    }
+    
 }
 
 void ModelMapper::draw(){
@@ -1994,6 +2001,11 @@ void ModelMapper::setMainGUI(){
     mainGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
     mainGUI->addSpacer();
     mainGUI->addLabel("Press 'g' to Hide GUIs", OFX_UI_FONT_SMALL);
+
+    mainGUI->addSpacer();
+    mainGUI->addLabel("Camera Z",OFX_UI_FONT_MEDIUM);
+    fps = mainGUI->addTextInput("FPS", ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+    fps->setAutoClear(true);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
