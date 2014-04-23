@@ -25,9 +25,6 @@ EventHandler::EventHandler(){
     
     //allEvents = &((playerApp*)ofGetAppPtr())->events;
     eventsInited = false;
-    bPlayEvent = false;
-    bPlaying=false;
-    
 }
 
 //--------------------------------------------------------------
@@ -50,7 +47,7 @@ void EventHandler::processEvent(string command, ofxLibwebsockets::Event &args){
     //--- start sales event
     else if (thisCmd == SALES_CMD){
         cout << ">>> received SALES_CMD: " << thisCmd << endl;
-        //salesEvent(args);
+//        salesEvent(args);
     }
     
     //--- ambient
@@ -79,8 +76,8 @@ void EventHandler::processEvent(string command, ofxLibwebsockets::Event &args){
     
     //--- ERROR
     else if (thisCmd == ERROR_CMD){
-        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
-        errorEvent(args);
+//        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
+//        errorEvent(args);
     }
     
     //--- unknown event
@@ -146,26 +143,10 @@ void EventHandler::playEvent(ofxLibwebsockets::Event &args){
     
     currentStart=eStartTime/1000;
     bTriggerEvent=true;
-    bPlayEvent=true;
-    bPlaying=true;
+    currentEvent=eTitle;
     
 
     //TODO: GOOOOOO
-}
-
-//--------------------------------------------------------------
-void EventHandler::salesEvent(ofxLibwebsockets::Event &args){
-    
-    /* triggers the playing of SALES */
-    
-    cout<<">>> hit salesEvent()"<<endl;
-    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
-    cout<<"\t>>--------------START SALES EVENT--------------<<"<<endl<<endl;
-    
-//    currentStart=salesStartTime;
-    bTriggerEvent=true;
-    bPlayEvent=true;
-    bPlaying=true;
 }
 
 //--------------------------------------------------------------
@@ -178,8 +159,7 @@ void EventHandler::pauseEvent(ofxLibwebsockets::Event &args){
     cout<<"\t>>-------------- PAUSE EVENT--------------<<"<<endl<<endl;
     
     bTriggerEvent=true;
-    bPlayEvent=false;
-    bPlaying=false;
+    currentEvent="pause";
 }
 
 //--------------------------------------------------------------
@@ -192,8 +172,7 @@ void EventHandler::resumeEvent(ofxLibwebsockets::Event &args){
     cout<<"\t>>-------------- RESUME EVENT --------------<<"<<endl<<endl;
     
     bTriggerEvent=true;
-    bPlayEvent=false;
-    bPlaying=true;
+    currentEvent="resume";
 }
 
 //--------------------------------------------------------------
@@ -207,8 +186,7 @@ void EventHandler::endEvent(ofxLibwebsockets::Event &args){
     
 //    currentStart=endTime;
     bTriggerEvent=true;
-    bPlayEvent=true;
-    bPlaying=true;
+    currentEvent="end";
 }
 
 //--------------------------------------------------------------
@@ -216,8 +194,8 @@ void EventHandler::errorEvent(ofxLibwebsockets::Event &args){
     
     /* ERROR RECEIVED FROM SERVER */
     
-    cout<<">>> hit error()"<<endl;
-    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
-    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
-    
+//    cout<<">>> hit error()"<<endl;
+//    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
+//    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
+//    
 }

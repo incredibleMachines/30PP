@@ -9,36 +9,87 @@
 *
 */
 
-var util 	= require('util'),
-	exec	= require('child_process').exec,
-	spawn   = require('child_process').spawn,
-	fs		= require('fs'),
-	async 	= require('async'),
-	folders = require('../modules/FolderStructure'),
-	utils 	= require('../modules/Utils');
-
-
-//Filepath Globals
-//Takes into account the ControllerApp file structure
-var OUTPUT_FOLDER = __dirname+"/../includes/videos"; //need to implement
-var ASSET_FOLDER = __dirname+"/../public/.assets/videos/";
-
-var CONCATENATE;
+var util 	 = require('util')
+var exec		= require('child_process').exec
+var spawn   = require('child_process').spawn
+var fs			= require('fs')
+var async 	= require('async')
+var folders = require('../modules/FolderStructure')
+var utils 	= require('../modules/Utils')
+var _ 			= require('underscore')
 
 
 // execute the concatenation of all scene videos
-exports.concat = function(cb){
+exports.concat = function(_Database, cb){
 
-	//needs to implement OUTPUT_FOLDER... something like:
-	// var concatScript = "ffmpeg -f concat -i <(for f in " + ASSET_FOLDER + "/*.mov; do echo \"file '$f'\"; done) -c copy "+OUTPUT_FOLDER+"/output.mov";
-	var concatScript = "ffmpeg -f concat -i <(for f in " + ASSET_FOLDER + "*.mov; do echo \"file '$f'\"; done) -c copy output.mov";
-	console.log("concatScript: ");
-	console.log(concatScript);
+	var OUTPUT_FOLDER = folders.outputDir();
+	var ASSET_FOLDER	= folders.videosDir();
 
-	CONCATENATE = exec(concatScript, function(err,stdout,stderr){
-	 	if(err) console.error(err);
-	 	cb(err);
-	})
+	console.log("OUTPUT_FOLDER:  "+ OUTPUT_FOLDER);
+	console.log("ASSET_FOLDER:  "+ ASSET_FOLDER);
+
+	var allSceneFileNames = new Array();
+
+	async.waterfall([
+		function populateSceneFiles (callback){
+			console.log("hit populateSceneFiles");
+			_Database.getAll('timeline',function(e, tEvents){
+				async.each(tEvents, function(evt, cb){
+					if(evt.scenes.length>0){
+						async.each(evt.scenes, function(sce, _cb){
+							var thisFilename = sce.concat_slug+".mov";
+							allSceneFileNames.push(thisFilename);
+							_cb(null);
+						});
+					}
+					cb(null);
+				});
+				var clearFile = exec("> "+OUTPUT_FOLDER+"/concat_list.txt", function(err,stdout,stderr){
+					if(err) console.error(err);
+					else callback();
+				})
+			});
+		},
+		function writeList (callback){
+			var writeline="";
+			async.each(allSceneFileNames, function(filename, _cb){
+				writeline += "file '"+filename+"'\n";
+				_cb(null);
+			});
+			var write = exec("echo \""+writeline+"\" >> "+OUTPUT_FOLDER+"/concat_list.txt", function(err,stdout,stderr){
+				if(err) console.error(err);
+				else callback();
+			})
+		},
+		function executeConcat(callback){
+
+			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"concat_list.txt -c copy "+OUTPUT_FOLDER+"concatOutput.mov";
+
+			console.log("allfilenames from execConcat: ");
+			console.log(JSON.stringify(allSceneFileNames));
+
+			//**** UNCOMMENT ME *****//
+			// var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
+			//  	if(err) console.error(err);
+			//  	cb(err);
+			// })
+			//************************//
+
+			/*************************************************/
+			//****** single line exec concat strategy ********/
+			// TODO: save output.mov to OUTPUT_FOLDER
+			// var concatOneLineScript = "ffmpeg -f concat -i <\(for f in " + ASSET_FOLDER + "*.mov; do echo \"file '$f'\"; done\) -c copy outputFromOneLine.mov";
+			// console.log("concat one-line Script: ");
+			// console.log(concatOneLineScript);
+			/*************************************************/
+			callback();
+		}
+	], function(err, result){
+
+		console.log("reached end of waterfall!");
+		cb(null); //DONE DONE DONE
+	});
+
 }
 
 
