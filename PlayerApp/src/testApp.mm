@@ -126,9 +126,6 @@ void testApp::draw(){
     if(MSA::ofxCocoa::getScreens()>0){
         map.draw();
     }
-    else{
-        ofDrawBitmapString("OOOOPS", 100,100);
-    }
 }
 
 //--------------------------------------------------------------
