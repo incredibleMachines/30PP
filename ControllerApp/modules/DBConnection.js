@@ -113,7 +113,7 @@ exports.remove = function(_type,_what,_cb){
 //_updateObj = the update operation which needs to take place
 exports.update=function(_type,_what,_updateObj,_cb){
 
-	collection[_type].update(_what,_updateObj,{upsert:true,multi:true},function(e){
+	collection[_type].update(_what,_updateObj,{multi:true},function(e){
 		//needs to be tested and finished
 		if(!e) _cb(null);
 		else _cb(e)
