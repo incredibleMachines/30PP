@@ -44,6 +44,8 @@ public:
     
     vector<float> pauseTimes;
     
+    int initCount;
+    
         
 };
 

@@ -30,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("concatOutput.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -80,12 +80,12 @@ void testApp::update(){
         
         socketHandler.eventHandler.bTriggerEvent=false;
         
-        if(socketHandler.eventHandler.currentEvent=="Default"){
+        if(socketHandler.eventHandler.currentEvent=="default"){
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=650;
             cout<<"play"<<endl;
         }
-        else if(socketHandler.eventHandler.currentEvent=="Gastronomy"){
+        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=650;
         }
@@ -95,7 +95,7 @@ void testApp::update(){
             loadTime=0;
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="Ambient"){
+        else if(socketHandler.eventHandler.currentEvent=="ambient"){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             loadTime=0;
         }
@@ -189,6 +189,12 @@ void testApp::keyPressed(int key){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             loadTime=0;
             break;
+        case '[':
+            socketHandler.sendSocketCmd(INIT_REQ);
+            initVariables();
+            initCount++;
+            break;
+            
     }
     
 }

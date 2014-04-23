@@ -127,7 +127,7 @@ void EventHandler::playEvent(ofxLibwebsockets::Event &args){
     
     cout<<">>> hit playEvent()"<<endl;
     
-    string eTitle   = args.json["event"]["title"].asString();
+    string eTitle   = args.json["event"]["slug"].asString();
     int eStartTime  = args.json["event"]["start_time"].asInt();
     int eDuration   = args.json["event"]["duration"].asInt();
     

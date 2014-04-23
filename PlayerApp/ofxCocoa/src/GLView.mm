@@ -537,6 +537,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     _playbackRate = 1.0;
     
     // Create and attach video output. 10.8 Only!!!
+    if (self.playerItemVideoOutput) [self.playerItemVideoOutput release];
     self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
     [self.playerItemVideoOutput autorelease];
     if (self.playerItemVideoOutput) {
