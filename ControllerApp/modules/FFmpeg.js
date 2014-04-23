@@ -19,17 +19,14 @@ var utils 	= require('../modules/Utils')
 var _ 			= require('underscore')
 
 
-//Filepath Globals
-//Takes into account the ControllerApp file structure
-var OUTPUT_FOLDER = __dirname+"/../includes/videos"; //need to implement
-var ASSET_FOLDER = __dirname+"/../public/.assets/videos/";
-
-var CONCATENATE;
-
-
 // execute the concatenation of all scene videos
 exports.concat = function(_Database, cb){
 
+	var OUTPUT_FOLDER = folders.outputDir();
+	var ASSET_FOLDER	= folders.videosDir();
+
+	console.log("OUTPUT_FOLDER:  "+ OUTPUT_FOLDER);
+	console.log("ASSET_FOLDER:  "+ ASSET_FOLDER);
 
 	var allSceneFileNames = new Array();
 
@@ -47,7 +44,10 @@ exports.concat = function(_Database, cb){
 					}
 					cb(null);
 				});
-				callback();
+				var clearFile = exec("> "+OUTPUT_FOLDER+"/concat_list.txt", function(err,stdout,stderr){
+					if(err) console.error(err);
+					else callback();
+				})
 			});
 		},
 		function writeList (callback){
@@ -56,20 +56,20 @@ exports.concat = function(_Database, cb){
 				writeline += "file '"+filename+"'\n";
 				_cb(null);
 			});
-			var write = exec("echo \""+writeline+"\" >> ~/Desktop/testList.txt", function(err,stdout,stderr){
+			var write = exec("echo \""+writeline+"\" >> "+OUTPUT_FOLDER+"/concat_list.txt", function(err,stdout,stderr){
 				if(err) console.error(err);
 				else callback();
 			})
 		},
 		function executeConcat(callback){
 
-			var concatFromFileScript = "ffmpeg -f concat -i "+ASSET_FOLDER+"list.txt -c copy "+ASSET_FOLDER+"outputFromFile.mov";
+			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"concat_list.txt -c copy "+OUTPUT_FOLDER+"concatOutput.mov";
 
 			console.log("allfilenames from execConcat: ");
 			console.log(JSON.stringify(allSceneFileNames));
 
 			//**** UNCOMMENT ME *****//
-			// CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
+			// var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
 			//  	if(err) console.error(err);
 			//  	cb(err);
 			// })
