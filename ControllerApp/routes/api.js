@@ -67,6 +67,7 @@ exports.sendEvents = function(_type,_Database,_Websocket){
 					"command": "play",
 					"event": {
 						"title": _event.title,
+						"slug" : _event.slug,
 						"duration": _event.duration,
 						"start_time": _event.start_time
 					}
@@ -110,6 +111,7 @@ exports.sendSingle = function(_Database, _Websocket){
 					"command": "play",
 					"event": {
 						"title": _event.title,
+						"slug" : _event.slug,
 						"duration": _event.duration,
 						"start_time": _event.start_time
 					}

@@ -124,7 +124,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 						}); //end async scenes
 
 						// thisTimelineEvent.start_time = startTime;
-						thisTimelineEvent.start_time = timelineStartTime;
+						thisTimelineEvent.start_time = timelineStartTime; //new
 						thisTimelineEvent.concat_queue = timelineEventOrder;
 						timelineEventOrder += 1;
 						// startTime += parseInt(thisTimelineEvent.duration);
