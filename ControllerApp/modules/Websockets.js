@@ -1,8 +1,9 @@
 var colors = require('colors')
 var WebSocketServer = require('ws').Server;
-var _socket; 
+var _socket;
 var _Database;
 var _socket_status;
+var folders = require('../modules/FolderStructure');
 
 
 exports.Connect = function(_port,_Db){
@@ -30,13 +31,13 @@ exports.Connect = function(_port,_Db){
 					console.error("WEBSOCKET COMMAND - JSON PARSE Error: "+e)
 				}
 				//console.log(message);
-				parseCommand(message);			
+				parseCommand(message);
 			}
-			
+
 			//sendFakeData(socket);
-			
+
 		})
-		
+
 		socket.on('close',function(msg){
 			console.log('Socket Disconnected'.cyan);
 			_socket_status=false;
@@ -72,22 +73,22 @@ function parseCommand(_json){
 	}else{
 		_socket.send(JSON.stringify({command:'error', 'error':'API Malformed: No Command Property'}));
 	}
-	
 }
+
+
 function sendPlayerInit(){
-	
+	var OUTPUT_FOLDER = folders.outputDir();
 	//console.log('Prepparing Init');
 	_Database.formatInit(function(e,_events){
 		if(!e) var resp = {
-			command: 'init', 
-			movie_file: 'data/file/path',
+			command: 'init',
+			movie_file: OUTPUT_FOLDER+"/output.mov",
 			events:_events
 		};
 		else  var resp = {'command':'error', 'error': 'Database Error: '+JSON.stringify(e)};
-		
+
 		console.log(JSON.stringify(resp));
 		_socket.send(JSON.stringify(resp));
-		
+
 	});
 }
-

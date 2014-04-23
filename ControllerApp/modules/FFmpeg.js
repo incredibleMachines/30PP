@@ -68,12 +68,10 @@ exports.concat = function(_Database, cb){
 			console.log("allfilenames from execConcat: ");
 			console.log(JSON.stringify(allSceneFileNames));
 
-			//**** UNCOMMENT ME *****//
+			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
 			  	if(err) console.error(err);
-			  	cb(err);
 			})
-			//************************//
 
 			/*************************************************/
 			//****** single line exec concat strategy ********/
