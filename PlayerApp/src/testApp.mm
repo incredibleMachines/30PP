@@ -30,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("default.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("output.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -79,15 +79,34 @@ void testApp::update(){
         
         socketHandler.eventHandler.bTriggerEvent=false;
         
-        if(socketHandler.eventHandler.bPlayEvent==true){
-            MSA::ofxCocoa::setTime(socketHandler.eventHandler.currentStart);
+        if(socketHandler.eventHandler.currentEvent=="Default"){
+            MSA::ofxCocoa::startPlayer();
+            map.fadeIn(TRANSITION_GASTRONOMY);
+            loadTime=650;
+        }
+        else if(socketHandler.eventHandler.currentEvent=="Gastronomy"){
+            MSA::ofxCocoa::startPlayer();
+            map.fadeIn(TRANSITION_GASTRONOMY);
+            loadTime=650;
         }
         
-        if(socketHandler.eventHandler.bPlaying==true){
+        else if(socketHandler.eventHandler.currentEvent=="end"){
             MSA::ofxCocoa::startPlayer();
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            loadTime=0;
         }
-        else{
+        
+        else if(socketHandler.eventHandler.currentEvent=="Ambient"){
+            MSA::ofxCocoa::startPlayer();
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            loadTime=0;
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="pause"){
             MSA::ofxCocoa::pausePlayer();
+        }
+        else if(socketHandler.eventHandler.currentEvent=="resume"){
+            MSA::ofxCocoa::startPlayer();
         }
         
     }
@@ -139,27 +158,31 @@ void testApp::keyPressed(int key){
             break;
         case '1':
             map.fadeIn(TRANSITION_GASTRONOMY);
-            loadTime=0;
+            loadTime=650;
             break;
         case '2':
             map.fadeIn(TRANSITION_MARKETS);
-            loadTime=44;
+            loadTime=694;
             break;
         case '3':
             map.fadeIn(TRANSITION_ARTS);
-            loadTime=79;
+            loadTime=729;
             break;
         case '4':
             map.fadeIn(TRANSITION_SHOPPING);
-            loadTime=114;
+            loadTime=764;
             break;
         case '5':
             map.fadeIn(TRANSITION_LEISURE);
-            loadTime=149;
+            loadTime=799;
             break;
         case '6':
             map.fadeIn(TRANSITION_END);
-            loadTime=184;
+            loadTime=834;
+            break;
+        case '0':
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            loadTime=0;
             break;
     }
     
