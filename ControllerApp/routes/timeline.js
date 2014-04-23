@@ -114,7 +114,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 								concat_slug:  thisConcatSlug,
 								concat_queue: timelineSceneOrder,
 								start_time: 	thisStartTime,
-								duration: 		thisDuration
+								duration: 		timelineStartTime
 							}
 							timelineStartTime += thisDuration; //increment startTime.
 							timelineSceneOrder += 1;  //increment the 'global' timeline SCENE order position
@@ -124,6 +124,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 						}); //end async scenes
 
 						// thisTimelineEvent.start_time = startTime;
+						thisTimelineEvent.start_time = timelineStartTime; //new
 						thisTimelineEvent.concat_queue = timelineEventOrder;
 						timelineEventOrder += 1;
 						// startTime += parseInt(thisTimelineEvent.duration);

@@ -30,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("output.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("concatOutput.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -73,6 +73,7 @@ void testApp::update(){
     
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
+        initVariables();
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
@@ -193,5 +194,9 @@ void testApp::keyPressed(int key){
 }
 
 void testApp::exit(){
+    
+}
+
+void testApp::initVariables(){
     
 }
