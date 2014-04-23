@@ -45,7 +45,6 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
 }
 
 void Camera::addMask(){
-    
     //add blank mask to Camera
     ofPolyline tempMask;
     ofPath tempDrawMask;

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/css/vendor/bootstrap.min.css' />
+    <link rel='stylesheet' href='/css/vendor/bootstrap-select.min.css'/>
+
+    <link rel="stylesheet/less" type="text/css" href="/stylesheets/style.less" />
+    <link rel='stylesheet' href='/css/style.css'/>
+  </head>
+  <body lang="en">
+    <section class="container">
+
+    </section>
+    <script src='/js/vendor/jquery-2.0.3.min.js'></script>
+    <script>
+      $(document).ready(function(){
+        $.getJSON('/api',function(data){
+          console.log(data)
+          var playSales = '<h4>Sales</h4><p><a class="btn btn-default" href="'+data.sales.play_all+'">Play All</a></p>'
+          var playAmbient = '<h4>Ambient</h4><p><a class="btn btn-default" href="'+data.ambient.play_all+'">Play All</a></p>'
+
+          var salesSingles = '<h4>Single Sales</h4>';
+          for(var i = 0; i< data.sales.play_single.length; i++){
+
+            for(var key in data.sales.play_single[i]){
+              salesSingles+= '<p><a class="btn btn-default" href="'+data.sales.play_single[i][key]+'">Play '+key+'</a></p>'
+            }
+
+          }
+          var ambientSingles = "<h4>Single Ambient</h4>";
+          for(var i = 0; i< data.ambient.play_single.length; i++){
+
+            for(var key in data.ambient.play_single[i]){
+              ambientSingles+= '<p><a class="btn btn-default" href="'+data.ambient.play_single[i][key]+'">Play '+key+'</a></p>'
+            }
+
+          }
+
+          var controlsButtons = '<h4>Commands</h4>'
+
+          for(var key in data.commands){
+            controlsButtons+= '<p><a class="btn btn-default" href="'+data.commands[key]+'">'+ key[0].toUpperCase()+ key.slice(1)+'</a></p>'
+          }
+          var html = '<article>'
+          html+= '<section>'+playSales+'</section>'
+          html+= '<section>'+salesSingles+'</section>'
+          html+= '<section>'+playAmbient+'</section>'
+          html+= '<section>'+ambientSingles+'</section>'
+          html+= '<section>'+controlsButtons+'</section>'
+          html+= '</article>'
+
+          $('.container').append(html)
+
+        })
+      })
+
+    </script>
+  </body>
+</html>

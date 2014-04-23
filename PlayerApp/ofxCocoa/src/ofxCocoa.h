@@ -104,6 +104,8 @@ namespace MSA {
         void                pausePlayer();
         void                setTime(float _millis);
         
+        int                 getScreens();
+        
         /***** 30PP *****/
 	}
 }

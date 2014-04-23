@@ -6,7 +6,9 @@
 void testApp::setup() {
 	printf("Window dimensions: %i %i\n", ofGetWidth(), ofGetHeight());
 	
-	ofBackground(0, 0, 0);
+    ofSetEscapeQuitsApp(false);
+    
+	ofBackground(0,0,0);
     
 	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
@@ -14,7 +16,6 @@ void testApp::setup() {
 	ofSetFrameRate(120);			// run as fast as you can
     
     bInited=false;
-    
     
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
@@ -29,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     
-    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("default.mov", meshTexture->texData.textureID);
     
     //----------MODEL MAPPER SETUP
     
@@ -62,6 +63,8 @@ void testApp::setup() {
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
+    MSA::ofxCocoa::hideCursor();
+    
 }
 
 
@@ -70,10 +73,6 @@ void testApp::update(){
     
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
-//        MSA::ofxCocoa::initPlayer(socketHandler.eventHandler.movieFile, meshTexture[0]->texData.textureID);
-//        MSA::ofxCocoa::pausePlayer();
-//        MSA::ofxCocoa::setTime(time);
-//        MSA::ofxCocoa::startPlayer();
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
@@ -93,22 +92,29 @@ void testApp::update(){
         
     }
     
-//    ofTextureData data=meshTexture[0]->getTextureData();
-//    data.textureTarget=GL_TEXTURE_2D;
-//    cout<<data.textureTarget<<endl;
+    if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
+        MSA::ofxCocoa::setTime(loadTime);
+        map.bTransitionLoading=true;
+        map.transitionTimer=ofGetElapsedTimeMillis();
+    }
+    
+    if(map.bLocked==true){
+        MSA::ofxCocoa::hideCursor();
+        map.bLocked=false;
+    }
+    
+    else if(map.bUnlocked==true){
+        MSA::ofxCocoa::showCursor();
+        map.bUnlocked=false;
+    }
     
     //Get Texture data from CVOpenGLTexture in ofxCocoa
     meshTexture->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
     ofTextureData data=meshTexture->getTextureData();
     data.textureTarget=GL_TEXTURE_RECTANGLE;
     
-    //Make sure texture data has correct settings for display
-//    data.tex_t = (float)(data.width) / (float)data.tex_w;
-//    data.tex_u = (float)(data.height) / (float)data.tex_h;
-    
     //Pass texture into ModelMapper
     map.update(meshTexture);
-    
     
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
@@ -117,30 +123,43 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    map.draw();
-    
-//    glDepthFunc(GL_ALWAYS);
-//    ofSetColor(255);
-//    ofCircle(100,100,100);
-//    glDepthFunc(GL_LESS);
+    if(MSA::ofxCocoa::getScreens()>0){
+        map.draw();
+    }
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     switch(key){
-        case ' ':
-            if(map.adjustMode!=ADJUST_MODE_LOCKED){
-                MSA::ofxCocoa::hideCursor();
-            }
-            else if(map.bShiftPressed==true){
-                MSA::ofxCocoa::showCursor();
-            }
-            break;
         case 'p':
             MSA::ofxCocoa::pausePlayer();
             break;
         case 'P':
             MSA::ofxCocoa::startPlayer();
+            break;
+        case '1':
+            map.fadeIn(TRANSITION_GASTRONOMY);
+            loadTime=0;
+            break;
+        case '2':
+            map.fadeIn(TRANSITION_MARKETS);
+            loadTime=44;
+            break;
+        case '3':
+            map.fadeIn(TRANSITION_ARTS);
+            loadTime=79;
+            break;
+        case '4':
+            map.fadeIn(TRANSITION_SHOPPING);
+            loadTime=114;
+            break;
+        case '5':
+            map.fadeIn(TRANSITION_LEISURE);
+            loadTime=149;
+            break;
+        case '6':
+            map.fadeIn(TRANSITION_END);
+            loadTime=184;
             break;
     }
     

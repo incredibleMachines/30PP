@@ -30,7 +30,7 @@ var OUTPUT_FOLDER = __dirname+"/../includes/videos";//folders.outputDir;
 var ASSET_FOLDER = __dirname+"/../public";
 
 
-var OM_TEMPLATE = 'ProRes222';
+var OM_TEMPLATE = 'ProRes422';
 //notes:
 
 // After Effects Object for handling and processing AE Scripts ETC.
@@ -161,7 +161,7 @@ function renderWorker(scene,callback){
 		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', OM_TEMPLATE]
 		//spawn a process to the aerender
 		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
-
+		var start = new Date()
 		console.log()
 		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
 		console.log()
@@ -186,6 +186,11 @@ function renderWorker(scene,callback){
 		aerender.on('close', function (code) {
 		  console.log('AERENDER PID: %s '.inverse+' exited with code %s '.cyan,aerender.pid,code)
 		  if(code !=0) bError = true;
+			var end = new Date()
+			var duration = end-start
+			duration = duration/1000
+			duration = duration/60
+			console.log('AERENDER PID: %s '.inverse+' Completed in %s minutes '.green,aerender.pid,duration)
 		  //callback once the process has finished
 		  callback(bError,scene)
 		})

@@ -278,7 +278,7 @@ function SceneController(_clips,_files){
     $('form.modal-body').append(hiddenInput)
 
   })
-  $('form.modal-body').submit(function(e){
+  $('section.new_file.modal form.modal-body').submit(function(e){
     e.preventDefault();
     //alert('this')
     //create a reference to the object
@@ -306,7 +306,7 @@ function SceneController(_clips,_files){
         //must select the closest upload item selected
         $('.zone-single-'+res.success.zone_index).find('select.zone-file option[value="'+res.success._id+'"]').attr('selected','selected')
         $('.zone-single-'+res.success.zone_index).find('img').attr('src','/'+res.success.path).height("auto")
-        
+
       },
       error:function(jqXHR, textStatus, errorThrown){
         console.log(textStatus)
