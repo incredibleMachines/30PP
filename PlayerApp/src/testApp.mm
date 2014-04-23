@@ -82,6 +82,7 @@ void testApp::update(){
         if(socketHandler.eventHandler.currentEvent=="Default"){
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=650;
+            cout<<"play"<<endl;
         }
         else if(socketHandler.eventHandler.currentEvent=="Gastronomy"){
             map.fadeIn(TRANSITION_GASTRONOMY);
