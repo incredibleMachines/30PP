@@ -36,7 +36,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					<% EVENT_TYPES.forEach(function(type){ %>
-						<li><a href="/events/?type=<%= type.toLowerCase().replace(/ /g,'-') %>"><%= type %></a></li>
+						<li><a href="/events/?type=<%= utils.makeSlug(type) %>"><%= type %></a></li>
 					<% }) %>
 					</ul>
 				</li>
