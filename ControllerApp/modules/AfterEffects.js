@@ -23,11 +23,11 @@ var AFTEREFFECTS,
 
 	needs modifications to ControllerApp Route
 */
-//var APPLESCRIPT_FOLDER = folders.appleScriptsDir(); //__dirname+"/../includes/applescripts";
-//var AESCRIPT_FOLDER = folders.aeScriptsDir(); //__dirname+"/../includes/aescripts";
-//var AEPROJECT_FOLDER = folders.aeProjectsDir(); //__dirname+"/../includes/aeprojects";
-//var OUTPUT_FOLDER = folders.outputDir()//__dirname+"/../includes/videos";//folders.outputDir;
-//var PUBLIC_FOLDER = folders.publicDir() //__dirname+"/../public";
+var APPLESCRIPT_FOLDER = __dirname+"/../includes/applescripts";
+var AESCRIPT_FOLDER = __dirname+"/../includes/aescripts";
+var AEPROJECT_FOLDER = __dirname+"/../includes/aeprojects";
+var OUTPUT_FOLDER = __dirname+"/../includes/videos";//folders.outputDir;
+var ASSET_FOLDER = __dirname+"/../public";
 
 
 var OM_TEMPLATE = 'ProRes422';
@@ -68,7 +68,7 @@ var AERunDoScript = { begin: "osascript -e 'tell application \"Adobe After Effec
 
 //spin up after effects from commandline applescript
 exports.init = function(cb){
-	var script = "osascript "+folders.appleScriptsDir()+"/AEInit.scpt";
+	var script = "osascript "+APPLESCRIPT_FOLDER+"/AEInit.scpt";
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 						bOpen = true;
 						if(err) console.error(err)
@@ -95,7 +95,7 @@ exports.runScriptFunction = function(_script,_call,_cb){
 function runScriptFunction(_script,_call,_cb){
 
 
-	var script = "osascript "+folders.appleScriptsDir()+"/AERunFunction.scpt '"+folders.aeScriptsDir()+"/"+_script+"' '"+_call+"'";
+	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/"+_script+"' '"+_call+"'";
 	//console.log(script)
 
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
@@ -108,7 +108,7 @@ function runScriptFunction(_script,_call,_cb){
 exports.open = function(file,cb){
 /* var script = "osascript -e 'tell application \"Adobe After Effects CC\"' -e 'open \"/Users/chris/IncredibleMachines/Dropbox/30PP/AE_Architecture/Template_test_Folder_3/Template_test.aep\"' -e 'end tell'"; */
 
-	var script = "osascript "+folders.appleScriptsDir()+"/AEOpenFile.scpt '"+file+"' "
+	var script = "osascript "+APPLESCRIPT_FOLDER+"/AEOpenFile.scpt '"+file+"' "
 	currentFile = file;
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 							bOpen = true;
@@ -123,7 +123,7 @@ function exit(cb){
 // callback  = cb(err,stdout)
 exports.exit = function(cb){
 
-	var script = "osascript "+folders.appleScriptsDir()+"/AERunFunction.scpt '"+folders.aeScriptsDir()+"/quitWithoutSaving.jsx' 'quitWithoutSaving()'";
+	var script = "osascript "+APPLESCRIPT_FOLDER+"/AERunFunction.scpt '"+AESCRIPT_FOLDER+"/quitWithoutSaving.jsx' 'quitWithoutSaving()'";
 	AFTEREFFECTS = exec(script,function(err,stdout,stderr){
 						bOpen = false;
 						if(err)console.error(err)
@@ -264,9 +264,9 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 //render options
 function setRenderContent(scene,cb){
 	var timebetween = 1000;
-	scene.asset_loc = folders.publicDir()+'/'
-	scene.output = folders.outputDir()+'/'+scene.type+'.mov'
-	scene.template = folders.aeProjectsDir()+'/'+scene.template
+	scene.asset_loc = ASSET_FOLDER+'/'
+	scene.output = OUTPUT_FOLDER+'/'+scene.type+'.mov'
+	scene.template = AEPROJECT_FOLDER+'/'+scene.template
 	if( scene.type.indexOf('default') != -1){
 		setTimeout(function(){
 

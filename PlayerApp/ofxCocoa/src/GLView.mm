@@ -477,9 +477,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         unichar key = [characters characterAtIndex:0];
         //            NSLog(@"key code pressed %hu", key);
         switch(key) {
-            case OF_KEY_ESC:
-                OF_EXIT_APP(0);
-                break;
+//            case OF_KEY_ESC:
+//                OF_EXIT_APP(0);
+//                break;
                 
             case 63232:
                 key = OF_KEY_UP;
