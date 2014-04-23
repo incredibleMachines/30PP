@@ -29,8 +29,9 @@ scenes = JSON.parse(scenes)
 					<!-- <li class="col-md-1 panel-title">+</li>-->
 					<li class="col-md-2 panel-title">Event</li>
 					<li class="col-md-2 panel-title">Scene Title</li>
-					<li class="col-md-2 panel-title">Order</li>
-					<li class="col-md-4 panel-title">Duration</li>
+					<li class="col-md-1 panel-title">Queue</li>
+					<li class="col-md-1 panel-title">Start Time</li>
+					<li class="col-md-3 panel-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Duration</li><!-- LULZ HACKHACKHACKHACK LULZ -->
 					<!-- <li class="col-md-1 panel-title">Actions</li> -->
 				</ul>
 			</div><!-- .panel-heading -->
@@ -40,31 +41,31 @@ scenes = JSON.parse(scenes)
 				<ul class="list-group">
 					<%
 					scenes = _.sortBy(scenes, function(scene){
-						return scene.order;
+						return scene.concat_queue;
 					});
-					scenes.reverse();
-					
-					scenes = _.sortBy(scenes, function(scene){
-						return scene.type;
-					});
-
-					scenes.reverse();
+					//scenes.reverse();
+					// scenes = _.sortBy(scenes, function(scene){
+					// 	return scene.type;
+					// });
 					//scenes.forEach(function(scene,i){
 					for (var i=0; i<scenes.length; i++){
 						// var scene = _.findWhere(scenes,{_id:item.scene_id})
+						// NOTE: these are *timeline collection* scenes
 						//console.log("scene: "+i);
-						//console.log(scene);
+						//console.log(scenes[i])
+						//console.log("start_time: "+ scenes[i].start_time);
 						%>
 						<li class="list-group-item">
 							<ul class="event row" >
 								<form method="POST" action="/timeline/update">
 								<li class="col-md-2"><%= scenes[i].type %></li>
 								<li class="col-md-2"><%= scenes[i].title %></li>
-								<li class="col-md-2"><%= scenes[i].order %></li>
-								<li class="col-md-4">
-									<div class="col-lg-3">
+								<li class="col-md-1"><%= scenes[i].concat_queue %></li>
+								<li class="col-md-1"><%= scenes[i].start_time %></li>
+								<li class="col-md-3">
+									<div class="col-lg-6">
 										<input class="form-control" type="text" name="duration" value="<%= scenes[i].duration %>"/>
-										<input type="hidden" value="<%= scenes[i]._id %>" name="scene_id"/>
+										<input type="hidden" value="<%= scenes[i].scene_id %>" name="scene_id"/>
 									</div>millis</li>
 								<li class="col-md-1"><button type="submit" class="btn btn-default btn-xs scene-view">Save &raquo; </button></li>
 								</form>
@@ -73,7 +74,7 @@ scenes = JSON.parse(scenes)
 						<% } %>
 					</ul><!-- .list-group -->
 				<% }else{ %>
-					<h3>Nothing in Timeline.</h3>
+					<h3>Nothing in Timeline.  Click MAKE Timeline to generate this collection.</h3>
 					<% } %>
 				</section><!--.<%= page_slug %> -->
 				<% include ../includes/footer %>

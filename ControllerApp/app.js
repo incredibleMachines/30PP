@@ -35,6 +35,7 @@ var Database = require('./modules/DBConnection');
 var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
+var FFmpeg = require('./modules/FFmpeg');
 
 /**
  *	File Checking
