@@ -3,7 +3,7 @@
 var utils 	= require('../modules/Utils');
 var _ 			= require('underscore');
 var ffmpeg  = require('../modules/FFmpeg');
-var async	= require('async');
+var async	 = require('async');
 
 exports.index = function(_Database){
 
@@ -153,11 +153,11 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 /*function to call FFMPEG and concatenate all video files */
 exports.concat = function(_Database, EVENT_TYPES, cb){
 	return function(req,res){
-		res.jsonp({error: "Not Implemented Yet!"});
-		// ffmpeg.concat(function(e){
-		// 	if(e) console.log("concat error: "+ e);
-		// 	else res.jsonp({success:'concat success'});
-		// })
+		//res.jsonp({error: "Not Implemented Yet!"});
+		ffmpeg.concat(_Database,function(e){
+			if(e) console.log("concat error: "+ e);
+			else res.jsonp({success:'concat success'});
+		})
 	}
 }
 
