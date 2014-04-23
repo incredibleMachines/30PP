@@ -100,7 +100,7 @@ void testApp::update(){
             loadTime=0;
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="Art & Design"){
+        else if(socketHandler.eventHandler.currentEvent=="art-design"){
             map.fadeIn(TRANSITION_ARTS);
             loadTime=729;
         }
