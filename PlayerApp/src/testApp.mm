@@ -6,6 +6,8 @@
 void testApp::setup() {
 	printf("Window dimensions: %i %i\n", ofGetWidth(), ofGetHeight());
 	
+    ofSetEscapeQuitsApp(false);
+    
 	ofBackground(0,0,0);
     
 	ofEnableDepthTest();
