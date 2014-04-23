@@ -154,6 +154,8 @@ public:
     void updateMasks();
     //reset selected 3D points back to 2D mask
     void resetSelected();
+    //clear selection of points
+    void clearSelection();
     
     //---------CAMERA SETTINGS
     int adjustMode;

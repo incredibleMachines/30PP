@@ -358,6 +358,14 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
+            //----------CLEAR SELECTION
+            
+        case 'c':
+            if(adjustMode!=ADJUST_MODE_LOCKED){
+                clearSelection();
+            }
+            break;
+            
             //----------TRIGGER ADJUST_MODE_LOCKED
             
         case ' ':
@@ -2600,12 +2608,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name=="CLEAR SELECTION"){
-        moveVertices.clear();
-        tempVertices.clear();
-        magnetVertices.clear();
-        penPoly.clear();
-        vertices2D.clear();
-        tempVertices2D.clear();
+        clearSelection();
     }
     
     else if(name=="RELOAD MESH"){
@@ -3076,6 +3079,15 @@ void ModelMapper::set2D(int _meshNum){
 
 void ModelMapper::setMeshDraw(int _cam, vector<int> which){
     cameras[_cam].which=which;
+}
+
+void ModelMapper::clearSelection(){
+    moveVertices.clear();
+    tempVertices.clear();
+    magnetVertices.clear();
+    penPoly.clear();
+    vertices2D.clear();
+    tempVertices2D.clear();
 }
 
 void ModelMapper::fadeIn(int type){
