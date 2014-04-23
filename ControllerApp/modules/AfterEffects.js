@@ -188,7 +188,9 @@ function renderWorker(scene,callback){
 		  if(code !=0) bError = true;
 			var end = new Date()
 			var duration = end-start
-			console.log('AERENDER PID: %s '.inverse+' Total Duration: %s'.green,aerender.pid,duration)
+			duration = duration/1000
+			duration = duration/60
+			console.log('AERENDER PID: %s '.inverse+' Completed in %s minutes '.green,aerender.pid,duration)
 		  //callback once the process has finished
 		  callback(bError,scene)
 		})
