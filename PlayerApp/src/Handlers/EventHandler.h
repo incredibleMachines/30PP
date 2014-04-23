@@ -18,7 +18,6 @@ public:
     //init and play
     void initEvents (ofxLibwebsockets::Event &args);
     void playEvent  (ofxLibwebsockets::Event &args);
-    void salesEvent (ofxLibwebsockets::Event &args);
     
     //control and error
     void pauseEvent (ofxLibwebsockets::Event &args);
@@ -40,7 +39,8 @@ public:
     
     vector<event> events;
     
-    bool bTriggerEvent, bPlayEvent, bPlaying;
+    bool bTriggerEvent;
+    string currentEvent;
     float currentStart;
     
 };
