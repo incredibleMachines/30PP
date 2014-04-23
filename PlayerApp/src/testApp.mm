@@ -80,31 +80,33 @@ void testApp::update(){
         socketHandler.eventHandler.bTriggerEvent=false;
         
         if(socketHandler.eventHandler.currentEvent=="Default"){
-            MSA::ofxCocoa::startPlayer();
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=650;
         }
         else if(socketHandler.eventHandler.currentEvent=="Gastronomy"){
-            MSA::ofxCocoa::startPlayer();
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=650;
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
-            MSA::ofxCocoa::startPlayer();
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             loadTime=0;
         }
         
         else if(socketHandler.eventHandler.currentEvent=="Ambient"){
-            MSA::ofxCocoa::startPlayer();
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             loadTime=0;
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="Art & Design"){
+            map.fadeIn(TRANSITION_ARTS);
+            loadTime=729;
         }
         
         else if(socketHandler.eventHandler.currentEvent=="pause"){
             MSA::ofxCocoa::pausePlayer();
         }
+        
         else if(socketHandler.eventHandler.currentEvent=="resume"){
             MSA::ofxCocoa::startPlayer();
         }
@@ -113,6 +115,7 @@ void testApp::update(){
     
     if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
         MSA::ofxCocoa::setTime(loadTime);
+        MSA::ofxCocoa::startPlayer();
         map.bTransitionLoading=true;
         map.transitionTimer=ofGetElapsedTimeMillis();
     }
