@@ -34,8 +34,8 @@ exports.index = function(_Database,EVENT_TYPES){
 				//check if type is Ambient or not
 				//for now assumes that all content is sales
 				var temp={}
-				temp[type] = '/api/'+utils.makeSlug(type)
-				structure.sales.play_single.push(temp)		
+				temp[type] = '/api/play/'+utils.makeSlug(type)
+				structure.sales.play_single.push(temp)
 			}
 		})
 		res.jsonp(structure)
