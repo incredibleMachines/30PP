@@ -41,7 +41,7 @@ var PathFinder = require('./modules/PathFinder')
  *
  */
 
-Folders.setup();
+Folders.setup(__dirname);
 
 /**
  * Setup Database
@@ -88,7 +88,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir, keepExtensions: true})); //temporary folder to store images on upload
+app.use(express.bodyParser({limit:'1000mb', uploadDir: Folders.tempDir(), keepExtensions: true})); //temporary folder to store images on upload
 app.use(express.methodOverride());
 app.use(express.cookieParser('30_PP_ControllerApp'));
 app.use( less( {src: __dirname+ '/public', force: true } ) );
@@ -160,6 +160,9 @@ app.get('/login', admin.index)
 app.post('/login',admin.login(Database))
 app.get('/logout',admin.logout(Database))
 
+app.get('/controller',function(req,res){
+  res.render('controller/index')
+})
 
 app.get('/location/matrix',function(req,res){
 
