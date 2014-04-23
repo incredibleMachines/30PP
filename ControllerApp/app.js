@@ -35,6 +35,7 @@ var Database = require('./modules/DBConnection');
 var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
+var FFmpeg = require('./modules/FFmpeg');
 
 /**
  *	File Checking
@@ -79,8 +80,8 @@ var app = express();
 //allow our local express files to use underscore
 app.locals._ = require('underscore');
 app.locals.utils = require('./modules/Utils');
-app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Fashion"]
-app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
+app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Fashion"];
+app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"];
 
 app.set('port', process.env.PORT || 3000);
 app.set('title', '30 Park Place Controller');
