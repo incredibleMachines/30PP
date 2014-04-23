@@ -1,23 +1,22 @@
 /* to display all files to be concatenated, run ffmpeg? */
 
 var utils 	= require('../modules/Utils');
-var _ 		= require('underscore');
+var _ 			= require('underscore');
+var ffmpeg  = require('../modules/FFmpeg');
+var async	= require('async');
 
 exports.index = function(_Database){
 
 	return function(req,res){
 		_Database.queryCollectionWithOptions('timeline', {}, {sort: 'concat_queue'}, function(e,tEvents){
-
 			if(!e){
 				var allScenes = new Array();
 				var tEventsCounter = 0;
-
 				if(tEvents.length>0){
 					tEvents.forEach(function(evt, j){
 						//console.log("evt.scenes.length: ");
 						//console.log(evt.scenes.length);
 						//console.log(evt.scenes)
-
 						var eScenesCounter = 0;
 						/* check in case there are no scenes in this event */
 						if(evt.scenes.length === 0){
@@ -26,7 +25,7 @@ exports.index = function(_Database){
 							if(tEventsCounter === tEvents.length){ /* if there are AND we are at eventsCounter total */
 								/* lemme get that page render */
 								res.render('renderqueue/timeline', { current:req.url, title:'Timeline', page_slug:'renderqueue-timeline',
-								scenes:allScenes, error:null });
+									scenes:allScenes, error:null });
 							}
 						} else {
 							evt.scenes.forEach(function(sce,i){
@@ -36,7 +35,7 @@ exports.index = function(_Database){
 									//console.log(scene);
 									scene.duration = sce.duration; //stick the duration from timeline scene obj into there
 									eScenesCounter++;
-									allScenes.push(scene); /* push this scene into allScenes */
+									allScenes.push(sce); /* push this scene into allScenes */
 									if(eScenesCounter === evt.scenes.length){
 										tEventsCounter++;
 										//console.log("tEventsCounter: "+tEventsCounter);
@@ -68,6 +67,102 @@ exports.index = function(_Database){
 }
 
 
+
+
+
+/* function to MAKE the timeline collection based on all scenes in the database */
+exports.make = function(_Database, EVENT_TYPES, cb){
+
+	var timelineStartTime = 0; //for calculating all start times
+	var timelineSceneOrder = 0; //for calculating global order number
+	var timelineEventOrder = 0;
+
+	_Database.queryCollection('timeline',{}, function(e, timelineContents){
+
+		if(timelineContents.length<1){ //nothing here, let's MAKE MAKE MAKE
+
+			async.eachSeries(EVENT_TYPES, function(EVT_TYPE, _cb){ //first function
+
+				//console.log("event title: " + EVT_TYPE);
+				var thisTimelineEvent 		= {};
+				thisTimelineEvent.title 	= EVT_TYPE;
+				thisTimelineEvent.slug 		= utils.makeSlug(EVT_TYPE);
+				thisTimelineEvent.duration	= 0; //durations are for scenes only now.
+				thisTimelineEvent.scenes	= new Array;
+
+				_Database.queryCollection('scenes', {type:thisTimelineEvent.slug}, function(_e,scenes){
+
+					if(scenes.length>0){
+						scenes = _.sortBy(scenes, function(scene){
+							return scene.order; //sort by the order # of the SCENE COLLECTION OBJECT
+						});
+
+						async.eachSeries(scenes, function(scene, __cb){
+
+							// console.log("scene number: "+scene.order);
+							// console.log("scene type: "+scene.type);
+							// console.log("found scene: "+scene.title+ "  type: "+scene.type);
+							var thisDuration = 47000;
+							if (scene.title === "Gastronomy") thisDuration = 55000; //gastronomically large!
+							var thisStartTime = timelineStartTime;
+							var thisConcatSlug = scene.type+"_"+utils.makeSlug(scene.title);
+							var sceneObj = { //** everything that is being stored in the scene timeline objects
+								scene_id: 		scene._id,
+								type: 				scene.type,
+								title: 	 		scene.title,
+								//order: 	 	scene.order,
+								concat_slug:  thisConcatSlug,
+								concat_queue: timelineSceneOrder,
+								start_time: 	thisStartTime,
+								duration: 		thisDuration
+							}
+							timelineStartTime += thisDuration; //increment startTime.
+							timelineSceneOrder += 1;  //increment the 'global' timeline SCENE order position
+							thisTimelineEvent.scenes.push(sceneObj);
+							thisTimelineEvent.duration += thisDuration;
+							__cb(null);
+						}); //end async scenes
+
+						// thisTimelineEvent.start_time = startTime;
+						thisTimelineEvent.concat_queue = timelineEventOrder;
+						timelineEventOrder += 1;
+						// startTime += parseInt(thisTimelineEvent.duration);
+
+						_Database.add('timeline', thisTimelineEvent, function(__e){
+							if(!__e){
+								console.log("added this timeline event: " + thisTimelineEvent.title);
+							}	//everything is great
+							else console.log("error adding to timeline collection: "+ thisTimelineEvent);
+						})
+					} //end if scenes.length>0
+
+				}); //end queryCollection('scenes')
+
+				_cb(null);
+			}); //end async EVENT_TYPES
+
+		} //else timelineContents is > 0
+		cb(null); //FINAL REAL CALLBACK
+	}); //end queryCollection('timeline')
+}
+
+
+
+
+
+/*function to call FFMPEG and concatenate all video files */
+exports.concat = function(_Database, EVENT_TYPES, cb){
+	return function(req,res){
+		res.jsonp({error: "Not Implemented Yet!"});
+		// ffmpeg.concat(function(e){
+		// 	if(e) console.log("concat error: "+ e);
+		// 	else res.jsonp({success:'concat success'});
+		// })
+	}
+}
+
+
+
 /* function to update the timeline database with a new duration value for any scene */
 exports.update = function(_Database){
 
@@ -77,7 +172,7 @@ exports.update = function(_Database){
 		var post = req.body;
 		var newDuration = parseInt(post.duration);
 		var sceneId	= post.scene_id;
-
+		console.log("req sceneId: "+sceneId);
 		if(isNaN(newDuration)){
 			console.log("NAN DETECTED!  Setting duration to 0.");
 			newDuration = 0;
@@ -97,12 +192,12 @@ exports.update = function(_Database){
 				evt.scenes.forEach(function(sce,j){
 					//console.log("this sce.scene_id= "+sce.scene_id);
 					if(sce.scene_id == sceneId){
-						// _Database.update('timeline',{scene_id: _Database.makeMongoID(sceneId)},obj,function(e){
+						//console.log("FOUND SCENEID MATCH");
 						_Database.update('timeline', {_id : evt._id, "scenes.scene_id": sce.scene_id}, obj, function(e){
-								if(!e){
-									console.log("successfully updated timeline with new scene duration");
-									res.redirect('/timeline');
-								}else console.log("ERROR UPDATING DB WITH NEW DURATION");
+							if(!e){
+								console.log("successfully updated timeline with new scene duration");
+								res.redirect('/timeline');
+							}else console.log("ERROR UPDATING DB WITH NEW DURATION");
 						})
 					}
 				})
@@ -112,85 +207,64 @@ exports.update = function(_Database){
 }
 
 
+/* attempt to update all start_times after any scene's duration has been changed.
+	for the future.
+*/
+exports.updateForFuture = function(_Database){
 
-/* function to create and populate 'timeline' collection */
-exports.make = function(_Database, EVENT_TYPES, cb){
+	return function(req, res){
+		//console.log("timeline.update req.body: ");
+		//console.log(req.body);
+		var post = req.body;
+		var newDuration = parseInt(post.duration);
+		var sceneId	= post.scene_id;
 
-	//return function(req, res){
-		var e = null; //error for entire function
-	/* console.log("EVENT_TYPES: "+ EVENT_TYPES); */
+		if(isNaN(newDuration)){
+			console.log("NAN DETECTED!  Setting duration to 0.");
+			newDuration = 0;
+		}
 
-		var startTime = 0; //this is for calculating starttimes!
-
-		//first wipe the timeline collection:
-		// _Database.remove('timeline',{},function(e){
-		// 	if(!e) console.log("remove timeline success");
-		// 	else console.log("error removing timeline");
-		// })
-
-		_Database.queryCollection('timeline',{}, function(_e, anything){
-			if(!e){
-				console.log(anything);
-				if(anything.length<1){ //check to make sure we don't already have a timeline!
-
-					EVENT_TYPES.forEach(function(event, i){
-
-						var thisTimelineEvent 		= {};
-						thisTimelineEvent.title 	= event;
-						thisTimelineEvent.slug 		= utils.makeSlug(event);
-						thisTimelineEvent.duration	= 0;
-						thisTimelineEvent.scenes	= new Array;
-
-						_Database.queryCollection('scenes', {type:thisTimelineEvent.slug}, function(__e,scenes){
-							if(!__e){
-								if(scenes.length>0){
-									scenes.forEach(function(scene, j){
-										//console.log("found scene: "+scene.title+ "  type: "+scene.type);
-										//thisTimelineEvent.duration += 5001; //DEPRECATED: now only scenes have durations.
-										//scene.duration = 5101;//Math.floor(20000 + Math.floor((Math.random()*10000)+1));
-										var thisDuration = 30001;
-										var sceneObj = {
-											scene_id: scene._id,
-											order: scene.order,
-											duration: thisDuration
-										}
-										thisTimelineEvent.scenes.push(sceneObj);
-										thisTimelineEvent.duration += scene.duration;
-									})
-								}
-								thisTimelineEvent.start_time = startTime;
-								thisTimelineEvent.concat_queue = i;
-								startTime += parseInt(thisTimelineEvent.duration);
-
-								_Database.add('timeline', thisTimelineEvent, function(_e){
-									if(!_e){}	//everything is great
-									else e = _e; //TODO: handle this better
-								})
-							} else {
-								e = __e; //TODO: handle this better
-								console.log("query scenes error");
-							}
-						})
-					})
-
-					if(!e) cb(null); //TODO: handle this better
-					else cb(e);
-
-				} else {
-					//res.redirect('/timeline');
-					console.log("DID NOT MAKE - TIMELINE CURRENTLY EXISTS");
-					cb("did not MAKE because timeline already exists.   mongo db.timeline.remove() before re-make");
-				}
-			} else {
-				console.log("ERROR QUERYING FOR TIMELINE...");
+		var obj = {
+			$set: {
+				"scenes.$.duration": newDuration
 			}
-		})
-	//}
-}
+		}
 
-/*function to call FFMPEG and concatenate all video files */
-exports.concat = function(_Database, EVENT_TYPES, cb){
-	return function(req,res){
-		res.jsonp({error: "Not Implemented Yet!"});
-	}
+		var allConcatScenes = new Array();
+
+		populateScenes(processAllTimelineScenes);
+
+		function populateScenes (callback){
+			console.log("hit populateScenes");
+			_Database.getAll('timeline',function(e, tEvents){
+				async.each(tEvents, function(evt, cb){
+					if(evt.scenes.length>0){
+						async.each(evt.scenes, function(sce, _cb){
+							allConcatScenes.push(sce);
+							_cb(null);
+						});
+					}
+					cb(null);
+				});
+				callback();
+			});
+		}
+
+		function processAllTimelineScenes() {
+			allConcatScenes = _.sortBy(allConcatScenes, function(scene){
+				return scene.concat_queue; //sort by the order # of the SCENE COLLECTION OBJECT
+			});
+
+			async.eachSeries(allConcatScenes, scene, function(e){
+				if(scene.scene_id == sceneId){
+					_Database.update('timeline', {_id : evt._id, "scenes.scene_id": scene.scene_id}, obj, function(e){
+						if(!e){
+							console.log("successfully updated timeline with new scene duration");
+							res.redirect('/timeline');
+						}else console.log("ERROR UPDATING DB WITH NEW DURATION");
+					})
+				}
+			})
+		}
+	}//end function(req,res)
 }
