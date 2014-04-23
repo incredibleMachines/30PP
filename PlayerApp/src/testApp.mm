@@ -98,6 +98,16 @@ void testApp::update(){
         map.transitionTimer=ofGetElapsedTimeMillis();
     }
     
+    if(map.bLocked==true){
+        MSA::ofxCocoa::hideCursor();
+        map.bLocked=false;
+    }
+    
+    else if(map.bUnlocked==true){
+        MSA::ofxCocoa::showCursor();
+        map.bUnlocked=false;
+    }
+    
     //Get Texture data from CVOpenGLTexture in ofxCocoa
     meshTexture->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
     ofTextureData data=meshTexture->getTextureData();
@@ -124,14 +134,6 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     switch(key){
-        case ' ':
-            if(map.adjustMode!=ADJUST_MODE_LOCKED){
-                MSA::ofxCocoa::hideCursor();
-            }
-            else if(map.bShiftPressed==true){
-                MSA::ofxCocoa::showCursor();
-            }
-            break;
         case 'p':
             MSA::ofxCocoa::pausePlayer();
             break;

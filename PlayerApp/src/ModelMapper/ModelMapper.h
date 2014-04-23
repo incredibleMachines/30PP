@@ -101,6 +101,8 @@ public:
     float moveModifier;
     //switch for separate GUICam
     bool bGuiCamAdjust;
+    bool bLocked;
+    bool bUnlocked;
     
     
     //---------DRAW FUNCTIONS
@@ -112,6 +114,8 @@ public:
     void drawHighlights();
     //draw masks for selected camera
     void drawMasks();
+    //set LockedMode
+    void setLocked(bool locked);
     
     //---------SETUP FUNCTIONS
     //init cameras

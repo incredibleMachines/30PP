@@ -86,6 +86,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     
     //draw settings
     bDrawWireframe=false;
+    bLocked=false;
+    bUnlocked=false;
     
     //adjustment settings
     bShiftPressed=false;
@@ -377,16 +379,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case ' ':
             if(adjustMode!=ADJUST_MODE_LOCKED){
-                bDrawWireframe=false;
-                wireframeButton->setColorFill(OFX_UI_COLOR_BACK);
-                adjustMode=ADJUST_MODE_LOCKED;
-                setGUIVisible(false);
+                setLocked(true);
             }
             else if(bShiftPressed==true){
-                adjustMode=ADJUST_MODE_CAMERA;
-                setGUIVisible(true);
-                currentMode->activateToggle("Camera Position");
-                performanceButton->setColorFill(OFX_UI_COLOR_BACK);;
+                setLocked(false);
             }
             break;
             
@@ -2301,11 +2297,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     }
     
     else if(name=="PERFORMANCE MODE"){
-        bDrawWireframe=false;
-        wireframeButton->setColorBack(OFX_UI_COLOR_BACK);
-        performanceButton->setColorBack(OFX_UI_COLOR_BACK);
-        adjustMode=ADJUST_MODE_LOCKED;
-        setGUIVisible(false);
+        setLocked(true);
     }
     
     else if(name == "Adjust GUI Separately")
@@ -3100,6 +3092,25 @@ void ModelMapper::clearSelection(){
     penPoly.clear();
     vertices2D.clear();
     tempVertices2D.clear();
+}
+
+void ModelMapper::setLocked(bool locked){
+    if(locked==true){
+        bDrawWireframe=false;
+        wireframeButton->setColorFill(OFX_UI_COLOR_BACK);
+        performanceButton->setColorFill(OFX_UI_COLOR_BACK);
+        adjustMode=ADJUST_MODE_LOCKED;
+        setGUIVisible(false);
+        bLocked=true;
+    }
+    
+    else if(locked==false){
+        adjustMode=ADJUST_MODE_CAMERA;
+        setGUIVisible(true);
+        currentMode->activateToggle("Camera Position");
+        performanceButton->setColorFill(OFX_UI_COLOR_BACK);
+        bUnlocked=true;
+    }
 }
 
 void ModelMapper::fadeIn(int type){
