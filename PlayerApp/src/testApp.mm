@@ -61,6 +61,8 @@ void testApp::setup() {
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
+    MSA::ofxCocoa::hideCursor();
+    
 }
 
 
