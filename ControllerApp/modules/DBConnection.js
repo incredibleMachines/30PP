@@ -185,7 +185,7 @@ exports.formatInit=function(_cb){
 						thisEvent.title= event.title;
 						thisEvent.duration= event.duration;
 						thisEvent.start_time= event.start_time;
-
+						thisEvent.slug=event.slug;
 						eventsToSend.push(thisEvent);
 
 

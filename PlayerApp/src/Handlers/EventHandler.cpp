@@ -101,7 +101,7 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
     cout <<"movieFilePath: " << movieFile << endl << endl;
     
     for (int e=0; e<numEvents; e++) {
-        string eTitle   = args.json["events"][e]["title"].asString();
+        string eTitle   = args.json["events"][e]["slug"].asString();
         int eStartTime  = args.json["events"][e]["start_time"].asInt();
         int eDuration   = args.json["events"][e]["duration"].asInt();
         
