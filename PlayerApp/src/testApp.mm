@@ -143,6 +143,7 @@ void testApp::keyPressed(int key){
         case '1':
             map.fadeIn(TRANSITION_GASTRONOMY);
             loadTime=0;
+            break;
         case '2':
             map.fadeIn(TRANSITION_MARKETS);
             loadTime=44;
