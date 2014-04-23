@@ -55,7 +55,8 @@
 #define TRANSITION_SHOPPING 3
 #define TRANSITION_ARTS 4
 #define TRANSITION_LEISURE 5
-#define TRANSITION_AMBIENT_GRADIENT 6
+#define TRANSITION_END 6
+#define TRANSITION_AMBIENT_GRADIENT 7
 
 class ModelMapper {
 public:
@@ -82,6 +83,8 @@ public:
     int guiCam;
     //how many meshes to draw, passed in setup or calculated by .size() of vector passed in setup
     int numMeshes;
+    //which mesh to edit TODO: allow user to set this in GUI
+    int currentMesh;
     
     //mouse variables, to deal with weirdness of using mouseX/Y with custom event listeneres
     ofVec2f mouse;
@@ -90,15 +93,19 @@ public:
     bool bDrawGui;
     //switch for drawing mesh wireframes
     bool bDrawWireframe;
-    //swith for shift key modifier
+    //switch for shift key modifier
     bool bShiftPressed;
-    //swith for shift key modifier
+    //switch for cmd key modifier
     bool bCommandPressed;
     //value of move commands (modified by shift key)
     float moveModifier;
+    //switch for separate GUICam
+    bool bGuiCamAdjust;
+    bool bLocked;
+    bool bUnlocked;
     
     
-    //---------CUSTOM FUNCTIONS
+    //---------DRAW FUNCTIONS
     //drawGuiText draws information on user settings on GUI_CAMERA Screen only
     void drawGuiText();
     //draw all cameras
@@ -107,16 +114,30 @@ public:
     void drawHighlights();
     //draw masks for selected camera
     void drawMasks();
-    void updateMasks();
+    //set LockedMode
+    void setLocked(bool locked);
+    
+    //---------SETUP FUNCTIONS
     //init cameras
     void setupCameras();
-    //save camera data to json and meshes to .ply files
+    //save camera data to json and meshes to .ply files for all cameras
     void saveCameras();
+    //save camera data to json and meshes to .ply files for all cameras
     void saveCamera();
     //sets file path for mesh to reload
     void setMassMesh(string _reloadMesh);
     //sets file path for detailed mesh
     void setDetailMesh(string _reloadMesh);
+    //set mesh to draw 2D homography instead of 3D mesh
+    void set2D(int _meshNum);
+    //set mesh to draw in specified camera
+    void setMeshDraw(int _cam, vector<int> _whichMeshes);
+    //turn all gui tabs on and off
+    void setGUIVisible(bool hide);
+    //setup all GUI elements
+    void setupGUI();
+    
+    //---------ADJUST FUNCTIONS
     //move camera position
     void adjustPosition(float x, float y, float z);
     //move camera orientation
@@ -131,17 +152,14 @@ public:
     void adjustMask(float x, float y);
     //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
+    //do magnet mapping using ofxTween easing functions
     float magnetMap(float distance, float radius);
+    //update mask points from ofPolyline into ofPath when changes is made
+    void updateMasks();
+    //reset selected 3D points back to 2D mask
     void resetSelected();
-    
-    void set2D(int _meshNum);
-    
-    void setMeshDraw(int _cam, vector<int> _whichMeshes);
-    
-    void setGUIVisible(bool hide);
-    
-    //setup GUI elements
-    void setupGUI();
+    //clear selection of points
+    void clearSelection();
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -151,6 +169,8 @@ public:
     
     //---------MESH SETTINGS
     ofxAssimpModelLoader test;
+    
+    //3D vertex custom class
     class meshVertex{
     public:
         ofVec3f vertex;
@@ -159,59 +179,53 @@ public:
         float distance;
     };
     
+    //2D vertex custom class
     class vertex2D{
     public:
         ofVec3f vertex;
         int box;
         int index;
     };
+    
+    //selected 3D vertices via user clicks
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
+    
+    //selected vertices via magnet and pen tools
     vector< vector<meshVertex> > magnetVertices;
     vector< vector<meshVertex> > tempDoubleVertices;
     vector< vector<meshVertex> > doubleVertices;
     
+    //selected vertices in 2D
     vector< vector<vertex2D> > vertices2D;
     vector< vector<vertex2D> > tempVertices2D;
     
-    //holder for mesh filepaths
+    //variable for mesh type via type def in ModelMapper.h
+    int meshType;
+    
+    //holder for reload mesh filepaths
     string detailMesh;
     string massMesh;
-    int meshType;
+    
     //holder for which meshes to reload from above filepath
     vector<int> whichMeshes;
-    ofPlanePrimitive plane;
-    bool bGuiCamAdjust, bDrawingPen, bNewPen, bDrawingDouble, bNewDouble;
+    
+    //switches for pen and double pen status
+    bool bDrawingPen, bNewPen, bDrawingDouble, bNewDouble;
+    
+    //polyline for storing pen and double pen shapes
     ofPolyline penPoly, doublePoly;
     
-    
-    //---------MASK SETTINGS
-    class maskVertex{
-    public:
-        ofVec2f vertex;
-        int maskIndex;
-        int vertexIndex;
-    };
-    vector<maskVertex> maskVertices;
-    bool bNewMask, bDrawingMask, bMaskPoint;
-    float mouseTimer;
-    
-    vector<maskVertex> penVertices;
-    
-    //---------HIGHLIGHT SETTINGS
-    bool bMouseDown;
-    ofVec2f mouseDown;
-    ofRectangle selectRect;
-    float clickThreshold;
-    
-    //----------TEXTURE SETTINGS
-    //    vector<Composite> compositeTexture;
-    bool bMipMap;
-    
-    ofTexture * texture;
-    
+    //radius of magnet selection in pointer and paintbrush modes
     float magnetRadius;
+    
+    //setting of magnet select mode, easing mode, and style of easing on in/out/both
     int selectMode, easeMode, easeInStyle, easeOutStyle, easeBothStyle;
+    
+    //radius of paintbrush selection tool
+    int brushRadius;
+    
+    //ofxTween easing types for magnet mode
     ofxEasingLinear easeLinear;
     ofxEasingQuad easeQuad;
     ofxEasingCubic easeCubic;
@@ -221,25 +235,70 @@ public:
     ofxEasingCirc easeCirc;
     
     
+    //---------MASK SETTINGS
+    //custom class for mask verties
+    class maskVertex{
+    public:
+        ofVec2f vertex;
+        int maskIndex;
+        int vertexIndex;
+    };
+    
+    //mask vertices
+    vector<maskVertex> maskVertices;
+    
+    //switches for mask shape drawing status
+    bool bNewMask, bDrawingMask, bMaskPoint;
+    
+    //mesh pen vertices
+    vector<maskVertex> penVertices;
+    
+    //---------HIGHLIGHT SETTINGS
+    //check on if mouse is pressed
+    bool bMouseDown;
+    
+    //mouse press position
+    ofVec2f mouseDown;
+    
+    //drag rectangle draw
+    ofRectangle selectRect;
+    
+    //timer for checking double clicks
+    float mouseTimer;
+    
+    //distance from vertices for clicks to register
+    float clickThreshold;
+    
+    //----------TEXTURE SETTINGS
+    //UV texture reference for global texture that is mapped to all meshes
+    ofTexture * texture;
+    
+    
     //-----------GUI SETTINGS
+    //gui event handler
     void guiEvent(ofxUIEventArgs &e);
+    
+    //global vectors to populate radial boxes in guis
     vector<string> adjustModes;
     vector<string> cameraNames;
     vector<string> easeMethods;
     
+    //main gui page gui, setup fuction, and globals
     ofxUISuperCanvas *mainGUI;
     void setMainGUI();
     ofxUIRadio *currentMode;
     ofxUIButton *wireframeButton;
     ofxUIButton *performanceButton;
+    ofxUITextInput *fps;
     
-    
+    //camera position gui, setup fuction, and globals
     void setPositionGUI();
     ofxUISuperCanvas *positionGUI;
     ofxUITextInput *positionX;
     ofxUITextInput *positionY;
     ofxUITextInput *positionZ;
-    
+
+    //camera orientation gui, setup fuction, and globals
     ofxUISuperCanvas *orientationGUI;
     void setOrientationGUI();
     ofxUITextInput *orientationX;
@@ -247,23 +306,17 @@ public:
     ofxUITextInput *orientationZ;
     ofxUITextInput *orientationW;
     
+    //camera viewport gui, setup fuction, and globals
     ofxUISuperCanvas *viewportGUI;
     void setViewportGUI();
     ofxUITextInput *viewportX;
     ofxUITextInput *viewportY;
     
+    //mesh general gui, setup fuction, and globals
     ofxUISuperCanvas *meshGUI;
     void setMeshGUI();
     
-    ofxUISuperCanvas *mesh2DGUI;
-    void setMesh2DGUI();
-    ofxUITextInput *translateX2D;
-    ofxUITextInput *translateY2D;
-    ofxUITextInput *scale2D;
-    ofxUITextInput *featherRight2D;
-    ofxUITextInput *featherLeft2D;
-    
-    
+    //easing gui, setup function, hide function, dynamic drawing function, and globals
     ofxUISuperCanvas *magnetGUI;
     void setMagnetGUI();
     void hideMagnetTypes();
@@ -284,28 +337,45 @@ public:
     ofxUIRadio *easeOutMethod;
     ofxUILabel *easeBothLabel;
     ofxUIRadio *easeBothMethod;
+    //variables for dynamically drawing in easing radio buttons
     int easeHeight, easeTypeHeight;
+
     
-    int brushRadius;
+    //mesh 2D "madmapper style" gui, setup fuction, and globals
+    ofxUISuperCanvas *mesh2DGUI;
+    void setMesh2DGUI();
+    ofxUITextInput *translateX2D;
+    ofxUITextInput *translateY2D;
+    ofxUITextInput *scale2D;
+    ofxUITextInput *featherRight2D;
+    ofxUITextInput *featherLeft2D;
     
+    //mash gui, setup function, and global
     ofxUISuperCanvas *maskGUI;
     void setMaskGUI();
     ofxUIButton *maskButton;
     
-    int currentMesh;
-    
     //----------------TRANSITIONS
+    //trigger transition, called in testApp in response to eventHandler
     void fadeIn(int type);
-    void fadeOut(int type);
+    //set for duration of transition
     bool bTransitioning;
+    //set for fading in
     bool bTransitionStarted;
+    //set for hold time to load video behind
     bool bTransitionLoading;
+    //set for fading out
     bool bTransitionFinished;
-    float opacity;
+
+    //length of transition
     int transitionTime;
+    //length of hold time for background video loading
     int loadTime;
+    //timer on transition
     int transitionTimer;
-    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame;
+    //textures for each individual transition graphic
+    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame, endFrame;
+    //reference for current transition graphic
     ofTexture * fadeFrame;
     
 };

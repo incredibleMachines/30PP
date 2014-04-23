@@ -6,6 +6,8 @@
 void testApp::setup() {
 	printf("Window dimensions: %i %i\n", ofGetWidth(), ofGetHeight());
 	
+    ofSetEscapeQuitsApp(false);
+    
 	ofBackground(0,0,0);
     
 	ofEnableDepthTest();
@@ -61,6 +63,8 @@ void testApp::setup() {
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
+    MSA::ofxCocoa::hideCursor();
+    
 }
 
 
@@ -89,10 +93,19 @@ void testApp::update(){
     }
     
     if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
-        cout<<"trigger"<<endl;
         MSA::ofxCocoa::setTime(loadTime);
         map.bTransitionLoading=true;
         map.transitionTimer=ofGetElapsedTimeMillis();
+    }
+    
+    if(map.bLocked==true){
+        MSA::ofxCocoa::hideCursor();
+        map.bLocked=false;
+    }
+    
+    else if(map.bUnlocked==true){
+        MSA::ofxCocoa::showCursor();
+        map.bUnlocked=false;
     }
     
     //Get Texture data from CVOpenGLTexture in ofxCocoa
@@ -116,37 +129,40 @@ void testApp::draw(){
     else{
         ofDrawBitmapString("OOOOPS", 100,100);
     }
-    
-    if(map.bTransitionStarted){
-        
-    }
-    
-//    glDepthFunc(GL_ALWAYS);
-//    ofSetColor(255);
-//    ofCircle(100,100,100);
-//    glDepthFunc(GL_LESS);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     switch(key){
-        case ' ':
-            if(map.adjustMode!=ADJUST_MODE_LOCKED){
-                MSA::ofxCocoa::hideCursor();
-            }
-            else if(map.bShiftPressed==true){
-                MSA::ofxCocoa::showCursor();
-            }
-            break;
         case 'p':
             MSA::ofxCocoa::pausePlayer();
             break;
         case 'P':
             MSA::ofxCocoa::startPlayer();
             break;
-        case '[':
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-            loadTime=100;
+        case '1':
+            map.fadeIn(TRANSITION_GASTRONOMY);
+            loadTime=0;
+        case '2':
+            map.fadeIn(TRANSITION_MARKETS);
+            loadTime=44;
+            break;
+        case '3':
+            map.fadeIn(TRANSITION_ARTS);
+            loadTime=79;
+            break;
+        case '4':
+            map.fadeIn(TRANSITION_SHOPPING);
+            loadTime=114;
+            break;
+        case '5':
+            map.fadeIn(TRANSITION_LEISURE);
+            loadTime=149;
+            break;
+        case '6':
+            map.fadeIn(TRANSITION_END);
+            loadTime=184;
+            break;
     }
     
 }
