@@ -232,6 +232,10 @@ namespace MSA {
             return [glView() numScreens];
         }
         
+        
+        float getCurrentTime(){
+            return [glView() currentTime];
+        }
         /***** 30PP *****/
         
 		

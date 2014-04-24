@@ -41,7 +41,9 @@ public:
     ofImage test;
     
     int currentTransition;
+    bool bCheckingTime;
     float loadTime;
+    float currentEnd;
     
     vector<float> pauseTimes;
     

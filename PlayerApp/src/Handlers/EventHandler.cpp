@@ -100,15 +100,18 @@ void EventHandler::initEvents(ofxLibwebsockets::Event &args){
     movieFile = args.json["movie_file"].asString();
     cout <<"movieFilePath: " << movieFile << endl << endl;
     
+    event tempEvent;
     for (int e=0; e<numEvents; e++) {
-        string eTitle   = args.json["events"][e]["slug"].asString();
-        int eStartTime  = args.json["events"][e]["start_time"].asInt();
-        int eDuration   = args.json["events"][e]["duration"].asInt();
+        tempEvent.title   = args.json["events"][e]["slug"].asString();
+        tempEvent.startTime  = args.json["events"][e]["start_time"].asInt()/1000;
+        tempEvent.duration  = args.json["events"][e]["duration"].asInt()/1000;
         
-        cout << "event #"<< e << " title: "<< eTitle << endl;
-        cout << "\tstart_time: "<< eStartTime << endl;
-        cout << "\tduration: "<< eDuration << endl;
+        cout << "event #"<< e << " title: "<< tempEvent.title << endl;
+        cout << "\tstart_time: "<< tempEvent.startTime << endl;
+        cout << "\tduration: "<< tempEvent.duration << endl;
         cout << endl;
+        
+        events.push_back(tempEvent);
         
         //TODO: stick these in an array somewhere globally? not necessarily needed, every play event will come with all event data...
         //Event thisEvent = Event(args.json["events"].get(e, "did not find 1 complete event"));
