@@ -104,35 +104,66 @@ exports.sendSingle = function(_Database, _Websocket){
 		//console.log("send single");
 		//console.log("req: "+req);
 		//console.log("slug: "+slug);
+		if(slug.indexOf("ambient")>-1){
+			//if its an ambient slug then we need to hardcore them.
+			//for now its just ambient_gradient
 
-		_Database.getDocumentBySlug('timeline',slug, function(e, _event){
-			if(_event){
+
+			if(slug.indexOf("gradient")>-1){
 				var socketCommand = {
-					"command": "play",
-					"event": {
-						"title": _event.title,
-						"slug" : _event.slug,
-						"duration": _event.duration,
-						"start_time": _event.start_time
+					command: "play",
+					event: {
+						title: "Ambient Gradient",
+						slug: slug,
+						duration: 650000,
+						start_time: 0
 					}
-				};
+				}
 
-				console.log("socketCommand: "+JSON.stringify(socketCommand));
-
-				_Websocket.status(function(status){
-					if(status ==true){
-						_Websocket.socket(function(socket){
-							socket.send(JSON.stringify(socketCommand))
-							res.jsonp({success: {socketCommand: socketCommand}});
-						})
-					}else{
-						res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
-					}
-				})
-			} else {
-				res.jsonp({error:'Event Not Found', requested: slug})
 			}
-		})
+			console.log("socketCommand: "+JSON.stringify(socketCommand));
+			_Websocket.status(function(status){
+				if(status ==true){
+					_Websocket.socket(function(socket){
+						socket.send(JSON.stringify(socketCommand))
+						res.jsonp({success: {socketCommand: socketCommand}});
+					})
+				}else{
+					res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+				}
+			})
+
+		}else{
+			_Database.getDocumentBySlug('timeline',slug, function(e, _event){
+				if(_event){
+					var socketCommand = {
+						"command": "play",
+						"event": {
+							"title": _event.title,
+							"slug" : _event.slug,
+							"duration": _event.duration,
+							"start_time": _event.start_time
+						}
+					};
+
+					console.log("socketCommand: "+JSON.stringify(socketCommand));
+
+					_Websocket.status(function(status){
+						if(status ==true){
+							_Websocket.socket(function(socket){
+								socket.send(JSON.stringify(socketCommand))
+								res.jsonp({success: {socketCommand: socketCommand}});
+							})
+						}else{
+							res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+						}
+					})
+				} else {
+					res.jsonp({error:'Event Not Found', requested: slug})
+				}
+			})
+		}
+
 	}
 }
 

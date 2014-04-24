@@ -9,7 +9,7 @@ var async	 = require('async');
 //adding this to timeline manually.
 var ambientEvent = {
 	"title" : "Ambient",
-	"slug" : "ambient",
+	"slug" : "ambient_gradient",
 	"concat_queue" : 0, //always at queue 0
 	"duration" : 650000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
 	"start_time" : 0,
@@ -187,7 +187,8 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 
 						__cb(null);
 					}); //end async scenes
-					evt.start_time = timelineStartTime+parseInt(ambientEvent.duration); //new
+					//evt.start_time = timelineStartTime;+parseInt(ambientEvent.duration); //new
+					evt.start_time = evt.scenes[0].start_time;
 					evt.concat_queue = timelineEventOrder;
 					timelineEventOrder += 1;
 				} //end if scenes.length>0
@@ -229,7 +230,13 @@ exports.concat = function(_Database, EVENT_TYPES, cb){
 		//res.jsonp({error: "Not Implemented Yet!"});
 		ffmpeg.concat(_Database,function(e){
 			if(e) console.log("concat error: "+ e);
-			else res.jsonp({success:'concat success'});
+			else{
+				res.jsonp({success:'concat success'});
+
+				/*******  CONCAT CALLBACK HERE *******/
+
+				/*************************************/
+			}
 		})
 	}
 }
