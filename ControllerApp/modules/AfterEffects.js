@@ -269,7 +269,7 @@ function setRenderContent(scene,cb){
 	scene.asset_loc = folders.publicDir()+'/'
 	scene.output = folders.outputDir()+'/'+scene.type+'.mov'
 	scene.template = folders.aeProjectsDir()+'/'+scene.template
-	if( scene.type.indexOf('default') != -1){
+	//if( scene.type.indexOf('default') != -1){
 		setTimeout(function(){
 
 			//console.log(scene)
@@ -286,10 +286,10 @@ function setRenderContent(scene,cb){
 								})
 
 		},timebetween)
-	}else{
+	/*}else{
 		console.log("Files ".inverse.yellow)
 		cb(null)
-	}
+	}*/
 	//cb(null)
 }
 
