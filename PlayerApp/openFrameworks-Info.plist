@@ -20,6 +20,8 @@
 	<string>1.0</string>
 	<key>NSMainNibFile</key>
 	<string>WithWindow</string>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

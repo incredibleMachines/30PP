@@ -24,7 +24,7 @@ exports.index = function(_Database,EVENT_TYPES){
 		//res.jsonp({success:'success'})
 		var structure = {};
 		structure.sales = {play_all: '/api/play/sales', play_single:[]};
-		structure.ambient = {play_all: '/api/play/ambient', play_single:[]};
+		structure.ambient = {play_all: '', play_single:[{"Ambient Gradient":'/api/play/ambient_gradient'}]};
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
 
 		EVENT_TYPES.forEach(function(type,i){

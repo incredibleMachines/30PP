@@ -17,7 +17,8 @@ var fs = require('fs');
 
 //globals
 
-var tempDir,
+var root,
+    tempDir,
     publicDir,
     assetsDir,
     videosDir,
@@ -28,7 +29,7 @@ var tempDir,
     aeScriptsDir,
     aeProjectsDir;
 
-
+exports.root = function(){return root}
 exports.tempDir = function(){ return tempDir }
 exports.publicDir = function(){ return publicDir }
 exports.assetsDir = function(){ return assetsDir }
@@ -49,6 +50,7 @@ exports.aeProjectsDir = function(){ return aeProjectsDir } //= exports.includesD
 exports.setup = function(base){
 
   //console.log(base)
+  root = base
   includesDir = base+'/includes';
   outputDir = includesDir+'/videos';
   appleScriptsDir = includesDir+'/applescripts';

@@ -247,7 +247,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 		_.each(scenesByType,function(scenes,slug){
 			//var groupHolder = [];
 			//sort out each scene by slug
-			if(slug === 'default'){
+			//if(slug === 'default'){
 
 				//console.log(scenesByType[slug])
 
@@ -258,7 +258,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 				_.each(scenesByType[slug],function(scene,order){
 					//assumes that _.each will iterate in the correct order
 
-					var type = slug+'_'+scene.slug
+					var type = ( slug == 'default' )? slug+'_'+scene.slug : slug+'_detail'
 					var temp = _.findWhere(holder, {type: type })
 					//var temp = _.findWhere(groupHolder, {type: type })
 
@@ -441,9 +441,9 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 				//holder.push(groupHolder)
 				//console.log(groupHolder)
 				callback(null,holder)
-			}else{
-				//custom video type
-			}
+			// }else{
+			// 	//custom video type
+			// }
 
 		})
 

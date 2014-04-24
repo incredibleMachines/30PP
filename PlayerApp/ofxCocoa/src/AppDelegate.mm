@@ -1,4 +1,4 @@
-/***********************************************************************
+ /***********************************************************************
  
  Copyright (c) 2008, 2009, 2010, Memo Akten, www.memo.tv
  *** The Mega Super Awesome Visuals Company ***
@@ -81,7 +81,6 @@ static AppDelegate* _appDelegate = NULL;
 
 
 -(void)createGLWindowAndView:(NSRect)windowRect {
-    //	NSLog(@"createGLWindowAndView: ");
 	_glWindow	= [[GLWindow alloc] initWithContentRect:windowRect styleMask:appWindow()->initSettings().windowStyle];
     // BR EDIT: MADE [_glWindow openGLContext] -> nil
 	_glView		= [[GLView alloc] initWithFrame:NSMakeRect(0, 0, windowRect.size.width, windowRect.size.height) shareContext:nil];
@@ -96,9 +95,13 @@ static AppDelegate* _appDelegate = NULL;
 	return YES;
 }
 
+-(void)applicationWillFinishLaunching:(NSNotification*)n {
+#define NSDEF [NSUserDefaults standardUserDefaults]
+    if([NSDEF objectForKey: @"ApplePersistenceIgnoreState"] == nil)
+        [NSDEF setBool: YES forKey:@"ApplePersistenceIgnoreState"];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
-    //	NSLog(@"applicationDidFinishLaunching");
 	
 	_appDelegate	= self;
 	
@@ -118,7 +121,6 @@ static AppDelegate* _appDelegate = NULL;
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
-    //	NSLog(@"applicationShouldTerminate");
 	
 	ofNotifyExit();
 	
@@ -128,7 +130,6 @@ static AppDelegate* _appDelegate = NULL;
 
 
 -(void) dealloc {
-    //	NSLog(@"AppDelegate::dealloc");
 	[_glWindow release];
     [super dealloc];
 }
