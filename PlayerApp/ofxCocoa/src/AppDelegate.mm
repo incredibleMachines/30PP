@@ -95,6 +95,11 @@ static AppDelegate* _appDelegate = NULL;
 	return YES;
 }
 
+-(void)applicationWillFinishLaunching:(NSNotification*)n {
+#define NSDEF [NSUserDefaults standardUserDefaults]
+    if([NSDEF objectForKey: @"ApplePersistenceIgnoreState"] == nil)
+        [NSDEF setBool: YES forKey:@"ApplePersistenceIgnoreState"];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
 	
