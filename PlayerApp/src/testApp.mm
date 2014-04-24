@@ -31,7 +31,7 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-    
+//    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER SETUP
     
     //Load mesh vector to select which meshes within obj to use
