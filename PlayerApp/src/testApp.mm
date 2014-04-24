@@ -87,6 +87,7 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
+            loadTime=0.0;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         
