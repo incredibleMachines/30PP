@@ -76,8 +76,8 @@ void EventHandler::processEvent(string command, ofxLibwebsockets::Event &args){
     
     //--- ERROR
     else if (thisCmd == ERROR_CMD){
-//        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
-//        errorEvent(args);
+        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
+        errorEvent(args);
     }
     
     //--- unknown event
@@ -194,8 +194,8 @@ void EventHandler::errorEvent(ofxLibwebsockets::Event &args){
     
     /* ERROR RECEIVED FROM SERVER */
     
-//    cout<<">>> hit error()"<<endl;
-//    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
-//    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
-//    
+    cout<<">>> hit error()"<<endl;
+    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
+    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
+    
 }

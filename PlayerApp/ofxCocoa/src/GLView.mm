@@ -86,7 +86,9 @@ using namespace ofxCocoa;
         CVReturn err = CVOpenGLTextureCacheCreateTextureFromImage(NULL, _textureCache, pixBuff, NULL, &_latestTextureFrame);
         
         if (err != noErr) {
+            #ifdef MAPPER_DEBUG
             NSLog(@"Error creating OpenGL texture %d", err);
+#endif
         }
         
         CVPixelBufferRelease(pixBuff);
@@ -109,8 +111,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(void)setupDisplayLink {
-    
+#ifdef MAPPER_DEBUG
 	NSLog(@"glView::setupDisplayLink");
+#endif
 	// Create a display link capable of being used with all active displays
 	CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
 	
@@ -127,7 +130,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)releaseDisplayLink {
+#ifdef MAPPER_DEBUG
 	NSLog(@"glView::releaseDisplayLink");
+#endif
     
 	CVDisplayLinkStop(displayLink);
 	CVDisplayLinkRelease(displayLink);
@@ -138,7 +143,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 // --------------------------------
 
 -(void)setupTimer {
+    #ifdef MAPPER_DEBUG
 	NSLog(@"glView::setupTimer");
+#endif
 	
 	float dur = targetFrameRate > 0 ? 1.0f /targetFrameRate : 0.001f;
 	
@@ -149,8 +156,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)releaseTimer {
+    #ifdef MAPPER_DEBUG
 	NSLog(@"glView::releaseTimer");
-	
+#endif
+    
 	[timer invalidate];
 	timer = 0;
 }
@@ -166,8 +175,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(void)startAnimation {
-	NSLog(@"glView::startAnimation using displayLink %@", useDisplayLink ? @"YES" : @"NO");
-	
+	#ifdef MAPPER_DEBUG
+    NSLog(@"glView::startAnimation using displayLink %@", useDisplayLink ? @"YES" : @"NO");
+#endif
+    
 	if(!isAnimating /*&& displayLink && !CVDisplayLinkIsRunning(displayLink)*/){
 		isAnimating = true;
 		
@@ -180,7 +191,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)stopAnimation {
-	NSLog(@"glView::stopAnimation using displayLink %@", useDisplayLink ? @"YES" : @"NO");
+	#ifdef MAPPER_DEBUG
+    NSLog(@"glView::stopAnimation using displayLink %@", useDisplayLink ? @"YES" : @"NO");
+#endif
 	if(isAnimating /*&& displayLink && CVDisplayLinkIsRunning(displayLink)*/) {
 		isAnimating = false;
 		
@@ -198,7 +211,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)setFrameRate:(float)rate {
-	NSLog(@"glView::setFrameRate %f", rate);
+#ifdef MAPPER_DEBUG
+    NSLog(@"glView::setFrameRate %f", rate);
+#endif
 	[self stopAnimation];
 	targetFrameRate = rate;
 	[self startAnimation];
@@ -247,16 +262,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context {
     
-	
+#ifdef MAPPER_DEBUG
     NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
-	
+#endif
+    
 	isAnimating		= false;
 	useDisplayLink	= true;
 	
 	pixelFormat = nil;
     
+    #ifdef MAPPER_DEBUG
     NSLog(@"%@", appWindow()->context);
-	
+#endif
 	// Initialized at AppWindow::setupOpenGL
 	if(appWindow()->initSettings().numFSAASamples) {
 		NSOpenGLPixelFormatAttribute attribs[] = {
@@ -272,7 +289,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         };
 		
 		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+        #ifdef MAPPER_DEBUG
         NSLog(@"      Multisampling supported");
+#endif
         glEnable(GL_MULTISAMPLE);
 	}
     
@@ -308,10 +327,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	} else {
         cout << "ERROR SETTING UP WINDOW" << endl;
     }
-    
+    #ifdef MAPPER_DEBUG
     NSLog(@"%s %s", glGetString(GL_RENDERER), glGetString(GL_VERSION));
+#endif
     NSArray *screens = [NSScreen screens];
+    
+#ifdef MAPPER_DEBUG
     NSLog(@"Screen Count: %i",[screens count]);
+#endif
     _numScreens=[screens count];
     
     ofGLReadyCallback();
@@ -329,16 +352,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
     NSArray *screens = [NSScreen screens];
     
-    
+    #ifdef MAPPER_DEBUG
     NSLog(@"New Screen Count: %i",[screens count]);
+#endif
     
     for(int i=0; i<[screens count];i++){
         NSScreen *screen = [screens objectAtIndex:i];
         NSRect screenFrame = [screen frame];
+        #ifdef MAPPER_DEBUG
         NSLog(@"Width: %f", NSWidth(screenFrame));
+#endif
     }
     
+    #ifdef MAPPER_DEBUG
     NSLog(@"Total Width: %f",NSWidth(rectForAllScreens()));
+#endif
     CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
     
     ofSetWindowPosition(0,0);
@@ -381,13 +409,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(void)awakeFromNib {
-	NSLog(@"GLView::awakeFromNib, window:%@",[self window]);
+	#ifdef MAPPER_DEBUG
+    NSLog(@"GLView::awakeFromNib, window:%@",[self window]);
+#endif
 	[[self window] setAcceptsMouseMovedEvents:YES];
     
 }
 
 -(void)goFullscreen:(NSScreen*)screen {
-	NSLog(@"GLView::goFullscreen: %@", screen);
+	#ifdef MAPPER_DEBUG
+    NSLog(@"GLView::goFullscreen: %@", screen);
+#endif
 	windowMode = OF_FULLSCREEN;
 	[self stopAnimation];
 	
@@ -406,8 +438,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 // ---------------------------------
 -(void)goWindow{
-	NSLog(@"GLView::goWindow");
-	
+	#ifdef MAPPER_DEBUG
+    NSLog(@"GLView::goWindow");
+#endif
 	windowMode = OF_WINDOW;
 	[self stopAnimation];
 	
@@ -452,30 +485,29 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #pragma mark Events
 
 -(void)keyDown:(NSEvent *)theEvent {
-    //	NSLog(@"%@", theEvent);
+
     
     if ([theEvent modifierFlags] & NSShiftKeyMask) {
-        //        NSLog(@"Shift key pressed");
+
         ofNotifyKeyPressed(OF_KEY_SHIFT);
     }
     else{
-        //        NSLog(@"Shift key not pressed");
+
         ofNotifyKeyReleased(OF_KEY_SHIFT);
     }
     
     if ([theEvent modifierFlags] & NSCommandKeyMask) {
-        //        NSLog(@"CMD key pressed");
+
         ofNotifyKeyPressed(OF_KEY_COMMAND);
     }
     else{
-        //        NSLog(@"CMD key not pressed");
+
         ofNotifyKeyReleased(OF_KEY_COMMAND);
     }
     
     NSString *characters = [theEvent characters];
     if ([characters length]) {
         unichar key = [characters characterAtIndex:0];
-        //            NSLog(@"key code pressed %hu", key);
         switch(key) {
 //            case OF_KEY_ESC:
 //                OF_EXIT_APP(0);
@@ -526,8 +558,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(void)initPlayer:(NSString *)path ID:(int)ID{
     _texID=ID;
+    #ifdef MAPPER_DEBUG
     NSLog(@"VideoPath:%@",path);
     NSLog(@"init");
+#endif
     _bLoaded = NO;
     _bPaused = NO;
     _bFinished = NO;
@@ -541,15 +575,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     self.playerItemVideoOutput = [[AVPlayerItemVideoOutput alloc] initWithPixelBufferAttributes:[self pixelBufferAttributes]];
     [self.playerItemVideoOutput autorelease];
     if (self.playerItemVideoOutput) {
+        #ifdef MAPPER_DEBUG
         NSLog(@"generated video output");
+#endif
         [(AVPlayerItemVideoOutput *)self.playerItemVideoOutput setSuppressesPlayerRendering:YES];
     }
     
     NSURL *url=[NSURL fileURLWithPath:[path stringByStandardizingPath]];
     
-    
+    #ifdef MAPPER_DEBUG
     NSLog(@"Loading %@", [url absoluteString]);
-    
+#endif
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     NSString *tracksKey = @"tracks";
@@ -573,13 +609,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                 _frameRate = [videoTrack nominalFrameRate];
                 
                 self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                
+                #ifdef MAPPER_DEBUG
                 NSLog(@"create player");
-                
+#endif
                 self.player=[[AVPlayer alloc] initWithPlayerItem:self.playerItem];
-                
+
+#ifdef MAPPER_DEBUG
                 NSLog(@"PLAYER CREATED");;
-                
+#endif
                 // Notify this object when the player reaches the end
                 // This allows us to loop the video
                 [[NSNotificationCenter defaultCenter]
@@ -600,7 +637,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                                                               NULL, &_textureCache);
                     
                     if (err != noErr) {
+                        #ifdef MAPPER_DEBUG
                         NSLog(@"Error at CVOpenGLTextureCacheCreate %d", err);
+#endif
                     }
                 }
                 
@@ -645,43 +684,36 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	if (captureExternalMouseEvents){
 		mouseMoveHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseMoveOutside:mouseEvent];
 		}];
 		
 		// down
 		
 		leftMouseDownHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask handler:^(NSEvent * mouseEvent) {
-            //			NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseDownOutside:mouseEvent];
 		}];
 		
 		rightMouseDownHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSRightMouseDownMask handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Right mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self rightMouseDownOutside:mouseEvent];
 		}];
 		
 		// up
 		
 		leftMouseUpHandler		= [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseUpMask handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseUpOutside:mouseEvent];
 		}];
 		
 		rightMouseUpHandler		= [NSEvent addGlobalMonitorForEventsMatchingMask:NSRightMouseUpMask  handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Right mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self rightMouseUpOutside:mouseEvent];
 		}];
 		
 		// drag
 		
 		leftMouseDraggedHandler	= [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDraggedMask handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self mouseDraggedOutside:mouseEvent];
 		}];
 		
 		rightMouseDraggedHandler = [NSEvent addGlobalMonitorForEventsMatchingMask:NSRightMouseDraggedMask handler:^(NSEvent * mouseEvent) {
-			//NSLog(@"Mouse down outside window: %@", NSStringFromPoint([mouseEvent locationInWindow]));
 			[self rightMouseDraggedOutside:mouseEvent];
 		}];
 		
@@ -798,14 +830,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)scrollWheel:(NSEvent *)theEvent {
-	//	NSLog(@"scrollWheel");
-	
-	//	float wheelDelta = [theEvent deltaX] +[theEvent deltaY] + [theEvent deltaZ];
-	//	if (wheelDelta)
-	//	{
-	//		GLfloat deltaAperture = wheelDelta * -camera.aperture / 200.0f;
-	//
-	//	}
 }
 
 //------------------------------------------------------------
