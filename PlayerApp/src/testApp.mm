@@ -80,12 +80,11 @@ void testApp::update(){
         
         socketHandler.eventHandler.bTriggerEvent=false;
         loadTime=socketHandler.eventHandler.currentStart;
+        MSA::ofxCocoa::startPlayer();
         
         if(socketHandler.eventHandler.currentEvent=="default"){
             map.fadeIn(TRANSITION_GASTRONOMY);
-            cout<<"play"<<endl;
         }
-        
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
