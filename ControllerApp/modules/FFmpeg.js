@@ -37,7 +37,7 @@ exports.concat = function(_Database, cb){
 				async.each(tEvents, function(evt, cb){
 					if(evt.scenes.length>0){
 						async.each(evt.scenes, function(sce, _cb){
-							var thisFilename = sce.concat_slug+".mov";
+							var thisFilename = sce.slug+".mov";
 							allSceneFileNames.push(thisFilename);
 							_cb(null);
 						});
