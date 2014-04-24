@@ -9,6 +9,7 @@
 #define TEX_WIDTH 2048
 #define TEX_HEIGHT 2500
 
+
 class testApp : public ofBaseApp{
 	
 public:
@@ -43,6 +44,8 @@ public:
     float loadTime;
     
     vector<float> pauseTimes;
+    
+    int initCount;
     
         
 };

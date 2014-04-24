@@ -208,7 +208,7 @@ exports.formatInit=function(_cb){
 				_cb(null, eventsToSend);
 			}else{//if(_events>0)
 				//console.error('No Events');
-				_cb({'error':'No Events Loaded into Database'});
+				_cb({'error':'No Timeline created in Database'});
 			}
 		}else{ //if(!e)
 			//Handle Error

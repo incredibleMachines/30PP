@@ -27,8 +27,11 @@ int main()
     
     //	initSettings.initRect				= MSA::ofxCocoa::rectForMainScreen();
 	initSettings.initRect				= MSA::ofxCocoa::rectForAllScreens();
+    
+#ifdef MAPPER_DEBUG
     NSLog(@"init width: %f", initSettings.initRect.size.width);
     NSLog(@"init height: %f", initSettings.initRect.size.height);
+#endif
 	
 	MSA::ofxCocoa::setSyncToDisplayLink(true);
 	MSA::ofxCocoa::AppWindow		cocoaWindow(initSettings);

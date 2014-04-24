@@ -76,8 +76,8 @@ void EventHandler::processEvent(string command, ofxLibwebsockets::Event &args){
     
     //--- ERROR
     else if (thisCmd == ERROR_CMD){
-//        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
-//        errorEvent(args);
+        cout << ">>> received ERROR_CMD: " << thisCmd << endl;
+        errorEvent(args);
     }
     
     //--- unknown event
@@ -127,7 +127,7 @@ void EventHandler::playEvent(ofxLibwebsockets::Event &args){
     
     cout<<">>> hit playEvent()"<<endl;
     
-    string eTitle   = args.json["event"]["title"].asString();
+    string eTitle   = args.json["event"]["slug"].asString();
     int eStartTime  = args.json["event"]["start_time"].asInt();
     int eDuration   = args.json["event"]["duration"].asInt();
     
@@ -194,8 +194,8 @@ void EventHandler::errorEvent(ofxLibwebsockets::Event &args){
     
     /* ERROR RECEIVED FROM SERVER */
     
-//    cout<<">>> hit error()"<<endl;
-//    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
-//    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
-//    
+    cout<<">>> hit error()"<<endl;
+    // cout<<">>> num events received: "<< numEvents <<endl<<endl;
+    cout<<"\t>>------ ERROR EVENT ---------<<"<<endl<<endl;
+    
 }
