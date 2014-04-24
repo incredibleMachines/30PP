@@ -25,11 +25,7 @@ exports.index = {
       start = new Date()
       status = true;
       player.stdout.on('data', function (data) {
-        //var string = data.toString().replace(/\n$/, "")
-        //var newString = string.replace()
-        //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline
-        //var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
-        console.log(typeof data )
+
         console.log('  PID: %s '.inverse+' %s '.grey, player.pid, data)
       })
 
