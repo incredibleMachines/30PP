@@ -54,7 +54,9 @@ namespace MSA {
 		/******** Constructor ************/
 		
 		AppWindow::AppWindow(InitSettings initSettings):_initSettings(initSettings) {
+#ifdef MAPPER_DEBUG
 			NSLog(@"AppWindow::AppWindow()");
+#endif
 			ofWindowPtr             = this;
 			nFrameCount				= 0;
 			bEnableSetupScreen		= true;
@@ -72,8 +74,9 @@ namespace MSA {
 		void AppWindow::setupOpenGL(int w, int h, int screenMode)
 		{
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#ifdef MAPPER_DEBUG
 			NSLog(@"AppWindow::setupOpenGL()");
-			
+#endif
 			
 			
 			// Initialize an openGLContext before glewInit()
@@ -101,50 +104,31 @@ namespace MSA {
                     0
                 };
                 
+#ifdef MAPPER_DEBUG
                 NSLog(@"   trying Multisampling");
+#endif
                 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
                 if(pixelFormat) {
+#ifdef MAPPER_DEBUG
                     NSLog(@"      Multisampling supported");
+#endif
                     glEnable(GL_MULTISAMPLE);
                 }
                 else {
+#ifdef MAPPER_DEBUG
                     NSLog(@"      Multisampling not supported");
+#endif
                 }
             }
-            
-            //			 if(pixelFormat == nil) {
-            //				 NSLog(@"   trying non multisampling");
-            //                 NSOpenGLPixelFormatAttribute attribs[] = {
-            //                 NSOpenGLPFAAccelerated,
-            //                 NSOpenGLPFADoubleBuffer,
-            //                 NSOpenGLPFAMultiScreen,
-            //                 NSOpenGLPFADepthSize, 24,
-            //                 NSOpenGLPFAAlphaSize, 8,
-            //                 NSOpenGLPFAColorSize, 32,
-            //                 NSOpenGLPFANoRecovery, 0,
-            //                 NSOpenGLPFAFullScreen, 1,
-            //                 NSOpenGLPFAOpenGLProfile,
-            //                 NSOpenGLProfileVersion3_2Core,
-            //                 0
-            //             };
-            //
-            //			 pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
-            //			 glDisable(GL_MULTISAMPLE);
-            //			 if(pixelFormat == nil) {
-            //			 NSLog(@"      not even that. fail");
-            //			 }
-            //			 }
-			
-			//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 			
 			//NSApplicationMain(0,  NULL);
 			context = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
 			[context makeCurrentContext];
 			//[pool release];
             
-			
+#ifdef MAPPER_DEBUG
             NSLog(@"%s %s GLEW: %s", glGetString(GL_RENDERER), glGetString(GL_VERSION), glewGetString(GLEW_VERSION));
-            
+#endif
 			
 			//[context release];
 			[pool drain];
@@ -152,13 +136,17 @@ namespace MSA {
 		
 		
 		void AppWindow::initializeWindow() {
+#ifdef MAPPER_DEBUG
 			NSLog(@"AppWindow::initializeWindow()");
+#endif
 		}
 		
 		
 		void AppWindow::runAppViaInfiniteLoop(ofBaseApp * appPtr) {
+            #ifdef MAPPER_DEBUG
 			NSLog(@"AppWindow::runAppViaInfiniteLoop()");
-			
+#endif
+            
 			ofGetAppPtr()->mouseX = 0;
 			ofGetAppPtr()->mouseY = 0;
 			
@@ -200,7 +188,9 @@ namespace MSA {
 		void AppWindow::setWindowShape(int requestedWidth, int requestedHeight) {
 			NSRect windowFrame  = [glWindow() frame];
 			NSRect viewFrame = [glView() frame];
+#ifdef MAPPER_DEBUG
 			NSLog(@"AppWindow::setWindowShape requested:(%i %i) window:%@ view:%@", requestedWidth, requestedHeight, NSStringFromRect(windowFrame), NSStringFromRect(viewFrame));
+#endif
 			
 			windowFrame.origin.y -= requestedHeight -  viewFrame.size.height;
 			windowFrame.size = NSMakeSize(requestedWidth + windowFrame.size.width - viewFrame.size.width, requestedHeight + windowFrame.size.height - viewFrame.size.height);

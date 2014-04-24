@@ -81,7 +81,6 @@ static AppDelegate* _appDelegate = NULL;
 
 
 -(void)createGLWindowAndView:(NSRect)windowRect {
-    //	NSLog(@"createGLWindowAndView: ");
 	_glWindow	= [[GLWindow alloc] initWithContentRect:windowRect styleMask:appWindow()->initSettings().windowStyle];
     // BR EDIT: MADE [_glWindow openGLContext] -> nil
 	_glView		= [[GLView alloc] initWithFrame:NSMakeRect(0, 0, windowRect.size.width, windowRect.size.height) shareContext:nil];
@@ -98,7 +97,6 @@ static AppDelegate* _appDelegate = NULL;
 
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
-    //	NSLog(@"applicationDidFinishLaunching");
 	
 	_appDelegate	= self;
 	
@@ -118,7 +116,6 @@ static AppDelegate* _appDelegate = NULL;
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
-    //	NSLog(@"applicationShouldTerminate");
 	
 	ofNotifyExit();
 	
@@ -128,7 +125,6 @@ static AppDelegate* _appDelegate = NULL;
 
 
 -(void) dealloc {
-    //	NSLog(@"AppDelegate::dealloc");
 	[_glWindow release];
     [super dealloc];
 }
