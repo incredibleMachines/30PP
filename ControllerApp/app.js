@@ -36,6 +36,10 @@ var Folders = require('./modules/FolderStructure');
 var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
 var FFmpeg = require('./modules/FFmpeg');
+var PlayerApp = require('./modules/PlayerApp')
+
+
+
 
 /**
  *	File Checking
@@ -59,6 +63,15 @@ Database.MongoConnect();
 WebSocket.Connect(8080,Database);
 
 /**
+ *  PlayerApp
+ *
+ */
+
+var playerApp = PlayerApp.index
+playerApp.start()
+
+
+/**
  *	PathFinder
  *
  */
@@ -67,6 +80,25 @@ PathFinder.setup(function(){
 	//test a path
 	//console.log(PathFinder.returnPath({x:322,y:74}))
 })
+
+
+/**
+ **
+ ** Listeners For Node Closing
+ **
+ */
+
+
+process.on('SIGINT', function() {
+  console.log()
+  console.log(' Got SIGINT '.inverse)
+  console.log(' Closing ControllerApp Processes '.inverse);
+  playerApp.end()
+  console.log(' Closed PlayerApp '.inverse)
+  console.log(' Goodbye '.inverse.green)
+  process.exit(0)
+});
+
 
 /**
  * Basic Express Environment setup
@@ -226,8 +258,14 @@ app.get('/AfterEffects/script/:file',auth.index(Database),function(req,res){
 //app.get('/timeline/make', timeline.make(Database, app.locals.EVENT_TYPES));
 
 //implimentation wishlist
-app.get('/PlayerApp/close',auth.index(Database),function(req,res){res.jsonp(404,null)})
-app.get('/PlayerApp/open',auth.index(Database),function(req,res){res.jsonp(404,null)})
+app.get('/PlayerApp/close',auth.index(Database),function(req,res){
+  playerApp.end()
+  res.jsonp(200,{status: playerApp.getStatus()})
+})
+app.get('/PlayerApp/open',auth.index(Database),function(req,res){
+  playerApp.start()
+  res.jsonp(200,{status: playerApp.getStatus()})
+})
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port '.grey + app.get('port').toString().cyan);
