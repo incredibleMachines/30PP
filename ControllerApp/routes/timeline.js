@@ -11,7 +11,7 @@ var ambientEvent = {
 	"title" : "Ambient",
 	"slug" : "ambient",
 	"concat_queue" : 0, //always at queue 0
-	"duration" : 62000, //need to calculate this manually
+	"duration" : 650000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
 	"start_time" : 0,
 	"scenes" : [
 		{
@@ -20,7 +20,7 @@ var ambientEvent = {
 			"slug" : "ambient_gradient",
 			"concat_queue" : 0, //if another scene is added, will be '1'
 			"start_time" : 0, //need to manually calc the start_time of the next ambient event
-			"duration" : 62000
+			"duration" : 650000
 		}
 	]
 }
@@ -162,9 +162,12 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 					async.eachSeries(scenes, function(scene, __cb){
 						var thisDuration = 47000;
 						if (scene.title === "Gastronomy") thisDuration = 55000; //gastronomically large!
-						if (scene.title === "Leisure") thisDuration = 52000;
+						if (scene.title === "Leisure") 	 thisDuration = 52000;
 						var thisStartTime = timelineStartTime+parseInt(ambientEvent.duration);
-						var thisConcatSlug = scene.type+"_"+utils.makeSlug(scene.title);
+						var thisConcatSlug;
+						if(scene.type == "default" || scene.type == "ambient")
+							thisConcatSlug = scene.type+"_"+utils.makeSlug(scene.title);
+						else thisConcatSlug = scene.type+"_detail";
 						var sceneObj = { //** everything that is being stored in the scene timeline objects
 							scene_id: 		scene._id,
 							type: 				scene.type,
@@ -245,6 +248,9 @@ exports.update = function(_Database){
 		var post = req.body;
 		var newDuration = parseInt(post.duration);
 		var sceneId	= post.scene_id;
+		if (sceneId == 'undefined'){
+			res.jsonp({HEYYOUTHERE:'ambient duration must be changed manually in the timeline.js file'});
+		}
 		console.log("req sceneId: "+sceneId);
 		if(isNaN(newDuration)){
 			console.log("NAN DETECTED!  Setting duration to 0.");
