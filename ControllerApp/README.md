@@ -67,7 +67,7 @@ $ mongorestore
 Optionally remove all items from render queue _Go back to the Mongo Terminal Tab_
 
 ```javascript
-> db.clips.update({render:true},{render:false},true,true)
+> db.clips.update({render:true},{$set:{render:false}},{multi:true})
 ```
 
 ##### Helpful Bash Commands
