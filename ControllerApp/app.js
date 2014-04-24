@@ -92,9 +92,13 @@ PathFinder.setup(function(){
 process.on('SIGINT', function() {
   console.log()
   console.log(' Got SIGINT '.inverse)
-  console.log(' Closing ControllerApp Processes '.inverse);
-  playerApp.end()
-  console.log(' Closed PlayerApp '.inverse)
+  if(playerApp.getStatus()==true){
+    console.log(' Closing ControllerApp Processes '.inverse);
+    playerApp.end()
+    console.log(' Closed PlayerApp '.inverse)
+  }else{
+    console.log(' No PlayerApp Process Open '.inverse)
+  }
   console.log(' Goodbye '.inverse.green)
   process.exit(0)
 });
