@@ -79,30 +79,40 @@ void testApp::update(){
     if(socketHandler.eventHandler.bTriggerEvent==true){
         
         socketHandler.eventHandler.bTriggerEvent=false;
+        loadTime=socketHandler.eventHandler.currentStart;
         
         if(socketHandler.eventHandler.currentEvent=="default"){
             map.fadeIn(TRANSITION_GASTRONOMY);
-            loadTime=650;
             cout<<"play"<<endl;
         }
-        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-            map.fadeIn(TRANSITION_GASTRONOMY);
-            loadTime=650;
-        }
+        
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-            loadTime=0;
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-            loadTime=0;
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
+            map.fadeIn(TRANSITION_GASTRONOMY);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="markets"){
+            map.fadeIn(TRANSITION_MARKETS);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="shopping"){
+            map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
             map.fadeIn(TRANSITION_ARTS);
-            loadTime=729;
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="leisure"){
+            map.fadeIn(TRANSITION_LEISURE);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="pause"){
