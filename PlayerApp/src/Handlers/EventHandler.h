@@ -31,8 +31,9 @@ public:
     string movieFile;
     
     class event{
+    public:
         float startTime;
-        float endTime;
+        float duration;
         string title;
         vector<int> pauseTimes;
     };

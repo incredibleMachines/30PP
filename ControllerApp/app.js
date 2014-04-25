@@ -116,7 +116,7 @@ var app = express();
 //allow our local express files to use underscore
 app.locals._ = require('underscore');
 app.locals.utils = require('./modules/Utils');
-app.locals.EVENT_TYPES = ["Default", "Ambient", "Gastronomy", "Markets", "Shopping", "Art & Design", "Leisure"]
+app.locals.EVENT_TYPES = ["Default", "Gastronomy", "Markets", "Shopping", "Art & Design", "Leisure"]
 app.locals.SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
 
 app.set('port', process.env.PORT || 3000);

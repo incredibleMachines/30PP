@@ -31,7 +31,7 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-    
+//    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER SETUP
     
     //Load mesh vector to select which meshes within obj to use
@@ -64,6 +64,7 @@ void testApp::setup() {
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
     MSA::ofxCocoa::hideCursor();
+    bCheckingTime=false;
     
 }
 
@@ -73,6 +74,7 @@ void testApp::update(){
     
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
+        bCheckingTime=true;
         initVariables();
     }
     
@@ -82,15 +84,22 @@ void testApp::update(){
         loadTime=socketHandler.eventHandler.currentStart;
         MSA::ofxCocoa::startPlayer();
         
+        for(int i=0; i<socketHandler.eventHandler.events.size();i++){
+            if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
+                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
+            }
+        }
+        
         if(socketHandler.eventHandler.currentEvent=="default"){
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
+            loadTime=0.0;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="ambient"){
+        else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         
@@ -124,11 +133,18 @@ void testApp::update(){
         
     }
     
+    if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
+        map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+        loadTime=0.0;
+        bCheckingTime=false;
+    }
+    
     if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
         MSA::ofxCocoa::setTime(loadTime);
         MSA::ofxCocoa::startPlayer();
         map.bTransitionLoading=true;
         map.transitionTimer=ofGetElapsedTimeMillis();
+        bCheckingTime=true;
     }
     
     if(map.bLocked==true){
@@ -170,38 +186,12 @@ void testApp::keyPressed(int key){
         case 'P':
             MSA::ofxCocoa::startPlayer();
             break;
-        case '1':
-            map.fadeIn(TRANSITION_GASTRONOMY);
-            loadTime=650;
-            break;
-        case '2':
-            map.fadeIn(TRANSITION_MARKETS);
-            loadTime=694;
-            break;
-        case '3':
-            map.fadeIn(TRANSITION_ARTS);
-            loadTime=729;
-            break;
-        case '4':
-            map.fadeIn(TRANSITION_SHOPPING);
-            loadTime=764;
-            break;
-        case '5':
-            map.fadeIn(TRANSITION_LEISURE);
-            loadTime=799;
-            break;
-        case '6':
-            map.fadeIn(TRANSITION_END);
-            loadTime=834;
-            break;
-        case '0':
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-            loadTime=0;
-            break;
+
         case '[':
-            socketHandler.sendSocketCmd(INIT_REQ);
-            initVariables();
-            initCount++;
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-10);
+            break;            
+        case ']':
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
             break;
             
     }
@@ -213,5 +203,6 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
-    
+    currentEnd=650;
+    currentTransition=TRANSITION_AMBIENT_GRADIENT;
 }
