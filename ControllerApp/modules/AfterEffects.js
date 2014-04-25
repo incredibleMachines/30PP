@@ -226,11 +226,8 @@ function setRenderContent(scene,cb){
 								})
 
 		},timebetween)
-	/*}else{
-		console.log("Files ".inverse.yellow)
-		cb(null)
-	}*/
-	//cb(null)
+
+
 }
 
 //function to delete old file and render new one
@@ -292,68 +289,5 @@ function renderWorker(scene,callback){
 
 
 	})
-
-}
-
-
-
-//put togeher ae script osascript based off of using the AERunDoScript Object.
-function runScriptFile(file){
-
-	AERunDoScript.doscript.file = file;
-
-	return AERunDoScript.begin+AERunDoScript.doscript.begin+AERunDoScript.doscript.file+AERunDoScript.doscript.end+AERunDoScript.end;
-
-}
-
-//old test to create loop of movies
-//needs to be deprecated
-exports.createMovie = function(){
-	//console.log(makeScript("file"))
-	var array =[];
-
-	for(var i = 1; i<6;i++){
-
-		var data = {};
-		data.file = "~/Downloads/AERenderTest/AeRenderTest.aep";
-		data.image="~/Desktop/images/image"+i+".jpg";
-		data.text="This is Image Number "+i;
-		data.output="~/Desktop/node-test"+i+".mov";
-		array.push(data)
-	}
-
-	//use asyn to run creation of single movies
-	async.eachSeries(array,createMovie,function(e){
-		if(e) console.error(e);
-	})
-
-}
-
-//old test to create loop of movies
-//needs to be deprecated
-function createMovie(data,cb){
-	console.log(data)
-	setTimeout(function(){
-		console.log('Writing File');
-		//make temp file to open and pass data
-		fs.writeFile('../temp.txt',JSON.stringify(data),function(e){
-			if(e){
-				console.log("error: "+e);
-				cb(e)
-			}else{
-				//execute script via cli
-				child = exec(makeScript(),function(err,stdout,stderr){
-					if(err){
-						console.error(err)
-						cb(e);
-					}else{
-						cb()
-					}
-				})
-
-			}
-		})
-
-	}, 5000)
 
 }

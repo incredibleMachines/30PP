@@ -20,7 +20,7 @@ exports.index = function(_Database){
 					if(_e) res.jsonp({"Error": "Query Collection Error: Events"})
 
 					else{ 	var _queue = _.where(_clips,{render: true})
-							res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', queue: _queue, clips: _clips, scenes: _scenes } );
+							res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', queue: _queue, clips: _clips, scenes: _scenes, auth: req.session.name } );
 						}
 				})
 			}
