@@ -105,6 +105,7 @@ namespace MSA {
         void                setTime(float _millis);
         
         int                 getScreens();
+        float              getCurrentTime();
         
         /***** 30PP *****/
 	}

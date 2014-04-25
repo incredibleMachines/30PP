@@ -5,6 +5,7 @@ var _ = require('underscore');
 
 //require the async lib for us if necessary
 var async = require('async');
+var ffmpeg  = require('../modules/FFmpeg');
 
 var bDEBUG = true;
 
@@ -44,7 +45,10 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
 						//concat files and document output
-
+						ffmpeg.concat(_Database,function(_e){
+							if(!e) console.log('Concat Success')
+							else console.error('Concat Error: '+_e)
+						})
 					}else{
 						//what error'd?
 					}
@@ -304,7 +308,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										_PathFinder.returnPath(clip.zones[0].locations[0],function(loc){
-											console.log(loc)
+											//console.log(loc)
 											var obj = {pos: clip.zones[0].locations[0], directions: loc}
 											currentGroup.data.source_single_location.push(obj)
 										})
@@ -330,7 +334,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										//utils :
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_single_text = []
 										var escapedText = utils.escapeChars(clip.zones[1].text)
-										console.log("escapedSingle: "+escapedText)
+										//console.log("escapedSingle: "+escapedText)
 										//currentGroup.data.source_single_text.push(clip.zones[1].text)
 										currentGroup.data.source_single_text.push(escapedText)
 
@@ -342,7 +346,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 											var thisText = utils.escapeChars(clip.zones[1].text[t]);
 											escapedText.push(thisText);
 										}
-										console.log("escapedMulti: "+escapedText);
+										//console.log("escapedMulti: "+escapedText);
 										//currentGroup.data.source_multitext_text.push(clip.zones[1].text)
 										currentGroup.data.source_multitext_text.push(escapedText)
 									}
@@ -361,7 +365,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_single_location')) currentGroup.data.source_single_location = []
 										_PathFinder.returnPath(clip.zones[0].locations[0],function(loc){
-											console.log(loc)
+											//console.log(loc)
 											var obj = {pos: clip.zones[0].locations[0], directions: loc}
 											currentGroup.data.source_single_location.push(obj)
 										})
@@ -392,7 +396,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									if(typeof clip.zones[1].text === 'string'){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_L')) currentGroup.data.source_sequence_text_L = []
 										var escapedText = utils.escapeChars(clip.zones[1].text)
-										console.log("escapedSingle: "+escapedText)
+										//console.log("escapedSingle: "+escapedText)
 										currentGroup.data.source_sequence_text_L.push(escapedText)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
@@ -400,9 +404,9 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										var escapedText=[];
 										for(var t=0; t<clip.zones[1].text.length; t++){
 											var thisText = utils.escapeChars(clip.zones[1].text[t]);
-											escapedText.push(thisText);
+											//escapedText.push(thisText);
 										}
-										console.log("escapedMulti: "+escapedText);
+										//console.log("escapedMulti: "+escapedText);
 										currentGroup.data.source_multitext_text.push(escapedText);
 									}
 
@@ -415,7 +419,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 									if(typeof clip.zones[2].text === 'string'){
 										if(!currentGroup.data.hasOwnProperty('source_sequence_text_R')) currentGroup.data.source_sequence_text_R = []
 										var escapedText = utils.escapeChars(clip.zones[2].text)
-										console.log("escapedSingle: "+escapedText)
+										//console.log("escapedSingle: "+escapedText)
 										currentGroup.data.source_sequence_text_R.push(escapedText)
 									}else{
 										if(!currentGroup.data.hasOwnProperty('source_multitext_text')) currentGroup.data.source_multitext_text = []
@@ -425,7 +429,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 											var thisText = utils.escapeChars(clip.zones[2].text[t]);
 											escapedText.push(thisText);
 										}
-										console.log("escapedMulti: "+escapedText);
+										//console.log("escapedMulti: "+escapedText);
 										currentGroup.data.source_multitext_text.push(escapedText)
 									}
 
@@ -440,7 +444,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 
 				//holder.push(groupHolder)
 				//console.log(groupHolder)
-				callback(null,holder)
+				//callback(null,holder)
 			// }else{
 			// 	//custom video type
 			// }
@@ -449,7 +453,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 
 		//for each other type custom organize
 		//ignoring custom types for now
-
+		callback(null,holder)
 
 	}],function(err,result){
 
