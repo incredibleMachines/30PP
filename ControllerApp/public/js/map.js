@@ -41,7 +41,7 @@ function InitMapCanvas(_type, _locs, _cb){
 
 	var bgImage = new Image();
 	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
-	bgImage.src = "/imgs/ManhattanStreets_512_202_smooth.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202_pretty.png";
 	var locs = _locs;
 
 	var locDiameter = 8; // size of circles
