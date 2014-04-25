@@ -44,7 +44,7 @@ exports.index = function(_Database){
 							//console.log("tEventsCounter: "+tEventsCounter);
 							if(tEventsCounter === tEvents.length){ /* if there are AND we are at eventsCounter total */
 								res.render('renderqueue/timeline', { current:req.url, title:'Timeline', page_slug:'renderqueue-timeline',
-									scenes:allScenes, error:null });/* lemme get that page render */
+									scenes:allScenes, auth: req.session.name, error:null });/* lemme get that page render */
 							}
 						} else { /* we have scenes ! */
 							evt.scenes.forEach(function(sce,i){
@@ -58,7 +58,7 @@ exports.index = function(_Database){
 									}
 									if(tEventsCounter === tEvents.length){
 										res.render('renderqueue/timeline', { current:req.url, title:'Timeline', page_slug:'renderqueue-timeline',
-										scenes:allScenes, error:null });
+										scenes:allScenes, auth: req.session.name, error:null });
 									}
 								})
 							})
@@ -66,7 +66,7 @@ exports.index = function(_Database){
 					})
 				} else { /*tEvents.length <=0, need to make timeline. */
 					res.render('renderqueue/timeline', { current:req.url, title:'Timeline', page_slug:'renderqueue-timeline',
-					scenes:allScenes, error:null });
+					scenes:allScenes,auth: req.session.name, error:null });
 				}
 			} else console.log("error on queryCollection timeline");
 		}) //end queryCollectionWithOptions('timeline')

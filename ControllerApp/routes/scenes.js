@@ -45,11 +45,11 @@ exports.single = function(_Database){
 						if(!e){
 							_scene.clips = _clips
 							_Database.getAll('files',function(_e,_files){
-								if(!e) res.render('scenes/single',{current: req.url, title:_scene.title, page_slug: 'scenes-single',scene: _scene, files: _files, error: null})
-								else res.render('scenes/single',{current:req.url, title: 'Get Files Scene Error', page_slug: 'scenes-single error', scene: _scene,files:[],error:_e})
+								if(!e) res.render('scenes/single',{current: req.url, title:_scene.title, page_slug: 'scenes-single',scene: _scene, files: _files, auth: req.session.name, error: null})
+								else res.render('scenes/single',{current:req.url, title: 'Get Files Scene Error', page_slug: 'scenes-single error', scene: _scene,files:[], auth: req.session.name,error:_e})
 							})
 						}else{
-							res.render('scenes/single',{current:req.url, title: 'Format Scene Error', page_slug: 'scenes-single error', scene:_scene,files:[],error:_e})
+							res.render('scenes/single',{current:req.url, title: 'Format Scene Error', page_slug: 'scenes-single error', scene:_scene,files:[], auth: req.session.name, error:_e})
 
 						}
 					})
@@ -60,17 +60,17 @@ exports.single = function(_Database){
 					_Database.getAll('files',function(_e, _files){
 						if(!_e){
 
-							res.render('scenes/single',{current: req.url, title:_scene.title, page_slug: 'scenes-single', scene: _scene, files: _files, error: null })
+							res.render('scenes/single',{current: req.url, title:_scene.title, page_slug: 'scenes-single', scene: _scene, files: _files, auth: req.session.name, error: null })
 
 						}else{
-							res.render('scenes/single',{current:req.url, title: 'Get Files Scene Error', page_slug: 'scenes-single error', scene:_scene,files:[],error:_e})
+							res.render('scenes/single',{current:req.url, title: 'Get Files Scene Error', page_slug: 'scenes-single error', scene:_scene,files:[], auth: req.session.name, error:_e})
 						}
 					})
 
 				}//end if(_scene.clips.length>0)
 
 			}else{ //if(!e)
-				res.render('scenes/single', {current: req.url, title: 'Find Scene Error', page_slug: 'scenes-single error', scene: [], files:[], error: e})
+				res.render('scenes/single', {current: req.url, title: 'Find Scene Error', page_slug: 'scenes-single error', scene: [], files:[], auth: req.session.name, error: e})
 			}// end if(!e)
 		})
 

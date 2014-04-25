@@ -19,7 +19,7 @@ exports.index = function(_Database){
 	 	_Database.queryCollectionWithOptions('scenes', {type: type} , {sort: 'order'} ,function(err, _scenes){
 	 		//error handling needs to happen
 
-		 	res.render('events/index', { current: req.url, title: utils.toTitleCase(title), page_slug: 'events-index', scenes: _scenes } );
+		 	res.render('events/index', { current: req.url, title: utils.toTitleCase(title), page_slug: 'events-index', scenes: _scenes, auth: req.session.name, } );
 
 
 	 	});

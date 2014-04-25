@@ -8,14 +8,14 @@
 			</header>
 			<section class="panel panel-default">
 				<header class="panel-heading">
-					<h3 class="panel-title">Clips <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#new_clip_modal"><small>Add New Clip +</small></button></h3>
+					<h3 class="panel-title">Clips <button type="button" class="btn btn-default btn-sm <% if(auth !== 'admin'){%>  disabled <%}%> " data-toggle="modal" data-target="#new_clip_modal"><small>Add New Clip +</small></button></h3>
 				</header> <!-- .panel-heading -->
 				<ul class="list-group">
 					<% for(var i = 0; i<scene.clips.length; i++){ %>
 					<li class="list-group-item">
 						<section class="btn-group-vertical">
-							<button class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
-							<button class="btn btn-default btn-xs scene-order scene-order-down <% if(i == scene.clips.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%> <% if(auth !== 'admin'){%> disabled <%}%>"><span class="caret"></span></button>
+							<button class="btn btn-default btn-xs scene-order scene-order-down <% if(i == scene.clips.length-1){%>disabled<%}%> <% if(auth !== 'admin'){%>  disabled  <%}%>"><span class="caret"></span></button>
 						</section>
 						<button type="button" data-scene-id="<%=scene.clips[i]._id%>" class="sub-nav scene-title <%=scene.clips[i].slug %> btn btn-link btn-lg "><%=scene.clips[i].title%></button>
 					</li>
@@ -42,7 +42,7 @@
 								</section>
 								<section class="form-group">
 									<label for="layout">Clip Layout</label>
-									<select class="form-control clip-layout" name="layout" id="layout">
+									<select class="form-control clip-layout" name="layout" id="layout" <% if(auth !== 'admin'){%> disabled <%}%> >
 									<%
 										for(var i =0; i<SCENE_TYPES.length; i++){ %>
 										 <option  value="<%=i%>" <% if(scene.clips[0].layout == i){ %> selected <% }%>><%=SCENE_TYPES[i]%></option>
@@ -58,7 +58,7 @@
 								<section class="btn-group">
 									<button type="submit" class="btn btn-primary btn-block btn-sm green">Save Changes</button>
 									<!--<button type="button" class="btn btn-default btn-block btn-sm">Exit Without Saving</button>-->
-									<button type="button" class="btn btn-danger btn-block btn-sm red scene-delete">Delete This Clip</button>
+									<button type="button" class="btn btn-danger btn-block btn-sm red scene-delete <% if(auth !== 'admin'){%> disabled <%}%>">Delete This Clip</button>
 								</section>
 						</article><!-- #scene-data -->
 

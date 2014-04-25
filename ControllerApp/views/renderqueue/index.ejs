@@ -1,34 +1,34 @@
 <% /* RENDER QUEUE INDEX PAGE  */ %>
 <% include ../includes/header %>
 
-<% 
-	
+<%
+
 	//Page Vars
 	//var SCENE_TYPES = ["Full Immersion","Single Wall Sculpture","Double Wall Sculpture"]
-	
-	//reobjectify our 
+
+	//reobjectify our
 	scenes = JSON.stringify(scenes);
 	scenes = JSON.parse(scenes)
-	
+
 	clips = JSON.stringify(clips)
 	clips = JSON.parse(clips)
-	
+
 	queue = JSON.stringify(queue)
 	queue = JSON.parse(queue)
-    
+
     var scenesToRender = [];
-	
+
 %>
 <section class="<%= page_slug %> col-md-12">
 
 	<header>
 	    <h1 class="col-md-6 pull-left">Render Queue <small>Total: <%= queue.length%></small></h1>
 	    <section class="col-md-2 pull-right add-btn">
-			<button type="button" class="btn btn-default navbar-btn render-content" >Render Content</button>
+			<button type="button" class="btn btn-default navbar-btn render-content <% if(auth !== 'admin'){%> disabled <%}%>" >Render Content</button>
 		</section>
 	</header>
     <section class='current_events row col-md-12'>
-    					
+
 		<div class="panel panel-default">
 		  <!-- Our Events Table  -->
 		  <div class="panel-heading">
@@ -41,7 +41,7 @@
 		  		<li class="col-md-1 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
-		
+
 		  <!-- Table body -->
 		  <% if(queue.length> 0){ %>
 		  <ul class="list-group">
