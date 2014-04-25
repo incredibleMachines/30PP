@@ -83,7 +83,7 @@ exports.update = function(_Database){
 		var slug = req.params.slug
 		//console.log(post)
 		var newSlug = utils.makeSlug(post.title)
-		console.log(newSlug)
+		//console.log(newSlug)
 		_Database.update('scenes',{slug: slug},{$set:{title:post.title,slug:newSlug}},function(e){
 			if(!e){
 				_Database.getDocumentBySlug('scenes',utils.makeSlug(post.title),function(_e,_scene){
@@ -123,7 +123,7 @@ exports.reorder = function(_Database){
 		var desiredIndex = 0;
 
 		_Database.getDocumentByID('scenes',post.id,function(e,_scene){
-			console.log(_scene)
+			//console.log(_scene)
 			var currentIndex = _scene.order;
 			if(post.type =='up'){
 				desiredIndex = parseInt(_scene.order)-1;

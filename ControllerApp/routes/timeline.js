@@ -95,14 +95,14 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 					var startTimeUpdate = 0;
 					for(var i=0; i<ambientEvent.scenes.length; i++){ //go through ambient event scenes
 						startTimeUpdate += ambientEvent.scenes[i].duration; //update the real startTime
-						console.log("this duration: ")
-						console.log(ambientEvent.scenes[i].duration);
+						//console.log("this duration: ")
+						//console.log(ambientEvent.scenes[i].duration);
 					}
 					timelineSceneOrder += orderUpdate;
 					timelineEventOrder += 1; //only 1 ambient Event ever.
 					callback(null); //next fall.
 				} else {
-					console.log("timeline already exists. clear with mongo: db.timeline.remove() first");
+					//console.log("timeline already exists. clear with mongo: db.timeline.remove() first");
 					cb(null); //exit. done done.
 				}
 			});
@@ -136,7 +136,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 				if(_e) console.log("error querying for scenes");
 				else{
 					allTimelineScenes = scenes.slice(0);
-					console.log("all scenes length: "+ allTimelineScenes.length);
+					//console.log("all scenes length: "+ allTimelineScenes.length);
 					// console.log("===========================");
 					// console.log(JSON.stringify(allTimelineScenes));
 					// console.log("===========================");
@@ -207,7 +207,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 			allTimelineEvents.forEach(function(evt, i){
 				_Database.add('timeline', evt, function(__e){
 					if(!__e){
-						console.log("added this timeline event: " + evt.title);
+						//console.log("added this timeline event: " + evt.title);
 					}	//everything is great
 					else console.log("error adding to timeline collection: "+ evt);
 				})
@@ -258,9 +258,9 @@ exports.update = function(_Database){
 		if (sceneId == 'undefined'){
 			res.jsonp({HEYYOUTHERE:'ambient duration must be changed manually in the timeline.js file'});
 		}
-		console.log("req sceneId: "+sceneId);
+		//console.log("req sceneId: "+sceneId);
 		if(isNaN(newDuration)){
-			console.log("NAN DETECTED!  Setting duration to 0.");
+			//console.log("NAN DETECTED!  Setting duration to 0.");
 			newDuration = 0;
 		}
 
@@ -283,7 +283,7 @@ exports.update = function(_Database){
 								//console.log("FOUND SCENEID MATCH");
 								_Database.update('timeline', {_id : evt._id, "scenes.scene_id": sce.scene_id}, obj, function(e){
 									if(!e){
-										console.log("successfully updated SCENE new scene duration");
+										//console.log("successfully updated SCENE new scene duration");
 										//res.redirect('/timeline');
 										callback(null);
 									}else console.log("ERROR UPDATING DB WITH NEW DURATION");
@@ -299,7 +299,7 @@ exports.update = function(_Database){
 					if(e) console.log("error querying for scenes");
 					else{
 						allTimelineEvents = tEvents.slice(0);
-						console.log("all events length: "+ allTimelineEvents.length);
+						//console.log("all events length: "+ allTimelineEvents.length);
 
 						allTimelineEvents = _.sortBy(allTimelineEvents, function(evt){
 							return evt.concat_queue; //sort by the order # of the SCENE COLLECTION OBJECT
@@ -362,7 +362,7 @@ exports.update = function(_Database){
 				allTimelineEvents.forEach(function(evt, i){
 					_Database.add('timeline', evt, function(__e){
 						if(!__e){
-							console.log("added this timeline event: " + evt.title);
+							//console.log("added this timeline event: " + evt.title);
 						}	//everything is great
 						else console.log("error adding to timeline collection: "+ evt);
 					})
