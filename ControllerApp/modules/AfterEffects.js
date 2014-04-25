@@ -208,9 +208,6 @@ function setRenderContent(scene,cb){
 	var timebetween = 1000;
 	scene.asset_loc = folders.publicDir()+'/'
 	scene.output = folders.outputDir()+'/'+scene.type+'.mov'
-	console.log(scene)
-	console.log(folders.aeProjectsDir())
-	console.log(scene.template)
 	scene.template = folders.aeProjectsDir()+'/'+scene.template
 	//if( scene.type.indexOf('default') != -1){
 		setTimeout(function(){

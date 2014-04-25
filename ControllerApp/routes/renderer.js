@@ -41,7 +41,7 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 			//console.log(result)
 			formatJSONForAE(result, _PathFinder, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 
-				console.log(JSON.stringify(formattedOutput))
+				//console.log(JSON.stringify(formattedOutput))
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
 						//concat files and document output
