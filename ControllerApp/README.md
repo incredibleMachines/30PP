@@ -50,7 +50,7 @@ __Pull assets down from Dropbox __
 ```bash
 $ cd /path/to/30PP/ControllerApp
 
-$ cp -r ~/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets/ public/.assets/
+$ cp -r path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets/ public/.assets/
 ```
 
 #### Reload Mongo from git store
