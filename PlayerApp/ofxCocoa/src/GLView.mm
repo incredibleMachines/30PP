@@ -247,6 +247,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     
 	if(useDisplayLink) CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
 	
+    _currentTime=self.playerItem.currentTime;
+    
 	// Make sure we draw to the right context
 	[[self openGLContext] makeCurrentContext];
 	
