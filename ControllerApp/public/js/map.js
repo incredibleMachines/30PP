@@ -82,7 +82,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	function drawInstruction(x,y){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
-		ctx.fillStyle = 'black';
+		ctx.fillStyle = 'white';
 		ctx.fillText("click to choose location", 33, 105);
 		//ctx.fillText(type+" location", 57, 100);
 		if(x&&y) drawSingleLoc(x,y,"#000000")
