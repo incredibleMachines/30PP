@@ -1,6 +1,7 @@
 var utils = require('../modules/Utils');
 var upload = require('../modules/Upload');
 
+
 exports.index = function(_Database){
 	return function(req,res){
 
@@ -19,7 +20,7 @@ exports.index = function(_Database){
 		})
 
 		//TODO: pagination quantity - how many per page!
-		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*resultsPerPage, limit:resultsPerPage}, function(e,_files){
+		_Database.queryCollectionWithOptions('files', {}, {skip: (page-1)*resultsPerPage, limit:resultsPerPage, sort: {"created_at":-1}}, function(e,_files){
 			if(!e){
 				_Database.getAll('clips',function(__e,_clips){
 					if(!__e){
