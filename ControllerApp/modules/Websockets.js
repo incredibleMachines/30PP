@@ -86,6 +86,7 @@ function parseCommand(_json){
 
 
 function sendPlayerInit(){
+	_playerApp.activate()
 	var OUTPUT_FOLDER = folders.outputDir();
 	//console.log('Prepparing Init');
 	_Database.formatInit(function(e,_events){
