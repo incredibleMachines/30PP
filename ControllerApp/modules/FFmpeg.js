@@ -44,6 +44,7 @@ exports.concat = function(_Database, cb){
 					}
 					cb(null);
 				});
+				//quick, before we move on, clear out the concat_list.txt file if it exists and has stuff in it:
 				var clearFile = exec("> "+OUTPUT_FOLDER+"/concat_list.txt", function(err,stdout,stderr){
 					if(err) console.error(err);
 					else callback();
@@ -61,26 +62,35 @@ exports.concat = function(_Database, cb){
 				else callback();
 			})
 		},
+		function archiveOldOutput (callback){
+			// var date = new Date(); //super verbose, for joe's fun:
+			// var year = date.getFullYear();
+			// var month = date.getMonth();
+			// var day = date.getDay();
+			// var hours = date.getHours();
+			// var minutes = date.getMinutes();
+			// var archiveName = OUTPUT_FOLDER+"/concatOutput_archive_"+year+"-"+month+"-"+day+"-"+hours+"h-"+minutes+"m.mov";
+			// console.log("new archived name: "+archiveName);
+			var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
+			//console.log("name archiveScript: "+renameScript);
+
+			var renameFile = exec(renameScript, function(err,stdout,stderr){
+				if(err) console.log(err);
+				else callback();
+			})
+		},
 		function executeConcat(callback){
 
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput.mov";
-
 			//console.log("allfilenames from execConcat: ");
 			//console.log(JSON.stringify(allSceneFileNames));
 
 			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
-			  	if(err) console.error(err);
-			})
 
-			/*************************************************/
-			//****** single line exec concat strategy ********/
-			// TODO: save output.mov to OUTPUT_FOLDER
-			// var concatOneLineScript = "ffmpeg -f concat -i <\(for f in " + ASSET_FOLDER + "*.mov; do echo \"file '$f'\"; done\) -c copy outputFromOneLine.mov";
-			// console.log("concat one-line Script: ");
-			// console.log(concatOneLineScript);
-			/*************************************************/
-			callback();
+			  	if(err) console.error(err);
+					else callback();
+			})
 		}
 	], function(err, result){
 

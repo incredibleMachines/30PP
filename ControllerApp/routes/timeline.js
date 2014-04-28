@@ -227,11 +227,11 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 /*function to call FFMPEG and concatenate all video files */
 exports.concat = function(_Database, EVENT_TYPES, cb){
 	return function(req,res){
-		//res.jsonp({error: "Not Implemented Yet!"});
+		res.jsonp({success: "Manual Concat has STARTED....."});
 		ffmpeg.concat(_Database,function(e){
 			if(e) console.log("concat error: "+ e);
 			else{
-				res.jsonp({success:'concat success'});
+				//res.jsonp({success:'concat COMPLETE!'});
 
 				/*******  CONCAT CALLBACK HERE *******/
 
