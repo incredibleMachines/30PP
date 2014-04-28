@@ -22,6 +22,10 @@
 	<string>WithWindow</string>
 	<key>NSSupportsSuddenTermination</key>
 	<true/>
+	<key>LSMultipleInstancesProhibited</key>
+	<true/>
+	<key>UIApplicationExitsOnSuspend</key>
+	<true/>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
