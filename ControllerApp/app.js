@@ -56,19 +56,20 @@ Folders.setup(__dirname);
 Database.MongoConnect();
 
 /**
- * Basic web socket control to PlayerApp
- *
- */
-
-WebSocket.Connect(8080,Database);
-
-/**
  *  PlayerApp
  *
  */
 
 var playerApp = PlayerApp.index
 playerApp.start()
+
+
+/**
+ * Basic web socket control to PlayerApp
+ *
+ */
+
+WebSocket.Connect(8080,Database,playerApp);
 
 
 /**
@@ -262,6 +263,11 @@ app.get('/AfterEffects/script/:file',auth.index(Database),function(req,res){
 
 //implimentation wishlist
 app.get('/PlayerApp/close',auth.index(Database),function(req,res){
+  playerApp.closeState(true)
+  playerApp.end()
+  res.jsonp(200,{status: playerApp.getStatus()})
+})
+app.get('/PlayerApp/restart',auth.index(Database),function(req,res){
   playerApp.end()
   res.jsonp(200,{status: playerApp.getStatus()})
 })

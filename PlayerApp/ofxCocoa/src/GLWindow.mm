@@ -66,7 +66,7 @@ using namespace ofxCocoa;
 }
 
 - (void)windowDidResize:(NSNotification *)notification {
-	NSLog(@"windowDidResize");
+//	NSLog(@"windowDidResize");
 	
 	static ofResizeEventArgs resizeEventArgs;
 	
