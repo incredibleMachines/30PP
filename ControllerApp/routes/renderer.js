@@ -45,8 +45,9 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
 						//concat files and document output
+						console.log(" Beginning Concat ".inverse )
 						ffmpeg.concat(_Database,function(_e){
-							if(!e) console.log('Concat Success')
+							if(!e) console.log(' Concat Success '.inverse.green)
 							else console.error('Concat Error: '+_e)
 						})
 					}else{

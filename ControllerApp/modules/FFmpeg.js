@@ -71,6 +71,7 @@ exports.concat = function(_Database, cb){
 			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
 			  	if(err) console.error(err);
+					else callback();
 			})
 
 			/*************************************************/
@@ -80,7 +81,7 @@ exports.concat = function(_Database, cb){
 			// console.log("concat one-line Script: ");
 			// console.log(concatOneLineScript);
 			/*************************************************/
-			callback();
+
 		}
 	], function(err, result){
 
