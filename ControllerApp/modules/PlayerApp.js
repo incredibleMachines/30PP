@@ -6,7 +6,8 @@ var spawn = require('child_process').spawn,
 
 var player,
     status,
-    start;
+    start,
+    bError;
 
 exports.index = {
 
@@ -36,7 +37,7 @@ exports.index = {
 
       player.stderr.on('data', function (data) {
         console.log(' PID: %s '.inverse+' '+' stderr: '.inverse.red+' %s '.grey, player.pid, data)
-        bError = true
+        //bError = true
       })
 
       player.on('error',function(error){
@@ -51,8 +52,8 @@ exports.index = {
         duration = duration/1000
         duration = duration/60
         console.log('PlayerApp PID: %s '.inverse+' Completed in %s minutes '.green, player.pid, duration)
-        //callback once the process has finished
-
+        status = false
+        
       })
   },
   activate: function(pID){
