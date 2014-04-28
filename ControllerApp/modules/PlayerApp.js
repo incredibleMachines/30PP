@@ -7,13 +7,15 @@ var spawn = require('child_process').spawn,
 var player,
     status = false,
     start,
-    bError;
+    bError,
+    bClose = false;
 
 exports.index = {
 
   start : function(cb){
       if(status ==false){
         var options = [""]
+        var _this = this
         //console.log(folders.root())
         // var child = exec(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app/Contents/MacOS/30PP_MapperDebug',
         //     function (error, stdout, stderr) {
@@ -54,7 +56,11 @@ exports.index = {
           duration = duration/60
           console.log('PlayerApp PID: %s '.inverse+' Completed in %s minutes '.green, player.pid, duration)
           status = false
-
+          if(bClose == false){
+            console.log(' PlayerApp Rebooting... '.inverse.green)
+            _this.start()
+          }
+          bClose = false //reset the closeState
         })
       }
   },
@@ -71,6 +77,9 @@ exports.index = {
   },
   getStatus: function(){
     return status
+  },
+  closeState: function(state){
+    bClose = state
   },
   end: function(){
 

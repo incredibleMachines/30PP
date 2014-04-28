@@ -76,14 +76,13 @@ exports.init = function(cb){
 						})
 
 }
+
 //_script = the jsx script to load;
 //_call = the jsx function to call as a string containing the JSON Object of the result
 //example -- see sample json reference above
 
 //script = 'updateAndRenderBasic.jsx'
-
 //_call = 'updateAndRenderBasic('+JSON.stringify(sample)+')'
-
 //_cb = callback(err, stdout)
 
 exports.runScriptFunction = function(_script,_call,_cb){
