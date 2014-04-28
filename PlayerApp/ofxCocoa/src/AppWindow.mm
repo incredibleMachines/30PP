@@ -153,6 +153,7 @@ namespace MSA {
 			NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 			
 			NSApplicationMain(0,  NULL);
+
 			
 			[pool drain];
             

@@ -266,7 +266,7 @@ app.get('/PlayerApp/close',auth.index(Database),function(req,res){
   res.jsonp(200,{status: playerApp.getStatus()})
 })
 app.get('/PlayerApp/open',auth.index(Database),function(req,res){
-  playerApp.start()
+  if(playerApp.getStatus() == false ) playerApp.start()
   res.jsonp(200,{status: playerApp.getStatus()})
 })
 

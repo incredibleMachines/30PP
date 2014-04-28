@@ -9,6 +9,9 @@
 #define TEX_WIDTH 2048
 #define TEX_HEIGHT 2500
 
+#define AMBIENT_LOOP 0
+#define DEFAULT_LOOP 1
+
 
 class testApp : public ofBaseApp{
 	
@@ -41,13 +44,16 @@ public:
     ofImage test;
     
     int currentTransition;
-    bool bCheckingTime;
+    bool bCheckingTime, bPausing;
     float loadTime;
     float currentEnd;
     
     vector<float> pauseTimes;
     
+    float pauseTime;
     int initCount;
+    
+    int loopMode;
     
         
 };
