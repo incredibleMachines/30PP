@@ -2,14 +2,14 @@
 /* Remove stupid blue borders in bootstrap!*/
 /* This handles all inputs and selects */
 
-textarea:focus, select:focus, button:focus, .btn:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus{   
+textarea:focus, select:focus, button:focus, .btn:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus{
 border-color: none !important;
 box-shadow: none !important;
 outline: 0 none !important;}
 
 /* HTML5 Range Finder Styling w. form-control*/
 .form-control.range{
-	
+
 	height: 4px;
 	font-size: 0;
 	line-height: 0;
@@ -53,7 +53,7 @@ section.new_event{
 /* -------------- EVENT -------------- */
 
 ul.event{
-	
+
 	display: inline;
 	list-style: none;
 	width: 100%;
@@ -161,13 +161,13 @@ header.single-event-head {
 
 	h3 {
 		margin: 0px;
-		padding-left: 0px; 
+		padding-left: 0px;
 	}
 }
 
 header .duration-header {
 	clear: both;
-	padding-left: 0px; 
+	padding-left: 0px;
 }
 
 label {
@@ -224,7 +224,7 @@ ul.list-group li.list-group-item {
 
 .active {
 	background-color: #f5f5f5;
-	
+
 	.sub-nav {
 		color: #333;
 	}
@@ -245,7 +245,7 @@ ul.list-group li.list-group-item {
 	padding-bottom: 20px;
 	margin-bottom: 30px;
 	border-bottom: 1px solid #333;
-	
+
 	.zone-contents {
 		padding-bottom: 10px;
 
@@ -382,7 +382,7 @@ canvas {
 .btn-danger {
 	border: 1px solid #0084ff;
  	background-color: #fff;
- 	color: #0084ff;	
+ 	color: #0084ff;
 }
 
 .btn-danger:hover {
@@ -397,7 +397,7 @@ canvas {
 .btn.green {
 	border: 1px solid #04bd5f;
  	background-color: #fff;
- 	color: #04bd5f;	
+ 	color: #04bd5f;
 }
 
 .btn:hover.green {
@@ -477,7 +477,7 @@ canvas {
 	}
 }
 
-.form-group {	
+.form-group {
 	canvas {
 		margin-top: 20px;
 	}
@@ -525,11 +525,14 @@ canvas {
 	margin-bottom: 20px;
 }
 
+/* ---------------- Media Queries ------------------- */
 
-
-
-
-
-
-
-
+@media (max-height: 850px) {
+    .affix {
+        //position: inherit;
+				position: fixed;
+				height: 100%;
+				overflow-y: scroll;
+				padding-bottom: 100px;
+    }
+}
