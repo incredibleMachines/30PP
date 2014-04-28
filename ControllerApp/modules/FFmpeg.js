@@ -25,14 +25,14 @@ exports.concat = function(_Database, cb){
 	var OUTPUT_FOLDER = folders.outputDir();
 	var ASSET_FOLDER	= folders.videosDir();
 
-	console.log("OUTPUT_FOLDER:  "+ OUTPUT_FOLDER);
-	console.log("ASSET_FOLDER:  "+ ASSET_FOLDER);
+	//console.log("OUTPUT_FOLDER:  "+ OUTPUT_FOLDER);
+	//console.log("ASSET_FOLDER:  "+ ASSET_FOLDER);
 
 	var allSceneFileNames = new Array();
 
 	async.waterfall([
 		function populateSceneFiles (callback){
-			console.log("hit populateSceneFiles");
+			//console.log("hit populateSceneFiles");
 			_Database.getAll('timeline',function(e, tEvents){
 				async.each(tEvents, function(evt, cb){
 					if(evt.scenes.length>0){
@@ -65,8 +65,8 @@ exports.concat = function(_Database, cb){
 
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput.mov";
 
-			console.log("allfilenames from execConcat: ");
-			console.log(JSON.stringify(allSceneFileNames));
+			//console.log("allfilenames from execConcat: ");
+			//console.log(JSON.stringify(allSceneFileNames));
 
 			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
@@ -84,7 +84,7 @@ exports.concat = function(_Database, cb){
 		}
 	], function(err, result){
 
-		console.log("reached end of waterfall!");
+		//console.log("reached end of waterfall!");
 		cb(null); //DONE DONE DONE
 	});
 

@@ -11,16 +11,16 @@ exports.login = function(_Database){
 
     if( (post.name == 'admin' && post.creds == 'adminpass') || (post.name == 'user' && post.creds == 'userpass') ){
       console.log('Login Success')
-      console.log(post)
+      //console.log(post)
       req.session.name = post.name
       req.session.timestamp = new Date()
       req.session.auth = (post.name == 'admin')? 1:0
       res.redirect('/')
     }else{
       console.log('Login Fail')
-      console.log(post)
-      res.jsonp({login:'here'})
-
+      //console.log(post)
+      //res.jsonp({login:'here'})
+      res.redirect('/')
     }
 
 

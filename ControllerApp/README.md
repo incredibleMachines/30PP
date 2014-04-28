@@ -45,6 +45,14 @@ $ cd /path/to/30PP/ControllerApp
 $ cp -r public/.assets path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets
 ```
 
+__Pull assets down from Dropbox __
+
+```bash
+$ cd /path/to/30PP/ControllerApp
+
+$ cp -r path/to/your/Dropbox\ \(Incredible\ Machines\)/30PP/AE_Architecture/Database/assets/ public/.assets/
+```
+
 #### Reload Mongo from git store
 A method for restoring your database from a dump on github.
 

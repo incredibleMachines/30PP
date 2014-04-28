@@ -114,7 +114,7 @@ function SceneController(_clips,_files){
 			case 'single':
 
 				var text = $('textarea').attr('name', 'zones['+index+'][text]').attr('placeholder','Enter your text now').addClass('zone-text-0 zone-text')
-				console.log(text)
+				//console.log(text)
 				//alert(text)
 				var text = '<section class="zone-text input-group"><textarea name="zones['+index+'][text]" placeholder="Enter your text now" class="form-control zone-text"></textarea></section>'
 
@@ -157,7 +157,7 @@ function SceneController(_clips,_files){
 		//console.log(texts.length)
 
 		var name_updated = name.substr(0,lastOpenBracket+1)+(texts.length)+"]"
-		console.log(name_updated)
+		//console.log(name_updated)
 
 
 		$(_new).find('input').attr("name",name_updated).val("")
@@ -285,8 +285,8 @@ function SceneController(_clips,_files){
     var _this = $(this)
     var data = $(this).serialize()
     var formData = new FormData($(this)[0])
-    console.log(data)
-    console.log(formData)
+    //console.log(data)
+    //console.log(formData)
     $.ajax({
       url: '/files/ajax',
       type: 'POST',
@@ -296,10 +296,10 @@ function SceneController(_clips,_files){
       processData: false,
       data: formData,
       success: function(res){
-        console.log('success')
+        //console.log('success')
         $('#new_file_modal').modal('hide')
         //console.log(res)
-        console.log(res.success)
+        //console.log(res.success)
         var option = '<option value="'+res.success._id+'">'+res.success.title+'</option>'
         $('select.zone-file').append(option)
 
@@ -309,7 +309,7 @@ function SceneController(_clips,_files){
 
       },
       error:function(jqXHR, textStatus, errorThrown){
-        console.log(textStatus)
+        //console.log(textStatus)
       }
     })
   })
@@ -321,7 +321,7 @@ function SceneController(_clips,_files){
 
 	function formatClip(_clip){
 		$('#clip-data').find('img').attr("src","/imgs/sculpture_"+_clip.layout+".jpg")
-		console.log(_clip)
+		//console.log(_clip)
 		$('#clip-contents form').attr('action', '/clips/'+_clip._id);
 		$('h3.clip-title').html(_clip.title)
 		$('input.clip-title').val(_clip.title)
@@ -389,11 +389,11 @@ function SceneController(_clips,_files){
 		}
 
 		if(_clip.zones.length>0){
-			console.log(_clip.zones)
+			//console.log(_clip.zones)
 			_clip.zones.forEach(function(zone,index){
 				if(zone.file){
 					var file = _.findWhere(_files,{_id:zone.file})
-					console.log(file)
+					//console.log(file)
 					if(file.type.indexOf('video')>=0){
 						$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:No Video Preview")
 						Holder.run({
@@ -411,9 +411,9 @@ function SceneController(_clips,_files){
 
 				}
 				if(zone.text){
-					console.log(typeof zone.text)
+					//console.log(typeof zone.text)
 					if(typeof zone.text !== 'object'){
-						console.log('Text at zone: '+index)
+						//console.log('Text at zone: '+index)
 						var text = '<section class="zone-text input-group"><textarea name="zones['+index+'][text]" placeholder="Enter your text now" class="form-control zone-text">'+zone.text+'</textarea></section>'
 						$('.zone-single-'+index).find('.zone-text-type').parent().append(text)
 						$('.zone-single-'+index).find('.zone-text-type').val('single')
@@ -438,9 +438,9 @@ function SceneController(_clips,_files){
 
 				if(zone.locations){
 					zoneZero = zone;
-					console.log("Locations: "+zone.locations.length)
+					//console.log("Locations: "+zone.locations.length)
 					var type = (zone.locations.length>1)? 'multiple' : 'single'
-					console.log("Type: "+type);
+					//console.log("Type: "+type);
 					//val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(type)
 					var output = type.charAt(0).toUpperCase()+type.slice(1)
@@ -477,7 +477,7 @@ function SceneController(_clips,_files){
 
 
 		var current = $('select.zone-map-type').val()
-		console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x+" | locPos.y: "+locPos.y);
+		//console.log("eventType: "+eventType+" -- locPos.x: "+locPos.x+" | locPos.y: "+locPos.y);
 		if(current === 'single') $('section.location').remove()
 		var length = $('section.location').length;
 
@@ -496,7 +496,7 @@ function SceneController(_clips,_files){
 				//this is to prevent any 'null' objects in the locations array
 				for(var j=0; j<allLoc.length; j++){
 					var thisLoc = allLoc[j];
-					console.log("thisLoc "+j+": "+$(thisLoc));
+					//console.log("thisLoc "+j+": "+$(thisLoc));
 					var inputs = $(thisLoc).find('input');
 					$(inputs[0]).attr('name','zones[0][locations]['+j+'][x]');
 					$(inputs[1]).attr('name','zones[0][locations]['+j+'][y]');
@@ -527,7 +527,7 @@ function SceneController(_clips,_files){
 
 	/* By Jenn: For making 1st sub-nav item be active on page load */
 	function firstOn(slug) {
-		console.log(slug)
+		//console.log(slug)
 		$('button.'+slug).closest('.list-group-item').addClass("active");
 	}
 

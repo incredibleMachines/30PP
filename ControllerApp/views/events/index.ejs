@@ -4,7 +4,7 @@
 	<header>
 	    <h1 class="col-md-4 pull-left"><%= title %> <small>Total: <%= scenes.length%></small></h1>
 		<section class="col-md-2 add-btn pull-right">
-			<button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#new_scene_modal">Add New Scene</button>
+			<button type="button" class="btn btn-default navbar-btn <% if(auth !== 'admin'){%> disabled <%}%>" data-toggle="modal" data-target="#new_scene_modal">Add New Scene</button>
 		</section>
 	</header>
     <section class='current_events row col-md-12'>
@@ -14,12 +14,11 @@
 		  	<ul class="event row panel-title" >
 		  		<li class="col-md-1 panel-title"></li>
 		  		<li class="col-md-4 panel-title">Title</li>
-		  		<li class="col-md-2 panel-title">Duration</li>
-		  		<li class="col-md-2 panel-title">Clips</li>
+		  		<li class="col-md-4 panel-title">Clips</li>
 		  		<li class="col-md-2 panel-title">Actions</li>
 		  	</ul>
 		  </div><!-- .panel-heading -->
-		
+
 		  <!-- Table body -->
 		  <ul class="list-group">
 		  	<% scenes.forEach(function(scene,i){ %>
@@ -28,15 +27,14 @@
 			    		<form class="event <%=scene.slug%>" method="post" action="/scenes/<%=scene.slug%>">
 							<li class="col-md-1">
 								<section class="btn-group-vertical">
-									<button type="button" class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
-									<button type="button" class="btn btn-default btn-xs scene-order scene-order-down <% if(i == scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
+									<button type="button" class="btn btn-default btn-xs dropup scene-order scene-order-up <% if(auth !== 'admin'){%> disabled <%}%> <% if(i == 0){%>disabled<%}%>"><span class="caret"></span></button>
+									<button type="button" class="btn btn-default btn-xs scene-order scene-order-down <% if(auth !== 'admin'){%> disabled <%}%> <% if(i == scenes.length-1){%>disabled<%}%>"><span class="caret"></span></button>
 								</section>
 							</li>
-							<li class="col-md-4">						
+							<li class="col-md-4">
 								<input class="form-control" type="text" name="title" value="<%=scene.title%>">
 							</li>
-							<li class="col-md-2"><%= scene.duration %> </li>
-							<li class="col-md-2 scene-num">
+							<li class="col-md-4 scene-num">
 								&nbsp;<%=scene.clips.length%>&nbsp;&nbsp;
 								<div class="btn-group">
 									<% if(scene.clips.length ==0){ %>
@@ -49,7 +47,7 @@
 							<li class="col-md-2">
 								<div class="btn-group">
 									  <button type="button" class="btn btn-default btn-xs scene-update green">Update</button>
-									  <button type="button" class="btn btn-default btn-xs scene-delete red">Delete</button>
+									  <button type="button" class="btn btn-default btn-xs scene-delete red <% if(auth !== 'admin'){%> disabled <%}%>">Delete</button>
 								</div>
 							</li>
 						</form>
@@ -59,5 +57,5 @@
 		  </ul><!-- ul.list-group -->
 	</div>
     </section>
-</section> <!-- .<%= page_slug %> -->   
+</section> <!-- .<%= page_slug %> -->
 <% include ../includes/footer %>

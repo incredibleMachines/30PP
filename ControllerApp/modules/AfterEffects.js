@@ -139,70 +139,10 @@ exports.getCurrentFile = function(){
 	return currentFile;
 }
 
-//function to delete old file and render new one
-//using async queue processes
-var concurrency = 3; //number of tasks running in the queue at once
-
-var renderqueue = async.queue(renderWorker,concurrency)
-
-//the worker function for our renderqueue
-function renderWorker(scene,callback){
-	//console.log("Running New Process")
-
-	var bError = null;
-
-	utils.deleteFile( scene.output,function(err){
-
-
-		if(err) console.error("Delete File: %s".grey,scene.output)
-		else console.log("Delete File: %s".grey,scene.output)
-
-		//options for render process
-		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', OM_TEMPLATE]
-		//spawn a process to the aerender
-		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
-		var start = new Date()
-		console.log()
-		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
-		console.log()
-
-		aerender.stdout.on('data', function (data) {
-		  var string = data.toString().replace(/\n$/, "")
-		  //var newString = string.replace()
-		  //var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline
-		  var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
-		  console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, nstring)
-		})
-
-		aerender.stderr.on('data', function (data) {
-		  console.log('stderr: %s'.orange,  data)
-		  bError = true
-		})
-
-		aerender.on('error',function(error){
-			console.error(error)
-			bError = true;
-		})
-		aerender.on('close', function (code) {
-		  console.log('AERENDER PID: %s '.inverse+' exited with code %s '.cyan,aerender.pid,code)
-		  if(code !=0) bError = true;
-			var end = new Date()
-			var duration = end-start
-			duration = duration/1000
-			duration = duration/60
-			console.log('AERENDER PID: %s '.inverse+' Completed in %s minutes '.green,aerender.pid,duration)
-		  //callback once the process has finished
-		  callback(bError,scene)
-		})
-
-
-
-	})
-
-}
 
 exports.processRenderOutput = function(formattedScenes,_Database,cb){
 	var renderError = null;
+	//console.log("SCENES".inverse)
 	//console.log(JSON.stringify(formattedScenes))
 
 	renderqueue.drain = function(){
@@ -286,73 +226,68 @@ function setRenderContent(scene,cb){
 								})
 
 		},timebetween)
-	/*}else{
-		console.log("Files ".inverse.yellow)
-		cb(null)
-	}*/
-	//cb(null)
-}
 
-
-
-
-//put togeher ae script osascript based off of using the AERunDoScript Object.
-function runScriptFile(file){
-
-	AERunDoScript.doscript.file = file;
-
-	return AERunDoScript.begin+AERunDoScript.doscript.begin+AERunDoScript.doscript.file+AERunDoScript.doscript.end+AERunDoScript.end;
 
 }
 
-//old test to create loop of movies
-//needs to be deprecated
-exports.createMovie = function(){
-	//console.log(makeScript("file"))
-	var array =[];
+//function to delete old file and render new one
+//using async queue processes
+var concurrency = 3; //number of tasks running in the queue at once
 
-	for(var i = 1; i<6;i++){
+var renderqueue = async.queue(renderWorker,concurrency)
 
-		var data = {};
-		data.file = "~/Downloads/AERenderTest/AeRenderTest.aep";
-		data.image="~/Desktop/images/image"+i+".jpg";
-		data.text="This is Image Number "+i;
-		data.output="~/Desktop/node-test"+i+".mov";
-		array.push(data)
-	}
+//the worker function for our renderqueue
+function renderWorker(scene,callback){
+	//console.log("Running New Process")
 
-	//use asyn to run creation of single movies
-	async.eachSeries(array,createMovie,function(e){
-		if(e) console.error(e);
-	})
+	var bError = null;
 
-}
+	utils.deleteFile( scene.output,function(err){
 
-//old test to create loop of movies
-//needs to be deprecated
-function createMovie(data,cb){
-	console.log(data)
-	setTimeout(function(){
-		console.log('Writing File');
-		//make temp file to open and pass data
-		fs.writeFile('../temp.txt',JSON.stringify(data),function(e){
-			if(e){
-				console.log("error: "+e);
-				cb(e)
-			}else{
-				//execute script via cli
-				child = exec(makeScript(),function(err,stdout,stderr){
-					if(err){
-						console.error(err)
-						cb(e);
-					}else{
-						cb()
-					}
-				})
 
-			}
+		if(err) console.error("Delete File: %s".grey,scene.output)
+		else console.log("Delete File: %s".grey,scene.output)
+
+		//options for render process
+		var options = ['-project', scene.template, '-output', scene.output, '-comp', 'UV_OUT', '-OMtemplate', OM_TEMPLATE]
+		//spawn a process to the aerender
+		var aerender = spawn('/Applications/Adobe\ After\ Effects\ CC/aerender',options)
+		var start = new Date()
+		console.log()
+		console.log(' AERENDER PID: '.inverse+' %s '.cyan.inverse, aerender.pid)
+		console.log()
+
+		aerender.stdout.on('data', function (data) {
+			var string = data.toString().replace(/\n$/, "")
+			//var newString = string.replace()
+			//var string = data.toString().replace(/^\s+|\s+$/g, "") //remove last newline
+			var nstring = string.replace(/(\r\n|\n|\r)/gm,'\r\n\t\t')//replace all newline chars with newline tabs
+			console.log('  PID: %s '.inverse+' %s '.grey, aerender.pid, nstring)
 		})
 
-	}, 5000)
+		aerender.stderr.on('data', function (data) {
+			console.log('stderr: %s'.orange,  data)
+			bError = true
+		})
+
+		aerender.on('error',function(error){
+			console.error(error)
+			bError = true;
+		})
+		aerender.on('close', function (code) {
+			console.log('AERENDER PID: %s '.inverse+' exited with code %s '.cyan,aerender.pid,code)
+			if(code !=0) bError = true;
+			var end = new Date()
+			var duration = end-start
+			duration = duration/1000
+			duration = duration/60
+			console.log('AERENDER PID: %s '.inverse+' Completed in %s minutes '.green,aerender.pid,duration)
+			//callback once the process has finished
+			callback(bError,scene)
+		})
+
+
+
+	})
 
 }

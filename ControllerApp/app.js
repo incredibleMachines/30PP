@@ -210,7 +210,6 @@ app.get('/location/matrix',function(req,res){
 app.post('/location/pathTest',function(req,res){
 
   var post = req.body;
-  console.log("pathTest: "+post);
   res.jsonp(PathFinder.returnPath(post));
 })
 

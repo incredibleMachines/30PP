@@ -10,19 +10,19 @@ function InitMapCanvas(_type, _locs, _cb){
 
 	$.getJSON('/location/matrix',function(data){
 
-		console.log('got matrix')
+		//console.log('got matrix')
 		//console.log(data)
 		matrix = data
 		//TODO: make this dynamic
 		canvas.width  = matrix[0].length //512;
 		canvas.height = matrix.length //202;
 
-		console.log("30_PP")
-		console.log("y:123 x:363")
-		console.log(matrix[123][363])
+		//console.log("30_PP")
+		//console.log("y:123 x:363")
+		//console.log(matrix[123][363])
 
 		if(typeof locs !== 'undefined'){ //if we received locations previously stored
-			console.log("numLocs: "+ locs.length);
+			//console.log("numLocs: "+ locs.length);
 			ctx.drawImage(bgImage, 0, 0);
 			drawLocations(null,null);
 			locationChosen = true;
@@ -41,7 +41,7 @@ function InitMapCanvas(_type, _locs, _cb){
 
 	var bgImage = new Image();
 	//bgImage.src = "/imgs/ManhattanStreets_512_202_raster.png";
-	bgImage.src = "/imgs/ManhattanStreets_512_202_smooth.png";
+	bgImage.src = "/imgs/ManhattanStreets_512_202_pretty.png";
 	var locs = _locs;
 
 	var locDiameter = 8; // size of circles
@@ -82,7 +82,7 @@ function InitMapCanvas(_type, _locs, _cb){
 	function drawInstruction(x,y){
 		ctx.drawImage(bgImage, 0, 0);
 		ctx.font = '12pt Calibri';
-		ctx.fillStyle = 'black';
+		ctx.fillStyle = 'white';
 		ctx.fillText("click to choose location", 33, 105);
 		//ctx.fillText(type+" location", 57, 100);
 		if(x&&y) drawSingleLoc(x,y,"#000000")
@@ -106,15 +106,15 @@ function InitMapCanvas(_type, _locs, _cb){
 
 			case 1: //adding a location
 				if(matrix){
-				console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
+				//console.log(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)])
 					if(matrix[parseInt(mousePos.y-1)][parseInt(mousePos.x-1)] == 0){
 
 						var thisLoc = {"x":mousePos.x-1, "y":mousePos.y-1};
 
 						var testLoc = {"x":mousePos.x-1, "y":mousePos.y-1};
 
-						console.log("testLoc: ");
-						console.log(testLoc);
+						//console.log("testLoc: ");
+						//console.log(testLoc);
 						/* FOR TESTING */
 						//pass this loc out as a POST
 						$.ajax({
@@ -122,18 +122,18 @@ function InitMapCanvas(_type, _locs, _cb){
 							type: 'POST',
 							data: testLoc,
 							success: function(result){
-									for(var i=0; i<result.length; i++) console.log(result[i][0]+","+result[i][1]);
+									//for(var i=0; i<result.length; i++) console.log(result[i][0]+","+result[i][1]);
 									if(result.length<1){
-										console.log("EMPTY ARRAY RETURNED FROM PFINDER");
+										//console.log("EMPTY ARRAY RETURNED FROM PFINDER");
 									}else{
-										console.log("length: ");
-										console.log(result.length);
+										//console.log("length: ");
+										//console.log(result.length);
 										path = result;
 										drawPFinderTest(path)
 									}
 							},
 							error: function( jqXHR, textStatus, errorThrown ){
-									console.log(jqXHR);
+									//console.log(jqXHR);
 							}
 						});
 						/**************/
