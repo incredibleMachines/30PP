@@ -11,7 +11,7 @@ var player,
 exports.index = {
 
   start : function(cb){
-      var options = []
+      var options = [""]
       //console.log(folders.root())
       // var child = exec(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app/Contents/MacOS/30PP_MapperDebug',
       //     function (error, stdout, stderr) {
@@ -22,6 +22,11 @@ exports.index = {
       //     }
       //   })
       player = spawn(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app/Contents/MacOS/30PP_MapperDebug', options)
+      //var child = exec("osascript -e 'tell application \"30PP_MapperDebug\" to activate'")
+      //player = spawn(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app', options)
+
+      setTimeout(this.activate(player.pid),300)
+
       start = new Date()
       status = true;
       player.stdout.on('data', function (data) {
@@ -49,6 +54,17 @@ exports.index = {
         //callback once the process has finished
 
       })
+  },
+  activate: function(pID){
+
+    var child = exec("osascript -e 'tell application \"System Events\" ' -e 'set frontmost of the first process whose unix id is "+pID+" to true' -e 'end tell' ",
+    function (error, stdout, stderr) {
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
+      if (error !== null) {
+        console.log('exec error: ' + error);
+      }
+    })
   },
   getStatus: function(){
     return status
