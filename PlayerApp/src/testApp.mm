@@ -30,9 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
 
-    MSA::ofxCocoa::initPlayer("/Users/IM_Laptop_01/Downloads/081/apps/30PP/ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-
-//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER SETUP
     
@@ -208,13 +206,19 @@ void testApp::draw(){
         map.draw();
     }
     
-    else{
-        bScreenRestart=true;
+    else if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==true){
+        bStartScreenRestart=true;
     }
     
-    if(bScreenRestart==true&&bStartScreenRestart==false){
+    else {
+        bScreenRestart==true;
+    }
+
+    
+    if(bScreenRestart==true&&bStartScreenRestart==true){
         socketHandler.sendSocketCmd(RESTART_REQ);
-        bStartScreenRestart=true;
+        bStartScreenRestart=false;
+        bScreenRestart=false;
     }
     
 }
