@@ -79,9 +79,6 @@ void testApp::update(){
         bInited=true;
         bCheckingTime=true;
         initVariables();
-        if(loopMode==DEFAULT_LOOP){
-            MSA::ofxCocoa::setTime(650.0);
-        }
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
@@ -156,11 +153,11 @@ void testApp::update(){
     
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
         if(loopMode==AMBIENT_LOOP){
-            loadTime=0.0;
+            loadTime=socketHandler.eventHandler.events[0].startTime;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         else if (loopMode==DEFAULT_LOOP){
-            loadTime=650.0;
+            loadTime=socketHandler.eventHandler.events[1].startTime;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         bCheckingTime=false;
@@ -235,8 +232,19 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
-    currentEnd=650;
-    currentTransition=TRANSITION_AMBIENT_GRADIENT;
+    if(loopMode==DEFAULT_LOOP){
+        currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+        currentTransition=TRANSITION_GASTRONOMY;
+        loadTime=socketHandler.eventHandler.events[1].startTime;
+        map.fadeIn(TRANSITION_GASTRONOMY);
+    }
+    else if(loopMode==AMBIENT_LOOP){
+        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
+        currentTransition=TRANSITION_AMBIENT_GRADIENT;
+        loadTime=socketHandler.eventHandler.events[0].startTime;
+        map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+    }
+
     
     float tempPause;
     tempPause=socketHandler.eventHandler.events[1].startTime+23;
