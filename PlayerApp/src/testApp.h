@@ -55,6 +55,9 @@ public:
     
     int loopMode;
     
+    int numScreens;
+    bool bScreenRestart, bStartScreenRestart;
+    
         
 };
 

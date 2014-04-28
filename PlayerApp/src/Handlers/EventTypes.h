@@ -19,6 +19,8 @@
 //--- SOCKET SERVER REQUESTS
 #define INIT_REQ            "{\"command\" : \"init\"}"
 #define GO_REQ              "{\"command\" : \"go\"}" //not currently used
+#define CLOSE_REQ           "{\"command\" : \"close\"}"
+#define RESTART_REQ         "{\"command\" : \"restart\"}"
 
 
 //--- SOCKET SERVER COMMANDS

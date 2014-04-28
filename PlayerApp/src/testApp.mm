@@ -69,6 +69,9 @@ void testApp::setup() {
     bCheckingTime=false;
     loopMode=DEFAULT_LOOP;
     
+    numScreens=2;
+    bScreenRestart=false;
+    
 }
 
 
@@ -201,9 +204,19 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    if(MSA::ofxCocoa::getScreens()>0){
+    if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==false){
         map.draw();
     }
+    
+    else{
+        bScreenRestart=true;
+    }
+    
+    if(bScreenRestart==true&&bStartScreenRestart==false){
+        socketHandler.sendSocketCmd(RESTART_REQ);
+        bStartScreenRestart=true;
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -221,6 +234,9 @@ void testApp::keyPressed(int key){
             break;            
         case ']':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
+            break;
+        case 'Q':
+            socketHandler.sendSocketCmd(CLOSE_REQ);
             break;
             
     }
