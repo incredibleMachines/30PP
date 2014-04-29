@@ -72,8 +72,8 @@ using namespace ofxCocoa;
     
     if ([self.playerItemVideoOutput hasNewPixelBufferForItemTime:outputItemTime]){
         
-        glEnable(GL_MULTISAMPLE);
-        glMatrixMode(GL_PROJECTION);
+//        glEnable(GL_MULTISAMPLE);
+//        glMatrixMode(GL_PROJECTION);
 		
         CVPixelBufferRef pixBuff = [self.playerItemVideoOutput copyPixelBufferForItemTime:outputItemTime itemTimeForDisplay:NULL];
         
