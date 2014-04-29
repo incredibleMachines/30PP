@@ -33,7 +33,7 @@ exports.concat = function(_Database, cb){
 
 	async.waterfall([
 		function populateSceneFiles (callback){
-			console.log("concat: populating scene files");
+			//console.log("concat: populating scene files");
 			_Database.getAll('timeline',function(e, tEvents){
 				async.each(tEvents, function(evt, cb){
 					if(evt.scenes.length>0){
@@ -53,11 +53,11 @@ exports.concat = function(_Database, cb){
 			});
 		},
 
-
+		//** save file list to concat_list.txt
 		function writeList (callback){
 			console.log("concat: saving concat_list.txt");
 			var writeline="";
-			async.each(allSceneFileNames, function(filename, _cb){
+			async.eachSeries(allSceneFileNames, function(filename, _cb){
 				writeline += "file '"+filename+"'\n";
 				_cb(null);
 			});
@@ -68,6 +68,26 @@ exports.concat = function(_Database, cb){
 		},
 
 
+		//** check to be sure that there isn't an aborted concatOutput_NEW.mov file in the folder
+		function checkForAbortedConcatFile(callback){ //first execute concat
+			console.log("concat: checking for aborted file");
+			var path = OUTPUT_FOLDER+"/concatOutput_NEW.mov";
+			fs.exists(path, function (exists) {
+				if(exists){
+					//console.log("concat: found aborted file, deleting now");
+					fs.unlink(path, function(err){
+						if(err) console.log(err);
+						else callback();
+					})
+				} else {
+					//console.log("concat: no aborted file found")
+					callback();
+				}
+			})
+		},
+
+
+		//** attempt to execute the actual ffmpeg concat
 		function executeConcat(callback){ //first execute concat
 			console.log("concat: execute ffmpeg concat");
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
@@ -81,43 +101,40 @@ exports.concat = function(_Database, cb){
 			})
 		},
 
-
-		function renameOldOutputFile (callback){ //if successful concat, rename old concatOutput.mov
-
+		//** if concat is successful, rename old concatOutput.mov
+		function renameOldOutputFile (callback){
+			//**** OLD ****//
 			// var date = new Date(); //super verbose, for joe's fun:
 			// var archivedName = OUTPUT_FOLDER + "/concatOutput_archived_"
-			//									 + date.getFullYear() + "-" + date.getMonth() + "-"
-			//									 + date.getDay() 		 + "-" + date.getHours() + "h-"
-			//									 + date.getMinutes()  + "m.mov";
+			//									 + date.getFullYear() +"-"+ date.getMonth() +"-"
+			//									 + date.getDay() 		 +"-"+ date.getHours() +"h-"
+			//									 + date.getMinutes()  +"m.mov";
 			// console.log("archived name: "+archivedName);
-
-			//**** OLD ****//
 			// var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
 			// var renameFile = exec(renameScript, function(err,stdout,stderr){
 			// 	if(err) console.log(err);
-			// 	else callback();
-			// })
+			// 	else callback(); })
 
 			var oldPath = OUTPUT_FOLDER+"/concatOutput.mov";
 			var newPath = OUTPUT_FOLDER+"/concatOutput_archived.mov";
 
-			console.log("concat: checking for old output file");
+			console.log("concat: renaming files");
 			fs.exists(oldPath, function (exists) {
 			  if(exists){
-					console.log("concat: renaming old output file");
+					//console.log("concat: renaming old output file");
 					fs.rename(oldPath, newPath, function(err){
 						if(err) console.log(err);
 						else callback();
 					})
 				} else {
-					console.log("concat: no old output file to archive")
+					//console.log("concat: no old output file to archive")
 					callback();
 				}
 			})
 		},
 
-
-		function renameNewOutputFile (callback){ //if successful concat, rename NEW concatOutput.mov
+		//** now, rename the NEW concatOutput.mov
+		function renameNewOutputFile (callback){
 
 			//**** OLD ****//
 			// var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
@@ -129,7 +146,7 @@ exports.concat = function(_Database, cb){
 			var oldPath = OUTPUT_FOLDER+"/concatOutput_NEW.mov";
 			var newPath = OUTPUT_FOLDER+"/concatOutput.mov";
 
-			console.log("cconcat: renaming new output file");
+			//console.log("concat: renaming new output file");
 			fs.rename(oldPath, newPath, function(err){
 				if(err) console.log(err);
 				else callback();
@@ -137,10 +154,9 @@ exports.concat = function(_Database, cb){
 		}
 	], function(err, result){
 
-		console.log("concat completed.");
+		console.log("concat: CONCAT COMPLETED.");
 		cb(null); //DONE DONE DONE
 	});
-
 }
 
 
