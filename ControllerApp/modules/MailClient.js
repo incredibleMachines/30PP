@@ -24,17 +24,21 @@ var mailOptions = {
     //text: "This is an automated message to inform you that the ControllerApp is starting at "+ new Date() // plaintext body
 }
 
-
+var DEVELOPMENT = true;
 
 
 exports.send = function(subject,text,cb){
 
   mailOptions.subject = subject
   mailOptions.text = text
+  if(DEVELOPMENT){
+    cb()
+  }else{
+    transport.sendMail(mailOptions,function(e,resp){
+      if(e) cb(e)
+      else cb(null,resp)
+    })
+  }
 
-  transport.sendMail(mailOptions,function(e,resp){
-    if(e) cb(e)
-    else cb(null,resp)
-  })
 
 }
