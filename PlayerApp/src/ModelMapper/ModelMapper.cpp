@@ -1759,13 +1759,10 @@ void ModelMapper::drawMasks(){
                 glDepthFunc(GL_ALWAYS);
                 if(i!=0){
                 cameras[i].drawMasks[j].draw();
-<<<<<<< HEAD
+
                 }
                 glDepthFunc(GL_LESS);
-            }
-=======
-//            }
->>>>>>> 38684e0f9e7e367a1f2686dcdffe47cd2a9f5e22
+            
         }
     }
 }
