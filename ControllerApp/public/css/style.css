@@ -453,3 +453,12 @@ fieldset[disabled] .btn-default.active .caret {
 .form-control.location {
   margin-bottom: 20px;
 }
+/* ---------------- Media Queries ------------------- */
+@media (max-height: 850px) {
+  .affix {
+    position: fixed;
+    height: 100%;
+    overflow-y: scroll;
+    padding-bottom: 100px;
+  }
+}
