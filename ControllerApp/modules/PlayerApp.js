@@ -69,11 +69,10 @@ exports.index = {
     //make the PlayerApp Process be the first thing that runs
     var child = exec("osascript -e 'tell application \"System Events\" ' -e 'set frontmost of the first process whose unix id is "+pID+" to true' -e 'end tell' ",
     function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
+      if(stdout) console.log('stdout: ' + stdout);
+      if(stderr) console.log('stderr: ' + stderr);
+      if(error)  console.log('exec error: ' + error);
+      if(!stdout && !stderr && !error) console.log(" PlayerApp pID: %s Activated ".inverse.green, pID)
     })
   },
   getStatus: function(){

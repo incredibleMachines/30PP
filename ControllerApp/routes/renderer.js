@@ -36,11 +36,19 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 	return function(req,res){
 		res.jsonp({status:'Check Console for data, currently being implimented'})
 
+		console.log(" Parsing Render Queue ".inverse.cyan)
+
 		parseRenderQueue(_Database, function(result){
 			//console.log("parseRenderQueue")
 			//console.log(result)
+			console.log(" Parsing Complete ".inverse.green)
+			console.log(" Formatting JSON for AE ".inverse.cyan)
+
 			formatJSONForAE(result, _PathFinder, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 
+				console.log(" Formatting Complete ".inverse.green)
+				console.log(" Beginning Render Process ".inverse.cyan)
+				
 				//console.log(JSON.stringify(formattedOutput))
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
