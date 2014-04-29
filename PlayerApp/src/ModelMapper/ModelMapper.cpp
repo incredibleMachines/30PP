@@ -1743,7 +1743,7 @@ void ModelMapper::drawMasks(){
                 //turn on outlines if adjusting
                 if(adjustMode==ADJUST_MODE_MASK){
                     cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
-                    if(i==cameraSelect||i==guiCam){
+                    if(i==cameraSelect){
                         if(j==cameras[i].highlightMask&&bMaskPoint==false){
                             cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
                         }
@@ -1752,7 +1752,11 @@ void ModelMapper::drawMasks(){
                 else{
                     cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
                 }
+                glDepthFunc(GL_ALWAYS);
+                if(i!=0){
                 cameras[i].drawMasks[j].draw();
+                }
+                glDepthFunc(GL_LESS);
             }
         }
     }
