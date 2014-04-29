@@ -70,7 +70,7 @@ exports.concat = function(_Database, cb){
 		function executeConcat(callback){ //first execute concat
 
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
-			console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
+			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
 
 			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){

@@ -11,7 +11,7 @@ var ambientEvent = {
 	"title" : "Ambient",
 	"slug" : "ambient_gradient",
 	"concat_queue" : 0, //always at queue 0
-	"duration" : 650000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
+	"duration" : 640000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
 	"start_time" : 0,
 	"scenes" : [
 		{
@@ -20,7 +20,7 @@ var ambientEvent = {
 			"slug" : "ambient_gradient",
 			"concat_queue" : 0, //if another scene is added, will be '1'
 			"start_time" : 0, //need to manually calc the start_time of the next ambient event
-			"duration" : 650000
+			"duration" : 640000
 		}
 	]
 }
@@ -161,8 +161,13 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 					// console.log("+++++++++++++++++++++++++++++++");
 					async.eachSeries(scenes, function(scene, __cb){
 						var thisDuration = 47000;
-						if (scene.title === "Gastronomy") thisDuration = 55000; //gastronomically large!
-						if (scene.title === "Leisure") 	 thisDuration = 52000;
+						if (scene.title === "Gastronomy") 				thisDuration = 55000; //gastronomically large!
+						if (scene.title === "Leisure") 	 				thisDuration = 52000;
+						if (scene.title === "Gastronomy Detail")	thisDuration = 96000;
+						if (scene.title === "Market Detail")			thisDuration = 67000;
+						if (scene.title === "Shopping Detail")		thisDuration = 101000;
+						if (scene.title === "Art & Design Detail")thisDuration = 96000;
+						if (scene.title === "Leisure Detail")		 thisDuration = 83000;
 						var thisStartTime = timelineStartTime+parseInt(ambientEvent.duration);
 						var thisConcatSlug;
 						if(scene.type == "default" || scene.type == "ambient")
