@@ -33,7 +33,7 @@ exports.concat = function(_Database, cb){
 
 	async.waterfall([
 		function populateSceneFiles (callback){
-			//console.log("hit populateSceneFiles");
+			console.log("concat: populating scene files");
 			_Database.getAll('timeline',function(e, tEvents){
 				async.each(tEvents, function(evt, cb){
 					if(evt.scenes.length>0){
@@ -55,6 +55,7 @@ exports.concat = function(_Database, cb){
 
 
 		function writeList (callback){
+			console.log("concat: saving concat_list.txt");
 			var writeline="";
 			async.each(allSceneFileNames, function(filename, _cb){
 				writeline += "file '"+filename+"'\n";
@@ -68,7 +69,7 @@ exports.concat = function(_Database, cb){
 
 
 		function executeConcat(callback){ //first execute concat
-
+			console.log("concat: execute ffmpeg concat");
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
 			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
 
@@ -99,16 +100,17 @@ exports.concat = function(_Database, cb){
 
 			var oldPath = OUTPUT_FOLDER+"/concatOutput.mov";
 			var newPath = OUTPUT_FOLDER+"/concatOutput_archived.mov";
-			//console.log("HIT renameOldOutputFile");
 
+			console.log("concat: checking for old output file");
 			fs.exists(oldPath, function (exists) {
 			  if(exists){
+					console.log("concat: renaming old output file");
 					fs.rename(oldPath, newPath, function(err){
 						if(err) console.log(err);
 						else callback();
 					})
 				} else {
-					console.log("no old output file to archive")
+					console.log("concat: no old output file to archive")
 					callback();
 				}
 			})
@@ -126,8 +128,8 @@ exports.concat = function(_Database, cb){
 
 			var oldPath = OUTPUT_FOLDER+"/concatOutput_NEW.mov";
 			var newPath = OUTPUT_FOLDER+"/concatOutput.mov";
-			//console.log("HIT renameNewOutputFile");
 
+			console.log("cconcat: renaming new output file");
 			fs.rename(oldPath, newPath, function(err){
 				if(err) console.log(err);
 				else callback();
