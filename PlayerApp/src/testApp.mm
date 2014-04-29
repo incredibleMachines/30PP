@@ -29,7 +29,7 @@ void testApp::setup() {
 
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
-    
+
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER SETUP
@@ -65,6 +65,10 @@ void testApp::setup() {
     
     MSA::ofxCocoa::hideCursor();
     bCheckingTime=false;
+    loopMode=DEFAULT_LOOP;
+    
+    numScreens=2;
+    bScreenRestart=false;
     
 }
 
@@ -79,6 +83,11 @@ void testApp::update(){
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
+        
+        
+//        if(map.adjustMode==ADJUST_MODE_LOCKED){
+//            MSA::ofxCocoa::hideCursor();
+//        }
         
         socketHandler.eventHandler.bTriggerEvent=false;
         loadTime=socketHandler.eventHandler.currentStart;
@@ -124,7 +133,17 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="pause"){
-            MSA::ofxCocoa::pausePlayer();
+            bool bCanPause=false;
+            for(int i=0; i<pauseTimes.size();i++){
+                if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
+                    bCanPause=true;
+                    pauseTime=pauseTimes[i];
+                    break;
+                }
+            }
+            if(bCanPause==true){
+                bPausing=true;
+            }
         }
         
         else if(socketHandler.eventHandler.currentEvent=="resume"){
@@ -134,8 +153,14 @@ void testApp::update(){
     }
     
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
-        map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-        loadTime=0.0;
+        if(loopMode==AMBIENT_LOOP){
+            loadTime=socketHandler.eventHandler.events[0].startTime;
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+        }
+        else if (loopMode==DEFAULT_LOOP){
+            loadTime=socketHandler.eventHandler.events[1].startTime;
+            map.fadeIn(TRANSITION_GASTRONOMY);
+        }
         bCheckingTime=false;
     }
     
@@ -157,6 +182,11 @@ void testApp::update(){
         map.bUnlocked=false;
     }
     
+    if(bPausing==true&&MSA::ofxCocoa::getCurrentTime()>pauseTime){
+        bPausing=false;
+        MSA::ofxCocoa::pausePlayer();
+    }
+    
     //Get Texture data from CVOpenGLTexture in ofxCocoa
     meshTexture->setUseExternalTextureID(MSA::ofxCocoa::getTextureID());
     ofTextureData data=meshTexture->getTextureData();
@@ -172,9 +202,25 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    if(MSA::ofxCocoa::getScreens()>0){
+    if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==false){
         map.draw();
     }
+    
+    else if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==true){
+        bStartScreenRestart=true;
+    }
+    
+    else {
+        bScreenRestart==true;
+    }
+
+    
+    if(bScreenRestart==true&&bStartScreenRestart==true){
+        socketHandler.sendSocketCmd(RESTART_REQ);
+        bStartScreenRestart=false;
+        bScreenRestart=false;
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -193,6 +239,9 @@ void testApp::keyPressed(int key){
         case ']':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
             break;
+        case 'Q':
+            socketHandler.sendSocketCmd(CLOSE_REQ);
+            break;
             
     }
     
@@ -203,6 +252,35 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
-    currentEnd=650;
-    currentTransition=TRANSITION_AMBIENT_GRADIENT;
+    if(loopMode==DEFAULT_LOOP){
+        currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+        currentTransition=TRANSITION_GASTRONOMY;
+        loadTime=socketHandler.eventHandler.events[1].startTime;
+        map.fadeIn(TRANSITION_GASTRONOMY);
+    }
+    else if(loopMode==AMBIENT_LOOP){
+        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
+        currentTransition=TRANSITION_AMBIENT_GRADIENT;
+        loadTime=socketHandler.eventHandler.events[0].startTime;
+        map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+    }
+
+    
+    float tempPause;
+    tempPause=socketHandler.eventHandler.events[1].startTime+23;
+    pauseTimes.push_back(tempPause);
+    tempPause+=5.7;
+    pauseTimes.push_back(tempPause);
+    tempPause+=10.8;
+    pauseTimes.push_back(tempPause);
+    tempPause+=5.2;
+    pauseTimes.push_back(tempPause);
+    tempPause+=26;
+    pauseTimes.push_back(tempPause);
+    tempPause+=5.7;
+    pauseTimes.push_back(tempPause);
+    tempPause+=10.8;
+    pauseTimes.push_back(tempPause);
+    tempPause+=5.2;
+    pauseTimes.push_back(tempPause);
 }

@@ -259,7 +259,7 @@ function makeMongoID(__id){
 //format asset
 
 function formatAsset(_asset,cb){
-	console.log('formatting asset: '+JSON.stringify(_asset));
+	//console.log('formatting asset: '+JSON.stringify(_asset));
 	if(_asset.file!=''){
 		getDocumentByID('files',_asset.file,function(e,_file){
 			if(_file.location!=''){

@@ -20,7 +20,7 @@ exports.index = function(_Database){
 					if(_e) res.jsonp({"Error": "Query Collection Error: Events"})
 
 					else{ 	var _queue = _.where(_clips,{render: true})
-							res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', queue: _queue, clips: _clips, scenes: _scenes } );
+							res.render('renderqueue/index', { current: req.url, title: 'Render Queue', page_slug: 'renderqueue-index', queue: _queue, clips: _clips, scenes: _scenes, auth: req.session.name } );
 						}
 				})
 			}
@@ -45,8 +45,9 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
 						//concat files and document output
+						console.log(" Beginning Concat ".inverse )
 						ffmpeg.concat(_Database,function(_e){
-							if(!e) console.log('Concat Success')
+							if(!e) console.log(' Concat Success '.inverse.green)
 							else console.error('Concat Error: '+_e)
 						})
 					}else{

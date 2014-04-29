@@ -152,8 +152,8 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
     }
     
-    cameras[guiCam].masks=cameras[cameraSelect].masks;
-    cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
+//    cameras[guiCam].masks=cameras[cameraSelect].masks;
+//    cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
     
     if(bGuiCamAdjust==false){
         cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation());
@@ -174,15 +174,19 @@ void ModelMapper::draw(){
     //----------DRAW CAMERAS, MESHES, TEXTURES
     drawCameras();
     
+
+    
+    //----------DRAW MASKS
+    glDepthFunc(GL_ALWAYS);
+    drawMasks();
+    glDepthFunc(GL_LESS);
+    
     //----------DRAW MESH POINT SELECTION HIGHLIGHTS
     ofPushStyle();
 	glDepthFunc(GL_ALWAYS);
     drawHighlights();
     glDepthFunc(GL_LESS);
 	ofPopStyle();
-    
-    //----------DRAW MASKS
-    drawMasks();
     
 }
 
@@ -1736,8 +1740,8 @@ void ModelMapper::drawMasks(){
     //draw mask ofPaths
     for(int i = 0; i < numCams; i++){
         for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
-            if(i!=guiCam||bGuiCamAdjust==false){
-                
+//            if(i!=guiCam){
+            
                 ofSetColor(0,0,0);
                 
                 //turn on outlines if adjusting
@@ -1755,9 +1759,13 @@ void ModelMapper::drawMasks(){
                 glDepthFunc(GL_ALWAYS);
                 if(i!=0){
                 cameras[i].drawMasks[j].draw();
+<<<<<<< HEAD
                 }
                 glDepthFunc(GL_LESS);
             }
+=======
+//            }
+>>>>>>> 38684e0f9e7e367a1f2686dcdffe47cd2a9f5e22
         }
     }
 }
@@ -1777,12 +1785,23 @@ void ModelMapper::updateMasks(){
             vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
             cameras[i].drawMasks[j].clear();
             for (int k=0;k<vertices.size();k++){
+
+                //COMMENTED OUT FOR REMOVAL OF GUI CAM
+                
+//                if(k==0){
+//                    cameras[i].drawMasks[j].moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+//                    
+//                }
+//                else{
+//                    cameras[i].drawMasks[j].lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+//                }
+                
                 if(k==0){
-                    cameras[i].drawMasks[j].moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+                    cameras[i].drawMasks[j].moveTo(vertices[k].x, vertices[k].y);
                     
                 }
                 else{
-                    cameras[i].drawMasks[j].lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
+                    cameras[i].drawMasks[j].lineTo(vertices[k].x, vertices[k].y);
                 }
             }
             cameras[i].drawMasks[j].close();

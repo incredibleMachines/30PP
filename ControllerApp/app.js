@@ -56,19 +56,20 @@ Folders.setup(__dirname);
 Database.MongoConnect();
 
 /**
- * Basic web socket control to PlayerApp
- *
- */
-
-WebSocket.Connect(8080,Database);
-
-/**
  *  PlayerApp
  *
  */
 
 var playerApp = PlayerApp.index
 playerApp.start()
+
+
+/**
+ * Basic web socket control to PlayerApp
+ *
+ */
+
+WebSocket.Connect(8080,Database,playerApp);
 
 
 /**
@@ -210,7 +211,6 @@ app.get('/location/matrix',function(req,res){
 app.post('/location/pathTest',function(req,res){
 
   var post = req.body;
-  console.log("pathTest: "+post);
   res.jsonp(PathFinder.returnPath(post));
 })
 
@@ -263,11 +263,16 @@ app.get('/AfterEffects/script/:file',auth.index(Database),function(req,res){
 
 //implimentation wishlist
 app.get('/PlayerApp/close',auth.index(Database),function(req,res){
+  playerApp.closeState(true)
+  playerApp.end()
+  res.jsonp(200,{status: playerApp.getStatus()})
+})
+app.get('/PlayerApp/restart',auth.index(Database),function(req,res){
   playerApp.end()
   res.jsonp(200,{status: playerApp.getStatus()})
 })
 app.get('/PlayerApp/open',auth.index(Database),function(req,res){
-  playerApp.start()
+  if(playerApp.getStatus() == false ) playerApp.start()
   res.jsonp(200,{status: playerApp.getStatus()})
 })
 
