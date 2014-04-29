@@ -101,9 +101,16 @@ exports.concat = function(_Database, cb){
 			var newPath = OUTPUT_FOLDER+"/concatOutput_archived.mov";
 			//console.log("HIT renameOldOutputFile");
 
-			fs.rename(oldPath, newPath, function(err){
-				if(err) console.log(err);
-				else callback();
+			fs.exists(oldPath, function (exists) {
+			  if(exists){
+					fs.rename(oldPath, newPath, function(err){
+						if(err) console.log(err);
+						else callback();
+					})
+				} else {
+					console.log("no old output file to archive")
+					callback();
+				}
 			})
 		},
 
