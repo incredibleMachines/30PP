@@ -273,6 +273,7 @@ app.get('/PlayerApp/restart',auth.index(Database),function(req,res){
 })
 app.get('/PlayerApp/open',auth.index(Database),function(req,res){
   if(playerApp.getStatus() == false ) playerApp.start()
+  else playerApp.activate()
   res.jsonp(200,{status: playerApp.getStatus()})
 })
 
