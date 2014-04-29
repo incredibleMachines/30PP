@@ -135,7 +135,7 @@ exports.concat = function(_Database, cb){
 		}
 	], function(err, result){
 
-		//console.log("reached end of waterfall!");
+		console.log("concat completed.");
 		cb(null); //DONE DONE DONE
 	});
 
