@@ -48,7 +48,7 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 
 				console.log(" Formatting Complete ".inverse.green)
 				console.log(" Beginning Render Process ".inverse.cyan)
-				
+
 				//console.log(JSON.stringify(formattedOutput))
 				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
 					if(!e){
@@ -413,7 +413,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										var escapedText=[];
 										for(var t=0; t<clip.zones[1].text.length; t++){
 											var thisText = utils.escapeChars(clip.zones[1].text[t]);
-											//escapedText.push(thisText);
+											escapedText.push(thisText);
 										}
 										//console.log("escapedMulti: "+escapedText);
 										currentGroup.data.source_multitext_text.push(escapedText);
