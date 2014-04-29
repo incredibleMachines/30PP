@@ -211,7 +211,7 @@ void testApp::draw(){
     }
     
     else {
-        bScreenRestart==true;
+        bScreenRestart=true;
     }
 
     
