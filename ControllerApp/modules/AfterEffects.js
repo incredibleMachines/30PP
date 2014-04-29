@@ -139,7 +139,7 @@ exports.getCurrentFile = function(){
 }
 
 
-exports.processRenderOutput = function(formattedScenes,_Database,cb){
+exports.processRenderOutput = function(formattedScenes,_Database,_Mailer,cb){
 	var renderError = null;
 	//console.log("SCENES".inverse)
 	//console.log(JSON.stringify(formattedScenes))
@@ -149,6 +149,7 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 		//call a concat function
 		cb(renderError)
 	}
+	console.log(' Processing %s AE Projects '.inverse.magenta, formattedScenes.length)
 
 	async.eachSeries(formattedScenes,setRenderContent,function(e){
 		if(e){
@@ -157,7 +158,13 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 		}else{
 			//close after effects
 			exit(function(){
-				console.log('After Effects Closed');
+				console.log(' After Effects Closed Successfully '.inverse.green);
+				var subject = "[30PP] Render Process Initiated"
+				var text = "This is an automated message to inform you that AfterEffects is beginning its render process of "+formattedScenes.length+" item(s)."
+				_Mailer.send(subject,text,function(e,resp){
+					if(e)console.error(e)
+					//else console.log(resp)
+				})
 				//render all files on the command line
 				renderqueue.push(formattedScenes,function(err,scene){
 
@@ -213,7 +220,7 @@ function setRenderContent(scene,cb){
 
 			//console.log(scene)
 			var functionCall = "main("+JSON.stringify(scene)+")" //scene.type+"("+JSON.stringify(scene)+")";
-			console.log(" Function Call to AE ".inverse.cyan)
+			console.log(" Function Call to AE %s ".inverse.cyan, scene.type)
 			console.log(functionCall)
 
 			runScriptFunction(scene.script,functionCall,function(err,stdout,stderr){

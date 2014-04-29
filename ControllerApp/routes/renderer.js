@@ -30,19 +30,27 @@ exports.index = function(_Database){
 }
 
 //a function to facilitate the render process gathers all data and executes
-exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SCENE_TYPES){
+exports.render = function(_Database, _AfterEffects, _PathFinder,_Mailer, EVENT_TYPES, SCENE_TYPES){
 
 
 	return function(req,res){
 		res.jsonp({status:'Check Console for data, currently being implimented'})
 
+		console.log(" Parsing Render Queue ".inverse.cyan)
+
 		parseRenderQueue(_Database, function(result){
 			//console.log("parseRenderQueue")
 			//console.log(result)
+			console.log(" Parsing Complete ".inverse.green)
+			console.log(" Formatting JSON for AE ".inverse.cyan)
+
 			formatJSONForAE(result, _PathFinder, EVENT_TYPES, SCENE_TYPES, function(formattedOutput){
 
+				console.log(" Formatting Complete ".inverse.green)
+				console.log(" Beginning Render Process ".inverse.cyan)
+
 				//console.log(JSON.stringify(formattedOutput))
-				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
+				_AfterEffects.processRenderOutput(formattedOutput,_Database,_Mailer,function(e){
 					if(!e){
 						//concat files and document output
 						console.log(" Beginning Concat ".inverse )
@@ -405,7 +413,7 @@ function formatJSONForAE(formattedScenes,_PathFinder,EVENT_TYPES,SCENE_TYPES,cb)
 										var escapedText=[];
 										for(var t=0; t<clip.zones[1].text.length; t++){
 											var thisText = utils.escapeChars(clip.zones[1].text[t]);
-											//escapedText.push(thisText);
+											escapedText.push(thisText);
 										}
 										//console.log("escapedMulti: "+escapedText);
 										currentGroup.data.source_multitext_text.push(escapedText);
