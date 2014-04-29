@@ -9,14 +9,15 @@
 *
 */
 
-var util 	 = require('util')
+var util 	 = require('util');
 var exec		= require('child_process').exec
 var spawn   = require('child_process').spawn
-var fs			= require('fs')
-var async 	= require('async')
-var folders = require('../modules/FolderStructure')
-var utils 	= require('../modules/Utils')
-var _ 			= require('underscore')
+var fs			= require('fs');
+var async 	= require('async');
+var folders = require('../modules/FolderStructure');
+var utils 	= require('../modules/Utils');
+var _ 			= require('underscore');
+var fs 		 = require('fs');
 
 
 // execute the concatenation of all scene videos
@@ -32,7 +33,7 @@ exports.concat = function(_Database, cb){
 
 	async.waterfall([
 		function populateSceneFiles (callback){
-			//console.log("hit populateSceneFiles");
+			console.log("concat: populating scene files");
 			_Database.getAll('timeline',function(e, tEvents){
 				async.each(tEvents, function(evt, cb){
 					if(evt.scenes.length>0){
@@ -51,7 +52,10 @@ exports.concat = function(_Database, cb){
 				})
 			});
 		},
+
+
 		function writeList (callback){
+			console.log("concat: saving concat_list.txt");
 			var writeline="";
 			async.each(allSceneFileNames, function(filename, _cb){
 				writeline += "file '"+filename+"'\n";
@@ -62,39 +66,78 @@ exports.concat = function(_Database, cb){
 				else callback();
 			})
 		},
-		function archiveOldOutput (callback){
-			// var date = new Date(); //super verbose, for joe's fun:
-			// var year = date.getFullYear();
-			// var month = date.getMonth();
-			// var day = date.getDay();
-			// var hours = date.getHours();
-			// var minutes = date.getMinutes();
-			// var archiveName = OUTPUT_FOLDER+"/concatOutput_archive_"+year+"-"+month+"-"+day+"-"+hours+"h-"+minutes+"m.mov";
-			// console.log("new archived name: "+archiveName);
-			var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
-			//console.log("name archiveScript: "+renameScript);
 
-			var renameFile = exec(renameScript, function(err,stdout,stderr){
-				if(err) console.log(err);
-				else callback();
-			})
-		},
-		function executeConcat(callback){
 
-			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput.mov";
-			//console.log("allfilenames from execConcat: ");
-			//console.log(JSON.stringify(allSceneFileNames));
+		function executeConcat(callback){ //first execute concat
+			console.log("concat: execute ffmpeg concat");
+			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
+			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
 
 			//**** EXECUTE CONCATENATE *****//
 			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
 
-			  	if(err) console.error(err);
+					if(err) console.error(err);
 					else callback();
+			})
+		},
+
+
+		function renameOldOutputFile (callback){ //if successful concat, rename old concatOutput.mov
+
+			// var date = new Date(); //super verbose, for joe's fun:
+			// var archivedName = OUTPUT_FOLDER + "/concatOutput_archived_"
+			//									 + date.getFullYear() + "-" + date.getMonth() + "-"
+			//									 + date.getDay() 		 + "-" + date.getHours() + "h-"
+			//									 + date.getMinutes()  + "m.mov";
+			// console.log("archived name: "+archivedName);
+
+			//**** OLD ****//
+			// var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
+			// var renameFile = exec(renameScript, function(err,stdout,stderr){
+			// 	if(err) console.log(err);
+			// 	else callback();
+			// })
+
+			var oldPath = OUTPUT_FOLDER+"/concatOutput.mov";
+			var newPath = OUTPUT_FOLDER+"/concatOutput_archived.mov";
+
+			console.log("concat: checking for old output file");
+			fs.exists(oldPath, function (exists) {
+			  if(exists){
+					console.log("concat: renaming old output file");
+					fs.rename(oldPath, newPath, function(err){
+						if(err) console.log(err);
+						else callback();
+					})
+				} else {
+					console.log("concat: no old output file to archive")
+					callback();
+				}
+			})
+		},
+
+
+		function renameNewOutputFile (callback){ //if successful concat, rename NEW concatOutput.mov
+
+			//**** OLD ****//
+			// var renameScript = "mv "+OUTPUT_FOLDER+"/concatOutput.mov "+OUTPUT_FOLDER+"/concatOutput_archived.mov";
+			// var renameFile = exec(renameScript, function(err,stdout,stderr){
+			// 	if(err) console.log(err);
+			// 	else callback();
+			// })
+
+			var oldPath = OUTPUT_FOLDER+"/concatOutput_NEW.mov";
+			var newPath = OUTPUT_FOLDER+"/concatOutput.mov";
+
+			console.log("cconcat: renaming new output file");
+			fs.rename(oldPath, newPath, function(err){
+				if(err) console.log(err);
+				else callback();
 			})
 		}
 	], function(err, result){
 
-		//console.log("reached end of waterfall!");
+		console.log("concat completed.");
 		cb(null); //DONE DONE DONE
 	});
 
