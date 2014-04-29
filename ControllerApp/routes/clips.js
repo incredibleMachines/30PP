@@ -43,7 +43,7 @@ exports.add = function(_Database){
 
 	}
 }
-exports.update = function(_Database){
+exports.update = function(_Database,_Mailer){
 	return function(req,res){
 		var post = req.body
 		//console.log(post)
@@ -88,6 +88,12 @@ exports.update = function(_Database){
 
 		_Database.update('clips',{_id: _Database.makeMongoID(id)},updateObject,function(e){
 			if(!e){
+				var subject = "[30PP] Clip Added to Render Queue"
+				var text = "This is an automated message to inform you that the clip "+post.title+" has been added to the render queue."
+				_Mailer.send(subject, text, function(e,resp){
+					if(e) console.error(e)
+					//else console.log(resp)
+				})
 				makeRedirectBySceneIdToClip(_Database, post.scene_id, utils.makeSlug(post.title), function(_e,url){
 					if(!_e) res.redirect(url)
 					else res.jsonp(500,{error:_e})
@@ -143,7 +149,7 @@ exports.reorder = function(_Database){
 								//console.log(holder)
 								//console.log("Scene Clips")
 								//console.log(scene.clips)
-								
+
 
 							}else if(post.type=='down'){
 								var val = holder[i+1]

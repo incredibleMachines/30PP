@@ -73,6 +73,7 @@ function parseCommand(_json){
 					_playerApp.end()
 			break;
 			case 'restart':
+					_playerApp.restart(true)
 					_playerApp.end()
 			break;
 			default:

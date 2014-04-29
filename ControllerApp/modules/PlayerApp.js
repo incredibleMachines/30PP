@@ -1,6 +1,7 @@
 var spawn = require('child_process').spawn,
     exec = require('child_process').exec,
     folders = require('../modules/FolderStructure')
+    Mailer = require('../modules/MailClient')
 
 //globals
 
@@ -9,11 +10,12 @@ var player,
     start,
     bError,
     bClose = false,
+    bRestart = false,
     pID;
 
 exports.index = {
 
-  start : function(cb){
+  start : function(_Mailer,cb){
       if(status ==false){
         var options = [""]
         var _this = this
@@ -60,8 +62,27 @@ exports.index = {
           if(bClose == false){
             console.log(' PlayerApp Rebooting... '.inverse.green)
             _this.start()
+
+            if(bRestart == true){
+              var subject = "[30PP] PlayerApp has Restarted Itself"
+              var message = "This is an automated message to inform you that the PlayerApp as signaled that it needs to be restarted."
+            }else{
+              var subject = "[30PP] PlayerApp has Crashed"
+              var message = "This is an automated message to inform you that the PlayerApp has unexpectedly quit and been restarted by the ControllerApp."
+            }
+            Mailer.send(subject,message,function(e,resp){
+              if(e) console.error(e)
+            })
+
+          }else{
+            var subject = "[30PP] PlayerApp has been Closed"
+            var message = "This is an automated message to inform you that the PlayerApp has been intentionally closed."
+            Mailer.send(subject,message,function(e,resp){
+              if(e) console.error(e)
+            })
           }
           bClose = false //reset the closeState
+          bRestart = false
         })
       }
   },
@@ -80,6 +101,9 @@ exports.index = {
   },
   closeState: function(state){
     bClose = state
+  },
+  restart: function(state){
+    bRestart = state
   },
   end: function(){
 

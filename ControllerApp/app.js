@@ -37,6 +37,7 @@ var AfterEffects = require('./modules/AfterEffects');
 var PathFinder = require('./modules/PathFinder')
 var FFmpeg = require('./modules/FFmpeg');
 var PlayerApp = require('./modules/PlayerApp')
+var Mailer = require('./modules/MailClient')
 
 
 
@@ -61,7 +62,7 @@ Database.MongoConnect();
  */
 
 var playerApp = PlayerApp.index
-playerApp.start()
+playerApp.start(Mailer)
 
 
 /**
@@ -103,6 +104,7 @@ process.on('SIGINT', function() {
   console.log(' Goodbye '.inverse.green)
   process.exit(0)
 });
+
 
 
 /**
@@ -164,7 +166,7 @@ app.post('/scenes/:slug/delete',auth.index(Database), scenes.delete(Database))
 
 //render handling
 app.get('/renderqueue',auth.index(Database), renderer.index(Database));
-app.post('/render',auth.index(Database), renderer.render(Database,AfterEffects,PathFinder,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
+app.post('/render',auth.index(Database), renderer.render(Database,AfterEffects,PathFinder,Mailer,app.locals.EVENT_TYPES,app.locals.SCENE_TYPES))
 
 //timeline page
 app.get('/timeline',auth.index(Database), timeline.index(Database));
@@ -190,7 +192,7 @@ app.post('/files/:slug/delete',auth.index(Database),files.delete(Database));
 //clip handling
 app.post('/clips',auth.index(Database),clips.add(Database));
 app.post('/clips/reorder/:id',auth.index(Database),clips.reorder(Database));
-app.post('/clips/:id',auth.index(Database),clips.update(Database));
+app.post('/clips/:id',auth.index(Database),clips.update(Database, Mailer));
 app.delete('/clips/:id',auth.index(Database),clips.delete(Database));
 app.post('/clips/:id/delete',auth.index(Database),clips.delete(Database));
 
@@ -279,4 +281,10 @@ app.get('/PlayerApp/open',auth.index(Database),function(req,res){
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port '.grey + app.get('port').toString().cyan);
+  var subject = "[30PP] ControllerApp Starting"
+  var body = "This is an automated message to inform you that the ControllerApp is starting at "+ new Date()
+  Mailer.send(subject,body,function(e,resp){
+    if(e) console.error('Mailer Error: '+e)
+    //else console.log('Mailer Response: '+resp)
+  })
 });

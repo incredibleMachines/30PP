@@ -30,7 +30,7 @@ exports.index = function(_Database){
 }
 
 //a function to facilitate the render process gathers all data and executes
-exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SCENE_TYPES){
+exports.render = function(_Database, _AfterEffects, _PathFinder,_Mailer, EVENT_TYPES, SCENE_TYPES){
 
 
 	return function(req,res){
@@ -50,7 +50,7 @@ exports.render = function(_Database, _AfterEffects, _PathFinder, EVENT_TYPES, SC
 				console.log(" Beginning Render Process ".inverse.cyan)
 
 				//console.log(JSON.stringify(formattedOutput))
-				_AfterEffects.processRenderOutput(formattedOutput,_Database,function(e){
+				_AfterEffects.processRenderOutput(formattedOutput,_Database,_Mailer,function(e){
 					if(!e){
 						//concat files and document output
 						console.log(" Beginning Concat ".inverse )

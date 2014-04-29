@@ -139,7 +139,7 @@ exports.getCurrentFile = function(){
 }
 
 
-exports.processRenderOutput = function(formattedScenes,_Database,cb){
+exports.processRenderOutput = function(formattedScenes,_Database,_Mailer,cb){
 	var renderError = null;
 	//console.log("SCENES".inverse)
 	//console.log(JSON.stringify(formattedScenes))
@@ -159,6 +159,12 @@ exports.processRenderOutput = function(formattedScenes,_Database,cb){
 			//close after effects
 			exit(function(){
 				console.log(' After Effects Closed Successfully '.inverse.green);
+				var subject = "[30PP] Render Process Initiated"
+				var text = "This is an automated message to inform you that AfterEffects is beginning its render process of "+formattedScenes.length+" item(s)."
+				_Mailer.send(subject,text,function(e,resp){
+					if(e)console.error(e)
+					//else console.log(resp)
+				})
 				//render all files on the command line
 				renderqueue.push(formattedScenes,function(err,scene){
 
