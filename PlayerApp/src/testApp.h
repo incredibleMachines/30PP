@@ -58,6 +58,7 @@ public:
     int numScreens;
     bool bScreenRestart, bStartScreenRestart;
     
+    float startOffset;
         
 };
 
