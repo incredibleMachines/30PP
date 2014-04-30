@@ -67,7 +67,7 @@ void testApp::setup() {
     bCheckingTime=false;
     loopMode=DEFAULT_LOOP;
     
-    numScreens=2;
+    numScreens=3;
     bScreenRestart=false;
     
 }
