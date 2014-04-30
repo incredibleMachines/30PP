@@ -94,9 +94,11 @@ exports.concat = function(_Database, cb){
 			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
 
 			//**** EXECUTE CONCATENATE *****//
-			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
-
+			var CONCATENATE = exec(concatFromFileScript, {maxBuffer:10000*1024},function(err,stdout,stderr){
+					if(stderr) console.log(stderr);
+					if(stdout) console.log(stdout);
 					if(err) console.error(err);
+				  if(!stdout && !stderr && !error) console.log(" PlayerApp pID: %s Activated ".inverse.green, pID)
 					else callback();
 			})
 		},
