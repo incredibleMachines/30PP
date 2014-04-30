@@ -93,12 +93,27 @@ exports.concat = function(_Database, cb){
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
 			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
 
-			//**** EXECUTE CONCATENATE *****//
-			var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
+			var concatenate = spawn('ffmpeg',['-f','concat','-i',OUTPUT_FOLDER+'/concat_list.txt', '-c', 'copy', OUTPUT_FOLDER+'/concatOutput_NEW.mov'])
+			concatenate.stdout.on('data',function(data){
+				//console.log(data)
 
-					if(err) console.error(err);
-					else callback();
 			})
+			concatenate.stderr.on('data',function(data){
+				//console.error(data)
+			})
+			concatenate.on('error',function(error){
+				console.error(error)
+			})
+			concatenate.on('close',function(code){
+				console.log('Concatenate Spawn Complete')
+				callback()
+			})
+			//**** EXECUTE CONCATENATE *****//
+			// var CONCATENATE = exec(concatFromFileScript, function(err,stdout,stderr){
+			//
+			// 		if(err) console.error(err);
+			// 		else callback();
+			// })
 		},
 
 		//** if concat is successful, rename old concatOutput.mov
