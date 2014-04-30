@@ -92,9 +92,11 @@ exports.concat = function(_Database, cb){
 			console.log("concat: execute ffmpeg concat");
 			var concatFromFileScript = "ffmpeg -f concat -i "+OUTPUT_FOLDER+"/concat_list.txt -c copy "+OUTPUT_FOLDER+"/concatOutput_NEW.mov";
 			//console.log("allfilenames from execConcat: "+ JSON.stringify(allSceneFileNames));
+
 			var concatenate = spawn('ffmpeg',['-f','concat','-i',OUTPUT_FOLDER+'/concat_list.txt', '-c', 'copy', OUTPUT_FOLDER+'/concatOutput_NEW.mov'])
 			concatenate.stdout.on('data',function(data){
 				//console.log(data)
+
 			})
 			concatenate.stderr.on('data',function(data){
 				//console.error(data)
