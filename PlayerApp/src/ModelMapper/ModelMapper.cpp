@@ -1756,8 +1756,13 @@ void ModelMapper::drawMasks(){
                 else{
                     cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
                 }
+                glDepthFunc(GL_ALWAYS);
+                if(i!=0){
                 cameras[i].drawMasks[j].draw();
-//            }
+
+                }
+                glDepthFunc(GL_LESS);
+            
         }
     }
 }

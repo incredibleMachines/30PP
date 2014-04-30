@@ -14,8 +14,8 @@
     "ejs": "*",
     "async":"*",
     "underscore": "1.6.x",
-    "spawn-async":"*",
     "pathfinding": "git://github.com/qiao/PathFinding.js.git",
-    "pngjs":"0.4.x"
+    "pngjs":"0.4.x",
+    "nodemailer": "0.6.x"
   }
 }
