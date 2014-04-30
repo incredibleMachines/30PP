@@ -1343,9 +1343,11 @@ void ModelMapper:: drawCameras() {
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
+                            glDepthFunc(GL_ALWAYS);
                             ofSetColor(255,255,255,100);
-                            ofSetLineWidth(2);
+                            ofSetLineWidth(5);
                             cameras[i].mesh[j].drawWireframe();
+                            glDepthFunc(GL_LESS);
                         }
                     }
                 }
@@ -1662,13 +1664,13 @@ void ModelMapper::drawHighlights() {
             ofSetLineWidth(2);
             if(drawNearest==true){
                 ofSetColor(ofColor::yellow);
-                ofCircle(nearestVertex, 4);
+                ofCircle(nearestVertex, 10);
             }
         }
         
         ofSetColor(255,0,0);
         for(int i=0;i<maskVertices.size();i++){
-            ofCircle(maskVertices[i].vertex,4);
+            ofCircle(maskVertices[i].vertex,10);
         }
         
     }
@@ -1707,9 +1709,9 @@ void ModelMapper::drawHighlights() {
                         ofSetColor(0,255,0);
                         ofNoFill();
                         ofSetLineWidth(2);
-                        ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,4);
+                        ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,10);
                         if(cameraSelect!=guiCam){
-                            ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,4);
+                            ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
                         }
                     }
                 }
@@ -1723,7 +1725,7 @@ void ModelMapper::drawHighlights() {
         ofSetLineWidth(2);
         if(drawNearest==true){
             ofSetColor(0,255,0);
-            ofCircle(nearestVertex, 4);
+            ofCircle(nearestVertex, 10);
         }
     }
     
