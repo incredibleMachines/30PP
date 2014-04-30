@@ -163,11 +163,11 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 						var thisDuration = 47000;
 						if (scene.title === "Gastronomy") 				thisDuration = 55000; //gastronomically large!
 						if (scene.title === "Leisure") 	 				thisDuration = 52000;
-						if (scene.title === "Gastronomy Detail")	thisDuration = 96000;
-						if (scene.title === "Market Detail")			thisDuration = 67000;
-						if (scene.title === "Shopping Detail")		thisDuration = 101000;
-						if (scene.title === "Art & Design Detail")thisDuration = 96000;
-						if (scene.title === "Leisure Detail")		 thisDuration = 83000;
+						if (scene.title === "Gastronomy Detail")	thisDuration = 97000;
+						if (scene.title === "Market Detail")			thisDuration = 72000;
+						if (scene.title === "Shopping Detail")		thisDuration = 106000;
+						if (scene.title === "Art & Design Detail")thisDuration = 97000;
+						if (scene.title === "Leisure Detail")		 thisDuration = 88000;
 						var thisStartTime = timelineStartTime+parseInt(ambientEvent.duration);
 						var thisConcatSlug;
 						if(scene.type == "default" || scene.type == "ambient")
