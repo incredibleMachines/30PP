@@ -115,11 +115,11 @@ exports.sendSingle = function(_Database, _Websocket){
 					event: {
 						title: "Ambient Gradient",
 						slug: slug,
-						duration: 650000,
+						/** TODO: DB CALL NEEDS TO POPULATE THIS OBJECT **/
+						duration: 640000,
 						start_time: 0
 					}
 				}
-
 			}
 			console.log("socketCommand: "+JSON.stringify(socketCommand));
 			_Websocket.status(function(status){
