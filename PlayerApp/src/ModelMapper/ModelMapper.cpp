@@ -1404,7 +1404,7 @@ void ModelMapper:: drawCameras() {
                                     glDepthFunc(GL_ALWAYS);
                                     if(bTransitionStarted==true){
                                         if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                                            if(i==numCams-1)bTransitionStarted=false;
+                                            if(i==numCams-1) bTransitionStarted=false;
                                             ofSetColor(255,255,255,255);
                                         }
                                         int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
@@ -1425,6 +1425,7 @@ void ModelMapper:: drawCameras() {
                                         if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
                                                 bTransitionFinished=true;
                                                 bTransitionLoading=false;
+                                            
 
                                             transitionTimer=ofGetElapsedTimeMillis();
                                             ofSetColor(255,255,255,255);
@@ -1444,6 +1445,7 @@ void ModelMapper:: drawCameras() {
                                         if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
                                                 bTransitionFinished=false;
                                                 bTransitioning=false;
+                                            ofSetColor(255,255,255,0);
                                         }
                                             ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
                                         
@@ -3140,7 +3142,9 @@ void ModelMapper::fadeIn(int type){
     bTransitioning=true;
     bTransitionStarted=true;
     bTransitionFinished=false;
+    
     transitionTimer=ofGetElapsedTimeMillis();
+    
     if (type==TRANSITION_AMBIENT_GRADIENT){
         fadeFrame=&ambientGradientFrame;
     }

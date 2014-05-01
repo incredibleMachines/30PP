@@ -77,6 +77,9 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update(){
     
+    //------ UPDATE DEM SOCKETS
+    socketHandler.update();
+    
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
         bCheckingTime=true;
@@ -85,7 +88,6 @@ void testApp::update(){
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
         
-        
 //        if(map.adjustMode==ADJUST_MODE_LOCKED){
 //            MSA::ofxCocoa::hideCursor();
 //        }
@@ -93,6 +95,7 @@ void testApp::update(){
         socketHandler.eventHandler.bTriggerEvent=false;
         loadTime=socketHandler.eventHandler.currentStart;
         MSA::ofxCocoa::startPlayer();
+        bCheckingTime=false;
         
         for(int i=0; i<socketHandler.eventHandler.events.size();i++){
             if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
@@ -105,8 +108,14 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
-            loadTime=0.0;
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            if(loopMode==AMBIENT_LOOP){
+                loadTime=socketHandler.eventHandler.events[0].startTime;
+                map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            }
+            else if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                map.fadeIn(TRANSITION_GASTRONOMY);
+            }
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
@@ -200,8 +209,7 @@ void testApp::update(){
     //Pass texture into ModelMapper
     map.update(meshTexture);
     
-    //------ UPDATE DEM SOCKETS
-    socketHandler.update();
+ 
 }
 
 //--------------------------------------------------------------
@@ -257,6 +265,7 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
+    
     if(loopMode==DEFAULT_LOOP){
         currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
         currentTransition=TRANSITION_GASTRONOMY;
