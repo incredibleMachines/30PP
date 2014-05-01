@@ -24,7 +24,7 @@ exports.index = function(_Database,EVENT_TYPES){
 		//res.jsonp({success:'success'})
 		var structure = {};
 		structure.sales = {play_all: '/api/play/sales', play_single:[]};
-		structure.ambient = {play_all: '', play_single:[{"Ambient Gradient":'/api/play/ambient_gradient'}]};
+		structure.ambient = {play_all: '/api/play/ambient_gradient', play_single:[{"Ambient Gradient":'/api/play/ambient_gradient'}]};
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
 
 		EVENT_TYPES.forEach(function(type,i){
@@ -101,48 +101,52 @@ exports.sendSingle = function(_Database, _Websocket){
 
 	return function(req,res){
 		var slug = req.params.slug;
-		//console.log("send single");
-		//console.log("req: "+req);
-		//console.log("slug: "+slug);
-		if(slug.indexOf("ambient")>-1){
+		console.log("send single");
+		console.log("req: "+req);
+		console.log("slug: "+slug);
+		if(slug.indexOf("ambient")>-1 || slug.indexOf("gradient")>-1){
 			//if its an ambient slug then we need to hardcore them.
 			//for now its just ambient_gradient
-
-
-			if(slug.indexOf("gradient")>-1){
-				var socketCommand = {
-					command: "play",
-					event: {
-						title: "Ambient Gradient",
-						slug: slug,
-						/** TODO: DB CALL NEEDS TO POPULATE THIS OBJECT **/
-						duration: 640000,
-						start_time: 0
+			//if(slug.indexOf("gradient")>-1){
+			_Database.getDocumentBySlug('timeline','ambient_gradient', function(e, _event){
+				if(_event){
+					var socketCommand = {
+						command: "play",
+						event: {
+							title: _event.title,//"Ambient Gradient",
+							slug: _event.slug,
+							/** TODO: DB CALL NEEDS TO POPULATE THIS OBJECT **/
+							duration: _event.duration,
+							start_time: _event.start_time
+						}
 					}
-				}
-			}
-			console.log("socketCommand: "+JSON.stringify(socketCommand));
-			_Websocket.status(function(status){
-				if(status ==true){
-					_Websocket.socket(function(socket){
-						socket.send(JSON.stringify(socketCommand))
-						res.jsonp({success: {socketCommand: socketCommand}});
+
+					console.log("socketCommand: "+JSON.stringify(socketCommand));
+					_Websocket.status(function(status){
+						if(status ==true){
+							_Websocket.socket(function(socket){
+								socket.send(JSON.stringify(socketCommand))
+								res.jsonp({success: {socketCommand: socketCommand}});
+							})
+						}else{
+							res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+						}
 					})
-				}else{
-					res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+				}
+				else {
+					res.jsonp({error:'Event Not Found', requested: slug})
 				}
 			})
-
 		}else{
 			_Database.getDocumentBySlug('timeline',slug, function(e, _event){
 				if(_event){
 					var socketCommand = {
 						"command": "play",
 						"event": {
-							"title": _event.title,
-							"slug" : _event.slug,
-							"duration": _event.duration,
-							"start_time": _event.start_time
+						"title": _event.title,
+						"slug" : _event.slug,
+						"duration": _event.duration,
+						"start_time": _event.start_time
 						}
 					};
 
@@ -163,11 +167,8 @@ exports.sendSingle = function(_Database, _Websocket){
 				}
 			})
 		}
-
 	}
 }
-
-
 
 /* Control Commands, ex:
 
