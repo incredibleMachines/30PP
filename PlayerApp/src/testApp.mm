@@ -45,7 +45,7 @@ void testApp::setup() {
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("UV walls_05.obj");
+    map.setMassMesh("mesh/mesh.obj");
     map.set2D(0);
     map.set2D(1);
     map.set2D(2);
@@ -67,7 +67,8 @@ void testApp::setup() {
     bCheckingTime=false;
     loopMode=DEFAULT_LOOP;
     
-    numScreens=3;
+    numScreens=2;
+    startOffset=3.0;
     bScreenRestart=false;
     
 }
@@ -100,7 +101,7 @@ void testApp::update(){
         }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
-            map.fadeIn(TRANSITION_GASTRONOMY);
+            map.fadeIn(TRANSITION_DEFAULT);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
@@ -113,14 +114,17 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
+            loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
+            loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
+            loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
@@ -129,6 +133,7 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="leisure"){
+            loadTime+=startOffset;
             map.fadeIn(TRANSITION_LEISURE);
         }
         

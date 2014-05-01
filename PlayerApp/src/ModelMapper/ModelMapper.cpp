@@ -103,6 +103,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     ofLoadImage(shoppingFrame,"Shopping_Frame.jpg");
     ofLoadImage(marketsFrame,"Markets_Frame.jpg");
     ofLoadImage(endFrame,"End_Frame.jpg");
+    ofLoadImage(defaultFrame,"Default_Frame.jpg");
     bTransitioning=false;
     bTransitionStarted=false;
     bTransitionFinished=false;
@@ -3142,6 +3143,9 @@ void ModelMapper::fadeIn(int type){
     transitionTimer=ofGetElapsedTimeMillis();
     if (type==TRANSITION_AMBIENT_GRADIENT){
         fadeFrame=&ambientGradientFrame;
+    }
+    else if(type==TRANSITION_DEFAULT){
+        fadeFrame=&defaultFrame;
     }
     else if(type==TRANSITION_ARTS){
         fadeFrame=&artsFrame;
