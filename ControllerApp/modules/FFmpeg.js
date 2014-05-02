@@ -18,8 +18,9 @@ var folders = require('../modules/FolderStructure');
 var utils 	= require('../modules/Utils');
 var _ 			= require('underscore');
 var fs 		 = require('fs');
+var mailer  = require('../modules/MailClient')
 
-//concatenation globals
+// concatenation globals
 var __Database;
 var OUTPUT_FOLDER;
 var ASSET_FOLDER;
@@ -48,6 +49,8 @@ exports.concat = function(_Database, cb){
 
 		checkForAbortedConcatFile,
 
+		checkForAllSourceFiles,
+
 		executeConcat,
 
 	  renameOldOutputFile,
@@ -57,10 +60,24 @@ exports.concat = function(_Database, cb){
 	], function(err, result){
 		if(err){
 			console.log("concat: CONCAT FAILED, err: "+err);
-			cb(err);
+			var subject = "[30PP] ControllerApp Concatenation has Failed";
+			var message = "This is an automated message to inform you that the ControllerApp failed while trying to concatenate final renders. Error: "+err;
+			mailer.send(subject,message,function(e,resp){
+				if(e){
+					console.error(e)
+					cb(err); //should also add 'e' to this callback
+				} else cb(err)
+			})
 		}else{
 			console.log("concat: CONCAT COMPLETED.");
-			cb(null); //DONE DONE DONE
+			var subject = "[30PP] ControllerApp Concatenation has Completed"
+			var message = "This is an automated message to inform you that the ControllerApp successfully completed a concatentation of the most recent renders."
+			mailer.send(subject,message,function(e,resp){
+				if(e){
+					console.error(e)
+					cb(e);
+				} else cb(null);//DONE DONE DONE
+			})
 		}
 	});
 }
@@ -116,6 +133,31 @@ function checkForAbortedConcatFile(callback){ //first execute concat
 		} else {
 			callback(null); // no aborted file found, that's fine let's keep going
 		}
+	})
+}
+
+
+//** check that all files exist
+function checkForAllSourceFiles(callback){
+	var missingFile = false;
+	var missingFiles = new Array();
+	allSceneFileNames.forEach(function(file,i){
+		var fileDir = OUTPUT_FOLDER+"/"+file;
+		//console.log("checking for file #"+i+" dir: "+fileDir);
+		fs.exists(fileDir, function (exists) {
+			if(!exists){
+				missingFile = true;
+				missingFiles.push(file);
+			}
+			if (i === allSceneFileNames.length-1){
+				if(missingFile === true){
+					console.log("concat error: missing files: "+JSON.stringify(missingFiles));
+					callback("missing source files: "+JSON.stringify(missingFiles));
+				} else {
+					callback(null);
+				}
+			}
+		})
 	})
 }
 
