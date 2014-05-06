@@ -19,16 +19,21 @@ exports.on = function(req,res){
 
   options.method = "POST"
   options.path = "/cgi-bin/power_on.cgi"
-  options.headers = {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': post_data.length
-      }
 
   var responses = ''
   var c =0;
   hostnames.forEach(function(host){
 
     options.hostname = host
+
+    options.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': post_data.length,
+            'Origin': 'http://'+host,
+            'Referer': 'http://'+host+'/cgi-bin/power_ctl.cgi?key=pow_on&lang=e&from=BASIC_CTL'
+
+        }
+
     console.log("Requesting "+host)
     var req = http.request(options,function(res){
       res.on('data',function(d){
@@ -49,14 +54,29 @@ exports.on = function(req,res){
 }
 
 exports.off = function(req,res){
+  var post_data = querystring.stringify({
+      'lang' : 'e',
+      'Submit.x': '38',
+      'Submit.y': '6'
+  });
   //standby
-  options.method = "GET"
-  options.path = "/cgi-bin/power_ctl.cgi?key=pow_off&lang=e&from=BASIC_CTL"
+  options.method = "POST"
+  options.path = "/cgi-bin/power_off.cgi"
+
   var responses = ''
   var c =0;
   hostnames.forEach(function(host){
 
     options.hostname = host
+
+    options.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': post_data.length,
+            'Origin': 'http://'+host,
+            'Referer': 'http://'+host+'/cgi-bin/power_ctl.cgi?key=pow_off&lang=e&from=BASIC_CTL'
+
+        }
+
     console.log("Requesting "+host)
     var req = http.request(options,function(res){
       res.on('data',function(d){
@@ -77,6 +97,8 @@ exports.off = function(req,res){
 exports.hdmi = function(req,res){
   options.method="GET"
   options.path = "/cgi-bin/proj_ctl.cgi?key=hdmi&lang=e&osd=off"
+  delete options.headers;
+
   var responses = ''
   var c =0;
   hostnames.forEach(function(host){
