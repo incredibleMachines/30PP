@@ -23,6 +23,7 @@ var clips = require('./routes/clips')
 var api = require('./routes/api');
 var timeline = require('./routes/timeline');
 var admin = require('./routes/admin')
+var projectors = require('./routes/projectors')
 var auth = require('./middleware/auth')
 
 /**
@@ -203,6 +204,10 @@ app.get('/logout',admin.logout(Database))
 app.get('/controller',function(req,res){
   res.render('controller/index')
 })
+
+app.get('/projectors/on', projectors.on)
+app.get('/projectors/off', projectors.off)
+app.get('/projectors/hdmi', projectors.hdmi)
 
 app.get('/location/matrix',function(req,res){
 
