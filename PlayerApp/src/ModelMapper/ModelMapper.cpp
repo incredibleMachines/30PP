@@ -1042,14 +1042,14 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             }
             
             if(drawMesh==true){
-                if(cameras[guiCam].meshObjects[i].isMesh==false){
+                if(cameras[cameraSelect].meshObjects[i].isMesh==false){
                     float nearestDistance = 15;
                     //parse through all vertices to determine nearest, if exists
-                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
-                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
-                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                    for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
+                            float distance = cameras[cameraSelect].meshObjects[i].warped[j][k].distance((mouse-cameras[cameraSelect].meshObjects[i].translate)/cameras[cameraSelect].meshObjects[i].scale);
                             if(distance < nearestDistance) {
-                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
+                                nearestVertex = cameras[cameraSelect].meshObjects[i].warped[j][k]*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].meshObjects[i].translate;
                                 
                                 vertex2D tempVert;
                                 tempVert.vertex=nearestVertex;
@@ -1691,16 +1691,16 @@ void ModelMapper::drawHighlights() {
             
             if(drawMesh==true){
                 
-                if(cameras[guiCam].meshObjects[i].isMesh==false){
+                if(cameras[cameraSelect].meshObjects[i].isMesh==false){
                     float nearestDistance = 15;
                     
                     //parse through all vertices to determine nearest, if exists
-                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
-                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
-                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                    for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
+                            float distance = cameras[cameraSelect].meshObjects[i].warped[j][k].distance((mouse-cameras[cameraSelect].meshObjects[i].translate)/cameras[cameraSelect].meshObjects[i].scale);
                             if(distance < nearestDistance) {
                                 nearestDistance = distance;
-                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
+                                nearestVertex = cameras[cameraSelect].meshObjects[i].warped[j][k]*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].meshObjects[i].translate;
                                 drawNearest=true;
                             }
                         }
@@ -1712,7 +1712,7 @@ void ModelMapper::drawHighlights() {
                         ofSetColor(0,255,0);
                         ofNoFill();
                         ofSetLineWidth(2);
-                        ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,10);
+//                        ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
                         if(cameraSelect!=guiCam){
                             ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
                         }
