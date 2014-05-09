@@ -27,8 +27,8 @@
 #define ADJUST_MODE_MASK 6
 #define ADJUST_MODE_LOCKED 7
 
-#define MESH_MASS 0
-#define MESH_DETAIL 1
+#define MESH_2D 0
+#define MESH_3D 1
 
 #define SELECT_MODE_POINTER 0
 #define SELECT_MODE_PAINTBRUSH 1
@@ -61,10 +61,7 @@
 class ModelMapper {
 public:
     //overloaded setup allowing different data to be passed
-    void setup(int _numCams); //defaults gui cam to [0], num Meshes to 1
-    void setup(int _numCams, int _guiCam); //defaults num Meshes to 1
-    void setup(int _numCams, int _guiCam, int _numMeshes); // draws first _numMeshes fount
-    void setup(int _numCams, int _guiCam, vector<int> _whichMeshes); //draws specifid meshes
+    void setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes); //draws specifid meshes
     
     void update(ofTexture * tex);
     void draw();
@@ -208,7 +205,7 @@ public:
     string massMesh;
     
     //holder for which meshes to reload from above filepath
-    vector<int> whichMeshes;
+    vector<vector<int> > whichMeshes;
     
     //switches for pen and double pen status
     bool bDrawingPen, bNewPen, bDrawingDouble, bNewDouble;

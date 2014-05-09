@@ -26,36 +26,15 @@
 
 #include "ModelMapper.h"
 
-void ModelMapper::setup(int _numCams){
-    
-    //pass through defaults
-    setup(_numCams,0,1);
-    
-}
 
-void ModelMapper::setup(int _numCams, int _guiCam){
-    
-    //pass through with defaults
-    setup(_numCams,_guiCam,1);
-}
-
-void ModelMapper::setup(int _numCams, int _guiCam, int _numMeshes){
-    
-    //pass through with defaults
-    vector<int> _whichMeshes;
-    _whichMeshes.push_back(0);
-    _whichMeshes.push_back(1);
-    _whichMeshes.push_back(2);
-    setup(_numCams,_guiCam,_whichMeshes);
-}
-
-void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
+void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes){
     
     //----------SETUP GLOBALS
     numCams=_numCams;
     guiCam=_guiCam;
     numMeshes=_whichMeshes.size();
     whichMeshes=_whichMeshes;
+    
     
     //set default variable values
     //camera settings
@@ -65,7 +44,6 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector<int> _whichMeshes){
     //mesh settings
     currentMesh=0;
     adjustMode=ADJUST_MODE_LOCKED;
-    meshType=MESH_MASS;
     selectMode=SELECT_MODE_POINTER;
     easeMode=EASE_MODE_NONE;
     easeInStyle=EASE_STYLE_LINEAR;
@@ -1114,6 +1092,7 @@ void ModelMapper::mouseReleased(ofMouseEventArgs& args){
 void ModelMapper:: setupCameras() {
     
     //----------SETUP CAMERAS FROM JSON
+
     
     for(int i=0; i<numCams;i++){
         if (settings["cameras"].size()>i){
@@ -1123,15 +1102,11 @@ void ModelMapper:: setupCameras() {
             vector<ofMesh>meshes;
             for(int j=0; j<numMeshes;j++){
                 ofMesh tempMesh;
-                string loader;
-                if(meshType==MESH_DETAIL){
-                    loader="mesh_detail_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
-                    
+                if(whichMeshes[j][1]==MESH_3D){
+                    string loader;
+                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j][2])+".ply");
+                    tempMesh.load(loader);
                 }
-                else if(meshType==MESH_MASS){
-                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply");
-                }
-                tempMesh.load(loader);
                 meshes.push_back(tempMesh);
             }
             
@@ -1154,6 +1129,12 @@ void ModelMapper:: setupCameras() {
             tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks);
             cameras.push_back(tempCam);
             meshes.clear();
+        }
+    }
+    
+    for (int i=0; i<numMeshes;i++){
+        if(whichMeshes[i][1]==MESH_2D){
+            set2D(i);
         }
     }
     
@@ -1224,13 +1205,8 @@ void ModelMapper:: saveCameras() {
         //save warped mesh objects
         for(int j=0;j<numMeshes;j++){
             string meshname;
-            if(meshType==MESH_DETAIL){
-                meshname="mesh_detail_"+ofToString(i)+"_"+
-                ofToString(whichMeshes[j])+".ply";
-            }
-            else if(meshType==MESH_MASS){
+
                 meshname="mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
-            }
             cameras[i].mesh[j].save(meshname);
         }
     }
@@ -1283,13 +1259,8 @@ void ModelMapper:: saveCamera() {
     //save warped mesh objects
     for(int j=0;j<numMeshes;j++){
         string meshname;
-        if(meshType==MESH_DETAIL){
-            meshname="mesh_detail_"+ofToString(cameraSelect)+"_"+
-            ofToString(whichMeshes[j])+".ply";
-        }
-        else if(meshType==MESH_MASS){
+
             meshname="mesh_mass_"+ofToString(cameraSelect)+"_"+ofToString(whichMeshes[j])+".ply";
-        }
         cameras[cameraSelect].mesh[j].save(meshname);
     }
     
@@ -1312,51 +1283,6 @@ void ModelMapper:: drawCameras() {
     for(int i = 0; i < numCams; i++){
         
         if(i!=guiCam){
-            
-            //CREATE AND POPULATE CAMERA
-            
-            //Begin camera object
-            cameras[i].camera.begin(cameras[i].viewport);
-            
-            
-            //DRAW 3D MESHES
-            
-            for(int j=0;j<numMeshes;j++){
-                
-                bool drawMesh=false;
-                for(int k=0;k<cameras[i].which.size();k++){
-                    if(cameras[i].which[k]==j){
-                        drawMesh=true;
-                    }
-                }
-                
-                if(drawMesh==true){
-                    
-                    if(cameras[i].meshObjects[j].isMesh==true){
-                        ofEnableNormalizedTexCoords();
-                        texture->bind();
-                        
-                        ofSetColor(255,255,255);
-                        
-                        cameras[i].mesh[j].draw();
-                        
-                        texture->unbind();
-                        
-                        //draw mesh wireframe
-                        if(bDrawWireframe==true){
-                            glDepthFunc(GL_ALWAYS);
-                            ofSetColor(255,255,255,100);
-                            ofSetLineWidth(5);
-                            cameras[i].mesh[j].drawWireframe();
-                            glDepthFunc(GL_LESS);
-                        }
-                    }
-                }
-            }
-            
-            
-            //End camera object
-            cameras[i].camera.end();
             
             
             //DRAW 2D MESHES
@@ -1463,21 +1389,6 @@ void ModelMapper:: drawCameras() {
                                 
                             }
                             
-                            // software edge blending
-                            //                            glDepthFunc(GL_ALWAYS);
-                            //                            for(int l=0; l<cameras[i].meshObjects[j].left; l++){
-                            //                                ofSetLineWidth(1);
-                            //                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].left,255,0));
-                            //                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                            //                            }
-                            //
-                            //                            for(int l=0; l<cameras[i].meshObjects[j].right; l++){
-                            //                                ofSetLineWidth(1);
-                            //                                ofSetColor(0,0,0,ofMap(l,0,cameras[i].meshObjects[j].right,255,0));
-                            //                                ofLine(cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][0].x+cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1)-l,cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                            //                            }
-                            //                            glDepthFunc(GL_LESS);
-                            
                             
                             if(bDrawWireframe==true){
                                 ofSetColor(0,255,0);
@@ -1490,6 +1401,53 @@ void ModelMapper:: drawCameras() {
                             ofPopMatrix();
                             
                             ofDisableAlphaBlending();
+                            
+                            
+                            //CREATE AND POPULATE CAMERA
+                            
+                            //Begin camera object
+                            cameras[i].camera.begin(cameras[i].viewport);
+                            
+                            
+                            //DRAW 3D MESHES
+                            
+                            for(int j=0;j<numMeshes;j++){
+                                
+                                bool drawMesh=false;
+                                for(int k=0;k<cameras[i].which.size();k++){
+                                    if(cameras[i].which[k]==j){
+                                        drawMesh=true;
+                                    }
+                                }
+                                
+                                if(drawMesh==true){
+                                    glDepthFunc(GL_ALWAYS);
+                                    if(cameras[i].meshObjects[j].isMesh==true){
+                                        ofEnableNormalizedTexCoords();
+                                        texture->bind();
+                                        
+                                        ofSetColor(255,255,255);
+                                        
+                                        cameras[i].mesh[j].draw();
+                                        
+                                        texture->unbind();
+                                        
+                                        //draw mesh wireframe
+                                        if(bDrawWireframe==true){
+
+                                            ofSetColor(255,255,255,100);
+                                            ofSetLineWidth(1);
+                                            cameras[i].mesh[j].drawWireframe();
+                                            
+                                        }
+                                    }
+                                    glDepthFunc(GL_LESS);
+                                }
+                            }
+                            
+                            
+                            //End camera object
+                            cameras[i].camera.end();
                         }
                     }
                 }
@@ -2642,17 +2600,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     
     else if(name=="RELOAD MESH"){
         ofxAssimpModelLoader reload;
-        if(meshType==MESH_DETAIL){
-            reload.loadModel(detailMesh);
-            for(int i=0; i<numMeshes;i++){
-                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
-            }
-        }
-        else if(meshType==MESH_MASS){
             reload.loadModel(massMesh);
             for(int i=0; i<numMeshes;i++){
-                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i]);
-            }
+                if(whichMeshes[i][1]==MESH_3D){
+                    cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i][2]);
+                }
+
         }
         cout<<"Reloaded Model"<<endl;
     }
@@ -2996,16 +2949,12 @@ void ModelMapper::setGUIVisible(bool hide){
 
 void ModelMapper::resetSelected(){
     ofxAssimpModelLoader reload;
-    if(meshType==MESH_DETAIL){
-        reload.loadModel(detailMesh);
-    }
-    else if(meshType==MESH_MASS){
-        reload.loadModel(massMesh);
-    }
+
+    reload.loadModel(massMesh);
     if(moveVertices.size()>0){
         for(int j=0;j<numMeshes;j++){
             for(int k=0;k<moveVertices[j].size();k++){
-                cameras[cameraSelect].mesh[j].setVertex(moveVertices[j][k].index,reload.getMesh(whichMeshes[j]).getVertex(moveVertices[j][k].index ));
+                cameras[cameraSelect].mesh[j].setVertex(moveVertices[j][k].index,reload.getMesh(whichMeshes[j][2]).getVertex(moveVertices[j][k].index));
             }
         }
     }

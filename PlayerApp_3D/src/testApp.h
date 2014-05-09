@@ -59,7 +59,6 @@ public:
     bool bScreenRestart, bStartScreenRestart;
     
     float startOffset;
-        
 };
 
 

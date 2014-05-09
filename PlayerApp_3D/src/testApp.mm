@@ -36,10 +36,26 @@ void testApp::setup() {
     //----------MODEL MAPPER SETUP
     
     //Load mesh vector to select which meshes within obj to use
-    vector<int> _meshesLoad;
-    _meshesLoad.push_back(0);
-//    _meshesLoad.push_back(1);
-//    _meshesLoad.push_back(2);
+    vector<vector<int> > _meshesLoad;
+    vector<int> tempMesh;
+    tempMesh.push_back(0);
+    tempMesh.push_back(MESH_2D);
+    _meshesLoad.push_back(tempMesh);
+    tempMesh.clear();
+    tempMesh.push_back(1);
+    tempMesh.push_back(MESH_2D);
+    _meshesLoad.push_back(tempMesh);
+    tempMesh.clear();
+    tempMesh.push_back(2);
+    tempMesh.push_back(MESH_2D);
+    _meshesLoad.push_back(tempMesh);
+    tempMesh.clear();
+    tempMesh.push_back(3);
+    tempMesh.push_back(MESH_3D);
+    tempMesh.push_back(0);
+    _meshesLoad.push_back(tempMesh);
+    tempMesh.clear();
+    
     numMesh=_meshesLoad.size();
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
@@ -47,12 +63,12 @@ void testApp::setup() {
     
     //set path to obj file to use in setup
     map.setMassMesh("UV Sculpt_LP 01.obj");
-//    map.set2D(0);
-//    map.set2D(1);
-//    map.set2D(2);
     
     vector<int> which;
     which.push_back(0);
+    which.push_back(1);
+    which.push_back(2);
+    which.push_back(3);
     map.setMeshDraw(1,which);
 //    which.clear();
 //    which.push_back(0);
