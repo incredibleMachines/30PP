@@ -120,15 +120,15 @@ public:
     //save camera data to json and meshes to .ply files for all cameras
     void saveCameras();
     //save camera data to json and meshes to .ply files for all cameras
-    void saveCamera();
+    void saveCamera(int n);
     //sets file path for mesh to reload
     void setMassMesh(string _reloadMesh);
     //sets file path for detailed mesh
     void setDetailMesh(string _reloadMesh);
     //set mesh to draw 2D homography instead of 3D mesh
     void set2D(int _meshNum);
-    //set mesh to draw in specified camera
-    void setMeshDraw(int _cam, vector<int> _whichMeshes);
+//    //set mesh to draw in specified camera
+//    void setMeshDraw(int _cam, vector<int> _whichMeshes);
     //turn all gui tabs on and off
     void setGUIVisible(bool hide);
     //setup all GUI elements
@@ -283,6 +283,10 @@ public:
     //main gui page gui, setup fuction, and globals
     ofxUISuperCanvas *mainGUI;
     void setMainGUI();
+    ofxUIButton *drawMesh0;
+    ofxUIButton *drawMesh1;
+    ofxUIButton *drawMesh2;
+    ofxUIButton *drawMesh3;
     ofxUIRadio *currentMode;
     ofxUIButton *wireframeButton;
     ofxUIButton *performanceButton;

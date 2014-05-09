@@ -18,7 +18,7 @@
 #include "Camera.h"
 
 //--------------------------------------------------------------
-void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks){
+void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
     camera.setGlobalPosition(_pos);
@@ -30,6 +30,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     viewport.width=_viewSize.x;
     viewport.height=_viewSize.y;
     
+    which=_which;
     mesh=_mesh;
     for (int i=0; i<mesh.size();i++){
         meshObject newObject;

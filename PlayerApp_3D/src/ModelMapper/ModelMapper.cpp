@@ -409,15 +409,9 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             //TODO: add shift-drag to deselect functionality?
             for(int i=0;i<numMeshes;i++)
             {
-                bool drawMesh=false;
-                for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                    if(cameras[cameraSelect].which[j]==i){
-                        drawMesh=true;
-                    }
-                }
                 
                 vector<meshVertex> tempVector;
-                if(drawMesh==true){
+                if(cameras[cameraSelect].which[i]==true){
                     
                     //determine vertices inside drag box on gui camera screen
                     for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
@@ -466,16 +460,10 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                bool drawMesh=false;
-                for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                    if(cameras[cameraSelect].which[j]==i){
-                        drawMesh=true;
-                    }
-                }
-                
+
                 vector<meshVertex> tempVector;
                 
-                if(drawMesh==true){
+                if(cameras[cameraSelect].which[i]==true){
                     
                     int n=cameras[cameraSelect].mesh[i].getNumVertices();
                     
@@ -627,15 +615,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                         
                         for(int i=0;i<numMeshes;i++)
                         {
-                            bool drawMesh=false;
-                            for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                                if(cameras[cameraSelect].which[j]==i){
-                                    drawMesh=true;
-                                }
-                            }
+
                             
                             vector<meshVertex> tempVector;
-                            if(drawMesh==true){
+                            if(cameras[cameraSelect].which[i]==true){
                                 
                                 //determine vertices inside drag box on gui camera screen
                                 for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
@@ -713,16 +696,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                             
                             for(int i=0;i<numMeshes;i++)
                             {
-                                bool drawMesh=false;
-                                for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                                    if(cameras[cameraSelect].which[j]==i){
-                                        drawMesh=true;
-                                    }
-                                }
-                                
+
                                 vector<meshVertex> tempVector;
                                 
-                                if(drawMesh==true){
+                                if(cameras[cameraSelect].which[i]==true){
                                     
                                     //determine vertices inside drag box on gui camera screen
                                     for(int j = 0; j < cameras[cameraSelect].mesh[i].getNumVertices(); j++){
@@ -779,16 +756,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                bool drawMesh=false;
-                for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                    if(cameras[cameraSelect].which[j]==i){
-                        drawMesh=true;
-                    }
-                }
-                
+
                 vector<meshVertex> tempVector;
                 
-                if(drawMesh==true){
+                if(cameras[cameraSelect].which[i]==true){
                     
                     int n=cameras[guiCam].mesh[i].getNumVertices();
                     
@@ -842,15 +813,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
             
             for(int i=0;i<numMeshes;i++)
             {
-                bool drawMesh=false;
-                for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                    if(cameras[cameraSelect].which[j]==i){
-                        drawMesh=true;
-                    }
-                }
+
                 
                 vector<meshVertex> tempVector;
-                if(drawMesh==true){
+                if(cameras[cameraSelect].which[i]==true){
                     int n=cameras[guiCam].mesh[i].getNumVertices();
                     
                     //Check for mouse clicks on gui screen if present highlight this particular vertex
@@ -1012,14 +978,9 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
         ofVec3f nearestVertex;
         float drawNearest=false;
         for(int i=0;i<numMeshes;i++){
-            bool drawMesh=false;
-            for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                if(cameras[cameraSelect].which[j]==i){
-                    drawMesh=true;
-                }
-            }
+
             
-            if(drawMesh==true){
+            if(cameras[cameraSelect].which[i]==true){
                 if(cameras[guiCam].meshObjects[i].isMesh==false){
                     float nearestDistance = 15;
                     //parse through all vertices to determine nearest, if exists
@@ -1104,7 +1065,7 @@ void ModelMapper:: setupCameras() {
                 ofMesh tempMesh;
                 if(whichMeshes[j][1]==MESH_3D){
                     string loader;
-                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j][2])+".ply");
+                    loader=ofToString("mesh_mass_"+ofToString(i)+"_"+ofToString(j)+".ply");
                     tempMesh.load(loader);
                 }
                 meshes.push_back(tempMesh);
@@ -1126,7 +1087,12 @@ void ModelMapper:: setupCameras() {
                 tempMasks.push_back(ofPolyline(vertices));
             }
             
-            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks);
+            vector<bool> _which;
+            for(int j=0;j<settings["cameras"][i]["which"].size();j++){
+                cout<<j<<endl;
+                _which.push_back(settings["cameras"][i]["which"][j].asBool());
+             }
+            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which);
             cameras.push_back(tempCam);
             meshes.clear();
         }
@@ -1145,130 +1111,83 @@ void ModelMapper:: setupCameras() {
 
 void ModelMapper:: saveCameras() {
     for(int i=0; i<numCams;i++){
-        
-        //----------SAVE CAMERA DATA
-        
-        //Camera position
-        settings["cameras"][i]["pos"]["x"]=cameras[i].camera.getGlobalPosition().x;
-        settings["cameras"][i]["pos"]["y"]=cameras[i].camera.getGlobalPosition().y;
-        settings["cameras"][i]["pos"]["z"]=cameras[i].camera.getGlobalPosition().z;
-        
-        //camera viewport offset
-        settings["cameras"][i]["viewPos"]["x"]=cameras[i].viewport.x;
-        settings["cameras"][i]["viewPos"]["y"]=cameras[i].viewport.y;
-        
-        //camera orientation quaternion
-        settings["cameras"][i]["orientation"]["x"]=cameras[i].camera.getGlobalOrientation().x();
-        settings["cameras"][i]["orientation"]["y"]=cameras[i].camera.getGlobalOrientation().y();
-        settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
-        settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
-        
-        //mask vertices
-        settings["cameras"][i]["mask"].clear();
-        for(int j=0;j<cameras[i].masks.size();j++){
-            vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
-            for(int k=0;k<vertices.size();k++){
-                settings["cameras"][i]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
-                settings["cameras"][i]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
-            }
-        }
-        
-        //save 2D meshes
-        for(int j=0; j<numMeshes;j++){
-            
-            settings["cameras"][i]["meshes"][j]["translate"]["x"] = cameras[i].meshObjects[j].translate.x;
-            settings["cameras"][i]["meshes"][j]["translate"]["y"] = cameras[i].meshObjects[j].translate.y;
-            settings["cameras"][i]["meshes"][j]["scale"] = cameras[i].meshObjects[j].scale;
-            settings["cameras"][i]["meshes"][j]["feather"]["right"] = cameras[i].meshObjects[j].right;
-            settings["cameras"][i]["meshes"][j]["feather"]["left"] = cameras[i].meshObjects[j].left;
-            
-            settings["cameras"][i]["meshes"][j]["grid"]["x"] = cameras[i].meshObjects[j].horizGrid;
-            settings["cameras"][i]["meshes"][j]["grid"]["y"] = cameras[i].meshObjects[j].vertGrid;
-            
-            settings["cameras"][i]["meshes"][j]["texPos"]["x"] = cameras[i].meshObjects[j].tex.pos.x;
-            settings["cameras"][i]["meshes"][j]["texPos"]["y"] = cameras[i].meshObjects[j].tex.pos.y;
-            
-            settings["cameras"][i]["meshes"][j]["texWidth"] = cameras[i].meshObjects[j].tex.width;
-            settings["cameras"][i]["meshes"][j]["texHeight"] = cameras[i].meshObjects[j].tex.height;
-            
-            
-            for(int k=0; k<cameras[i].meshObjects[j].warped.size(); k++){
-                for(int l=0; l<cameras[i].meshObjects[j].warped[k].size();l++){
-                    settings["cameras"][i]["meshes"][j]["warped"][k][l]["x"]=cameras[i].meshObjects[j].warped[k][l].x;
-                    settings["cameras"][i]["meshes"][j]["warped"][k][l]["y"]=cameras[i].meshObjects[j].warped[k][l].y;
-                }
-            }
-        }
-        
-        //----------SAVE INDIVIDUAL 3D MESH
-        
-        //save warped mesh objects
-        for(int j=0;j<numMeshes;j++){
-            string meshname;
-
-                meshname="mesh_mass_"+ofToString(i)+"_"+ofToString(whichMeshes[j])+".ply";
-            cameras[i].mesh[j].save(meshname);
-        }
-    }
-    
-    //----------SAVE JSON SETTINGS DOCUMENT
-    
-    ofFile file;
-    if (!file.open("settings.json", ofFile::WriteOnly)) {
-        cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
-    }
-    else {
-        Json::StyledWriter writer;
-        file << writer.write(settings) << endl;
-        cout<<"settings.json SAVED"<<endl;
-        file.close();
+        saveCamera(i);
     }
 }
 
-void ModelMapper:: saveCamera() {
+void ModelMapper:: saveCamera(int i) {
     
     //----------SAVE CAMERA DATA
     
     //Camera position
-    settings["cameras"][cameraSelect]["pos"]["x"]=cameras[cameraSelect].camera.getGlobalPosition().x;
-    settings["cameras"][cameraSelect]["pos"]["y"]=cameras[cameraSelect].camera.getGlobalPosition().y;
-    settings["cameras"][cameraSelect]["pos"]["z"]=cameras[cameraSelect].camera.getGlobalPosition().z;
+    settings["cameras"][i]["pos"]["x"]=cameras[i].camera.getGlobalPosition().x;
+    settings["cameras"][i]["pos"]["y"]=cameras[i].camera.getGlobalPosition().y;
+    settings["cameras"][i]["pos"]["z"]=cameras[i].camera.getGlobalPosition().z;
     
     //camera viewport offset
-    settings["cameras"][cameraSelect]["viewPos"]["x"]=cameras[cameraSelect].viewport.x;
-    settings["cameras"][cameraSelect]["viewPos"]["y"]=cameras[cameraSelect].viewport.y;
+    settings["cameras"][i]["viewPos"]["x"]=cameras[i].viewport.x;
+    settings["cameras"][i]["viewPos"]["y"]=cameras[i].viewport.y;
     
     //camera orientation quaternion
-    settings["cameras"][cameraSelect]["orientation"]["x"]=cameras[cameraSelect].camera.getGlobalOrientation().x();
-    settings["cameras"][cameraSelect]["orientation"]["y"]=cameras[cameraSelect].camera.getGlobalOrientation().y();
-    settings["cameras"][cameraSelect]["orientation"]["z"]=cameras[cameraSelect].camera.getGlobalOrientation().z();
-    settings["cameras"][cameraSelect]["orientation"]["w"]=cameras[cameraSelect].camera.getGlobalOrientation().w();
+    settings["cameras"][i]["orientation"]["x"]=cameras[i].camera.getGlobalOrientation().x();
+    settings["cameras"][i]["orientation"]["y"]=cameras[i].camera.getGlobalOrientation().y();
+    settings["cameras"][i]["orientation"]["z"]=cameras[i].camera.getGlobalOrientation().z();
+    settings["cameras"][i]["orientation"]["w"]=cameras[i].camera.getGlobalOrientation().w();
     
     //mask vertices
-    settings["cameras"][cameraSelect]["mask"].clear();
-    for(int j=0;j<cameras[cameraSelect].masks.size();j++){
-        vector<ofPoint> vertices=cameras[cameraSelect].masks[j].getVertices();
+    settings["cameras"][i]["mask"].clear();
+    for(int j=0;j<cameras[i].masks.size();j++){
+        vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
         for(int k=0;k<vertices.size();k++){
-            settings["cameras"][cameraSelect]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
-            settings["cameras"][cameraSelect]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
+            settings["cameras"][i]["mask"][j]["vertices"][k]["x"]=vertices[k].x;
+            settings["cameras"][i]["mask"][j]["vertices"][k]["y"]=vertices[k].y;
         }
     }
     
-    //----------SAVE INDIVIDUAL MESH
+    //save 2D meshes
+    for(int j=0; j<numMeshes;j++){
+        
+        settings["cameras"][i]["meshes"][j]["translate"]["x"] = cameras[i].meshObjects[j].translate.x;
+        settings["cameras"][i]["meshes"][j]["translate"]["y"] = cameras[i].meshObjects[j].translate.y;
+        settings["cameras"][i]["meshes"][j]["scale"] = cameras[i].meshObjects[j].scale;
+        settings["cameras"][i]["meshes"][j]["feather"]["right"] = cameras[i].meshObjects[j].right;
+        settings["cameras"][i]["meshes"][j]["feather"]["left"] = cameras[i].meshObjects[j].left;
+        
+        settings["cameras"][i]["meshes"][j]["grid"]["x"] = cameras[i].meshObjects[j].horizGrid;
+        settings["cameras"][i]["meshes"][j]["grid"]["y"] = cameras[i].meshObjects[j].vertGrid;
+        
+        settings["cameras"][i]["meshes"][j]["texPos"]["x"] = cameras[i].meshObjects[j].tex.pos.x;
+        settings["cameras"][i]["meshes"][j]["texPos"]["y"] = cameras[i].meshObjects[j].tex.pos.y;
+        
+        settings["cameras"][i]["meshes"][j]["texWidth"] = cameras[i].meshObjects[j].tex.width;
+        settings["cameras"][i]["meshes"][j]["texHeight"] = cameras[i].meshObjects[j].tex.height;
+        
+        
+        for(int k=0; k<cameras[i].meshObjects[j].warped.size(); k++){
+            for(int l=0; l<cameras[i].meshObjects[j].warped[k].size();l++){
+                settings["cameras"][i]["meshes"][j]["warped"][k][l]["x"]=cameras[i].meshObjects[j].warped[k][l].x;
+                settings["cameras"][i]["meshes"][j]["warped"][k][l]["y"]=cameras[i].meshObjects[j].warped[k][l].y;
+            }
+        }
+        
+        settings["cameras"][i]["which"][j] = int(cameras[i].which[j]);
+    }
+    
+    //----------SAVE INDIVIDUAL 3D MESH
     
     //save warped mesh objects
     for(int j=0;j<numMeshes;j++){
         string meshname;
-
-            meshname="mesh_mass_"+ofToString(cameraSelect)+"_"+ofToString(whichMeshes[j])+".ply";
-        cameras[cameraSelect].mesh[j].save(meshname);
+        
+        meshname="mesh_mass_"+ofToString(i)+"_"+ofToString(j)+".ply";
+        cameras[i].mesh[j].save(meshname);
     }
-    
-    //----------SAVE JSON settings DOCUMENT
-    
+
+    //----------SAVE JSON SETTINGS DOCUMENT
+
     ofFile file;
     if (!file.open("settings.json", ofFile::WriteOnly)) {
-        cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << "."<<endl;
+        cout<<"ERROR: ofxJSONElement::save" << "Unable to open " << file.getAbsolutePath() << ".";
     }
     else {
         Json::StyledWriter writer;
@@ -1288,15 +1207,9 @@ void ModelMapper:: drawCameras() {
             //DRAW 2D MESHES
             
             for(int j=0;j<numMeshes;j++){
+
                 
-                bool drawMesh=false;
-                for(int k=0;k<cameras[i].which.size();k++){
-                    if(cameras[i].which[k]==j){
-                        drawMesh=true;
-                    }
-                }
-                
-                if(drawMesh==true){
+                if(cameras[i].which[j]==true){
                     
                     if(cameras[i].meshObjects[j].isMesh==false){
                         for(int k=0; k<cameras[i].meshObjects[j].originals.size();k++){
@@ -1389,7 +1302,6 @@ void ModelMapper:: drawCameras() {
                                 
                             }
                             
-                            
                             if(bDrawWireframe==true){
                                 ofSetColor(0,255,0);
                                 ofNoFill();
@@ -1403,54 +1315,49 @@ void ModelMapper:: drawCameras() {
                             ofDisableAlphaBlending();
                             
                             
-                            //CREATE AND POPULATE CAMERA
-                            
-                            //Begin camera object
-                            cameras[i].camera.begin(cameras[i].viewport);
-                            
-                            
-                            //DRAW 3D MESHES
-                            
-                            for(int j=0;j<numMeshes;j++){
-                                
-                                bool drawMesh=false;
-                                for(int k=0;k<cameras[i].which.size();k++){
-                                    if(cameras[i].which[k]==j){
-                                        drawMesh=true;
-                                    }
-                                }
-                                
-                                if(drawMesh==true){
-                                    glDepthFunc(GL_ALWAYS);
-                                    if(cameras[i].meshObjects[j].isMesh==true){
-                                        ofEnableNormalizedTexCoords();
-                                        texture->bind();
-                                        
-                                        ofSetColor(255,255,255);
-                                        
-                                        cameras[i].mesh[j].draw();
-                                        
-                                        texture->unbind();
-                                        
-                                        //draw mesh wireframe
-                                        if(bDrawWireframe==true){
-
-                                            ofSetColor(255,255,255,100);
-                                            ofSetLineWidth(1);
-                                            cameras[i].mesh[j].drawWireframe();
-                                            
-                                        }
-                                    }
-                                    glDepthFunc(GL_LESS);
-                                }
-                            }
-                            
-                            
-                            //End camera object
-                            cameras[i].camera.end();
                         }
                     }
                 }
+                
+                //CREATE AND POPULATE CAMERA
+                
+                //Begin camera object
+                cameras[i].camera.begin(cameras[i].viewport);
+                
+                
+                //DRAW 3D MESHES
+                
+                for(int j=0;j<numMeshes;j++){
+                    
+                    
+                    if(cameras[i].which[j]==true){
+                        glDepthFunc(GL_ALWAYS);
+                        if(cameras[i].meshObjects[j].isMesh==true){
+                            ofEnableNormalizedTexCoords();
+                            texture->bind();
+                            
+                            ofSetColor(255,255,255);
+                            
+                            cameras[i].mesh[j].draw();
+                            
+                            texture->unbind();
+                            
+                            //draw mesh wireframe
+                            if(bDrawWireframe==true){
+                                
+                                ofSetColor(255,255,255,100);
+                                ofSetLineWidth(1);
+                                cameras[i].mesh[j].drawWireframe();
+                                
+                            }
+                        }
+                        glDepthFunc(GL_LESS);
+                    }
+                }
+                
+                
+                //End camera object
+                cameras[i].camera.end();
             }
         }
         
@@ -1503,14 +1410,9 @@ void ModelMapper::drawHighlights() {
         
         //determine nearest vertex and highlight yellow, if within clickThreshold distance of vertex
         for(int i=0;i<numMeshes;i++){
-            bool drawMesh=false;
-            for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                if(cameras[cameraSelect].which[j]==i){
-                    drawMesh=true;
-                }
-            }
+
             
-            if(drawMesh==true){
+            if(cameras[cameraSelect].which[i]==true){
                 //set up local variables for determining nearest
                 ofVec3f nearestVertex;
                 int nearestIndex = 0;
@@ -1640,25 +1542,19 @@ void ModelMapper::drawHighlights() {
         ofVec3f nearestVertex;
         float drawNearest=false;
         for(int i=0;i<numMeshes;i++){
-            bool drawMesh=false;
-            for(int j=0;j<cameras[cameraSelect].which.size();j++){
-                if(cameras[cameraSelect].which[j]==i){
-                    drawMesh=true;
-                }
-            }
             
-            if(drawMesh==true){
+            if(cameras[cameraSelect].which[i]==true){
                 
-                if(cameras[guiCam].meshObjects[i].isMesh==false){
+                if(cameras[cameraSelect].meshObjects[i].isMesh==false){
                     float nearestDistance = 15;
                     
                     //parse through all vertices to determine nearest, if exists
-                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
-                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
-                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                    for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
+                            float distance = cameras[cameraSelect].meshObjects[i].warped[j][k].distance((mouse-cameras[cameraSelect].meshObjects[i].translate)/cameras[cameraSelect].meshObjects[i].scale);
                             if(distance < nearestDistance) {
                                 nearestDistance = distance;
-                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
+                                nearestVertex = cameras[cameraSelect].meshObjects[i].warped[j][k]*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].meshObjects[i].translate;
                                 drawNearest=true;
                             }
                         }
@@ -1670,10 +1566,7 @@ void ModelMapper::drawHighlights() {
                         ofSetColor(0,255,0);
                         ofNoFill();
                         ofSetLineWidth(2);
-                        ofCircle(vertices2D[i][j].vertex.x+cameras[guiCam].viewport.x,vertices2D[i][j].vertex.y+cameras[guiCam].viewport.y,10);
-                        if(cameraSelect!=guiCam){
-                            ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
-                        }
+                        ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
                     }
                 }
             }
@@ -1982,7 +1875,7 @@ void ModelMapper::setMainGUI(){
     mainGUI->addLabel("Press 'g' to Hide GUIs", OFX_UI_FONT_SMALL);
 
     mainGUI->addSpacer();
-    mainGUI->addLabel("Camera Z",OFX_UI_FONT_MEDIUM);
+    mainGUI->addLabel("Frame Rate",OFX_UI_FONT_MEDIUM);
     fps = mainGUI->addTextInput("FPS", ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
     fps->setAutoClear(true);
     
@@ -1990,8 +1883,15 @@ void ModelMapper::setMainGUI(){
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
     mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
     
+//    mainGUI->addSpacer();
+//    mainGUI->addToggle("Adjust GUI Separately", false);
+
     mainGUI->addSpacer();
-    mainGUI->addToggle("Adjust GUI Separately", false);
+    mainGUI->addLabel("Draw Meshes",OFX_UI_FONT_MEDIUM);
+    drawMesh0=mainGUI->addToggle("Mesh 0",cameras[1].which[0]);
+    drawMesh1=mainGUI->addToggle("Mesh 1",cameras[1].which[1]);
+    drawMesh2=mainGUI->addToggle("Mesh 2",cameras[1].which[2]);
+    drawMesh3=mainGUI->addToggle("Mesh 3",cameras[1].which[3]);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Adjust:",OFX_UI_FONT_MEDIUM);
@@ -2296,6 +2196,46 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
     }
     
+    else if (name == "Mesh 0"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        if(toggle->getValue()==true){
+            cameras[cameraSelect].which[0]=true;
+        }
+        else{
+            cameras[cameraSelect].which[0]=false;
+        }
+    }
+    
+    else if (name == "Mesh 1"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        if(toggle->getValue()==true){
+            cameras[cameraSelect].which[1]=true;
+        }
+        else{
+            cameras[cameraSelect].which[1]=false;
+        }
+    }
+    
+    else if (name == "Mesh 2"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        if(toggle->getValue()==true){
+            cameras[cameraSelect].which[2]=true;
+        }
+        else{
+            cameras[cameraSelect].which[2]=false;
+        }
+    }
+    
+    else if (name == "Mesh 3"){
+        ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
+        if(toggle->getValue()==true){
+            cameras[cameraSelect].which[3]=true;
+        }
+        else{
+            cameras[cameraSelect].which[3]=false;
+        }
+    }
+    
     else if(name == "Camera X")
     {
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
@@ -2442,7 +2382,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     {
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
-            saveCamera();
+            saveCamera(cameraSelect);
         }
     }
     
@@ -2509,6 +2449,18 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         }
         if(featherLeft2D!=NULL){
             featherLeft2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
+        }
+        if(drawMesh0!=NULL){
+            drawMesh0->setValue(cameras[cameraSelect].which[0]);
+        }
+        if(drawMesh1!=NULL){
+            drawMesh1->setValue(cameras[cameraSelect].which[1]);
+        }
+        if(drawMesh2!=NULL){
+            drawMesh2->setValue(cameras[cameraSelect].which[2]);
+        }
+        if(drawMesh3!=NULL){
+            drawMesh3->setValue(cameras[cameraSelect].which[3]);
         }
     }
     
@@ -3055,9 +3007,9 @@ void ModelMapper::set2D(int _meshNum){
     
 }
 
-void ModelMapper::setMeshDraw(int _cam, vector<int> which){
-    cameras[_cam].which=which;
-}
+//void ModelMapper::setMeshDraw(int _cam, vector<int> which){
+//    cameras[_cam].which=which;
+//}
 
 void ModelMapper::clearSelection(){
     moveVertices.clear();

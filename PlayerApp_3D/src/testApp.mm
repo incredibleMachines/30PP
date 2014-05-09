@@ -64,18 +64,18 @@ void testApp::setup() {
     //set path to obj file to use in setup
     map.setMassMesh("UV Sculpt_LP 01.obj");
     
-    vector<int> which;
-    which.push_back(0);
-    which.push_back(1);
-    which.push_back(2);
-    which.push_back(3);
-    map.setMeshDraw(1,which);
-//    which.clear();
+//    vector<int> which;
 //    which.push_back(0);
-    map.setMeshDraw(2,which);
-//    which.clear();
-//    which.push_back(0);
-    map.setMeshDraw(3,which);
+//    which.push_back(1);
+//    which.push_back(2);
+//    which.push_back(3);
+//    map.setMeshDraw(1,which);
+////    which.clear();
+////    which.push_back(0);
+//    map.setMeshDraw(2,which);
+////    which.clear();
+////    which.push_back(0);
+//    map.setMeshDraw(3,which);
     
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
