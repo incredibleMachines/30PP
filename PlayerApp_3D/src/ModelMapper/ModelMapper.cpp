@@ -981,17 +981,17 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
 
             
             if(cameras[cameraSelect].which[i]==true){
-                if(cameras[guiCam].meshObjects[i].isMesh==false){
-                    float nearestDistance = 15;
+                
+                if(cameras[cameraSelect].meshObjects[i].isMesh==false){
+                    float nearestDistance = 25;
+                    
                     //parse through all vertices to determine nearest, if exists
-                    for(int j = 0; j < cameras[guiCam].meshObjects[i].warped.size(); j++) {
-                        for(int k = 0; k < cameras[guiCam].meshObjects[i].warped[j].size(); k++){
-                            float distance = cameras[guiCam].meshObjects[i].warped[j][k].distance((mouse-cameras[guiCam].meshObjects[i].translate)/cameras[guiCam].meshObjects[i].scale);
+                    for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
+                        for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
+                            float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y).distance(mouse );
                             if(distance < nearestDistance) {
-                                nearestVertex = cameras[guiCam].meshObjects[i].warped[j][k]*cameras[guiCam].meshObjects[i].scale+cameras[guiCam].meshObjects[i].translate;
-                                
                                 vertex2D tempVert;
-                                tempVert.vertex=nearestVertex;
+                                tempVert.vertex=ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y) ;
                                 tempVert.index=k;
                                 tempVert.box=j;
                                 bool included=false;
@@ -1012,10 +1012,9 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                                 else if(bShiftPressed==false){
                                     tempVector.push_back(tempVert);
                                 }
-                                
+
                             }
                         }
-                        
                     }
                 }
             }
@@ -1546,17 +1545,19 @@ void ModelMapper::drawHighlights() {
             if(cameras[cameraSelect].which[i]==true){
                 
                 if(cameras[cameraSelect].meshObjects[i].isMesh==false){
-                    float nearestDistance = 15;
+                    float nearestDistance = 25;
                     
                     //parse through all vertices to determine nearest, if exists
                     for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
                         for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
-                            float distance = cameras[cameraSelect].meshObjects[i].warped[j][k].distance((mouse-cameras[cameraSelect].meshObjects[i].translate)/cameras[cameraSelect].meshObjects[i].scale);
+                            float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y).distance(mouse );
                             if(distance < nearestDistance) {
                                 nearestDistance = distance;
-                                nearestVertex = cameras[cameraSelect].meshObjects[i].warped[j][k]*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].meshObjects[i].translate;
+                                nearestVertex = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y);
                                 drawNearest=true;
                             }
+                            ofNoFill();
+                            ofCircle( ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y),10);
                         }
                     }
                 }
@@ -1566,7 +1567,7 @@ void ModelMapper::drawHighlights() {
                         ofSetColor(0,255,0);
                         ofNoFill();
                         ofSetLineWidth(2);
-                        ofCircle(vertices2D[i][j].vertex.x+cameras[cameraSelect].viewport.x,vertices2D[i][j].vertex.y+cameras[cameraSelect].viewport.y,10);
+                        ofCircle(vertices2D[i][j].vertex.x,vertices2D[i][j].vertex.y,10);
                     }
                 }
             }
@@ -1577,6 +1578,7 @@ void ModelMapper::drawHighlights() {
         //draw nearest highlight circle on both gui camera and selected camera
         ofNoFill();
         ofSetLineWidth(2);
+        
         if(drawNearest==true){
             ofSetColor(0,255,0);
             ofCircle(nearestVertex, 10);
