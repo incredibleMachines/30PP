@@ -150,6 +150,7 @@ void ModelMapper::update(ofTexture * tex){
 
 void ModelMapper::draw(){
     
+    
     //----------DRAW CAMERAS, MESHES, TEXTURES
     drawCameras();
     
@@ -1200,7 +1201,7 @@ void ModelMapper:: drawCameras() {
     
     for(int i = 0; i < numCams; i++){
         
-        if(i!=guiCam){
+        if(i!=guiCam&&i==cameraSelect){
             
             
             //DRAW 2D MESHES
