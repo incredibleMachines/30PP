@@ -126,51 +126,51 @@ void ModelMapper::update(ofTexture * tex){
     //update gui camera to display selected camera graphics
     texture=tex;
     
-    for(int i=0;i<cameras.size();i++){
-        for(int j=0; j<cameras[i].mesh.size();j++){
-            if(cameras[i].meshObjects[j].isMesh==true){
-                //                cout<<"camera: "<<i<<" mesh: "<<j<<endl;
-                
-                cameras[i].cameraView.begin();
-                ofClear(255,255,255,0);
-                
-                ofEnableNormalizedTexCoords();
-                texture->bind();
-                
-                ofSetColor(255,255,255);
-                
-                
-                glEnable(GL_DEPTH_TEST);
-                
-                ofPushMatrix();
-                
-                ofRotate(180,0,0,1);
-                ofRotate(180,0,1,0);
-                ofTranslate(cameras[i].meshTranslate);
-                
-                cameras[i].mesh[j].draw();
-                
-                texture->unbind();
-                
-                //draw mesh wireframe
-                if(bDrawWireframe==true){
-                    ofSetLineWidth(1);
-                    ofSetColor(72,225,180);
-                    cameras[i].mesh[j].drawWireframe();
-                }
-                //End camera object
-                //                cameras[i].camera.end();
-                
-                //
-                //                ofSetColor(0);
-                //                ofCircle(100,100,100);
-                
-                ofPopMatrix();
-                
-                cameras[i].cameraView.end();
-            }
-        }
-    }
+//    for(int i=0;i<cameras.size();i++){
+//        for(int j=0; j<cameras[i].mesh.size();j++){
+//            if(cameras[i].meshObjects[j].isMesh==true){
+//                //                cout<<"camera: "<<i<<" mesh: "<<j<<endl;
+//                
+//                cameras[i].cameraView.begin();
+//                ofClear(255,255,255,0);
+//                
+//                ofEnableNormalizedTexCoords();
+//                texture->bind();
+//                
+//                ofSetColor(255,255,255);
+//                
+//                
+//                glEnable(GL_DEPTH_TEST);
+//                
+//                ofPushMatrix();
+//                
+//                ofRotate(180,0,0,1);
+//                ofRotate(180,0,1,0);
+//                ofTranslate(cameras[i].meshTranslate);
+//                
+//                cameras[i].mesh[j].draw();
+//                
+//                texture->unbind();
+//                
+//                //draw mesh wireframe
+//                if(bDrawWireframe==true){
+//                    ofSetLineWidth(1);
+//                    ofSetColor(72,225,180);
+//                    cameras[i].mesh[j].drawWireframe();
+//                }
+//                //End camera object
+//                //                cameras[i].camera.end();
+//                
+//                //
+//                //                ofSetColor(0);
+//                //                ofCircle(100,100,100);
+//                
+//                ofPopMatrix();
+//                
+//                cameras[i].cameraView.end();
+//            }
+//        }
+//    }
     
     //set guiCam to have same settings as cameraSelect (less vital in three camera mode as currently setup)
     cameras[guiCam].which=cameras[cameraSelect].which;
@@ -358,6 +358,21 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMesh(0,0,-moveModifier);
             }
             break;
+            
+        case 'n':
+        case 'N':
+            if(adjustMode==ADJUST_MODE_CAMERA){
+                adjustRoll(moveModifier);
+            }
+            break;
+            
+        case 'm':
+        case 'M':
+            if(adjustMode==ADJUST_MODE_CAMERA){
+                adjustRoll(-moveModifier);
+            }
+            break;
+            
             
             
             //----------DELETE SELECTED MASK
@@ -1721,34 +1736,63 @@ void ModelMapper:: drawCameras() {
                     }
                     
                     else{
+                        cameras[i].camera.begin();
+                        
+                        ofEnableNormalizedTexCoords();
+                        texture->bind();
+                        
+                        ofSetColor(255,255,255);
+                        
+                        
+                        glEnable(GL_DEPTH_TEST);
+                        
+                        
+                        cameras[i].mesh[j].draw();
+                        
+                        texture->unbind();
+                        
+                        //draw mesh wireframe
+                        if(bDrawWireframe==true){
+                            ofSetLineWidth(1);
+                            ofSetColor(72,225,180);
+                            cameras[i].mesh[j].drawWireframe();
+                        }
+                        
+                        cameras[i].camera.end();
+                        //End camera object
+                        //                cameras[i].camera.end();
+                        
+                        //
+                        //                ofSetColor(0);
+                        //                ofCircle(100,100,100);
+                        
                         
                         //CREATE AND POPULATE CAMERA
-                        ofEnableAlphaBlending();
-                        ofDisableNormalizedTexCoords();
                         
-                        for(int k=0; k<4;k++){
+//                        ofDisableNormalizedTexCoords();
+                        
+//                        for(int k=0; k<4;k++){
+                        
+//                            ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].originals3D[3], cameras[i].warped3D[3]);
+//                            
+//                            cout<<cameras[i].warped3D[3][2].x<<endl;
+//                            
+//                            
+//                            ofSetColor(255,255,255);
+//                            
+//                            ofNoFill();
                             
-                            ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].originals3D[3], cameras[i].warped3D[3]);
+//                            ofPushMatrix();
+//                            ofTranslate(cameras[i].viewport.x,cameras[i].viewport.y);
                             
-                            cout<<cameras[i].warped3D[3][2].x<<endl;
-                            
-                            
-                            ofSetColor(255,255,255);
-                            
-                            ofNoFill();
-                            
-                            ofPushMatrix();
-                            ofTranslate(cameras[i].viewport.x,cameras[i].viewport.y);
-                            
-                            ofPushMatrix();
-                            glMultMatrixf(homography.getPtr());
+//                            ofPushMatrix();
+//                            glMultMatrixf(homography.getPtr());
                             //Begin camera object
-                            ofRect(0,0,cameras[i].cameraView.getWidth(),cameras[i].cameraView.getHeight());
-                            cameras[i].cameraView.draw(0,0);
-                            ofPopMatrix();
-                            ofPopMatrix();
-                        }
-                        ofDisableAlphaBlending();
+//                            ofRect(0,0,cameras[i].cameraView.getWidth(),cameras[i].cameraView.getHeight());
+//                            cameras[i].cameraView.draw(0,0);
+//                            ofPopMatrix();
+//                            ofPopMatrix();
+//                        }
                     }
                     
                 }
@@ -2101,10 +2145,10 @@ void ModelMapper::setDetailMesh(string _reloadMesh){
 void ModelMapper::adjustPosition(float x, float y, float z){
     
     if(bGuiCamAdjust==true){
-        cameras[guiCam].meshTranslate=cameras[guiCam].meshTranslate+ofVec3f(x,y,z);
+        cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     else{
-        cameras[cameraSelect].meshTranslate=cameras[cameraSelect].meshTranslate+ofVec3f(x,y,z);
+        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     
     if(positionX!=NULL){
@@ -2117,6 +2161,16 @@ void ModelMapper::adjustPosition(float x, float y, float z){
         positionZ->setTextString(ofToString(cameras[cameraSelect].meshTranslate.z));
     }
     
+}
+
+void ModelMapper::adjustRoll(float zR){
+    
+    if(bGuiCamAdjust==true){
+        cameras[guiCam].camera.roll(zR);
+    }
+    else{
+        cameras[cameraSelect].camera.roll(zR);
+    }
 }
 
 void ModelMapper::adjustOrientation(float x, float y, float z){
@@ -2361,14 +2415,18 @@ void ModelMapper::setPositionGUI(){
     positionGUI->addSpacer();
     positionGUI->setWidgetFontSize(OFX_UI_FONT_MEDIUM);
     positionGUI->addLabel("Camera X",OFX_UI_FONT_MEDIUM);
-    positionX = positionGUI->addTextInput("Camera X", ofToString(cameras[cameraSelect].meshTranslate.x));
+    positionX = positionGUI->addTextInput("Camera X", ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
     positionX->setAutoClear(false);
     positionGUI->addLabel("Camera Y",OFX_UI_FONT_MEDIUM);
-    positionY = positionGUI->addTextInput("Camera Y", ofToString(cameras[cameraSelect].meshTranslate.y));
+    positionY = positionGUI->addTextInput("Camera Y", ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
     positionY->setAutoClear(false);
     positionGUI->addLabel("Camera Z",OFX_UI_FONT_MEDIUM);
-    positionZ = positionGUI->addTextInput("Camera Z", ofToString(cameras[cameraSelect].meshTranslate.z));
+    positionZ = positionGUI->addTextInput("Camera Z", ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
     positionZ->setAutoClear(false);
+    
+    positionGUI->addLabel("Rotate",OFX_UI_FONT_MEDIUM);
+    rotateZ = positionGUI->addTextInput("Rotate", ofToString(cameras[cameraSelect].camera.getRoll()));
+    rotateZ->setAutoClear(false);
     
     positionGUI->setPosition(212, 0);
     
@@ -2633,10 +2691,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             if(bEnableGuiCam==true){
-                cameras[guiCam].meshTranslate=ofVec3f(1000,-540,-600);
+                cameras[guiCam].camera.setGlobalPosition(ofVec3f(cameras[guiCam].mesh[3].getCentroid().x,cameras[guiCam].mesh[3].getCentroid().y,cameras[guiCam].mesh[3].getCentroid().z+500));
+                cameras[guiCam].camera.setTarget(cameras[guiCam].mesh[3].getCentroid());
             }
             else{
-                cameras[cameraSelect].meshTranslate=ofVec3f(1000,-540,-600);
+                cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x,cameras[cameraSelect].mesh[3].getCentroid().y,cameras[cameraSelect].mesh[3].getCentroid().z+500));
+                cameras[cameraSelect].camera.setTarget(cameras[cameraSelect].mesh[3].getCentroid());
             }
         }
     }
@@ -2745,6 +2805,15 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
             cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
+        }
+    }
+    
+    else if(name == "Rotate")
+    {
+        ofxUITextInput *ti = (ofxUITextInput *) e.widget;
+        if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
+        {
+            cameras[cameraSelect].camera.roll(ofToFloat(ti->getTextString()));
         }
     }
     
@@ -2902,6 +2971,10 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         if(positionZ!=NULL){
             positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
         }
+        if(positionZ!=NULL){
+            positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+        }
+        
         if(orientationX!=NULL){
             orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
         }
@@ -3288,6 +3361,7 @@ void ModelMapper::setupGUI(){
     positionX=NULL;
     positionY=NULL;
     positionZ=NULL;
+    rotateZ=NULL;
     setMainGUI();
     setPositionGUI();
     setOrientationGUI();

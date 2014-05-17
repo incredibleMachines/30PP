@@ -300,6 +300,7 @@ public:
     ofxUITextInput *positionX;
     ofxUITextInput *positionY;
     ofxUITextInput *positionZ;
+    ofxUITextInput *rotateZ;
 
     //camera orientation gui, setup fuction, and globals
     ofxUISuperCanvas *orientationGUI;
@@ -387,5 +388,7 @@ public:
     float clearTime;
     
     bool warped[4][4];
+    
+    void adjustRoll(float xR);
     
 };
