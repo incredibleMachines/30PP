@@ -24,6 +24,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     camera.setGlobalPosition(_pos);
     camera.setGlobalOrientation(_orientation);
     camera.disableMouseInput();
+    camera.disableOrtho();
     
     viewport.x=_viewPos.x;
     viewport.y=_viewPos.y;

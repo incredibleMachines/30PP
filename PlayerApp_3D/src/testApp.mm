@@ -29,11 +29,11 @@ void testApp::setup() {
 
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
-
+//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput_3D.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
-    MSA::ofxCocoa::initPlayer("3D_UV_Test_3.mov", meshTexture->texData.textureID);
-    //----------MODEL MAPPER SETUP
+    MSA::ofxCocoa::initPlayer("Calibration_Checkerboard.mov", meshTexture->texData.textureID);
+    //----------MODEL MAPPER   SETUP
     
     //Load mesh vector to select which meshes within obj to use
     vector<vector<int> > _meshesLoad;
@@ -62,7 +62,7 @@ void testApp::setup() {
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("UV Sculpt_LP 01.obj");
+    map.setMassMesh("less.obj");
     
 //    vector<int> which;
 //    which.push_back(0);

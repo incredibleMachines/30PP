@@ -16,7 +16,7 @@
 //#include "../Events/Event.h"
 #include "EventTypes.h"
 
-#define SOCKET_DEBUG 1 // 0 = OFF, 1 = ON
+#define SOCKET_DEBUG 0 // 0 = OFF, 1 = ON
 
 class SocketHandler{
     

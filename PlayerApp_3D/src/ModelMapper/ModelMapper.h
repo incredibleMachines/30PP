@@ -90,6 +90,7 @@ public:
     bool bDrawGui;
     //switch for drawing mesh wireframes
     bool bDrawWireframe;
+    bool bDrawHighlights;
     //switch for shift key modifier
     bool bShiftPressed;
     //switch for cmd key modifier
@@ -187,6 +188,7 @@ public:
     //selected 3D vertices via user clicks
     vector< vector<meshVertex> > moveVertices;
     vector< vector<meshVertex> > tempVertices;
+    vector<meshVertex> surroundingVertices;
     
     //selected vertices via magnet and pen tools
     vector< vector<meshVertex> > magnetVertices;
@@ -378,5 +380,10 @@ public:
     ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame, endFrame;
     //reference for current transition graphic
     ofTexture * fadeFrame;
+    
+    bool bEnableGuiCam;
+    
+    bool bClearing;
+    float clearTime;
     
 };
