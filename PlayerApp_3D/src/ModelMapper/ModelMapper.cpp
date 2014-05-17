@@ -1736,7 +1736,7 @@ void ModelMapper:: drawCameras() {
                     }
                     
                     else{
-                        cameras[i].camera.begin();
+                        cameras[i].camera.begin(cameras[i].viewport);
                         
                         ofEnableNormalizedTexCoords();
                         texture->bind();
