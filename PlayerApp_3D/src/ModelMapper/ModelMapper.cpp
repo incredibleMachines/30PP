@@ -135,9 +135,6 @@ void ModelMapper::update(ofTexture * tex){
         cameras[guiCam].meshObjects[i]=cameras[cameraSelect].meshObjects[i];
     }
     
-    //    cameras[guiCam].masks=cameras[cameraSelect].masks;
-    //    cameras[guiCam].highlightMask=cameras[cameraSelect].highlightMask;
-    
     //update FPS in gui
     if(adjustMode!=ADJUST_MODE_LOCKED){
         if(fps!=NULL){
@@ -160,9 +157,7 @@ void ModelMapper::draw(){
     drawMasks();
     glDepthFunc(GL_LESS);
     
-    
     //----------DRAW MESH POINT SELECTION HIGHLIGHTS
-    
     if(bDrawHighlights){
         ofPushStyle();
         glDepthFunc(GL_ALWAYS);

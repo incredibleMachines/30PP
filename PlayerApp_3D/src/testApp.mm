@@ -30,8 +30,6 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
 //    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput_3D.mov", meshTexture->texData.textureID);
-//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-//    MSA::ofxCocoa::initPlayer("checker.mov", meshTexture->texData.textureID);
     MSA::ofxCocoa::initPlayer("Calibration_Checkerboard.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER   SETUP
     
@@ -64,19 +62,6 @@ void testApp::setup() {
     //set path to obj file to use in setup
     map.setMassMesh("less.obj");
     
-//    vector<int> which;
-//    which.push_back(0);
-//    which.push_back(1);
-//    which.push_back(2);
-//    which.push_back(3);
-//    map.setMeshDraw(1,which);
-////    which.clear();
-////    which.push_back(0);
-//    map.setMeshDraw(2,which);
-////    which.clear();
-////    which.push_back(0);
-//    map.setMeshDraw(3,which);
-    
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
@@ -104,10 +89,6 @@ void testApp::update(){
     }
     
     if(socketHandler.eventHandler.bTriggerEvent==true){
-        
-//        if(map.adjustMode==ADJUST_MODE_LOCKED){
-//            MSA::ofxCocoa::hideCursor();
-//        }
         
         socketHandler.eventHandler.bTriggerEvent=false;
         loadTime=socketHandler.eventHandler.currentStart;
@@ -263,6 +244,12 @@ void testApp::keyPressed(int key){
             MSA::ofxCocoa::startPlayer();
             break;
 
+        case '{':
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-10);
+            break;
+        case '}':
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
+            break;
         case '[':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-10);
             break;            
@@ -295,23 +282,72 @@ void testApp::initVariables(){
         loadTime=socketHandler.eventHandler.events[0].startTime;
         map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
     }
-
     
-    float tempPause;
-    tempPause=socketHandler.eventHandler.events[1].startTime+23;
-    pauseTimes.push_back(tempPause);
-    tempPause+=5.7;
-    pauseTimes.push_back(tempPause);
-    tempPause+=10.8;
-    pauseTimes.push_back(tempPause);
-    tempPause+=5.2;
-    pauseTimes.push_back(tempPause);
-    tempPause+=26;
-    pauseTimes.push_back(tempPause);
-    tempPause+=5.7;
-    pauseTimes.push_back(tempPause);
-    tempPause+=10.8;
-    pauseTimes.push_back(tempPause);
-    tempPause+=5.2;
-    pauseTimes.push_back(tempPause);
+    //Gastronomy Default
+    pauseTimes.push_back(663);
+    pauseTimes.push_back(669.17);
+    pauseTimes.push_back(680.43);
+    pauseTimes.push_back(684.22);
+    //Markets Default
+    pauseTimes.push_back(710.38);
+    pauseTimes.push_back(717);
+    pauseTimes.push_back(728);
+    pauseTimes.push_back(732);
+    //Shopping Default
+    pauseTimes.push_back(758);
+    pauseTimes.push_back(764.06);
+    pauseTimes.push_back(774.32);
+    pauseTimes.push_back(780.16);
+    //Art & Design Default
+    pauseTimes.push_back(804.17);
+    pauseTimes.push_back(811.03);
+    pauseTimes.push_back(821.25);
+    pauseTimes.push_back(826.12);
+    //Leisure Default
+    pauseTimes.push_back(852.11);
+    pauseTimes.push_back(858.09);
+    pauseTimes.push_back(868.36);
+    pauseTimes.push_back(874.14);
+    
+    //Gastronomy Detail
+    pauseTimes.push_back(908.46);
+    pauseTimes.push_back(915.09);
+    pauseTimes.push_back(926.11);
+    pauseTimes.push_back(930.17);
+    pauseTimes.push_back(942.35);
+    pauseTimes.push_back(947.14);
+    pauseTimes.push_back(960.09);
+    
+    //Mrkets Detail
+    pauseTimes.push_back(1005.11);
+    pauseTimes.push_back(1012.07);
+    pauseTimes.push_back(1022.03);
+    pauseTimes.push_back(1027.07);
+    
+    //Shopping Detail
+    pauseTimes.push_back(1077.47);
+    pauseTimes.push_back(1084.04);
+    pauseTimes.push_back(1095.09);
+    pauseTimes.push_back(1100.22);
+    pauseTimes.push_back(1112.04);
+    pauseTimes.push_back(1116.08);
+    pauseTimes.push_back(1128.35);
+    pauseTimes.push_back(1133.39);
+    
+    //Arts & Design Detail
+    pauseTimes.push_back(1183.27);
+    pauseTimes.push_back(1190.01);
+    pauseTimes.push_back(1200.19);
+    pauseTimes.push_back(1205.11);
+    pauseTimes.push_back(1215.24);
+    pauseTimes.push_back(1222.20);
+    pauseTimes.push_back(1235.06);
+    
+    //Leisure Detail
+    pauseTimes.push_back(1281.00);
+    pauseTimes.push_back(1287.06);
+    pauseTimes.push_back(1297.43);
+    pauseTimes.push_back(1303.12);
+    pauseTimes.push_back(1314.26);
+    pauseTimes.push_back(1319.26);
 }
