@@ -386,4 +386,6 @@ public:
     bool bClearing;
     float clearTime;
     
+    bool warped[4][4];
+    
 };

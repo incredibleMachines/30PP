@@ -18,13 +18,15 @@
 #include "Camera.h"
 
 //--------------------------------------------------------------
-void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which){
+void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4]){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
-    camera.setGlobalPosition(_pos);
-    camera.setGlobalOrientation(_orientation);
-    camera.disableMouseInput();
-    camera.disableOrtho();
+//    camera.setGlobalPosition(_pos);
+//    camera.setGlobalOrientation(_orientation);
+//    camera.disableMouseInput();
+//    camera.disableOrtho();
+
+    meshTranslate=_pos;
     
     viewport.x=_viewPos.x;
     viewport.y=_viewPos.y;
@@ -33,17 +35,32 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     which=_which;
     mesh=_mesh;
+    
     for (int i=0; i<mesh.size();i++){
         meshObject newObject;
         newObject.isMesh=true;
         meshObjects.push_back(newObject);
+        vector<ofPoint> tempPoints;
     }
+    
     highlightMask=-1;
     for(int i=0; i<_masks.size();i++){
         ofPath tempDrawMask;
         masks.push_back(_masks[i]);
         drawMasks.push_back(tempDrawMask);
     }
+    
+    originals3D[3][0]=ofPoint(0, 0);
+    originals3D[3][1]=ofPoint(1920, 0);
+    originals3D[3][2]=ofPoint(1920, 1080);
+    originals3D[3][3]=ofPoint(0, 1080);
+    
+    warped3D[3][0]=warped[3][0];
+    warped3D[3][1]=warped[3][1];
+    warped3D[3][2]=warped[3][2];
+    warped3D[3][3]=warped[3][3];
+    
+    cameraView.allocate(1920,1080,GL_RGBA);
 }
 
 void Camera::addMask(){

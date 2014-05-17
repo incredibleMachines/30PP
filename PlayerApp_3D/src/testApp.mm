@@ -30,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
 //    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput_3D.mov", meshTexture->texData.textureID);
-    MSA::ofxCocoa::initPlayer("calibration.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("Calibration_2.mov", meshTexture->texData.textureID);
     //----------MODEL MAPPER   SETUP
     
     //Load mesh vector to select which meshes within obj to use
@@ -60,7 +60,7 @@ void testApp::setup() {
     map.setup(4,0,_meshesLoad);
     
     //set path to obj file to use in setup
-    map.setMassMesh("less.obj");
+    map.setMassMesh("sculpt_low_01 .obj");
     
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
