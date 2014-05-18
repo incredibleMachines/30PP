@@ -439,6 +439,23 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 's':
             saveCameras();
             break;
+        
+        case 'p':
+            if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
+                cameras[cameraSelect].addMask();
+                bNewMask=true;
+                bDrawingMask=true;
+                updateMasks();
+                maskButton->setColorFill(OFX_UI_COLOR_FILL);
+            }
+            
+            else if (adjustMode==ADJUST_MODE_MESH&&selectMode==SELECT_MODE_PEN){
+                penPoly.clear();
+                bNewPen=true;
+                bDrawingPen=true;
+                penButton->setColorFill(OFX_UI_COLOR_FILL); 
+            }
+            break; 
             
     }
 }
