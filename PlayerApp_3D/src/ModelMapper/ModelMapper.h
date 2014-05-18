@@ -389,6 +389,6 @@ public:
     
     bool warped[4][4];
     
-    void adjustRoll(float xR);
+    void adjustRoll(float zR);
     
 };

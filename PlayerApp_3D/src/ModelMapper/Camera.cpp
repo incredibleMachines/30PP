@@ -18,15 +18,15 @@
 #include "Camera.h"
 
 //--------------------------------------------------------------
-void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4]){
+void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float _rotate){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
-//    camera.setGlobalPosition(_pos);
+    camera.setGlobalPosition(_pos);
 //    camera.setGlobalOrientation(_orientation);
-//    camera.disableMouseInput();
-//    camera.disableOrtho();
+    camera.disableMouseInput();
+    camera.disableOrtho();
 
-    meshTranslate=_pos;
+//    meshTranslate=_pos;
     
     viewport.x=_viewPos.x;
     viewport.y=_viewPos.y;
@@ -35,6 +35,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     which=_which;
     mesh=_mesh;
+    rotate=_rotate;
     
     for (int i=0; i<mesh.size();i++){
         meshObject newObject;
@@ -87,4 +88,9 @@ void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, 
     meshObjects[_meshNum].right=featherRight;
     meshObjects[_meshNum].left=featherLeft;
     
+}
+
+void Camera::reset(){
+    camera.setGlobalPosition(ofVec3f(mesh[3].getCentroid().x,mesh[3].getCentroid().y,mesh[3].getCentroid().z+500));
+    camera.setTarget(mesh[3].getCentroid());
 }

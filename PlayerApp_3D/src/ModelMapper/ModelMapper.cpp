@@ -1540,9 +1540,10 @@ void ModelMapper:: saveCamera(int i) {
     //----------SAVE CAMERA DATA
     
     //Camera position
-    settings["cameras"][i]["pos"]["x"]=cameras[i].meshTranslate.x;
-    settings["cameras"][i]["pos"]["y"]=cameras[i].meshTranslate.y;
-    settings["cameras"][i]["pos"]["z"]=cameras[i].meshTranslate.z;
+    settings["cameras"][i]["pos"]["x"]=cameras[i].camera.getGlobalPosition().x;
+    settings["cameras"][i]["pos"]["y"]=cameras[i].camera.getGlobalPosition().y;
+    settings["cameras"][i]["pos"]["z"]=cameras[i].camera.getGlobalPosition().z;
+    settings["cameras"][i]["zRotate"]=cameras[i].camera.getGlobalPosition().z;
     
     //camera viewport offset
     settings["cameras"][i]["viewPos"]["x"]=cameras[i].viewport.x;
@@ -1821,7 +1822,7 @@ void ModelMapper::drawHighlights() {
             else{
                 ofSetColor(255,0,0);
             }
-            ofSetLineWidth(1);
+            ofSetLineWidth(4);
             penPoly.draw();
             ofSetColor(255);
         }
@@ -1833,7 +1834,7 @@ void ModelMapper::drawHighlights() {
             else{
                 ofSetColor(255);
             }
-            ofSetLineWidth(1);
+            ofSetLineWidth(4);
             doublePoly.draw();
             ofSetColor(255);
         }
@@ -2691,10 +2692,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             if(bEnableGuiCam==true){
-                cameras[guiCam].camera.setGlobalPosition(ofVec3f(cameras[guiCam].mesh[3].getCentroid().x,cameras[guiCam].mesh[3].getCentroid().y,cameras[guiCam].mesh[3].getCentroid().z+500));
-                cameras[guiCam].camera.setTarget(cameras[guiCam].mesh[3].getCentroid());
+                
+                cameras[guiCam].reset();
+
             }
             else{
+                cameras[cameraSelect].reset();
                 cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x,cameras[cameraSelect].mesh[3].getCentroid().y,cameras[cameraSelect].mesh[3].getCentroid().z+500));
                 cameras[cameraSelect].camera.setTarget(cameras[cameraSelect].mesh[3].getCentroid());
             }
