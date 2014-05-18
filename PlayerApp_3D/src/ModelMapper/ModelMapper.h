@@ -391,4 +391,8 @@ public:
     
     void adjustRoll(float zR);
     
+    void calculateGuiValues();
+    
+    void findMeshFaces(int i, int j);
+    
 };

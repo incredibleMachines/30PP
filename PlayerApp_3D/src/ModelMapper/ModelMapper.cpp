@@ -359,15 +359,15 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             break;
             
-        case 'n':
-        case 'N':
+        case ',':
+        case '<':
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustRoll(moveModifier);
             }
             break;
             
-        case 'm':
-        case 'M':
+        case '.':
+        case '>':
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustRoll(-moveModifier);
             }
@@ -1046,10 +1046,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                         ofVec3f cur;
                         for(int j = 0; j < n; j++){
                             if(bEnableGuiCam==true){
-                                cur = cameras[guiCam].mesh[i].getVertex(j);
+                                cur = cameras[guiCam].camera.worldToScreen(cameras[guiCam].mesh[i].getVertex(j),cameras[guiCam].viewport);
                             }
                             else{
-                                cur = cameras[cameraSelect].mesh[i].getVertex(j)+ofVec2f(cameras[cameraSelect].viewport.x,cameras[cameraSelect].viewport.y)+cameras[cameraSelect].meshTranslate;
+                                cur = cameras[cameraSelect].camera.worldToScreen(cameras[cameraSelect].mesh[i].getVertex(j),cameras[cameraSelect].viewport);
                             }
                             float distance = cur.distance(ofVec2f(args.x,args.y));
                             if(distance < clickThreshold) {
@@ -1497,6 +1497,7 @@ void ModelMapper:: setupCameras() {
             ofQuaternion rot = ofQuaternion(settings["cameras"][i]["orientation"]["x"].asFloat(), settings["cameras"][i]["orientation"]["y"].asFloat(), settings["cameras"][i]["orientation"]["z"].asFloat(), settings["cameras"][i]["orientation"]["w"].asFloat());
             ofVec3f viewPos = ofVec3f(settings["cameras"][i]["viewPos"]["x"].asFloat(),settings["cameras"][i]["viewPos"]["y"].asFloat());
             ofVec3f viewSize = ofVec3f(settings["cameras"][i]["viewSize"]["x"].asFloat(),settings["cameras"][i]["viewSize"]["y"].asFloat());
+            float _rotate=settings["cameras"][i]["zRotate"].asFloat();
             
             //load mask polyines from JSON vertex points
             vector<ofPolyline> tempMasks;
@@ -1512,7 +1513,7 @@ void ModelMapper:: setupCameras() {
             for(int j=0;j<settings["cameras"][i]["which"].size();j++){
                 _which.push_back(settings["cameras"][i]["which"][j].asBool());
             }
-            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped);
+            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate);
             cameras.push_back(tempCam);
             meshes.clear();
         }
@@ -1543,7 +1544,7 @@ void ModelMapper:: saveCamera(int i) {
     settings["cameras"][i]["pos"]["x"]=cameras[i].camera.getGlobalPosition().x;
     settings["cameras"][i]["pos"]["y"]=cameras[i].camera.getGlobalPosition().y;
     settings["cameras"][i]["pos"]["z"]=cameras[i].camera.getGlobalPosition().z;
-    settings["cameras"][i]["zRotate"]=cameras[i].camera.getGlobalPosition().z;
+    settings["cameras"][i]["zRotate"]=cameras[i].rotate;
     
     //camera viewport offset
     settings["cameras"][i]["viewPos"]["x"]=cameras[i].viewport.x;
@@ -1726,6 +1727,7 @@ void ModelMapper:: drawCameras() {
                             if(bDrawWireframe==true){
                                 ofSetColor(255,0,0);
                                 ofNoFill();
+                                ofSetLineWidth(4);
                                 ofRect(cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][0].y,cameras[i].meshObjects[j].originals[k][1].x-cameras[i].meshObjects[j].originals[k][0].x,cameras[i].meshObjects[j].originals[k][2].y-cameras[i].meshObjects[j].originals[k][0].y);
                             }
                             ofPopMatrix();
@@ -1754,12 +1756,22 @@ void ModelMapper:: drawCameras() {
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
-                            ofSetLineWidth(1);
+                            ofSetLineWidth(4);
                             ofSetColor(72,225,180);
                             cameras[i].mesh[j].drawWireframe();
                         }
                         
+                        
                         cameras[i].camera.end();
+                        
+                        
+                        
+                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].mesh[j].getCentroid(),cameras[i].viewport),10);
+                        
+                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].camera.getTarget().getGlobalPosition(),cameras[i].viewport),10);
+                        
+                        
+                        
                         //End camera object
                         //                cameras[i].camera.end();
                         
@@ -2153,13 +2165,13 @@ void ModelMapper::adjustPosition(float x, float y, float z){
     }
     
     if(positionX!=NULL){
-        positionX->setTextString(ofToString(cameras[cameraSelect].meshTranslate.x));
+        positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
     }
     if(positionY!=NULL){
-        positionY->setTextString(ofToString(cameras[cameraSelect].meshTranslate.y));
+        positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
     }
     if(positionZ!=NULL){
-        positionZ->setTextString(ofToString(cameras[cameraSelect].meshTranslate.z));
+        positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
     }
     
 }
@@ -2168,9 +2180,15 @@ void ModelMapper::adjustRoll(float zR){
     
     if(bGuiCamAdjust==true){
         cameras[guiCam].camera.roll(zR);
+        cameras[guiCam].rotate+=zR;
     }
     else{
         cameras[cameraSelect].camera.roll(zR);
+        cameras[cameraSelect].rotate+=zR;
+    }
+    
+    if(rotateZ!=NULL){
+        rotateZ->setTextString(ofToString(cameras[cameraSelect].rotate));
     }
 }
 
@@ -2364,7 +2382,6 @@ void ModelMapper::setMainGUI(){
     mainGUI->addSpacer();
     mainGUI->addToggle("Enable Gui Cam",OFX_UI_FONT_MEDIUM)->setValue(false);
     mainGUI->addToggle("Adjust Gui Cam",OFX_UI_FONT_MEDIUM)->setValue(false);
-    mainGUI->addLabelButton("Reset Gui Cam", false);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
@@ -2397,6 +2414,7 @@ void ModelMapper::setMainGUI(){
     performanceButton=mainGUI->addLabelButton("PERFORMANCE MODE", false);
     
     mainGUI->autoSizeToFitWidgets();
+    mainGUI->setPosition(40, 300);
     ofAddListener(mainGUI->newGUIEvent,this,&ModelMapper::guiEvent);
 }
 
@@ -2426,10 +2444,10 @@ void ModelMapper::setPositionGUI(){
     positionZ->setAutoClear(false);
     
     positionGUI->addLabel("Rotate",OFX_UI_FONT_MEDIUM);
-    rotateZ = positionGUI->addTextInput("Rotate", ofToString(cameras[cameraSelect].camera.getRoll()));
+    rotateZ = positionGUI->addTextInput("Rotate", ofToString(cameras[cameraSelect].rotate));
     rotateZ->setAutoClear(false);
     
-    positionGUI->setPosition(212, 0);
+    positionGUI->setPosition(240, 300);
     
     positionGUI->autoSizeToFitWidgets();
     ofAddListener(positionGUI->newGUIEvent,this,&ModelMapper::guiEvent);
@@ -2447,7 +2465,7 @@ void ModelMapper::setOrientationGUI(){
     orientationGUI->addToggle("LR",false);
     orientationGUI->addToggle("LL",false);
     
-    orientationGUI->setPosition(212, 0);
+    orientationGUI->setPosition(240, 300);
     orientationGUI->autoSizeToFitWidgets();
     
     orientationGUI->setVisible(false);
@@ -2473,7 +2491,7 @@ void ModelMapper::setViewportGUI(){
     viewportY = viewportGUI->addTextInput("Viewport Y", ofToString(cameras[cameraSelect].viewport.y));
     viewportY->setAutoClear(false);
     
-    viewportGUI->setPosition(212, 0);
+    viewportGUI->setPosition(240, 300);
     viewportGUI->autoSizeToFitWidgets();
     
     viewportGUI->setVisible(false);
@@ -2509,7 +2527,7 @@ void ModelMapper::setMeshGUI(){
     meshGUI->addLabelButton("RELOAD MESH", false);
     meshGUI->addLabelButton("RELOAD SELECTED", false);
     
-    meshGUI->setPosition(212, 0);
+    meshGUI->setPosition(240, 300);
     meshGUI->autoSizeToFitWidgets();
     
     meshGUI->setVisible(false);
@@ -2552,7 +2570,7 @@ void ModelMapper::setMesh2DGUI(){
     mesh2DGUI->addSpacer();
     mesh2DGUI->addLabelButton("RESET WARP", false);
     
-    mesh2DGUI->setPosition(212, 0);
+    mesh2DGUI->setPosition(240, 300);
     mesh2DGUI->autoSizeToFitWidgets();
     
     mesh2DGUI->setVisible(false);
@@ -2605,7 +2623,7 @@ void ModelMapper::setMagnetGUI(){
     easeBothMethod = magnetGUI->addRadio("EASE BOTH", easeMethods, OFX_UI_ORIENTATION_VERTICAL, OFX_UI_FONT_MEDIUM);
     easeBothMethod->setVisible(false);
     
-    magnetGUI->setPosition(212*2, 0);
+    magnetGUI->setPosition(440, 300);
     magnetGUI->setHeight(220);
     
     setEaseHeights(true,false,false,false);
@@ -2631,7 +2649,7 @@ void ModelMapper::setMaskGUI(){
     maskButton=maskGUI->addLabelButton("START MASK", OFX_UI_FONT_MEDIUM);
     maskButton->setColorFill(OFX_UI_COLOR_BACK);
     
-    maskGUI->setPosition(212, 0);
+    maskGUI->setPosition(240, 300);
     maskGUI->autoSizeToFitWidgets();
     
     maskGUI->setVisible(false);
@@ -2691,15 +2709,13 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     {
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
-            if(bEnableGuiCam==true){
-                
+            if(bGuiCamAdjust==true){
                 cameras[guiCam].reset();
-
+                calculateGuiValues();
             }
             else{
                 cameras[cameraSelect].reset();
-                cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x,cameras[cameraSelect].mesh[3].getCentroid().y,cameras[cameraSelect].mesh[3].getCentroid().z+500));
-                cameras[cameraSelect].camera.setTarget(cameras[cameraSelect].mesh[3].getCentroid());
+                calculateGuiValues();
             }
         }
     }
@@ -2965,64 +2981,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         
         updateMasks();
         
-        if(positionX!=NULL){
-            positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
-        }
-        if(positionY!=NULL){
-            positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
-        }
-        if(positionZ!=NULL){
-            positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
-        }
-        if(positionZ!=NULL){
-            positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
-        }
-        
-        if(orientationX!=NULL){
-            orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
-        }
-        if(orientationY!=NULL){
-            orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
-        }
-        if(orientationZ!=NULL){
-            orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
-        }
-        if(orientationW!=NULL){
-            orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
-        }
-        if(viewportX!=NULL){
-            viewportX->setTextString(ofToString(cameras[cameraSelect].viewport.x));
-        }
-        if(viewportY!=NULL){
-            viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
-        }
-        if(translateX2D!=NULL){
-            translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
-        }
-        if(translateY2D!=NULL){
-            translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
-        }
-        if(scale2D!=NULL){
-            scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
-        }
-        if(featherRight2D!=NULL){
-            featherRight2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].right));
-        }
-        if(featherLeft2D!=NULL){
-            featherLeft2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
-        }
-        if(drawMesh0!=NULL){
-            drawMesh0->setValue(cameras[cameraSelect].which[0]);
-        }
-        if(drawMesh1!=NULL){
-            drawMesh1->setValue(cameras[cameraSelect].which[1]);
-        }
-        if(drawMesh2!=NULL){
-            drawMesh2->setValue(cameras[cameraSelect].which[2]);
-        }
-        if(drawMesh3!=NULL){
-            drawMesh3->setValue(cameras[cameraSelect].which[3]);
-        }
+        calculateGuiValues();
     }
     
     else if(name == "CHANGE MODE"){
@@ -3114,12 +3073,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     else if(name=="RELOAD MESH"){
         ofxAssimpModelLoader reload;
         reload.loadModel(massMesh);
-        for(int i=0; i<numMeshes;i++){
-            if(whichMeshes[i][3]==MESH_3D){
-                cameras[cameraSelect].mesh[i]=reload.getMesh(whichMeshes[i][1]);
-            }
-            
-        }
+
+        cameras[cameraSelect].mesh[3]=reload.getMesh(0);
+        cameras[guiCam].mesh[3]=reload.getMesh(0);
+    
+     
+        reload.clear(); 
         cout<<"Reloaded Model"<<endl;
     }
     
@@ -3350,7 +3309,7 @@ void ModelMapper::setEaseHeights(bool radiusSpacer, bool pen1, bool pen2, bool b
 void ModelMapper::setupGUI(){
     cameraNames.push_back("1");cameraNames.push_back("2");cameraNames.push_back("3");
     
-    adjustModes.push_back("Camera Position"); adjustModes.push_back("Camera Orientation"); adjustModes.push_back("Viewport Position");
+    adjustModes.push_back("Camera Position"); adjustModes.push_back("Viewport Position");
     adjustModes.push_back("3D Meshes"); adjustModes.push_back("2D Meshes");adjustModes.push_back("Masks");
     
     easeMethods.push_back("Linear");
@@ -3463,15 +3422,15 @@ void ModelMapper::setGUIVisible(bool hide){
 
 void ModelMapper::resetSelected(){
     ofxAssimpModelLoader reload;
-    
     reload.loadModel(massMesh);
     if(moveVertices.size()>0){
         for(int j=0;j<numMeshes;j++){
             for(int k=0;k<moveVertices[j].size();k++){
-                cameras[cameraSelect].mesh[j].setVertex(moveVertices[j][k].index,reload.getMesh(whichMeshes[j][2]).getVertex(moveVertices[j][k].index));
+                cameras[cameraSelect].mesh[j].setVertex(moveVertices[j][k].index,reload.getMesh(0).getVertex(moveVertices[j][k].index));
             }
         }
     }
+    reload.clear();
     cout<<"Reloaded Selected"<<endl;
 }
 
@@ -3638,3 +3597,65 @@ void ModelMapper::fadeIn(int type){
         fadeFrame=&endFrame;
     }
 }
+
+void ModelMapper::calculateGuiValues(){
+    if(positionX!=NULL){
+        positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
+    }
+    if(positionY!=NULL){
+        positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
+    }
+    if(positionZ!=NULL){
+        positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
+    }
+    if(rotateZ!=NULL){
+        rotateZ->setTextString(ofToString(cameras[cameraSelect].rotate));
+    }
+    
+    if(orientationX!=NULL){
+        orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
+    }
+    if(orientationY!=NULL){
+        orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
+    }
+    if(orientationZ!=NULL){
+        orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
+    }
+    if(orientationW!=NULL){
+        orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
+    }
+    if(viewportX!=NULL){
+        viewportX->setTextString(ofToString(cameras[cameraSelect].viewport.x));
+    }
+    if(viewportY!=NULL){
+        viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
+    }
+    if(translateX2D!=NULL){
+        translateX2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.x));
+    }
+    if(translateY2D!=NULL){
+        translateY2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].translate.y));
+    }
+    if(scale2D!=NULL){
+        scale2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].scale));
+    }
+    if(featherRight2D!=NULL){
+        featherRight2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].right));
+    }
+    if(featherLeft2D!=NULL){
+        featherLeft2D->setTextString(ofToString(cameras[cameraSelect].meshObjects[currentMesh].left));
+    }
+    if(drawMesh0!=NULL){
+        drawMesh0->setValue(cameras[cameraSelect].which[0]);
+    }
+    if(drawMesh1!=NULL){
+        drawMesh1->setValue(cameras[cameraSelect].which[1]);
+    }
+    if(drawMesh2!=NULL){
+        drawMesh2->setValue(cameras[cameraSelect].which[2]);
+    }
+    if(drawMesh3!=NULL){
+        drawMesh3->setValue(cameras[cameraSelect].which[3]);
+    }
+}
+

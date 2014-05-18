@@ -35,6 +35,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     which=_which;
     mesh=_mesh;
+    camera.roll(_rotate);
     rotate=_rotate;
     
     for (int i=0; i<mesh.size();i++){
@@ -91,6 +92,7 @@ void Camera::set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, 
 }
 
 void Camera::reset(){
-    camera.setGlobalPosition(ofVec3f(mesh[3].getCentroid().x,mesh[3].getCentroid().y,mesh[3].getCentroid().z+500));
-    camera.setTarget(mesh[3].getCentroid());
+    camera.setGlobalPosition(ofVec3f(mesh[3].getCentroid().x+10,15,mesh[3].getCentroid().z+397));
+    camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
+    rotate=0;
 }
