@@ -21,16 +21,6 @@
 		D339C19C18CFA0BB008E604C /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0A818CFA0BB008E604C /* libwebsockets.a */; };
 		D339C19D18CFA0BB008E604C /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0AA18CFA0BB008E604C /* libwebsockets.a */; };
 		D339C19E18CFA0BB008E604C /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0AC18CFA0BB008E604C /* libwebsockets.a */; };
-		D339C19F18CFA0BB008E604C /* websockets.exp in Sources */ = {isa = PBXBuildFile; fileRef = D339C0AF18CFA0BB008E604C /* websockets.exp */; };
-		D339C1A018CFA0BB008E604C /* websockets.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B018CFA0BB008E604C /* websockets.lib */; };
-		D339C1A118CFA0BB008E604C /* websockets_static.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B118CFA0BB008E604C /* websockets_static.lib */; };
-		D339C1A218CFA0BB008E604C /* websockets_static.pdb in Resources */ = {isa = PBXBuildFile; fileRef = D339C0B218CFA0BB008E604C /* websockets_static.pdb */; };
-		D339C1A318CFA0BB008E604C /* ZLIB.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B318CFA0BB008E604C /* ZLIB.lib */; };
-		D339C1A418CFA0BB008E604C /* zlib.pdb in Resources */ = {isa = PBXBuildFile; fileRef = D339C0B418CFA0BB008E604C /* zlib.pdb */; };
-		D339C1A518CFA0BB008E604C /* websockets.exp in Sources */ = {isa = PBXBuildFile; fileRef = D339C0B618CFA0BB008E604C /* websockets.exp */; };
-		D339C1A618CFA0BB008E604C /* websockets.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B718CFA0BB008E604C /* websockets.lib */; };
-		D339C1A718CFA0BB008E604C /* websockets_static.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B818CFA0BB008E604C /* websockets_static.lib */; };
-		D339C1A818CFA0BB008E604C /* ZLIB.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = D339C0B918CFA0BB008E604C /* ZLIB.lib */; };
 		D339C1A918CFA0BB008E604C /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D339C0C518CFA0BB008E604C /* Client.cpp */; };
 		D339C1AA18CFA0BB008E604C /* Connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D339C0C618CFA0BB008E604C /* Connection.cpp */; };
 		D339C1AB18CFA0BB008E604C /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D339C0C718CFA0BB008E604C /* Events.cpp */; };
@@ -212,16 +202,6 @@
 		D339C0A818CFA0BB008E604C /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebsockets.a; sourceTree = "<group>"; };
 		D339C0AA18CFA0BB008E604C /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebsockets.a; sourceTree = "<group>"; };
 		D339C0AC18CFA0BB008E604C /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwebsockets.a; sourceTree = "<group>"; };
-		D339C0AF18CFA0BB008E604C /* websockets.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = websockets.exp; sourceTree = "<group>"; };
-		D339C0B018CFA0BB008E604C /* websockets.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = websockets.lib; sourceTree = "<group>"; };
-		D339C0B118CFA0BB008E604C /* websockets_static.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = websockets_static.lib; sourceTree = "<group>"; };
-		D339C0B218CFA0BB008E604C /* websockets_static.pdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = websockets_static.pdb; sourceTree = "<group>"; };
-		D339C0B318CFA0BB008E604C /* ZLIB.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = ZLIB.lib; sourceTree = "<group>"; };
-		D339C0B418CFA0BB008E604C /* zlib.pdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = zlib.pdb; sourceTree = "<group>"; };
-		D339C0B618CFA0BB008E604C /* websockets.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = websockets.exp; sourceTree = "<group>"; };
-		D339C0B718CFA0BB008E604C /* websockets.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = websockets.lib; sourceTree = "<group>"; };
-		D339C0B818CFA0BB008E604C /* websockets_static.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = websockets_static.lib; sourceTree = "<group>"; };
-		D339C0B918CFA0BB008E604C /* ZLIB.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = ZLIB.lib; sourceTree = "<group>"; };
 		D339C0BD18CFA0BB008E604C /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		D339C0BE18CFA0BB008E604C /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		D339C0BF18CFA0BB008E604C /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
@@ -549,28 +529,22 @@
 			files = (
 				D339C1B018CFA0BB008E604C /* libssl.a in Frameworks */,
 				E2A695EA18CE7318008D8EF1 /* QuartzCore.framework in Frameworks */,
-				D339C1A018CFA0BB008E604C /* websockets.lib in Frameworks */,
 				D339C19C18CFA0BB008E604C /* libwebsockets.a in Frameworks */,
-				D339C1A718CFA0BB008E604C /* websockets_static.lib in Frameworks */,
 				E2A695E818CE72EF008D8EF1 /* CoreMedia.framework in Frameworks */,
 				D339C1AF18CFA0BB008E604C /* libcrypto.a in Frameworks */,
 				E2A695E618CE72E0008D8EF1 /* AVFoundation.framework in Frameworks */,
-				D339C1A118CFA0BB008E604C /* websockets_static.lib in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
-				D339C1A818CFA0BB008E604C /* ZLIB.lib in Frameworks */,
 				D339C19E18CFA0BB008E604C /* libwebsockets.a in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				D339C1B218CFA0BB008E604C /* ssleay32.lib in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
-				D339C1A618CFA0BB008E604C /* websockets.lib in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
 				E45BE97E0E8CC7DD009D7055 /* Carbon.framework in Frameworks */,
 				D339C19D18CFA0BB008E604C /* libwebsockets.a in Frameworks */,
 				D339C1B118CFA0BB008E604C /* libeay32.lib in Frameworks */,
-				D339C1A318CFA0BB008E604C /* ZLIB.lib in Frameworks */,
 				E45BE97F0E8CC7DD009D7055 /* CoreAudio.framework in Frameworks */,
 				E45BE9800E8CC7DD009D7055 /* CoreFoundation.framework in Frameworks */,
 				E2A691DB18CE6567008D8EF1 /* assimp.a in Frameworks */,
@@ -732,7 +706,6 @@
 				D339C0A718CFA0BB008E604C /* linux64 */,
 				D339C0A918CFA0BB008E604C /* linuxarmv6l */,
 				D339C0AB18CFA0BB008E604C /* osx */,
-				D339C0AD18CFA0BB008E604C /* win32 */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -759,39 +732,6 @@
 				D339C0AC18CFA0BB008E604C /* libwebsockets.a */,
 			);
 			path = osx;
-			sourceTree = "<group>";
-		};
-		D339C0AD18CFA0BB008E604C /* win32 */ = {
-			isa = PBXGroup;
-			children = (
-				D339C0AE18CFA0BB008E604C /* Debug */,
-				D339C0B518CFA0BB008E604C /* Release */,
-			);
-			path = win32;
-			sourceTree = "<group>";
-		};
-		D339C0AE18CFA0BB008E604C /* Debug */ = {
-			isa = PBXGroup;
-			children = (
-				D339C0AF18CFA0BB008E604C /* websockets.exp */,
-				D339C0B018CFA0BB008E604C /* websockets.lib */,
-				D339C0B118CFA0BB008E604C /* websockets_static.lib */,
-				D339C0B218CFA0BB008E604C /* websockets_static.pdb */,
-				D339C0B318CFA0BB008E604C /* ZLIB.lib */,
-				D339C0B418CFA0BB008E604C /* zlib.pdb */,
-			);
-			path = Debug;
-			sourceTree = "<group>";
-		};
-		D339C0B518CFA0BB008E604C /* Release */ = {
-			isa = PBXGroup;
-			children = (
-				D339C0B618CFA0BB008E604C /* websockets.exp */,
-				D339C0B718CFA0BB008E604C /* websockets.lib */,
-				D339C0B818CFA0BB008E604C /* websockets_static.lib */,
-				D339C0B918CFA0BB008E604C /* ZLIB.lib */,
-			);
-			path = Release;
 			sourceTree = "<group>";
 		};
 		D339C0BA18CFA0BB008E604C /* ofxLibwebsockets */ = {
@@ -1467,7 +1407,6 @@
 				D3801ACC18EA455C0006C493 /* .gitignore in Resources */,
 				D334C30718FDBAFC0071EA7B /* README.md in Resources */,
 				D339C19518CFA0BB008E604C /* COPYING in Resources */,
-				D339C1A218CFA0BB008E604C /* websockets_static.pdb in Resources */,
 				D3801ADD18EA455C0006C493 /* LICENSE in Resources */,
 				E2A691D618CE6567008D8EF1 /* aiColor4D.inl in Resources */,
 				D339C1B318CFA0BB008E604C /* ofxaddons_thumbnail.png in Resources */,
@@ -1478,7 +1417,6 @@
 				D371D53E18E9B9F70085D1B5 /* iconbuilder.icns in Resources */,
 				D339C11A18CFA0BB008E604C /* addon_config.mk in Resources */,
 				E2A691D818CE6567008D8EF1 /* aiMatrix3x3.inl in Resources */,
-				D339C1A418CFA0BB008E604C /* zlib.pdb in Resources */,
 				D3801ACB18EA455C0006C493 /* .cproject in Resources */,
 				D339C19718CFA0BB008E604C /* libwebsockets-test-server.pem in Resources */,
 				D3801ACD18EA455C0006C493 /* .project in Resources */,
@@ -1528,7 +1466,6 @@
 				D3801AE318EA455C0006C493 /* ofxEasingCirc.cpp in Sources */,
 				D3801E5618EB00800006C493 /* ofxUILabel.cpp in Sources */,
 				D3801E4518EB00800006C493 /* ofxUI2DGraph.cpp in Sources */,
-				D339C1A518CFA0BB008E604C /* websockets.exp in Sources */,
 				D3801E6418EB00800006C493 /* ofxUISortableList.cpp in Sources */,
 				E20462FE18F44E6D00F41A74 /* EventHandler.cpp in Sources */,
 				D3801E6118EB00800006C493 /* ofxUIRotarySlider.cpp in Sources */,
@@ -1553,7 +1490,6 @@
 				590FEF0D293D8C60BEE0C470 /* MyUIDelegate.mm in Sources */,
 				D3801EAD18EB02310006C493 /* tinyxml.cpp in Sources */,
 				D3801E5D18EB00800006C493 /* ofxUINumberDialer.cpp in Sources */,
-				D339C19F18CFA0BB008E604C /* websockets.exp in Sources */,
 				D3801E5F18EB00800006C493 /* ofxUIRangeSlider.cpp in Sources */,
 				E2A691DC18CE6567008D8EF1 /* ofxAssimpAnimation.cpp in Sources */,
 				D3801AEA18EA455C0006C493 /* ofxEasingQuint.cpp in Sources */,

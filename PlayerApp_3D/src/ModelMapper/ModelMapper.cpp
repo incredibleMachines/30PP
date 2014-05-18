@@ -1758,7 +1758,17 @@ void ModelMapper:: drawCameras() {
                             cameras[i].mesh[j].drawWireframe();
                         }
                         
+                        
                         cameras[i].camera.end();
+                        
+                        
+                        
+                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].mesh[j].getCentroid(),cameras[i].viewport),10);
+                        
+                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].camera.getTarget().getGlobalPosition(),cameras[i].viewport),10);
+                        
+                        
+                        
                         //End camera object
                         //                cameras[i].camera.end();
                         
@@ -2691,12 +2701,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             if(bEnableGuiCam==true){
-                cameras[guiCam].camera.setGlobalPosition(ofVec3f(cameras[guiCam].mesh[3].getCentroid().x,cameras[guiCam].mesh[3].getCentroid().y,cameras[guiCam].mesh[3].getCentroid().z+500));
+                cameras[guiCam].camera.setGlobalPosition(ofVec3f(cameras[guiCam].mesh[3].getCentroid().x,500,cameras[guiCam].mesh[3].getCentroid().z+500));
                 cameras[guiCam].camera.setTarget(cameras[guiCam].mesh[3].getCentroid());
             }
             else{
-                cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x,cameras[cameraSelect].mesh[3].getCentroid().y,cameras[cameraSelect].mesh[3].getCentroid().z+500));
-                cameras[cameraSelect].camera.setTarget(cameras[cameraSelect].mesh[3].getCentroid());
+                cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x+10,15,cameras[cameraSelect].mesh[3].getCentroid().z+397));
+                cameras[cameraSelect].camera.setTarget(ofVec3f(cameras[cameraSelect].mesh[3].getCentroid().x+30,cameras[cameraSelect].mesh[3].getCentroid().y, cameras[cameraSelect].mesh[3].getCentroid().z));
             }
         }
     }
