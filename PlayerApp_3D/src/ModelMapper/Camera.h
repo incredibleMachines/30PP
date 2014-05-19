@@ -66,6 +66,8 @@ public:
     
     void reset();
     
+    void setTarget();
+    
     
 };
 

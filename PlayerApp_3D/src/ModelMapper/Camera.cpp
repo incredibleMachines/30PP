@@ -21,10 +21,6 @@
 void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float _rotate){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
-    camera.setGlobalPosition(_pos);
-//    camera.setGlobalOrientation(_orientation);
-    camera.disableMouseInput();
-    camera.disableOrtho();
 
 //    meshTranslate=_pos;
     
@@ -35,8 +31,7 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     which=_which;
     mesh=_mesh;
-    camera.roll(_rotate);
-    rotate=_rotate;
+
     
     for (int i=0; i<mesh.size();i++){
         meshObject newObject;
@@ -63,6 +58,15 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     warped3D[3][3]=warped[3][3];
     
     cameraView.allocate(1920,1080,GL_RGBA);
+    
+    camera.roll(_rotate);
+    rotate=_rotate;
+    camera.setGlobalPosition(_pos);
+    setTarget();
+
+    //    camera.setGlobalOrientation(_orientation);
+    camera.disableMouseInput();
+    camera.disableOrtho();
 }
 
 void Camera::addMask(){
@@ -95,4 +99,9 @@ void Camera::reset(){
     camera.setGlobalPosition(ofVec3f(mesh[3].getCentroid().x+10,15,mesh[3].getCentroid().z+397));
     camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
     rotate=0;
+}
+
+void Camera::setTarget(){
+        camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
+    camera.roll(rotate);
 }

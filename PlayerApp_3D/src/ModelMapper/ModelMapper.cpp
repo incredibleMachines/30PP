@@ -250,7 +250,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
             //Adjust Viewport Position for Active Camera
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                adjustViewport(0,-moveModifier);
+                 adjustViewport(0,-moveModifier);
             }
             
             //Adjust Entire Mask Position
@@ -304,7 +304,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMask(moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_MESH){
-                adjustMesh(-moveModifier,0,0);
+                adjustMesh(moveModifier,0,0);
             }
             else if(adjustMode==ADJUST_MODE_2D){
                 adjust2D(moveModifier,0);
@@ -325,7 +325,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustMask(-moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_MESH){
-                adjustMesh(moveModifier,0,0);
+                adjustMesh(-moveModifier,0,0);
             }
             else if(adjustMode==ADJUST_MODE_2D){
                 adjust2D(-moveModifier,0);
@@ -440,7 +440,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             saveCameras();
             break;
         
-        case 'p':
+        case 'm':
             if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
                 cameras[cameraSelect].addMask();
                 bNewMask=true;
@@ -1417,10 +1417,10 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                         //parse through all vertices to determine nearest, if exists
                         for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
                             for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
-                                float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y).distance(mouse );
+                                float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x+cameras[cameraSelect].meshObjects[i].translate.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y+cameras[cameraSelect].meshObjects[i].translate.y).distance(mouse);
                                 if(distance < nearestDistance) {
                                     vertex2D tempVert;
-                                    tempVert.vertex=ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y) ;
+                                    tempVert.vertex=ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x+cameras[cameraSelect].meshObjects[i].translate.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y+cameras[cameraSelect].meshObjects[i].translate.y) ;
                                     tempVert.index=k;
                                     tempVert.box=j;
                                     bool included=false;
@@ -1783,11 +1783,6 @@ void ModelMapper:: drawCameras() {
                         
                         
                         
-                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].mesh[j].getCentroid(),cameras[i].viewport),10);
-                        
-                        ofCircle(cameras[i].camera.worldToScreen(cameras[i].camera.getTarget().getGlobalPosition(),cameras[i].viewport),10);
-                        
-                        
                         
                         //End camera object
                         //                cameras[i].camera.end();
@@ -2044,14 +2039,14 @@ void ModelMapper::drawHighlights() {
                     //parse through all vertices to determine nearest, if exists
                     for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {
                         for(int k = 0; k < cameras[cameraSelect].meshObjects[i].warped[j].size(); k++){
-                            float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y).distance(mouse );
+                            float distance = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x+cameras[cameraSelect].meshObjects[i].translate.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y+cameras[cameraSelect].meshObjects[i].translate.y).distance(mouse);
                             if(distance < nearestDistance) {
                                 nearestDistance = distance;
-                                nearestVertex = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y);
+                                nearestVertex = ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x+cameras[cameraSelect].meshObjects[i].translate.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y+cameras[cameraSelect].meshObjects[i].translate.y);
                                 drawNearest=true;
                             }
                             ofNoFill();
-                            ofCircle( ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y),10);
+                            ofCircle( ofPoint(cameras[cameraSelect].meshObjects[i].warped[j][k].x*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.x+cameras[cameraSelect].meshObjects[i].translate.x,cameras[cameraSelect].meshObjects[i].warped[j][k].y*cameras[cameraSelect].meshObjects[i].scale+cameras[cameraSelect].viewport.y+cameras[cameraSelect].meshObjects[i].translate.y),10);
                         }
                     }
                 }
@@ -2090,7 +2085,8 @@ void ModelMapper::drawHighlights() {
 
 void ModelMapper::drawMasks(){
     //draw mask ofPaths
-    for(int i = 0; i < numCams; i++){
+    for(int c = 0; c < numCams; c++){
+        int i = c;
         for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
             //            if(i!=guiCam){
             
@@ -2176,9 +2172,6 @@ void ModelMapper::adjustPosition(float x, float y, float z){
     
     if(bGuiCamAdjust==true){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
-    }
-    else{
-        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     
     if(positionX!=NULL){
@@ -2822,7 +2815,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
+//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
+//            cameras[cameraSelect].setTarget();
         }
     }
     
@@ -2831,7 +2825,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
+//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
+//                        cameras[cameraSelect].setTarget();
         }
     }
     
@@ -2840,7 +2835,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
+//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
+//                        cameras[cameraSelect].setTarget();
         }
     }
     
@@ -2973,6 +2969,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
+                        cameras[cameraSelect].setTarget();
             //            cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation ());
         }
     }
