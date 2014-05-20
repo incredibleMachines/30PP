@@ -197,12 +197,6 @@ void ModelMapper::draw(){
     
     drawCameras();
     
-    
-    //----------DRAW MASKS
-    glDepthFunc(GL_ALWAYS);
-    drawMasks();
-    glDepthFunc(GL_LESS);
-    
     //----------DRAW MESH POINT SELECTION HIGHLIGHTS
     if(bDrawHighlights){
         ofPushStyle();
@@ -1638,9 +1632,27 @@ void ModelMapper:: saveCamera(int i) {
 
 void ModelMapper:: drawCameras() {
     
-    for(int i = 0; i < numCams; i++){
+    for(int c = 0; c < numCams; c++){
+        
+        int i;
+        
+        if(c<2){
+            i=c;
+        }
+        
+        else if (c==2){
+            i=3;
+        }
+        
+        else if(c==3){
+            i=2;
+        }
+
         
         if(bEnableGuiCam==true||(i!=guiCam)){
+    
+            
+            cout<<"draw camera: "<<i<<endl;
             
             //DRAW 2D MESHES
             
@@ -1825,6 +1837,12 @@ void ModelMapper:: drawCameras() {
             }
             
         }
+        
+        
+        //----------DRAW MASKS
+//        glDepthFunc(GL_ALWAYS);
+        drawMasks(i);
+//        glDepthFunc(GL_LESS);
     }
 }
 
@@ -2083,10 +2101,10 @@ void ModelMapper::drawHighlights() {
     ofSetLineWidth(1);
 }
 
-void ModelMapper::drawMasks(){
+void ModelMapper::drawMasks(int i){
     //draw mask ofPaths
-    for(int c = 0; c < numCams; c++){
-        int i = c;
+
+        
         for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
             //            if(i!=guiCam){
             
@@ -2104,14 +2122,13 @@ void ModelMapper::drawMasks(){
             else{
                 cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
             }
+            
             glDepthFunc(GL_ALWAYS);
             if(i!=0){
                 cameras[i].drawMasks[j].draw();
                 
             }
             glDepthFunc(GL_LESS);
-            
-        }
     }
 }
 
