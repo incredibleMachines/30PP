@@ -18,7 +18,7 @@
 #include "Camera.h"
 
 //--------------------------------------------------------------
-void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float _rotate){
+void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float _rotate, bool cam3){
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
 
@@ -62,7 +62,12 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     camera.roll(_rotate);
     rotate=_rotate;
     camera.setGlobalPosition(_pos);
-    setTarget();
+    if(cam3==true){
+        setTarget();
+    }
+    else{
+        setTarget1();
+    }
 
     //    camera.setGlobalOrientation(_orientation);
     camera.disableMouseInput();
@@ -102,6 +107,11 @@ void Camera::reset(){
 }
 
 void Camera::setTarget(){
-        camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
+    camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
+    camera.roll(rotate);
+}
+
+void Camera::setTarget1(){
+    camera.setTarget(ofVec3f(0,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
     camera.roll(rotate);
 }

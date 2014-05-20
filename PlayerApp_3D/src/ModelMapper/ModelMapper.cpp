@@ -1530,7 +1530,12 @@ void ModelMapper:: setupCameras() {
             for(int j=0;j<settings["cameras"][i]["which"].size();j++){
                 _which.push_back(settings["cameras"][i]["which"][j].asBool());
             }
-            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate);
+            if(i==3){
+                tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate, true);
+            }
+            else{
+                tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate, false);
+            }
             cameras.push_back(tempCam);
             meshes.clear();
         }
@@ -2172,6 +2177,10 @@ void ModelMapper::adjustPosition(float x, float y, float z){
     
     if(bGuiCamAdjust==true){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
+    }
+    else{
+        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
+//        cameras[cameraSelect].setTarget();
     }
     
     if(positionX!=NULL){

@@ -13,7 +13,7 @@ class Camera {
 public:
     
     //Setup passes through data parsed from JSON in ModelMapper
-    void setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float rotate);
+    void setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, ofVec3f _viewSize, vector<ofMesh> _mesh, vector<ofPolyline> _masks, vector<bool> _which, ofPoint warped[4][4], float rotate, bool cam3);
     
     //create additional mask
     void addMask();
@@ -68,6 +68,7 @@ public:
     
     void setTarget();
     
+    void setTarget1();
     
 };
 
