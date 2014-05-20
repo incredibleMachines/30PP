@@ -111,7 +111,7 @@ public:
     //draw Highlights for selection box, nearest point, and selected points
     void drawHighlights();
     //draw masks for selected camera
-    void drawMasks();
+    void drawMasks(int i);
     //set LockedMode
     void setLocked(bool locked);
     
