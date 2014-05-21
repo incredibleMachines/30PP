@@ -104,9 +104,10 @@ void testApp::update(){
 //        }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
-            map.fadeIn(TRANSITION_DEFAULT);
             loadTime = 233;
             currentEnd=336;
+            map.fadeIn(TRANSITION_DEFAULT);
+
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
@@ -117,15 +118,16 @@ void testApp::update(){
             }
             else if (loopMode==DEFAULT_LOOP){
 //                loadTime=socketHandler.eventHandler.events[1].startTime;
-                map.fadeIn(TRANSITION_GASTRONOMY);
                 loadTime = 233;
+                map.fadeIn(TRANSITION_GASTRONOMY);
             }
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             loadTime=0;
             currentEnd=233;
+            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+
         }
         
 //        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
