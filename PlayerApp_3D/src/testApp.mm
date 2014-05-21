@@ -107,7 +107,6 @@ void testApp::update(){
             loadTime = 233;
             currentEnd=336;
             map.fadeIn(TRANSITION_DEFAULT);
-
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
@@ -192,7 +191,8 @@ void testApp::update(){
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         else if (loopMode==DEFAULT_LOOP){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
+            loadTime=233;
+//            loadTime=socketHandler.eventHandler.events[1].startTime;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         bCheckingTime=false;
