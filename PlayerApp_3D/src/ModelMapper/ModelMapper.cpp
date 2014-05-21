@@ -1779,6 +1779,9 @@ void ModelMapper:: drawCameras() {
                         
                         //start transitions
                         
+                        ofSetColor(255,255,255);
+                        texture->bind();
+                        
                         if(bTransitioning==true){
                             
                             if(bTransitionStarted==true){
@@ -1820,11 +1823,9 @@ void ModelMapper:: drawCameras() {
                             }
                             
                         }
-                        
-                        else{
-                            ofSetColor(255,255,255);
-                            texture->bind();
-                        }
+
+
+
                         
                         //END
                         
@@ -1835,13 +1836,13 @@ void ModelMapper:: drawCameras() {
                         
                         
                         cameras[i].mesh[j].draw();
-                        
+                        texture->unbind();
                         if(bTransitioning==true){
                             fadeFrame->unbind();
                         }
-                        else{
-                            texture->unbind();
-                        }
+//                        else{
+
+//                        }
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
