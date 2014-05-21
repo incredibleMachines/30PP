@@ -112,6 +112,7 @@ void Camera::setTarget(){
 }
 
 void Camera::setTarget1(){
-    camera.setTarget(ofVec3f(0,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
+    camera.setGlobalPosition(ofVec3f(-350,-135,mesh[3].getCentroid().z+397));
+    camera.setTarget(ofVec3f(-385,-135 , mesh[3].getCentroid().z));
     camera.roll(rotate);
 }

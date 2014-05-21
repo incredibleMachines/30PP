@@ -28,7 +28,7 @@ exports.index = {
         //       console.log('exec error: ' + error);
         //     }
         //   })
-        player = spawn(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app/Contents/MacOS/30PP_MapperDebug', options)
+        player = spawn(folders.root()+'/../PlayerApp_3D/bin/30PP_MapperDebug.app/Contents/MacOS/30PP_MapperDebug', options)
         //var child = exec("osascript -e 'tell application \"30PP_MapperDebug\" to activate'")
         //player = spawn(folders.root()+'/../PlayerApp/bin/30PP_MapperDebug.app', options)
 

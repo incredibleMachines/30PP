@@ -2196,7 +2196,7 @@ void ModelMapper::adjustPosition(float x, float y, float z){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     else{
-        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
+//        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
 //        cameras[cameraSelect].setTarget();
     }
     
@@ -2995,8 +2995,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
-                        cameras[cameraSelect].setTarget();
-            //            cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation ());
         }
     }
     

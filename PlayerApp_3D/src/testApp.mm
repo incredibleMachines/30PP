@@ -29,9 +29,10 @@ void testApp::setup() {
 
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
-//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput_3D.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("calibration.mov", meshTexture->texData.textureID);
-        MSA::ofxCocoa::initPlayer("concatOutput3D.mov", meshTexture->texData.textureID);
+//        MSA::ofxCocoa::initPlayer("concatOutput3D.mov", meshTexture->texData.textureID);
+
     //----------MODEL MAPPER   SETUP
     
     //Load mesh vector to select which meshes within obj to use
@@ -70,7 +71,7 @@ void testApp::setup() {
     bCheckingTime=false;
     loopMode=AMBIENT_LOOP;
     
-    numScreens=1;
+    numScreens=3;
     startOffset=3.0;
     bScreenRestart=false;
     
