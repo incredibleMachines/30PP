@@ -1779,52 +1779,52 @@ void ModelMapper:: drawCameras() {
                         
                         //start transitions
                         
-                        if(bTransitioning==true){
-                            
-                            if(bTransitionStarted==true){
-                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                                    if(i==numCams-1) bTransitionStarted=false;
-                                    ofSetColor(255,255,255,255);
-                                }
-                                int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
-                                if(opacity>255) opacity=255;
-                                ofSetColor(255,255,255,opacity);
-                                fadeFrame->bind();
-                                
-
-                            }
-                            
-                            else if(bTransitionLoading==true){
-                                if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
-                                    bTransitionFinished=true;
-                                    bTransitionLoading=false;
-                                    
-                                    
-                                    transitionTimer=ofGetElapsedTimeMillis();
-                                    ofSetColor(255,255,255,255);
-                                }
-                                ofSetColor(255,255,255,255);
-                                fadeFrame->bind();
-
-                            }
-                            
-                            else if(bTransitionFinished==true){
-                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                                    bTransitionFinished=false;
-                                    bTransitioning=false;
-                                    ofSetColor(255,255,255,0);
-                                }
-                                ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
-                                
-                                fadeFrame->bind();
-                            }
-                            
-                        }
+//                        if(bTransitioning==true){
+//                            
+//                            if(bTransitionStarted==true){
+//                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+//                                    if(i==numCams-1) bTransitionStarted=false;
+//                                    ofSetColor(255,255,255,255);
+//                                }
+//                                int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
+//                                if(opacity>255) opacity=255;
+//                                ofSetColor(255,255,255,opacity);
+//                                fadeFrame->bind();
+//                                
+//
+//                            }
+//                            
+//                            else if(bTransitionLoading==true){
+//                                if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
+//                                    bTransitionFinished=true;
+//                                    bTransitionLoading=false;
+//                                    
+//                                    
+//                                    transitionTimer=ofGetElapsedTimeMillis();
+//                                    ofSetColor(255,255,255,255);
+//                                }
+//                                ofSetColor(255,255,255,255);
+//                                fadeFrame->bind();
+//
+//                            }
+//                            
+//                            else if(bTransitionFinished==true){
+//                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+//                                    bTransitionFinished=false;
+//                                    bTransitioning=false;
+//                                    ofSetColor(255,255,255,0);
+//                                }
+//                                ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
+//                                
+//                                fadeFrame->bind();
+//                            }
+//                            
+//                        }
                         
-                        else{
+//                        else{
                             ofSetColor(255,255,255);
                             texture->bind();
-                        }
+//                        }
                         
                         //END
                         
@@ -1836,12 +1836,12 @@ void ModelMapper:: drawCameras() {
                         
                         cameras[i].mesh[j].draw();
                         
-                        if(bTransitioning==true){
+//                        if(bTransitioning==true){
+//                            fadeFrame->unbind();
+//                        }
+//                        else{
                             texture->unbind();
-                        }
-                        else{
-                            fadeFrame->unbind();
-                        }
+//                        }
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
