@@ -1524,7 +1524,12 @@ void ModelMapper:: setupCameras() {
             for(int j=0;j<settings["cameras"][i]["which"].size();j++){
                 _which.push_back(settings["cameras"][i]["which"][j].asBool());
             }
-            tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate);
+            if(i==3){
+                tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate, true);
+            }
+            else{
+                tempCam.setup(pos, rot, viewPos, viewSize, meshes, tempMasks,_which, _warped, _rotate, false);
+            }
             cameras.push_back(tempCam);
             meshes.clear();
         }
@@ -2189,6 +2194,10 @@ void ModelMapper::adjustPosition(float x, float y, float z){
     
     if(bGuiCamAdjust==true){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
+    }
+    else{
+//        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
+//        cameras[cameraSelect].setTarget();
     }
     
     if(positionX!=NULL){
@@ -2986,8 +2995,6 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUIButton *button = (ofxUIButton *) e.getButton();
         if(button->getValue()==1){
             cameras[guiCam].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition());
-                        cameras[cameraSelect].setTarget();
-            //            cameras[guiCam].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation ());
         }
     }
     
