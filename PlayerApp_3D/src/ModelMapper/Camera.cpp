@@ -59,9 +59,10 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     cameraView.allocate(1920,1080,GL_RGBA);
     
+    pos = _pos;
     camera.roll(_rotate);
     rotate=_rotate;
-    camera.setGlobalPosition(_pos);
+//    camera.setGlobalPosition(_pos);
     if(cam3==true){
         setTarget();
     }
@@ -107,6 +108,7 @@ void Camera::reset(){
 }
 
 void Camera::setTarget(){
+    camera.setGlobalPosition(ofVec3f(mesh[3].getCentroid().x+5,-17,pos.z));
     camera.setTarget(ofVec3f(mesh[3].getCentroid().x+30,mesh[3].getCentroid().y, mesh[3].getCentroid().z));
     camera.roll(rotate);
 }

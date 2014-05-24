@@ -70,6 +70,8 @@ public:
     
     void setTarget1();
     
+    ofVec3f pos;
+    
 };
 
 

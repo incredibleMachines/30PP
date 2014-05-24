@@ -2252,8 +2252,7 @@ void ModelMapper::adjustPosition(float x, float y, float z){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     else{
-//        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
-//        cameras[cameraSelect].setTarget();
+        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(0,0,z));
     }
     
     if(positionX!=NULL){
