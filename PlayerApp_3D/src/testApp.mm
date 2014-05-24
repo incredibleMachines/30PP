@@ -4,19 +4,31 @@
 
 //--------------------------------------------------------------
 void testApp::setup() {
-	printf("Window dimensions: %i %i\n", ofGetWidth(), ofGetHeight());
+    
+    //User Variable
+    //check for init event from sockets
+    bInited=false;
+    //hide cursor at launch for show mode
+    MSA::ofxCocoa::hideCursor();
+    //not currently playing and checking for loop or pause point
+    bCheckingTime=false;
+    //set loop mode to loop either ambient or default content
+    loopMode=AMBIENT_LOOP;
+    //set number of GL cameras/projectors
+    numScreens=3;
+    //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
+    startOffset=3.0;
+    //set whether to check number of screens b/c less than 3 - will get set to true if cocoa ever detects less than three
+    bScreenRestart=false;
 	
+    //INIT GL CONTEXT VARIABLES
     ofSetEscapeQuitsApp(false);
-    
-	ofBackground(0,0,0);
-    
 	ofEnableDepthTest();
     ofEnableNormalizedTexCoords();
+	ofSetFrameRate(120);			// run as fast as you can for display link
+    ofBackground(0,0,0);
     
-	ofSetFrameRate(120);			// run as fast as you can
-    
-    bInited=false;
-    
+    //VIDEO TEXTURE FOR OFXCOCOA AVPLAYER ITEM VIDEO
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
     cout<<data.textureTarget<<endl;
@@ -26,16 +38,16 @@ void testApp::setup() {
 	data.tex_h = TEX_HEIGHT;
 	data.tex_t = TEX_WIDTH;
 	data.tex_u = TEX_HEIGHT;
-
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
+    
+    //LOAD VIDEO
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 //    MSA::ofxCocoa::initPlayer("calibration.mov", meshTexture->texData.textureID);
-//        MSA::ofxCocoa::initPlayer("concatOutput3D.mov", meshTexture->texData.textureID);
 
     //----------MODEL MAPPER   SETUP
+    //Load mesh vector to tell ModelMapper which meshes to use 3D obj file and which to set as 2D textures
     
-    //Load mesh vector to select which meshes within obj to use
     vector<vector<int> > _meshesLoad;
     vector<int> tempMesh;
     tempMesh.push_back(0);
@@ -67,14 +79,6 @@ void testApp::setup() {
     //----------SOCKET HANDLER SETUP
     socketHandler.setup(8080, true); // (PORT,  bool verboseMode)
     
-    MSA::ofxCocoa::hideCursor();
-    bCheckingTime=false;
-    loopMode=AMBIENT_LOOP;
-    
-    numScreens=3;
-    startOffset=3.0;
-    bScreenRestart=false;
-    
 }
 
 
@@ -84,77 +88,81 @@ void testApp::update(){
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
     
+    //INIT VARIABLES IF FIRST TIME INIT COMMAND
     if(bInited==false&&socketHandler.eventHandler.eventsInited==true){
         bInited=true;
         bCheckingTime=true;
         initVariables();
     }
     
+    //SOCKET EVENT RECEIVED
     if(socketHandler.eventHandler.bTriggerEvent==true){
-        
         socketHandler.eventHandler.bTriggerEvent=false;
+        
+        //set load point to start time received from socket
         loadTime=socketHandler.eventHandler.currentStart;
+        
+        //play video just in case it's pause
         MSA::ofxCocoa::startPlayer();
+        
+        //don't check for video end or else will loop on frame one and cause an extra frame
         bCheckingTime=false;
         
-//        for(int i=0; i<socketHandler.eventHandler.events.size();i++){
-//            if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
-//                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
-//            }
-//        }
+        //load end time for current event
+        for(int i=0; i<socketHandler.eventHandler.events.size();i++){
+            if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
+                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
+            }
+        }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
-            loadTime = 233;
-            currentEnd=336;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
             if(loopMode==AMBIENT_LOOP){
-//                loadTime=socketHandler.eventHandler.events[0].startTime;
-                loadTime=0;
+                loadTime=socketHandler.eventHandler.events[0].startTime;
                 map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
             }
             else if (loopMode==DEFAULT_LOOP){
-//                loadTime=socketHandler.eventHandler.events[1].startTime;
-                loadTime = 233;
-                map.fadeIn(TRANSITION_GASTRONOMY);
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                map.fadeIn(TRANSITION_DEFAULT);
             }
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            loadTime=0;
-            currentEnd=233;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
 
         }
         
-//        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-//            loadTime+=startOffset;
-//            map.fadeIn(TRANSITION_GASTRONOMY);
-//        }
-//        
-//        else if(socketHandler.eventHandler.currentEvent=="markets"){
-//            loadTime+=startOffset;
-//            map.fadeIn(TRANSITION_MARKETS);
-//        }
-//        
-//        else if(socketHandler.eventHandler.currentEvent=="shopping"){
-//            loadTime+=startOffset;
-//            map.fadeIn(TRANSITION_SHOPPING);
-//        }
-//        
-//        else if(socketHandler.eventHandler.currentEvent=="art-design"){
-//            map.fadeIn(TRANSITION_ARTS);
-//        }
-//        
-//        else if(socketHandler.eventHandler.currentEvent=="leisure"){
-//            loadTime+=startOffset;
-//            map.fadeIn(TRANSITION_LEISURE);
-//        }
+        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
+            loadTime+=startOffset;
+            map.fadeIn(TRANSITION_GASTRONOMY);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="markets"){
+            loadTime+=startOffset;
+            map.fadeIn(TRANSITION_MARKETS);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="shopping"){
+            loadTime+=startOffset;
+            map.fadeIn(TRANSITION_SHOPPING);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="art-design"){
+            map.fadeIn(TRANSITION_ARTS);
+        }
+        
+        else if(socketHandler.eventHandler.currentEvent=="leisure"){
+            loadTime+=startOffset;
+            map.fadeIn(TRANSITION_LEISURE);
+        }
         
         else if(socketHandler.eventHandler.currentEvent=="pause"){
             bool bCanPause=false;
+            
+            //look for next pause time
             for(int i=0; i<pauseTimes.size();i++){
                 if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
                     bCanPause=true;
@@ -173,49 +181,46 @@ void testApp::update(){
         
     }
     
-//    if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
-//        if(loopMode==AMBIENT_LOOP){
-//            loadTime=socketHandler.eventHandler.events[0].startTime;
-//            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
-//        }
-//        else if (loopMode==DEFAULT_LOOP){
-//            loadTime=socketHandler.eventHandler.events[1].startTime;
-//            map.fadeIn(TRANSITION_GASTRONOMY);
-//        }
-//        bCheckingTime=false;
-//    }
     
+    //check for end of current event and then go to ambient/default start
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
         if(loopMode==AMBIENT_LOOP){
-            loadTime=0;
+            loadTime=socketHandler.eventHandler.events[0].startTime;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         else if (loopMode==DEFAULT_LOOP){
-            loadTime=233;
-//            loadTime=socketHandler.eventHandler.events[1].startTime;
+            loadTime=socketHandler.eventHandler.events[1].startTime;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         bCheckingTime=false;
     }
     
+    //transition has reached midpoint, load and start playing new position in video
     if(map.bTransitioning==true&&map.bTransitionLoading==false&&map.bTransitionStarted==false&&map.bTransitionFinished==false){
         MSA::ofxCocoa::setTime(loadTime);
         MSA::ofxCocoa::startPlayer();
+        
+        //start the pause period to allow glitchy loading to happen behind the fully opaque gradient transition texture
         map.bTransitionLoading=true;
         map.transitionTimer=ofGetElapsedTimeMillis();
+        
+        //start checking for end and pause points
         bCheckingTime=true;
     }
     
+    //turn off cursor in performance mode
     if(map.bLocked==true){
         MSA::ofxCocoa::hideCursor();
         map.bLocked=false;
     }
     
+    //show cursor when coming out of preformance mode
     else if(map.bUnlocked==true){
         MSA::ofxCocoa::showCursor();
         map.bUnlocked=false;
     }
     
+    //check for pause point and if reached pause video
     if(bPausing==true&&MSA::ofxCocoa::getCurrentTime()>pauseTime){
         bPausing=false;
         MSA::ofxCocoa::pausePlayer();
@@ -235,6 +240,8 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
+    
+    //check for number of screens present
     if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==false){
         map.draw();
     }
@@ -247,7 +254,7 @@ void testApp::draw(){
         bScreenRestart=true;
     }
 
-    
+    //if screens were not present and now are, restart app via socket command
     if(bScreenRestart==true&&bStartScreenRestart==true){
         socketHandler.sendSocketCmd(RESTART_REQ);
         bStartScreenRestart=false;
@@ -259,6 +266,8 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     switch(key){
+            
+        //debug pause and position controls
         case 'p':
             MSA::ofxCocoa::pausePlayer();
             break;
@@ -273,17 +282,17 @@ void testApp::keyPressed(int key){
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
             break;
         case '[':
-            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-10);
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-5);
             break;            
         case ']':
-            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+10);
+            MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+5);
             break;
+            
+        //debug quit app entirely and do not let node restart automatically
         case 'Q':
             socketHandler.sendSocketCmd(CLOSE_REQ);
             break;
-            
     }
-    
 }
 
 void testApp::exit(){
@@ -291,21 +300,24 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
-    
+
+    // set default variable for default loop
     if(loopMode==DEFAULT_LOOP){
-//        currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-        currentEnd=336;
+        currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
         currentTransition=TRANSITION_DEFAULT;
         loadTime=socketHandler.eventHandler.events[1].startTime;
         map.fadeIn(TRANSITION_DEFAULT);
     }
+    
+    // set default variable for ambient loop
     else if(loopMode==AMBIENT_LOOP){
-//        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
-        currentEnd=233;
+        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
         currentTransition=TRANSITION_AMBIENT_GRADIENT;
         loadTime=socketHandler.eventHandler.events[0].startTime;
         map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
     }
+    
+    //Pause times for default and detail loops
     
     //Gastronomy Default
     pauseTimes.push_back(663);

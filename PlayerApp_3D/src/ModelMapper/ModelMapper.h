@@ -60,12 +60,14 @@
 
 class ModelMapper {
 public:
-    //overloaded setup allowing different data to be passed
+    //pass in number of cameras, which one is gui, and vector of meshes with info about 2D or 3D
     void setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes); //draws specifid meshes
     
+    //pass in current texture reference
     void update(ofTexture * tex);
     void draw();
     
+    //default ofEvents for ModelMapper
     void keyPressed(ofKeyEventArgs& args);
     void keyReleased(ofKeyEventArgs& args);
     void mouseDragged(ofMouseEventArgs& args);
@@ -80,7 +82,7 @@ public:
     int guiCam;
     //how many meshes to draw, passed in setup or calculated by .size() of vector passed in setup
     int numMeshes;
-    //which mesh to edit TODO: allow user to set this in GUI
+    //which mesh to edit
     int currentMesh;
     
     //mouse variables, to deal with weirdness of using mouseX/Y with custom event listeneres
@@ -90,46 +92,42 @@ public:
     bool bDrawGui;
     //switch for drawing mesh wireframes
     bool bDrawWireframe;
+    //switch for drawing mesh point highlights
     bool bDrawHighlights;
     //switch for shift key modifier
     bool bShiftPressed;
     //switch for cmd key modifier
     bool bCommandPressed;
-    //value of move commands (modified by shift key)
+    //value of move commands (modified by shift/cmd key)
     float moveModifier;
     //switch for separate GUICam
     bool bGuiCamAdjust;
+    //switch for screen lock status
     bool bLocked;
     bool bUnlocked;
     
     
     //---------DRAW FUNCTIONS
-    //drawGuiText draws information on user settings on GUI_CAMERA Screen only
-    void drawGuiText();
     //draw all cameras
     void drawCameras();
     //draw Highlights for selection box, nearest point, and selected points
     void drawHighlights();
-    //draw masks for selected camera
+    //draw masks for selected camera, called from within drawCameras
     void drawMasks(int i);
     //set LockedMode
     void setLocked(bool locked);
     
     //---------SETUP FUNCTIONS
-    //init cameras
+    //init cameras from json
     void setupCameras();
     //save camera data to json and meshes to .ply files for all cameras
     void saveCameras();
-    //save camera data to json and meshes to .ply files for all cameras
+    //save camera data to json and meshes to .ply files for one cameras
     void saveCamera(int n);
     //sets file path for mesh to reload
     void setMassMesh(string _reloadMesh);
-    //sets file path for detailed mesh
-    void setDetailMesh(string _reloadMesh);
     //set mesh to draw 2D homography instead of 3D mesh
     void set2D(int _meshNum);
-//    //set mesh to draw in specified camera
-//    void setMeshDraw(int _cam, vector<int> _whichMeshes);
     //turn all gui tabs on and off
     void setGUIVisible(bool hide);
     //setup all GUI elements
@@ -138,8 +136,6 @@ public:
     //---------ADJUST FUNCTIONS
     //move camera position
     void adjustPosition(float x, float y, float z);
-    //move camera orientation
-    void adjustOrientation(float x, float y, float z);
     //move mask point/entire mask
     void adjustViewport(float x, float y);
     //move mesh point
@@ -166,8 +162,6 @@ public:
     int cameraSelect;
     
     //---------MESH SETTINGS
-    ofxAssimpModelLoader test;
-    
     //3D vertex custom class
     class meshVertex{
     public:
@@ -192,6 +186,8 @@ public:
     
     //selected vertices via magnet and pen tools
     vector< vector<meshVertex> > magnetVertices;
+    
+    //DOUBLE PEN TOOL
     vector< vector<meshVertex> > tempDoubleVertices;
     vector< vector<meshVertex> > doubleVertices;
     
@@ -199,11 +195,7 @@ public:
     vector< vector<vertex2D> > vertices2D;
     vector< vector<vertex2D> > tempVertices2D;
     
-    //variable for mesh type via type def in ModelMapper.h
-    int meshType;
-    
     //holder for reload mesh filepaths
-    string detailMesh;
     string massMesh;
     
     //holder for which meshes to reload from above filepath
@@ -394,5 +386,7 @@ public:
     void calculateGuiValues();
     
     void findMeshFaces(int i, int j);
+    
+    ofFbo UVFrame;
     
 };

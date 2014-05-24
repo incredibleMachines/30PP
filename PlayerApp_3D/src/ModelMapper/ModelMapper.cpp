@@ -15,7 +15,6 @@
  - setupCameras() load camera and mask data from JSON settings file. Create Camera objects.
  - update() update textures and set guicam to be identical to selected camera
  - draw() trigger various drawing functions
- - drawGuiText() draw gui text, dependent on ADJUST_MODE
  - drawCameras() wrap meshes in their designated textures and draw out to all monitors
  - drawHighlights() draw on-screen highlights for selected mesh and mask vertices
  - drawMasks() draw ofPath for all masks
@@ -237,11 +236,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 adjustPosition(0,moveModifier,0);
             }
             
-            //Adjust Camera Orientation
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,moveModifier/10,0);
-            }
-            
             //Adjust Viewport Position for Active Camera
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
                  adjustViewport(0,-moveModifier);
@@ -266,9 +260,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustPosition(0,-moveModifier,0);
             }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,-moveModifier/10,0);
-            }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
                 adjustViewport(0,moveModifier);
             }
@@ -286,9 +277,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case OF_KEY_RIGHT:
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustPosition(-moveModifier,0,0);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(-moveModifier/10,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
                 adjustViewport(moveModifier,0);
@@ -308,9 +296,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case OF_KEY_LEFT:
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustPosition(moveModifier,0,0);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(moveModifier/10,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
                 adjustViewport(-moveModifier,0);
@@ -332,9 +317,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustPosition(0,0,moveModifier);
             }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,0,-moveModifier/10);
-            }
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,0,moveModifier);
             }
@@ -344,9 +326,6 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 'A':
             if(adjustMode==ADJUST_MODE_CAMERA){
                 adjustPosition(0,0,-moveModifier);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,0,moveModifier/10);
             }
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,0,-moveModifier);
@@ -1655,9 +1634,6 @@ void ModelMapper:: drawCameras() {
 
         
         if(bEnableGuiCam==true||(i!=guiCam)){
-    
-            
-            cout<<"draw camera: "<<i<<endl;
             
             //DRAW 2D MESHES
             
@@ -2209,16 +2185,6 @@ void ModelMapper::updateMasks(){
             cameras[i].drawMasks[j].clear();
             for (int k=0;k<vertices.size();k++){
                 
-                //COMMENTED OUT FOR REMOVAL OF GUI CAM
-                
-                //                if(k==0){
-                //                    cameras[i].drawMasks[j].moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-                //
-                //                }
-                //                else{
-                //                    cameras[i].drawMasks[j].lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-                //                }
-                
                 if(k==0){
                     cameras[i].drawMasks[j].moveTo(vertices[k].x, vertices[k].y);
                     
@@ -2241,19 +2207,12 @@ void ModelMapper::setMassMesh(string _reloadMesh){
     massMesh=_reloadMesh;
 }
 
-void ModelMapper::setDetailMesh(string _reloadMesh){
-    //pass through reload mesh file path
-    massMesh=_reloadMesh;
-}
-
 void ModelMapper::adjustPosition(float x, float y, float z){
     
     if(bGuiCamAdjust==true){
         cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
     }
     else{
-//        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
-//        cameras[cameraSelect].setTarget();
     }
     
     if(positionX!=NULL){
@@ -2284,36 +2243,7 @@ void ModelMapper::adjustRoll(float zR){
     }
 }
 
-void ModelMapper::adjustOrientation(float x, float y, float z){
-    
-    for(int i=0;i<4;i++){
-        if(warped[cameraSelect][i]==true){
-            cameras[cameraSelect].warped3D[3][i]+=ofPoint(x,y);
-        }
-    }
-//    ofQuaternion yRot(x, ofVec3f(0,1,0));
-//    ofQuaternion xRot(y, ofVec3f(1,0,0));
-//    ofQuaternion zRot(z, ofVec3f(0,0,1));
-//    if(bGuiCamAdjust==true){
-//        cameras[guiCam].camera.setGlobalOrientation(cameras[guiCam].camera.getGlobalOrientation() *= yRot*xRot*zRot);
-//    }
-//    else{
-//        cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
-//    }
-//    
-//    if(orientationX!=NULL){
-//        orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
-//    }
-//    if(orientationY!=NULL){
-//        orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
-//    }
-//    if(orientationZ!=NULL){
-//        orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
-//    }
-//    if(orientationW!=NULL){
-//        orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
-//    }
-}
+
 
 void ModelMapper::adjustViewport(float x, float y){
     cameras[cameraSelect].viewport.x+=x;
@@ -2478,9 +2408,6 @@ void ModelMapper::setMainGUI(){
     mainGUI->addSpacer();
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
     mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
-    
-    //    mainGUI->addSpacer();
-    //    mainGUI->addToggle("Adjust GUI Separately", false);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Draw Meshes",OFX_UI_FONT_MEDIUM);
@@ -2917,8 +2844,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
-//                        cameras[cameraSelect].setTarget();
+            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
         }
     }
     
