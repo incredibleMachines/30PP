@@ -19,6 +19,20 @@ public:
     void addMask();
     
     void set2D(int _meshNum, ofPoint translate, float scale, int horizGrid, int vertGrid, ofPoint texPos, int texWidth, int texHeight, float featherRight, float featherLeft, vector< vector<ofPoint> > originals, vector< vector<ofPoint> > warped);
+
+    //move camera position
+    void adjustPosition(float x, float y, float z);
+    //move mask point/entire mask
+    void adjustViewport(float x, float y);
+    //move mesh point
+    void adjustMesh(float x, float y, float z);
+    //move mesh point
+    void adjust2D(float x, float y);
+    //move mask point/entire mask
+
+    void adjustRoll(float zR);
+
+    
     
     //-----------CAMERA DATA
     ofEasyCam camera;
@@ -69,6 +83,8 @@ public:
     void setTarget();
     
     void setTarget1();
+    
+    ofVec3f pos;
     
 };
 

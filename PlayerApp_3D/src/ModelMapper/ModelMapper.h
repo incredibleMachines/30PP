@@ -61,7 +61,7 @@
 class ModelMapper {
 public:
     //pass in number of cameras, which one is gui, and vector of meshes with info about 2D or 3D
-    void setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes); //draws specifid meshes
+    void setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes, int width, int heigh); //draws specifid meshes
     
     //pass in current texture reference
     void update(ofTexture * tex);
@@ -134,17 +134,7 @@ public:
     void setupGUI();
     
     //---------ADJUST FUNCTIONS
-    //move camera position
-    void adjustPosition(float x, float y, float z);
-    //move mask point/entire mask
-    void adjustViewport(float x, float y);
-    //move mesh point
-    void adjustMesh(float x, float y, float z);
-    //move mesh point
-    void adjust2D(float x, float y);
-    //move mask point/entire mask
-    void adjustMask(float x, float y);
-    //make vector of Mesh points for magnet mode
+        //make vector of Mesh points for magnet mode
     void calculateMagnetPoints();
     //do magnet mapping using ofxTween easing functions
     float magnetMap(float distance, float radius);
@@ -154,6 +144,8 @@ public:
     void resetSelected();
     //clear selection of points
     void clearSelection();
+    
+    void adjustMesh(float x, float y, float z);
     
     //---------CAMERA SETTINGS
     int adjustMode;
@@ -388,5 +380,9 @@ public:
     void findMeshFaces(int i, int j);
     
     ofFbo UVFrame;
+    ofTexture drawTexture;
+    
+    void adjust2D(float x, float y);
+    void adjustMask(float x, float y);
     
 };

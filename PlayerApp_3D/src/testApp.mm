@@ -71,7 +71,7 @@ void testApp::setup() {
     numMesh=_meshesLoad.size();
     
     //setup ModelMapper - setup(number of Cameras, which camera is the gui, vector of mesh ids to draw)
-    map.setup(4,0,_meshesLoad);
+    map.setup(4,0,_meshesLoad, TEX_WIDTH, TEX_HEIGHT);
     
     //set path to obj file to use in setup
     map.setMassMesh("UV Sculpt_LP 01.obj");
