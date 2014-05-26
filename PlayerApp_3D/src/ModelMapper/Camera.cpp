@@ -118,3 +118,24 @@ void Camera::setTarget1(){
     camera.setTarget(ofVec3f(-385,-135 , mesh[3].getCentroid().z));
     camera.roll(rotate);
 }
+
+void Camera::adjustPosition(float x, float y, float z){
+    
+    camera.setGlobalPosition(camera.getGlobalPosition()+ofVec3f(x,y,z));
+    
+    
+}
+
+void Camera::adjustRoll(float zR){
+    
+    camera.roll(zR);
+    rotate+=zR;
+}
+
+
+
+void Camera::adjustViewport(float x, float y){
+    viewport.x+=x;
+    viewport.y+=y;
+    
+}
