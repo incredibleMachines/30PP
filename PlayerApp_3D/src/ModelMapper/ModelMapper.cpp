@@ -1901,9 +1901,9 @@ void ModelMapper:: drawCameras() {
         
         
         //----------DRAW MASKS
-//        glDepthFunc(GL_ALWAYS);
+        glDepthFunc(GL_ALWAYS);
         drawMasks(i);
-//        glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LESS);
     }
 }
 

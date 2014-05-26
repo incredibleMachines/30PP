@@ -30,7 +30,7 @@ void testApp::setup() {
     meshTexture = new ofTexture();
     meshTexture->allocate(data);
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-//     MSA::ofxCocoa::initPlayer("calibration.mov", meshTexture->texData.textureID);
+//     MSA::ofxCocoa::initPlayer("calibration_5_26.mov", meshTexture->texData.textureID);
  
     //----------MODEL MAPPER   SETUP
     
