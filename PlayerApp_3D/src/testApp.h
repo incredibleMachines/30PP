@@ -4,8 +4,6 @@
 #include "ModelMapper/ModelMapper.h"
 #include "Handlers/SocketHandler.h"
 
-#define BUFFER_SIZE 3
-#define MESH_NUM 1
 #define TEX_WIDTH 2048
 #define TEX_HEIGHT 3400
 
@@ -21,43 +19,43 @@ public:
 	void update();
 	void draw();
     void exit();
-	void keyPressed  (int key);
+	void keyPressed (int key);
     void initVariables();
     
-	//----------COCOA DRAW SETTING
-	float	lineWidth;
-    
-    //----------MODELS + CAMERAS
+    //----------MODELS
     //ModelMapper object contains all cameras, meshes, and textures
     ModelMapper map;
     
-    //---------CONTENT TEXTURE
-    ofTexture * meshTexture;
-    
     //total number of meshes to be loaded
     int numMesh;
+    
+    //---------CONTENT TEXTURE
+    ofTexture * meshTexture;
     
     //---------SOCKET HANDLER
     SocketHandler socketHandler;
     bool bInited;
     
-    ofImage test;
-    
+    //--------TRANSITION VARIABLES
+    //which transition to trigger
     int currentTransition;
+    //checking time for pausing
     bool bCheckingTime, bPausing;
+    //what time in cocoa video to load
     float loadTime;
+    //current end time for loop checking
     float currentEnd;
-    
+    //vector of all pause points populated on init
     vector<float> pauseTimes;
-    
+    //current pause time
     float pauseTime;
-    int initCount;
-    
+    //set loop mode
     int loopMode;
-    
+    //set number of screens required to run app
     int numScreens;
+    //bools for checking screen status and restarting when proper number of screens present
     bool bScreenRestart, bStartScreenRestart;
-    
+    //variable for determining how far into a detail section to start on transition
     float startOffset;
 };
 

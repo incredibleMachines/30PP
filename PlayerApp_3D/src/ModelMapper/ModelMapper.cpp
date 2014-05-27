@@ -15,7 +15,6 @@
  - setupCameras() load camera and mask data from JSON settings file. Create Camera objects.
  - update() update textures and set guicam to be identical to selected camera
  - draw() trigger various drawing functions
- - drawGuiText() draw gui text, dependent on ADJUST_MODE
  - drawCameras() wrap meshes in their designated textures and draw out to all monitors
  - drawHighlights() draw on-screen highlights for selected mesh and mask vertices
  - drawMasks() draw ofPath for all masks
@@ -27,7 +26,7 @@
 #include "ModelMapper.h"
 
 
-void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes){
+void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichMeshes, int width, int height){
     
     //----------SETUP GLOBALS
     numCams=_numCams;
@@ -119,6 +118,9 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     ofAddListener(ofEvents().mouseDragged,this,&ModelMapper::mouseDragged);
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
+    
+    UVFrame.allocate(width,height);
+
 }
 
 void ModelMapper::update(ofTexture * tex){
@@ -126,51 +128,52 @@ void ModelMapper::update(ofTexture * tex){
     //update gui camera to display selected camera graphics
     texture=tex;
     
-//    for(int i=0;i<cameras.size();i++){
-//        for(int j=0; j<cameras[i].mesh.size();j++){
-//            if(cameras[i].meshObjects[j].isMesh==true){
-//                //                cout<<"camera: "<<i<<" mesh: "<<j<<endl;
-//                
-//                cameras[i].cameraView.begin();
-//                ofClear(255,255,255,0);
-//                
-//                ofEnableNormalizedTexCoords();
-//                texture->bind();
-//                
-//                ofSetColor(255,255,255);
-//                
-//                
-//                glEnable(GL_DEPTH_TEST);
-//                
-//                ofPushMatrix();
-//                
-//                ofRotate(180,0,0,1);
-//                ofRotate(180,0,1,0);
-//                ofTranslate(cameras[i].meshTranslate);
-//                
-//                cameras[i].mesh[j].draw();
-//                
-//                texture->unbind();
-//                
-//                //draw mesh wireframe
-//                if(bDrawWireframe==true){
-//                    ofSetLineWidth(1);
-//                    ofSetColor(72,225,180);
-//                    cameras[i].mesh[j].drawWireframe();
-//                }
-//                //End camera object
-//                //                cameras[i].camera.end();
-//                
-//                //
-//                //                ofSetColor(0);
-//                //                ofCircle(100,100,100);
-//                
-//                ofPopMatrix();
-//                
-//                cameras[i].cameraView.end();
-//            }
-//        }
-//    }
+    UVFrame.begin();
+    ofEnableAlphaBlending();
+    texture->draw(0,0);
+    if(bTransitioning==true){
+        
+        if(bTransitionStarted==true){
+            if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                bTransitionStarted=false;
+                ofSetColor(255,255,255,255);
+            }
+            int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
+            if(opacity>255) opacity=255;
+            ofSetColor(255,255,255,opacity);
+            
+            fadeFrame->draw(0,0);
+        }
+        
+        else if(bTransitionLoading==true){
+            if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
+                bTransitionFinished=true;
+                bTransitionLoading=false;
+                transitionTimer=ofGetElapsedTimeMillis();
+                ofSetColor(255,255,255,255);
+            }
+            ofSetColor(255,255,255,255);
+            fadeFrame->draw(0,0);
+        }
+        
+        else if(bTransitionFinished==true){
+            if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                bTransitionFinished=false;
+                bTransitioning=false;
+                ofSetColor(255,255,255,0);
+            }
+            ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
+            
+            fadeFrame->draw(0,0);
+        }
+    }
+    
+    UVFrame.end();
+    drawTexture=UVFrame.getTextureReference();
+    
+
+    
+    
     
     //set guiCam to have same settings as cameraSelect (less vital in three camera mode as currently setup)
     cameras[guiCam].which=cameras[cameraSelect].which;
@@ -216,6 +219,14 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         moveModifier=1;
     }
     
+    int cam;
+    if(bGuiCamAdjust==true){
+        cam=guiCam;
+    }
+    else{
+        cam=cameraSelect;
+    }
+    
     switch(args.key){
             
             //----------MODIFY ADJUSTMENTS
@@ -234,17 +245,12 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case OF_KEY_UP:
             //Move Camera Position
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(0,moveModifier,0);
-            }
-            
-            //Adjust Camera Orientation
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,moveModifier/10,0);
+                cameras[cam].adjustPosition(0,-moveModifier,0);
             }
             
             //Adjust Viewport Position for Active Camera
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                 adjustViewport(0,-moveModifier);
+                cameras[cam].adjustViewport(0,-moveModifier);
             }
             
             //Adjust Entire Mask Position
@@ -253,6 +259,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             }
             
             else if(adjustMode==ADJUST_MODE_2D){
+                
                 adjust2D(0,-moveModifier);
             }
             
@@ -264,13 +271,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_DOWN:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(0,-moveModifier,0);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,-moveModifier/10,0);
+                cameras[cam].adjustPosition(0,moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                adjustViewport(0,moveModifier);
+                cameras[cam].adjustViewport(0,moveModifier);
             }
             else if(adjustMode==ADJUST_MODE_MASK){
                 adjustMask(0,moveModifier);
@@ -285,14 +289,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_RIGHT:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(-moveModifier,0,0);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(-moveModifier/10,0,0);
+                cameras[cam].adjustPosition(-moveModifier,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                adjustViewport(moveModifier,0);
-                
+                cameras[cam].adjustViewport(moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_MASK){
                 adjustMask(moveModifier,0);
@@ -307,13 +307,10 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
             
         case OF_KEY_LEFT:
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(moveModifier,0,0);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(moveModifier/10,0,0);
+                cameras[cam].adjustPosition(moveModifier,0,0);
             }
             else if(adjustMode==ADJUST_MODE_VIEWPORT){
-                adjustViewport(-moveModifier,0);
+                cameras[cam].adjustViewport(-moveModifier,0);
             }
             else if(adjustMode==ADJUST_MODE_MASK){
                 adjustMask(-moveModifier,0);
@@ -330,10 +327,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 'z':
         case 'Z':
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(0,0,moveModifier);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,0,-moveModifier/10);
+                cameras[cam].adjustPosition(0,0,moveModifier);
             }
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,0,moveModifier);
@@ -343,27 +337,28 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 'a':
         case 'A':
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustPosition(0,0,-moveModifier);
-            }
-            else if(adjustMode==ADJUST_MODE_LOOK_AT){
-                adjustOrientation(0,0,moveModifier/10);
+                cameras[cam].adjustPosition(0,0,-moveModifier);
+                
             }
             else if(adjustMode==ADJUST_MODE_MESH){
                 adjustMesh(0,0,-moveModifier);
             }
             break;
             
-        case ',':
-        case '<':
+        case 'l':
+        case 'L':
+            
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustRoll(moveModifier);
+                cameras[cam].adjustRoll(moveModifier);
+                
             }
             break;
             
-        case '.':
-        case '>':
+        case 'k':
+        case 'K':
             if(adjustMode==ADJUST_MODE_CAMERA){
-                adjustRoll(-moveModifier);
+                cameras[cam].adjustRoll(-moveModifier);
+                
             }
             break;
             
@@ -433,7 +428,7 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
         case 's':
             saveCameras();
             break;
-        
+            
         case 'm':
             if(adjustMode==ADJUST_MODE_MASK&&bDrawingMask==false){
                 cameras[cameraSelect].addMask();
@@ -447,11 +442,12 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 penPoly.clear();
                 bNewPen=true;
                 bDrawingPen=true;
-                penButton->setColorFill(OFX_UI_COLOR_FILL); 
+                penButton->setColorFill(OFX_UI_COLOR_FILL);
             }
-            break; 
+            break;
             
     }
+    calculateGuiValues();
 }
 
 void ModelMapper::keyReleased(ofKeyEventArgs& args){
@@ -1064,7 +1060,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                             }
                             float distance = cur.distance(ofVec2f(args.x,args.y));
                             if(distance < clickThreshold) {
-                    
+                                
                                 cout<<"clicked"<<endl;
                                 meshVertex tempVert;
                                 tempVert.vertex=cur;
@@ -1479,7 +1475,7 @@ void ModelMapper:: setupCameras() {
     
     
     for(int i=0; i<numCams;i++){
-                        ofPoint _warped[4][4];
+        ofPoint _warped[4][4];
         if (settings["cameras"].size()>i){
             Camera tempCam;
             
@@ -1493,7 +1489,7 @@ void ModelMapper:: setupCameras() {
                     tempMesh.load(loader);
                 }
                 
-
+                
                 
                 for(int k=0;k<4;k++){
                     _warped[j][k].x=settings["cameras"][i]["warped3D"][k]["x"].asFloat();
@@ -1652,12 +1648,9 @@ void ModelMapper:: drawCameras() {
         else if(c==3){
             i=2;
         }
-
+        
         
         if(bEnableGuiCam==true||(i!=guiCam)){
-    
-            
-            cout<<"draw camera: "<<i<<endl;
             
             //DRAW 2D MESHES
             
@@ -1685,7 +1678,9 @@ void ModelMapper:: drawCameras() {
                                 
                                 //draw UV Section
                                 ofSetColor(255,255,255,255);
-                                texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                UVFrame.getTextureReference();
+                                
+                                drawTexture.drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
                                                         cameras[i].meshObjects[j].originals[k][0].y,
                                                         cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                         cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
@@ -1695,66 +1690,6 @@ void ModelMapper:: drawCameras() {
                                                         cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
                                 
                                 //draw Transition image on top
-                                if(bTransitioning==true){
-                                    
-                                    if(bTransitionStarted==true){
-                                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                                            if(i==numCams-1) bTransitionStarted=false;
-                                            ofSetColor(255,255,255,255);
-                                        }
-                                        int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
-                                        if(opacity>255) opacity=255;
-                                        ofSetColor(255,255,255,opacity);
-                                        
-                                        fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                                    }
-                                    
-                                    else if(bTransitionLoading==true){
-                                        if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
-                                            bTransitionFinished=true;
-                                            bTransitionLoading=false;
-                                            
-                                            
-                                            transitionTimer=ofGetElapsedTimeMillis();
-                                            ofSetColor(255,255,255,255);
-                                        }
-                                        ofSetColor(255,255,255,255);
-                                        fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                                    }
-                                    
-                                    else if(bTransitionFinished==true){
-                                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                                            bTransitionFinished=false;
-                                            bTransitioning=false;
-                                            ofSetColor(255,255,255,0);
-                                        }
-                                        ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
-                                        
-                                        fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
-                                                                  cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
-                                                                  cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
-                                                                  cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
-                                    }
-                                    
-                                }
                                 
                             }
                             
@@ -1780,69 +1715,69 @@ void ModelMapper:: drawCameras() {
                         //start transitions
                         
                         ofSetColor(255,255,255);
-                        texture->bind();
+                        drawTexture.bind();
                         
-//                        if(bTransitioning==true){
-//                            
-//                            if(bTransitionStarted==true){
-//                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-//                                    if(i==numCams-1) bTransitionStarted=false;
-//                                    ofSetColor(255,255,255,255);
-//                                }
-//                                int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
-//                                if(opacity>255) opacity=255;
-//                                ofSetColor(255,255,255,opacity);
-//                                fadeFrame->bind();
-//                                
-//
-//                            }
-//                            
-//                            else if(bTransitionLoading==true){
-//                                if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
-//                                    bTransitionFinished=true;
-//                                    bTransitionLoading=false;
-//                                    
-//                                    
-//                                    transitionTimer=ofGetElapsedTimeMillis();
-//                                    ofSetColor(255,255,255,255);
-//                                }
-//                                ofSetColor(255,255,255,255);
-//                                fadeFrame->bind();
-//
-//                            }
-//                            
-//                            else if(bTransitionFinished==true){
-//                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-//                                    bTransitionFinished=false;
-//                                    bTransitioning=false;
-//                                    ofSetColor(255,255,255,0);
-//                                }
-//                                ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
-//                                
-//                                fadeFrame->bind();
-//                            }
-//                            
-//                        }
-
-
-
+                        //                        if(bTransitioning==true){
+                        //
+                        //                            if(bTransitionStarted==true){
+                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                        //                                    if(i==numCams-1) bTransitionStarted=false;
+                        //                                    ofSetColor(255,255,255,255);
+                        //                                }
+                        //                                int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
+                        //                                if(opacity>255) opacity=255;
+                        //                                ofSetColor(255,255,255,opacity);
+                        //                                fadeFrame->bind();
+                        //
+                        //
+                        //                            }
+                        //
+                        //                            else if(bTransitionLoading==true){
+                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
+                        //                                    bTransitionFinished=true;
+                        //                                    bTransitionLoading=false;
+                        //
+                        //
+                        //                                    transitionTimer=ofGetElapsedTimeMillis();
+                        //                                    ofSetColor(255,255,255,255);
+                        //                                }
+                        //                                ofSetColor(255,255,255,255);
+                        //                                fadeFrame->bind();
+                        //
+                        //                            }
+                        //
+                        //                            else if(bTransitionFinished==true){
+                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                        //                                    bTransitionFinished=false;
+                        //                                    bTransitioning=false;
+                        //                                    ofSetColor(255,255,255,0);
+                        //                                }
+                        //                                ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
+                        //
+                        //                                fadeFrame->bind();
+                        //                            }
+                        //
+                        //                        }
+                        
+                        
+                        
                         
                         //END
                         
-
+                        
                         
                         
                         glEnable(GL_DEPTH_TEST);
                         
                         
                         cameras[i].mesh[j].draw();
-                        texture->unbind();
-//                        if(bTransitioning==true){
-//                            fadeFrame->unbind();
-//                        }
-//                        else{
-
-//                        }
+                        drawTexture.unbind();
+                        //                        if(bTransitioning==true){
+                        //                            fadeFrame->unbind();
+                        //                        }
+                        //                        else{
+                        
+                        //                        }
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
@@ -1857,40 +1792,6 @@ void ModelMapper:: drawCameras() {
                         
                         
                         
-                        //End camera object
-                        //                cameras[i].camera.end();
-                        
-                        //
-                        //                ofSetColor(0);
-                        //                ofCircle(100,100,100);
-                        
-                        
-                        //CREATE AND POPULATE CAMERA
-                        
-//                        ofDisableNormalizedTexCoords();
-                        
-//                        for(int k=0; k<4;k++){
-                        
-//                            ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].originals3D[3], cameras[i].warped3D[3]);
-//                            
-//                            cout<<cameras[i].warped3D[3][2].x<<endl;
-//                            
-//                            
-//                            ofSetColor(255,255,255);
-//                            
-//                            ofNoFill();
-                            
-//                            ofPushMatrix();
-//                            ofTranslate(cameras[i].viewport.x,cameras[i].viewport.y);
-                            
-//                            ofPushMatrix();
-//                            glMultMatrixf(homography.getPtr());
-                            //Begin camera object
-//                            ofRect(0,0,cameras[i].cameraView.getWidth(),cameras[i].cameraView.getHeight());
-//                            cameras[i].cameraView.draw(0,0);
-//                            ofPopMatrix();
-//                            ofPopMatrix();
-//                        }
                     }
                     
                 }
@@ -1901,9 +1802,9 @@ void ModelMapper:: drawCameras() {
         
         
         //----------DRAW MASKS
-//        glDepthFunc(GL_ALWAYS);
+        glDepthFunc(GL_ALWAYS);
         drawMasks(i);
-//        glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LESS);
     }
 }
 
@@ -2164,32 +2065,32 @@ void ModelMapper::drawHighlights() {
 
 void ModelMapper::drawMasks(int i){
     //draw mask ofPaths
-
+    
+    
+    for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
+        //            if(i!=guiCam){
         
-        for(int j=cameras[i].drawMasks.size()-1; j>=0;j--){
-            //            if(i!=guiCam){
-            
-            ofSetColor(0,0,0);
-            
-            //turn on outlines if adjusting
-            if(adjustMode==ADJUST_MODE_MASK){
-                cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
-                if(i==cameraSelect){
-                    if(j==cameras[i].highlightMask&&bMaskPoint==false){
-                        cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
-                    }
+        ofSetColor(0,0,0);
+        
+        //turn on outlines if adjusting
+        if(adjustMode==ADJUST_MODE_MASK){
+            cameras[i].drawMasks[j].setStrokeColor(ofColor::white);
+            if(i==cameraSelect){
+                if(j==cameras[i].highlightMask&&bMaskPoint==false){
+                    cameras[i].drawMasks[j].setStrokeColor(ofColor::yellow);
                 }
             }
-            else{
-                cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
-            }
+        }
+        else{
+            cameras[i].drawMasks[j].setStrokeColor(ofColor::black);
+        }
+        
+        glDepthFunc(GL_ALWAYS);
+        if(i!=0){
+            cameras[i].drawMasks[j].draw();
             
-            glDepthFunc(GL_ALWAYS);
-            if(i!=0){
-                cameras[i].drawMasks[j].draw();
-                
-            }
-            glDepthFunc(GL_LESS);
+        }
+        glDepthFunc(GL_LESS);
     }
 }
 
@@ -2208,16 +2109,6 @@ void ModelMapper::updateMasks(){
             vector<ofPoint> vertices=cameras[i].masks[j].getVertices();
             cameras[i].drawMasks[j].clear();
             for (int k=0;k<vertices.size();k++){
-                
-                //COMMENTED OUT FOR REMOVAL OF GUI CAM
-                
-                //                if(k==0){
-                //                    cameras[i].drawMasks[j].moveTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-                //
-                //                }
-                //                else{
-                //                    cameras[i].drawMasks[j].lineTo(ofMap(vertices[k].x,cameras[guiCam].viewport.x,cameras[guiCam].viewport.width,cameras[i].viewport.x,cameras[i].viewport.x+cameras[i].viewport.width),ofMap(vertices[k].y,cameras[guiCam].viewport.y,cameras[guiCam].viewport.height,cameras[i].viewport.y,cameras[i].viewport.y+cameras[i].viewport.height));
-                //                }
                 
                 if(k==0){
                     cameras[i].drawMasks[j].moveTo(vertices[k].x, vertices[k].y);
@@ -2241,119 +2132,7 @@ void ModelMapper::setMassMesh(string _reloadMesh){
     massMesh=_reloadMesh;
 }
 
-void ModelMapper::setDetailMesh(string _reloadMesh){
-    //pass through reload mesh file path
-    massMesh=_reloadMesh;
-}
 
-void ModelMapper::adjustPosition(float x, float y, float z){
-    
-    if(bGuiCamAdjust==true){
-        cameras[guiCam].camera.setGlobalPosition(cameras[guiCam].camera.getGlobalPosition()+ofVec3f(x,y,z));
-    }
-    else{
-//        cameras[cameraSelect].camera.setGlobalPosition(cameras[cameraSelect].camera.getGlobalPosition()+ofVec3f(x,y,z));
-//        cameras[cameraSelect].setTarget();
-    }
-    
-    if(positionX!=NULL){
-        positionX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().x));
-    }
-    if(positionY!=NULL){
-        positionY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().y));
-    }
-    if(positionZ!=NULL){
-        positionZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalPosition().z));
-    }
-    
-}
-
-void ModelMapper::adjustRoll(float zR){
-    
-    if(bGuiCamAdjust==true){
-        cameras[guiCam].camera.roll(zR);
-        cameras[guiCam].rotate+=zR;
-    }
-    else{
-        cameras[cameraSelect].camera.roll(zR);
-        cameras[cameraSelect].rotate+=zR;
-    }
-    
-    if(rotateZ!=NULL){
-        rotateZ->setTextString(ofToString(cameras[cameraSelect].rotate));
-    }
-}
-
-void ModelMapper::adjustOrientation(float x, float y, float z){
-    
-    for(int i=0;i<4;i++){
-        if(warped[cameraSelect][i]==true){
-            cameras[cameraSelect].warped3D[3][i]+=ofPoint(x,y);
-        }
-    }
-//    ofQuaternion yRot(x, ofVec3f(0,1,0));
-//    ofQuaternion xRot(y, ofVec3f(1,0,0));
-//    ofQuaternion zRot(z, ofVec3f(0,0,1));
-//    if(bGuiCamAdjust==true){
-//        cameras[guiCam].camera.setGlobalOrientation(cameras[guiCam].camera.getGlobalOrientation() *= yRot*xRot*zRot);
-//    }
-//    else{
-//        cameras[cameraSelect].camera.setGlobalOrientation(cameras[cameraSelect].camera.getGlobalOrientation() *= yRot*xRot*zRot);
-//    }
-//    
-//    if(orientationX!=NULL){
-//        orientationX->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().x()));
-//    }
-//    if(orientationY!=NULL){
-//        orientationY->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().y()));
-//    }
-//    if(orientationZ!=NULL){
-//        orientationZ->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().z()));
-//    }
-//    if(orientationW!=NULL){
-//        orientationW->setTextString(ofToString(cameras[cameraSelect].camera.getGlobalOrientation().w()));
-//    }
-}
-
-void ModelMapper::adjustViewport(float x, float y){
-    cameras[cameraSelect].viewport.x+=x;
-    cameras[cameraSelect].viewport.y+=y;
-    if(viewportX!=NULL){
-        viewportX->setTextString(ofToString(cameras[cameraSelect].viewport.x));
-    }
-    if(viewportY!=NULL){
-        viewportY->setTextString(ofToString(cameras[cameraSelect].viewport.y));
-    }
-    
-}
-
-void ModelMapper::adjustMesh(float x, float y, float z){
-    
-    for(int i=0;i<moveVertices.size();i++){
-        for(int j=0;j<moveVertices[i].size();j++){
-            cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(x,y,z));
-        }
-    }
-    
-    for(int i=0;i<magnetVertices.size();i++){
-        for(int j=0;j<magnetVertices[i].size();j++){
-            cameras[cameraSelect].mesh[i].setVertex(magnetVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(magnetVertices[i][j].index)+ofVec3f(x*magnetVertices[i][j].modifier,y*magnetVertices[i][j].modifier,z*magnetVertices[i][j].modifier));
-        }
-    }
-}
-
-void ModelMapper::adjust2D(float x, float y){
-    
-    for(int i=0;i<vertices2D.size();i++){
-        for(int j=0;j<vertices2D[i].size();j++){
-            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].x+=x;
-            vertices2D[i][j].vertex.x+=x*cameras[cameraSelect].meshObjects[i].scale;
-            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].y+=y;
-            vertices2D[i][j].vertex.y+=y*cameras[cameraSelect].meshObjects[i].scale;
-        }
-    }
-    
-}
 
 void ModelMapper::calculateMagnetPoints(){
     
@@ -2478,9 +2257,6 @@ void ModelMapper::setMainGUI(){
     mainGUI->addSpacer();
     mainGUI->addLabel("Current Camera",OFX_UI_FONT_MEDIUM);
     mainGUI->addRadio("CURRENT", cameraNames, OFX_UI_ORIENTATION_HORIZONTAL, OFX_UI_FONT_MEDIUM)->activateToggle("1");
-    
-    //    mainGUI->addSpacer();
-    //    mainGUI->addToggle("Adjust GUI Separately", false);
     
     mainGUI->addSpacer();
     mainGUI->addLabel("Draw Meshes",OFX_UI_FONT_MEDIUM);
@@ -2897,8 +2673,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
-//            cameras[cameraSelect].setTarget();
+            //            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().y,cameras[cameraSelect].camera.getGlobalPosition().z));
+            //            cameras[cameraSelect].setTarget();
         }
     }
     
@@ -2907,8 +2683,8 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
-//                        cameras[cameraSelect].setTarget();
+            //            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,ofToFloat(ti->getTextString()),cameras[cameraSelect].camera.getGlobalPosition().z));
+            //                        cameras[cameraSelect].setTarget();
         }
     }
     
@@ -2917,8 +2693,7 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
         ofxUITextInput *ti = (ofxUITextInput *) e.widget;
         if(ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER||ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
         {
-//            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
-//                        cameras[cameraSelect].setTarget();
+            cameras[cameraSelect].camera.setGlobalPosition(ofVec3f(cameras[cameraSelect].camera.getGlobalPosition().x,cameras[cameraSelect].camera.getGlobalPosition().y,ofToFloat(ti->getTextString())));
         }
     }
     
@@ -3167,12 +2942,12 @@ void ModelMapper::guiEvent(ofxUIEventArgs &e)
     else if(name=="RELOAD MESH"){
         ofxAssimpModelLoader reload;
         reload.loadModel(massMesh);
-
+        
         cameras[cameraSelect].mesh[3]=reload.getMesh(0);
         cameras[guiCam].mesh[3]=reload.getMesh(0);
-    
-     
-        reload.clear(); 
+        
+        
+        reload.clear();
         cout<<"Reloaded Model"<<endl;
     }
     
@@ -3753,3 +3528,31 @@ void ModelMapper::calculateGuiValues(){
     }
 }
 
+void ModelMapper::adjustMesh(float x, float y, float z){
+    
+    for(int i=0;i<moveVertices.size();i++){
+        for(int j=0;j<moveVertices[i].size();j++){
+            cameras[cameraSelect].mesh[i].setVertex(moveVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(moveVertices[i][j].index)+ofVec3f(x,y,z));
+        }
+    }
+    
+    for(int i=0;i<magnetVertices.size();i++){
+        for(int j=0;j<magnetVertices[i].size();j++){
+            cameras[cameraSelect].mesh[i].setVertex(magnetVertices[i][j].index,cameras[cameraSelect].mesh[i].getVertex(magnetVertices[i][j].index)+ofVec3f(x*magnetVertices[i][j].modifier,y*magnetVertices[i][j].modifier,z*magnetVertices[i][j].modifier));
+        }
+    }
+}
+
+
+void ModelMapper::adjust2D(float x, float y){
+    
+    for(int i=0;i<vertices2D.size();i++){
+        for(int j=0;j<vertices2D[i].size();j++){
+            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].x+=x;
+            vertices2D[i][j].vertex.x+=x*cameras[cameraSelect].meshObjects[i].scale;
+            cameras[cameraSelect].meshObjects[i].warped[vertices2D[i][j].box][vertices2D[i][j].index].y+=y;
+            vertices2D[i][j].vertex.y+=y*cameras[cameraSelect].meshObjects[i].scale;
+        }
+    }
+    
+}
