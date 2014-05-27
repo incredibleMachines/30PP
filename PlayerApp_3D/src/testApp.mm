@@ -15,7 +15,7 @@ void testApp::setup() {
     //set loop mode to loop either ambient or default content
     loopMode=AMBIENT_LOOP;
     //set number of GL cameras/projectors
-    numScreens=3;
+    numScreens=1;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
     startOffset=3.0;
     //set whether to check number of screens b/c less than 3 - will get set to true if cocoa ever detects less than three
