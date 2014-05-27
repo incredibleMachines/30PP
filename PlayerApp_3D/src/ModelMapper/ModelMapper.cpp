@@ -130,6 +130,7 @@ void ModelMapper::update(ofTexture * tex){
 //    cout<<"update"<<endl;
     UVFrame.begin();
     ofEnableAlphaBlending();
+    ofSetColor(255,255,255);
     texture->draw(0,0);
 //    if(bTransitioning==true){
 //        
@@ -1680,7 +1681,7 @@ void ModelMapper:: drawCameras() {
                                 //draw UV Section
                                 ofSetColor(255,255,255,255);
                                 
-                                texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                drawTexture.drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
                                                         cameras[i].meshObjects[j].originals[k][0].y,
                                                         cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                         cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
@@ -1715,7 +1716,7 @@ void ModelMapper:: drawCameras() {
                         //start transitions
                         
                         ofSetColor(255,255,255);
-                        texture->bind();
+                        drawTexture.bind();
                         
                         //                        if(bTransitioning==true){
                         //
@@ -1771,7 +1772,7 @@ void ModelMapper:: drawCameras() {
                         
                         
                         cameras[i].mesh[j].draw();
-                        texture->unbind();
+                        drawTexture.unbind();
                         //                        if(bTransitioning==true){
                         //                            fadeFrame->unbind();
                         //                        }
