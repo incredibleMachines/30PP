@@ -119,61 +119,18 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     ofAddListener(ofEvents().mouseReleased,this,&ModelMapper::mouseReleased);
     ofAddListener(ofEvents().mouseMoved,this,&ModelMapper::mouseMoved);
     
-    UVFrame.allocate(width,height);
-
+    fadeFrame=&ambientGradientFrame;
+    
 }
 
 void ModelMapper::update(ofTexture * tex){
     
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    
     //update gui camera to display selected camera graphics
     texture=tex;
-//    cout<<"update"<<endl;
-    UVFrame.begin();
-    ofEnableAlphaBlending();
-    ofSetColor(255,255,255);
-    texture->draw(0,0);
-//    if(bTransitioning==true){
-//        
-//        if(bTransitionStarted==true){
-//            if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-//                bTransitionStarted=false;
-//                ofSetColor(255,255,255,255);
-//            }
-//            int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
-//            if(opacity>255) opacity=255;
-//            ofSetColor(255,255,255,opacity);
-//            
-//            fadeFrame->draw(0,0);
-//        }
-//        
-//        else if(bTransitionLoading==true){
-//            if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
-//                bTransitionFinished=true;
-//                bTransitionLoading=false;
-//                transitionTimer=ofGetElapsedTimeMillis();
-//                ofSetColor(255,255,255,255);
-//            }
-//            ofSetColor(255,255,255,255);
-//            fadeFrame->draw(0,0);
-//        }
-//        
-//        else if(bTransitionFinished==true){
-//            if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-//                bTransitionFinished=false;
-//                bTransitioning=false;
-//                ofSetColor(255,255,255,0);
-//            }
-//            ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
-//            
-//            fadeFrame->draw(0,0);
-//        }
-//    }
     
-    UVFrame.end();
     
-    drawTexture=UVFrame.getTextureReference();
-    
-
     
     
     
@@ -1681,7 +1638,7 @@ void ModelMapper:: drawCameras() {
                                 //draw UV Section
                                 ofSetColor(255,255,255,255);
                                 
-                                drawTexture.drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                texture->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
                                                         cameras[i].meshObjects[j].originals[k][0].y,
                                                         cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
                                                         cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
@@ -1691,6 +1648,9 @@ void ModelMapper:: drawCameras() {
                                                         cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
                                 
                                 //draw Transition image on top
+                                
+                                
+                                
                                 
                             }
                             
@@ -1716,69 +1676,14 @@ void ModelMapper:: drawCameras() {
                         //start transitions
                         
                         ofSetColor(255,255,255);
-                        drawTexture.bind();
-                        
-                        //                        if(bTransitioning==true){
-                        //
-                        //                            if(bTransitionStarted==true){
-                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                        //                                    if(i==numCams-1) bTransitionStarted=false;
-                        //                                    ofSetColor(255,255,255,255);
-                        //                                }
-                        //                                int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
-                        //                                if(opacity>255) opacity=255;
-                        //                                ofSetColor(255,255,255,opacity);
-                        //                                fadeFrame->bind();
-                        //
-                        //
-                        //                            }
-                        //
-                        //                            else if(bTransitionLoading==true){
-                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
-                        //                                    bTransitionFinished=true;
-                        //                                    bTransitionLoading=false;
-                        //
-                        //
-                        //                                    transitionTimer=ofGetElapsedTimeMillis();
-                        //                                    ofSetColor(255,255,255,255);
-                        //                                }
-                        //                                ofSetColor(255,255,255,255);
-                        //                                fadeFrame->bind();
-                        //
-                        //                            }
-                        //
-                        //                            else if(bTransitionFinished==true){
-                        //                                if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
-                        //                                    bTransitionFinished=false;
-                        //                                    bTransitioning=false;
-                        //                                    ofSetColor(255,255,255,0);
-                        //                                }
-                        //                                ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
-                        //
-                        //                                fadeFrame->bind();
-                        //                            }
-                        //
-                        //                        }
-                        
-                        
-                        
-                        
-                        //END
-                        
-                        
+                        texture->bind();
                         
                         
                         glEnable(GL_DEPTH_TEST);
                         
                         
                         cameras[i].mesh[j].draw();
-                        drawTexture.unbind();
-                        //                        if(bTransitioning==true){
-                        //                            fadeFrame->unbind();
-                        //                        }
-                        //                        else{
-                        
-                        //                        }
+                        texture->unbind();
                         
                         //draw mesh wireframe
                         if(bDrawWireframe==true){
@@ -1790,9 +1695,6 @@ void ModelMapper:: drawCameras() {
                         
                         cameras[i].camera.end();
                         
-                        
-                        
-                        
                     }
                     
                 }
@@ -1802,8 +1704,11 @@ void ModelMapper:: drawCameras() {
         }
         
         
+        
+        
         //----------DRAW MASKS
         glDepthFunc(GL_ALWAYS);
+        drawFades(i);
         drawMasks(i);
         glDepthFunc(GL_LESS);
     }
@@ -3555,5 +3460,80 @@ void ModelMapper::adjust2D(float x, float y){
             vertices2D[i][j].vertex.y+=y*cameras[cameraSelect].meshObjects[i].scale;
         }
     }
-    
+   
+}
+
+void ModelMapper::drawFades(int i){
+    for(int j=0;j<numMeshes;j++){
+        if(cameras[i].which[j]==true){
+    for(int k=0; k<cameras[i].meshObjects[j].originals.size();k++){
+        if(cameras[i].meshObjects[j].isMesh==false){
+            if(i!=guiCam){
+                if(bTransitioning==true){
+                    
+                    glDisable(GL_DEPTH_TEST);
+                    
+                    glDepthFunc(GL_ALWAYS);
+                    ofEnableAlphaBlending();
+                    ofDisableNormalizedTexCoords();
+                    ofMatrix4x4 homography = ofxHomography::findHomography(cameras[i].meshObjects[j].originals[k], cameras[i].meshObjects[j].warped[k]);
+                    
+                    ofPushMatrix();
+                    ofSetColor(255,255,255);
+                    
+                    ofTranslate(cameras[i].meshObjects[j].translate+ofPoint(cameras[i].viewport.x,cameras[i].viewport.y));
+                    ofScale(cameras[i].meshObjects[j].scale,cameras[i].meshObjects[j].scale);
+                    
+                    ofPushMatrix();
+                    glMultMatrixf(homography.getPtr());
+                    
+                    
+                    if(bTransitionStarted==true){
+                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                            bTransitionStarted=false;
+                            ofSetColor(255,255,255,255);
+                        }
+                        int opacity=int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,0,255));
+                        if(opacity>255) opacity=255;
+                        ofSetColor(255,255,255,opacity);
+                        
+                    }
+                    
+                    else if(bTransitionLoading==true){
+                        if(ofGetElapsedTimeMillis()-transitionTimer>loadTime){
+                            bTransitionFinished=true;
+                            bTransitionLoading=false;
+                            transitionTimer=ofGetElapsedTimeMillis();
+                            ofSetColor(255,255,255,255);
+                        }
+                        ofSetColor(255,255,255,255);
+                    }
+                    
+                    else if(bTransitionFinished==true){
+                        if(ofGetElapsedTimeMillis()-transitionTimer>transitionTime){
+                            bTransitionFinished=false;
+                            bTransitioning=false;
+                            ofSetColor(255,255,255,0);
+                        }
+                        ofSetColor(255,255,255,int(ofMap(ofGetElapsedTimeMillis()-transitionTimer,0,transitionTime,255,0)));
+                        
+                    }
+                    
+                    fadeFrame->drawSubsection(cameras[i].meshObjects[j].originals[k][0].x,
+                                              cameras[i].meshObjects[j].originals[k][0].y,
+                                              cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                              cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1),
+                                              cameras[i].meshObjects[j].tex.pos.x+cameras[i].meshObjects[j].originals[k][0].x,
+                                              cameras[i].meshObjects[j].tex.pos.y+cameras[i].meshObjects[j].originals[k][0].y,
+                                              cameras[i].meshObjects[j].tex.width/(cameras[i].meshObjects[j].horizGrid-1),
+                                              cameras[i].meshObjects[j].tex.height/(cameras[i].meshObjects[j].vertGrid-1));
+                    ofPopMatrix();
+                    ofPopMatrix();
+                }
+                
+            }
+        }
+    }
+    }
+    }
 }

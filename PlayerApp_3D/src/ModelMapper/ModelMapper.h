@@ -377,12 +377,11 @@ public:
     
     void calculateGuiValues();
     
-    void findMeshFaces(int i, int j);
-    
-    ofFbo UVFrame;
-    ofTexture drawTexture;
+    void findMeshFaces(int i, int j); 
     
     void adjust2D(float x, float y);
     void adjustMask(float x, float y);
+    
+    void drawFades(int i);
     
 };
