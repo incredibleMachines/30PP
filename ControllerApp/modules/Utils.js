@@ -14,6 +14,14 @@ exports.makeSlug = function(title){
 exports.reverseSlug = function(title){
 	return title.toLowerCase().replace(/-/g,' ');
 }
+exports.reverseAPISlug = function(title){
+  return capitalize(title.replace(/_/g,' '))
+}
+
+function capitalize(string) {
+    return string.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+};
+exports.captialize = capitalize
 
 exports.toTitleCase = function(str){
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});

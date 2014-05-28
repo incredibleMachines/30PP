@@ -8,7 +8,7 @@ var async	 = require('async');
 /******* AMBIENT EVENT *********/
 //adding this to timeline manually.
 var ambientEvent = {
-	"title" : "Ambient",
+	"title" : "Ambient Gradient",
 	"slug" : "ambient_gradient",
 	"concat_queue" : 0, //always at queue 0
 	"duration" : 640000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
