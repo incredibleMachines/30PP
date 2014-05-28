@@ -112,11 +112,13 @@ void testApp::update(){
         //load end time for current event
         for(int i=0; i<socketHandler.eventHandler.events.size();i++){
             if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
-                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
+//                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
+                currentEnd=98;
             }
         }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
+            loadTime=0;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -132,33 +134,35 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
+            loadTime=0;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
 
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-            loadTime+=startOffset;
+//            loadTime+=startOffset;
+            loadTime=0;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="markets"){
-            loadTime+=startOffset;
-            map.fadeIn(TRANSITION_MARKETS);
-        }
-        
-        else if(socketHandler.eventHandler.currentEvent=="shopping"){
-            loadTime+=startOffset;
-            map.fadeIn(TRANSITION_SHOPPING);
-        }
-        
-        else if(socketHandler.eventHandler.currentEvent=="art-design"){
-            map.fadeIn(TRANSITION_ARTS);
-        }
-        
-        else if(socketHandler.eventHandler.currentEvent=="leisure"){
-            loadTime+=startOffset;
-            map.fadeIn(TRANSITION_LEISURE);
-        }
+//        else if(socketHandler.eventHandler.currentEvent=="markets"){
+//            loadTime+=startOffset;
+//            map.fadeIn(TRANSITION_MARKETS);
+//        }
+//        
+//        else if(socketHandler.eventHandler.currentEvent=="shopping"){
+//            loadTime+=startOffset;
+//            map.fadeIn(TRANSITION_SHOPPING);
+//        }
+//        
+//        else if(socketHandler.eventHandler.currentEvent=="art-design"){
+//            map.fadeIn(TRANSITION_ARTS);
+//        }
+//        
+//        else if(socketHandler.eventHandler.currentEvent=="leisure"){
+//            loadTime+=startOffset;
+//            map.fadeIn(TRANSITION_LEISURE);
+//        }
         
         else if(socketHandler.eventHandler.currentEvent=="pause"){
             bool bCanPause=false;
@@ -186,11 +190,13 @@ void testApp::update(){
     //check for end of current event and then go to ambient/default start
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
         if(loopMode==AMBIENT_LOOP){
-            loadTime=socketHandler.eventHandler.events[0].startTime;
+//            loadTime=socketHandler.eventHandler.events[0].startTime;
+            loadTime=0;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
         }
         else if (loopMode==DEFAULT_LOOP){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
+//            loadTime=socketHandler.eventHandler.events[1].startTime;
+            loadTime=0;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         bCheckingTime=false;
@@ -312,9 +318,11 @@ void testApp::initVariables(){
     
     // set default variable for ambient loop
     else if(loopMode==AMBIENT_LOOP){
-        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
+//        currentEnd=socketHandler.eventHandler.events[0].startTime+socketHandler.eventHandler.events[0].duration;
+        currentEnd=98;
         currentTransition=TRANSITION_AMBIENT_GRADIENT;
-        loadTime=socketHandler.eventHandler.events[0].startTime;
+//        loadTime=socketHandler.eventHandler.events[0].startTime;
+        loadTime=0;
         map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
     }
     
