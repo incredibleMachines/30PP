@@ -113,12 +113,13 @@ void testApp::update(){
         for(int i=0; i<socketHandler.eventHandler.events.size();i++){
             if(socketHandler.eventHandler.currentEvent==socketHandler.eventHandler.events[i].title){
 //                currentEnd=socketHandler.eventHandler.events[i].startTime+socketHandler.eventHandler.events[i].duration;
-                currentEnd=98;
+//                currentEnd=98;
             }
         }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
-            loadTime=0;
+            loadTime=990;
+            currentEnd=1228;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -134,16 +135,31 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            loadTime=0;
+            loadTime=180;
+            currentEnd=820;
             map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
 
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-//            loadTime+=startOffset;
+        else if(socketHandler.eventHandler.currentEvent=="ambient_clouds"){
             loadTime=0;
-            map.fadeIn(TRANSITION_GASTRONOMY);
+            currentEnd=180;
+            map.fadeIn(TRANSITION_AMBIENT_CLOUDS);
+            
         }
+        
+        else if(socketHandler.eventHandler.currentEvent=="ambient_party"){
+            loadTime=820;
+            currentEnd=990;
+            map.fadeIn(TRANSITION_AMBIENT_PARTY);
+            
+        }
+        
+//        else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
+////            loadTime+=startOffset;
+//            loadTime=0;
+//            map.fadeIn(TRANSITION_GASTRONOMY);
+//        }
         
 //        else if(socketHandler.eventHandler.currentEvent=="markets"){
 //            loadTime+=startOffset;
@@ -192,13 +208,14 @@ void testApp::update(){
         if(loopMode==AMBIENT_LOOP){
 //            loadTime=socketHandler.eventHandler.events[0].startTime;
             loadTime=0;
-            map.fadeIn(TRANSITION_AMBIENT_GRADIENT);
+            currentEnd=180;
+            map.fadeIn(TRANSITION_AMBIENT_CLOUDS);
         }
-        else if (loopMode==DEFAULT_LOOP){
-//            loadTime=socketHandler.eventHandler.events[1].startTime;
-            loadTime=0;
-            map.fadeIn(TRANSITION_GASTRONOMY);
-        }
+//        else if (loopMode==DEFAULT_LOOP){
+////            loadTime=socketHandler.eventHandler.events[1].startTime;
+//            loadTime=0;
+//            map.fadeIn(TRANSITION_GASTRONOMY);
+//        }
         bCheckingTime=false;
     }
     
