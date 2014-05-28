@@ -77,7 +77,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     //transition settings
     transitionTime=1000;
     loadTime=750;
-    ofLoadImage(ambientGradientFrame,"Ambient_Frame.jpg");
+    ofLoadImage(ambientGradientFrame,"Ambient_Gradient_Frame.jpg");
     ofLoadImage(artsFrame,"Arts_Frame.jpg");
     ofLoadImage(gastronomyFrame,"Gastronomy_Frame.jpg");
     ofLoadImage(leisureFrame,"Leisure_Frame.jpg");
@@ -85,6 +85,8 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     ofLoadImage(marketsFrame,"Markets_Frame.jpg");
     ofLoadImage(endFrame,"End_Frame.jpg");
     ofLoadImage(defaultFrame,"Default_Frame.jpg");
+    ofLoadImage(ambientCloudsFrame,"Ambient_Clouds_Frame.jpg");
+    ofLoadImage(ambientPartyFrame,"Ambient_Party_Frame.jpg");
     bTransitioning=false;
     bTransitionStarted=false;
     bTransitionFinished=false;
@@ -3370,6 +3372,12 @@ void ModelMapper::fadeIn(int type){
     }
     else if(type==TRANSITION_END){
         fadeFrame=&endFrame;
+    }
+    else if(type==TRANSITION_AMBIENT_CLOUDS){
+        fadeFrame=&ambientCloudsFrame;
+    }
+    else if(type==TRANSITION_AMBIENT_PARTY){
+        fadeFrame=&ambientPartyFrame;
     }
 }
 
