@@ -24,7 +24,11 @@ exports.index = function(_Database,EVENT_TYPES){
 		//res.jsonp({success:'success'})
 		var structure = {};
 		structure.sales = {play_all: '/api/play/sales', play_single:[]};
-		structure.ambient = {play_all: '/api/play/ambient_gradient', play_single:[{"Ambient Gradient":'/api/play/ambient_gradient'}]};
+		structure.ambient = {play_all: '/api/play/ambient_gradient',
+												 play_single:[{'Ambient Gradient':'/api/play/ambient_gradient'},
+																		  {'Ambient Clouds': '/api/play/ambient_clouds'},
+																			{'Ambient Party':  '/api/play/ambient_party'}
+																																							]};
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
 
 		EVENT_TYPES.forEach(function(type,i){
@@ -104,7 +108,8 @@ exports.sendSingle = function(_Database, _Websocket){
 		console.log("send single");
 		console.log("req: "+req);
 		console.log("slug: "+slug);
-		if(slug.indexOf("ambient")>-1 || slug.indexOf("gradient")>-1){
+		if(slug.indexOf("ambient")>-1 ){
+			if(slug.indexOf("gradient")>-1){
 			//if its an ambient slug then we need to hardcore them.
 			//for now its just ambient_gradient
 			//if(slug.indexOf("gradient")>-1){
@@ -137,6 +142,30 @@ exports.sendSingle = function(_Database, _Websocket){
 					res.jsonp({error:'Event Not Found', requested: slug})
 				}
 			})
+		}else{
+			var socketCommand = {
+				command: "play",
+				event:{
+					title: utils.reverseAPISlug(slug),
+					slug: slug,
+					duration: 0,
+					start_time: 0
+				}
+			}
+			console.log("socketCommand: "+JSON.stringify(socketCommand));
+			_Websocket.status(function(status){
+				if(status ==true){
+					_Websocket.socket(function(socket){
+						socket.send(JSON.stringify(socketCommand))
+						res.jsonp({success: {socketCommand: socketCommand}});
+					})
+				}else{
+					res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+				}
+			})
+
+		}
+
 		}else{
 			_Database.getDocumentBySlug('timeline',slug, function(e, _event){
 				if(_event){
