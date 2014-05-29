@@ -113,9 +113,12 @@ function sortRenderQueue(scenes,clips,files,cb){
 		clip_queue.forEach(function(item,i){
 
 			var checkScene = _.findWhere(scene_queue,{_id: item.scene_id});
+
 			if(typeof checkScene === 'undefined'){
-				var scene = _.findWhere(scenes,{_id:item.scene_id})
-				scene_queue.push(scene)
+				if(checkScene.title.indexOf("ambient")==-1){
+					var scene = _.findWhere(scenes,{_id:item.scene_id})
+					scene_queue.push(scene)
+				}
 			}
 
 			clip_queue_counter++
