@@ -125,7 +125,7 @@ exports.delete = function(_Database){
 
 	}
 }
-exports.reorder = function(_Database){
+exports.reorder = function(_Database,_Mailer){
 	return function(req,res){
 		//res.jsonp({working:"onit"})
 		var id = req.params.id;
@@ -158,8 +158,20 @@ exports.reorder = function(_Database){
 							}
 
 						    _Database.updateByID('scenes',scene._id,{$set:{clips:holder}},function(__e){
-							    if(!e) res.redirect('/scenes/'+scene.slug+'#'+clip.slug)
-							    else res.jsonp(500,{e:__e})
+							    if(!__e){
+										_Database.updateByID('clips',id,{$set:{render:true}},function(___e){
+												if(!___e){
+													var subject = "[30PP] Clip Added to Render Queue"
+													var text = "This is an automated message to inform you that the clip "+clip.title+" has been repositioned within "+scene.title+". "+clip.title+" has been added to the render queue."
+													_Mailer.send(subject, text, function(e,resp){
+														if(e) console.error(e)
+														//else console.log(resp)
+													})
+													res.redirect('/scenes/'+scene.slug+'#'+clip.slug)
+												}else res.jsonp(500,{e:___e})
+										})
+
+									}else res.jsonp(500,{e:__e})
 						    })
 						}
 					})

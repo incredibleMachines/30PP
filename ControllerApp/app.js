@@ -192,7 +192,7 @@ app.post('/files/:slug/delete',auth.index(Database),files.delete(Database));
 
 //clip handling
 app.post('/clips',auth.index(Database),clips.add(Database));
-app.post('/clips/reorder/:id',auth.index(Database),clips.reorder(Database));
+app.post('/clips/reorder/:id',auth.index(Database),clips.reorder(Database,Mailer));
 app.post('/clips/:id',auth.index(Database),clips.update(Database, Mailer));
 app.delete('/clips/:id',auth.index(Database),clips.delete(Database));
 app.post('/clips/:id/delete',auth.index(Database),clips.delete(Database));
