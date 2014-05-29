@@ -27,7 +27,8 @@ exports.index = function(_Database,EVENT_TYPES){
 		structure.ambient = {play_all: '/api/play/ambient_gradient',
 												 play_single:[{'Ambient Gradient':'/api/play/ambient_gradient'},
 																		  {'Ambient Clouds': '/api/play/ambient_clouds'},
-																			{'Ambient Party':  '/api/play/ambient_party'}
+																			{'Ambient Party':  '/api/play/ambient_party'},
+																			{'Ambient Waves':  '/api/play/ambient_waves'}
 																																							]};
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
 

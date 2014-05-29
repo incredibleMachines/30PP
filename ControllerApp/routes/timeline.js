@@ -7,23 +7,23 @@ var async	 = require('async');
 
 /******* AMBIENT EVENT *********/
 //adding this to timeline manually.
-var ambientEvent = {
-	"title" : "Ambient Gradient",
-	"slug" : "ambient_gradient",
-	"concat_queue" : 0, //always at queue 0
-	"duration" : 640000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
-	"start_time" : 0,
-	"scenes" : [
-		{
-			"type" : "ambient",
-			"title" : "Gradient",
-			"slug" : "ambient_gradient",
-			"concat_queue" : 0, //if another scene is added, will be '1'
-			"start_time" : 0, //need to manually calc the start_time of the next ambient event
-			"duration" : 640000
-		}
-	]
-}
+// var ambientEvent = {
+// 	"title" : "Ambient Gradient",
+// 	"slug" : "ambient_gradient",
+// 	"concat_queue" : 0, //always at queue 0
+// 	"duration" : 640000, //need to calculate this manuallyif (scene.title === "Gradient") 	thisDuration = ;
+// 	"start_time" : 0,
+// 	"scenes" : [
+// 		{
+// 			"type" : "ambient",
+// 			"title" : "Gradient",
+// 			"slug" : "ambient_gradient",
+// 			"concat_queue" : 0, //if another scene is added, will be '1'
+// 			"start_time" : 0, //need to manually calc the start_time of the next ambient event
+// 			"duration" : 640000
+// 		}
+// 	]
+// }
 //****************************/
 
 exports.index = function(_Database){
@@ -90,16 +90,16 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 		function(callback){ //check if the timeline already exists
 			_Database.queryCollection('timeline',{}, function(e, timelineContents){
 				if(timelineContents.length<1){
-					allTimelineEvents.push(ambientEvent); //INSERT AMBIENT HERE, AT THE VERY TOP
-					var orderUpdate = ambientEvent.scenes.length;
-					var startTimeUpdate = 0;
-					for(var i=0; i<ambientEvent.scenes.length; i++){ //go through ambient event scenes
-						startTimeUpdate += ambientEvent.scenes[i].duration; //update the real startTime
+					//allTimelineEvents.push(ambientEvent); //INSERT AMBIENT HERE, AT THE VERY TOP
+					//var orderUpdate = ambientEvent.scenes.length;
+					//var startTimeUpdate = 0;
+					//for(var i=0; i<ambientEvent.scenes.length; i++){ //go through ambient event scenes
+						//startTimeUpdate += ambientEvent.scenes[i].duration; //update the real startTime
 						//console.log("this duration: ")
 						//console.log(ambientEvent.scenes[i].duration);
-					}
-					timelineSceneOrder += orderUpdate;
-					timelineEventOrder += 1; //only 1 ambient Event ever.
+					//}
+					//timelineSceneOrder += orderUpdate;
+					//timelineEventOrder += 1; //only 1 ambient Event ever.
 					callback(null); //next fall.
 				} else {
 					//console.log("timeline already exists. clear with mongo: db.timeline.remove() first");
@@ -168,7 +168,7 @@ exports.make = function(_Database, EVENT_TYPES, cb){
 						if (scene.title === "Shopping Detail")		thisDuration = 106000;
 						if (scene.title === "Art & Design Detail")thisDuration = 97000;
 						if (scene.title === "Leisure Detail")		 thisDuration = 88000;
-						var thisStartTime = timelineStartTime+parseInt(ambientEvent.duration);
+						var thisStartTime = timelineStartTime;//+parseInt(ambientEvent.duration);
 						var thisConcatSlug;
 						if(scene.type == "default" || scene.type == "ambient")
 							thisConcatSlug = scene.type+"_"+utils.makeSlug(scene.title);
