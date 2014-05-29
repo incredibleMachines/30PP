@@ -79,14 +79,18 @@ exports.update = function(_Database,_Mailer){
 		var updateObject = { $set: {
 										title: post.title,
 										slug: utils.makeSlug(post.title),
-										layout: post.layout,
 										zones: post.zones,
 										last_edited: new Date(),
 										render: true
 									}
 								}
 
+		if( post.hasOwnProperty("layout") ) {updateObject['$set'].layout = post.layout}
+
+		//console.log("updating")
+
 		_Database.update('clips',{_id: _Database.makeMongoID(id)},updateObject,function(e){
+			//console.log('updated')
 			if(!e){
 				var subject = "[30PP] Clip Added to Render Queue"
 				var text = "This is an automated message to inform you that the clip "+post.title+" has been added to the render queue."
