@@ -6,7 +6,7 @@
 
 */
 
-function SceneController(_clips,_files){
+function SceneController(_auth,_clips,_files){
 	//console.log(_.isEmpty({}))
 	var currentClip = _clips[0];
 	//console.log("Clips:")
@@ -392,6 +392,10 @@ function SceneController(_clips,_files){
 			//console.log(_clip.zones)
 			_clip.zones.forEach(function(zone,index){
 				if(zone.file){
+          if(_auth !== "admin" && index != 0){
+            $('.zone-single-'+index).find('.zone-text-type').attr('disabled','disabled')
+            $('.zone-single-'+index).find('select.zone-file').removeAttr('disabled')
+          }
 					var file = _.findWhere(_files,{_id:zone.file})
 					//console.log(file)
 					if(file.type.indexOf('video')>=0){
@@ -412,11 +416,17 @@ function SceneController(_clips,_files){
 				}
 				if(zone.text){
 					//console.log(typeof zone.text)
+          if(_auth !== "admin" && index != 0){
+            $('.zone-single-'+index).find('.zone-text-type').attr('disabled','disabled')
+            $('.zone-single-'+index).find('select.zone-file').removeAttr('disabled')
+          }
+
 					if(typeof zone.text !== 'object'){
 						//console.log('Text at zone: '+index)
 						var text = '<section class="zone-text input-group"><textarea name="zones['+index+'][text]" placeholder="Enter your text now" class="form-control zone-text">'+zone.text+'</textarea></section>'
 						$('.zone-single-'+index).find('.zone-text-type').parent().append(text)
 						$('.zone-single-'+index).find('.zone-text-type').val('single')
+
 
 					}else{
 						var text = '';
@@ -428,6 +438,10 @@ function SceneController(_clips,_files){
 								$('.zone-single-'+index).find('.zone-text-type').parent().append(text)
 
 						}
+            if(_auth !== "admin" && index != 0){
+              $('.zone-single-'+index).find('select.zone-file').attr('disabled','disabled')
+            }
+
 						$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Text Mode: Multitext")
 						Holder.run({
 							images: $('.zone-single-'+index).find('img')[0]
@@ -443,11 +457,21 @@ function SceneController(_clips,_files){
 					//console.log("Type: "+type);
 					//val = (zone.locations.length>1)? 'multiple' : 'single'
 					$('.zone-single-'+index).find('select.zone-map-type').val(type)
+
 					var output = type.charAt(0).toUpperCase()+type.slice(1)
 					$('.zone-single-'+index).find('img').attr("data-src","holder.js/100%x150/industrial/text:Location Mode: "+output)
 					Holder.run({
 						images: $('.zone-single-'+index).find('img')[0]
 					})
+          //set auth preferences
+
+          if(_auth !== "admin" && index == 0){
+            console.log("Setting Loc Disabled "+index)
+            $('.zone-single-'+index).find('select.zone-map-type').attr('disabled','disabled')
+            $('.zone-single-'+index).find('select.zone-file').attr('disabled','disabled')
+          }else if(_auth === "admin" && index ==0){
+            $('.zone-single-'+index).find('select.zone-file').removeAttr('disabled')
+          }
 
 					if(!$('canvas#map').length){
 
@@ -468,8 +492,12 @@ function SceneController(_clips,_files){
 
 					InitMapCanvas(type, locs, mapCallback); //see mapCallback defined below
 				}
+
+
 			})
 		}
+
+
 	}
 
 

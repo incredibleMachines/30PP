@@ -3,11 +3,11 @@
   <% /* Only Including the Modals we need for specific pages */ %>
   <% /* Event Index Page */ %>
   <% if(page_slug == 'events-index'){ %>
-  	<% include ../includes/modals/new_scene %>	
+  	<% include ../includes/modals/new_scene %>
   <% } %>
   <% /* Event Single Page */ %>
   <% if(page_slug == 'scenes-single' ){ %>
-  	<% include ../includes/modals/new_clip %> 
+  	<% include ../includes/modals/new_clip %>
   	<% include ../includes/modals/new_file %>
   <% }%>
   <% /* Any Assets Page */ %>
@@ -28,20 +28,19 @@
   <% if(page_slug == 'events-index'){ %>
   	<script src='/js/eventController.js'></script>
   	<script>
-  	
+
   	  	$(document).ready(function(){
   	  	<% if(scenes.length ==0){ %>
 		  	$('#new_scene_modal').modal('show')
 		<% }else{ %>
 		  	var eventController = new EventController()
 	  	<% } %>
-	  	
+
 	  	})
   	</script>
-  	
+
   <% } %>
   <% if(page_slug == 'scenes-single' ){ %>
-  	<script type="text/javascript" src='/js/pathfinding-browser.min.js'></script>
   	<script src='/js/map.js'></script>
   	<script src='/js/sceneController.js'></script>
   	<script>
@@ -50,10 +49,10 @@
   		<% if(scene.clips.length == 0){ %>
 	  	$('#new_clip_modal').modal('show');
 	  	<% }else{ %>
-	  	var sceneControl = new SceneController(<%-JSON.stringify(scene.clips)%>,<%- JSON.stringify(files)%>,function(){});
-	  	<% } %>	  		
+	  	var sceneControl = new SceneController('<%=auth %>',<%-JSON.stringify(scene.clips)%>,<%- JSON.stringify(files)%>,function(){});
+	  	<% } %>
 
-	  	
+
 	 });
   	</script>
   <% }%>
@@ -65,8 +64,8 @@
 	  	})
   	</script>
   <% }%>
-  <!-- EJS LOCALS DATA: FOR DEBUG 
-  	<%- JSON.stringify(locals) %> 
+  <!-- EJS LOCALS DATA: FOR DEBUG
+  	<%- JSON.stringify(locals) %>
   -->
   </body>
 </html>
