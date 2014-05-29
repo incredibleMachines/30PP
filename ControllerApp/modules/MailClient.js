@@ -24,7 +24,7 @@ var mailOptions = {
     //text: "This is an automated message to inform you that the ControllerApp is starting at "+ new Date() // plaintext body
 }
 
-var DEVELOPMENT = false;
+var DEVELOPMENT = true;
 
 
 exports.send = function(subject,text,cb){
