@@ -115,7 +115,7 @@ function sortRenderQueue(scenes,clips,files,cb){
 			var checkScene = _.findWhere(scene_queue,{_id: item.scene_id});
 
 			if(typeof checkScene === 'undefined'){
-				console.log(checkScene)
+				//console.log(checkScene)
 				if(item.title.indexOf("ambient")==-1){
 					var scene = _.findWhere(scenes,{_id:item.scene_id})
 					scene_queue.push(scene)
