@@ -74,7 +74,6 @@ public:
     ofPoint warped3D[4][4];
     
     ofFbo cameraView;
-    ofVec3f meshTranslate;
     
     float rotate;
     

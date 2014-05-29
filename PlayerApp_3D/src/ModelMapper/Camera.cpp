@@ -22,7 +22,6 @@ void Camera::setup(ofVec3f _pos, ofQuaternion _orientation, ofVec3f _viewPos, of
     
     //load variables into ofEasyCam camera, ofRectangle viewport and ofMesh mesh objects
 
-//    meshTranslate=_pos;
     
     viewport.x=_viewPos.x;
     viewport.y=_viewPos.y;
@@ -120,22 +119,15 @@ void Camera::setTarget1(){
 }
 
 void Camera::adjustPosition(float x, float y, float z){
-    
     camera.setGlobalPosition(camera.getGlobalPosition()+ofVec3f(x,y,z));
-    
-    
 }
 
 void Camera::adjustRoll(float zR){
-    
     camera.roll(zR);
     rotate+=zR;
 }
 
-
-
 void Camera::adjustViewport(float x, float y){
     viewport.x+=x;
     viewport.y+=y;
-    
 }
