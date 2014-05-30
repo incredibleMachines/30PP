@@ -87,6 +87,7 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     ofLoadImage(defaultFrame,"Default_Frame.jpg");
     ofLoadImage(ambientCloudsFrame,"Ambient_Clouds_Frame.jpg");
     ofLoadImage(ambientPartyFrame,"Ambient_Party_Frame.jpg");
+    ofLoadImage(ambientWavesFrame,"Ambient_Waves_Frame.jpg");
     bTransitioning=false;
     bTransitionStarted=false;
     bTransitionFinished=false;
@@ -3349,7 +3350,7 @@ void ModelMapper::fadeIn(int type){
     
     transitionTimer=ofGetElapsedTimeMillis();
     
-    if (type==TRANSITION_AMBIENT_GRADIENT){
+    if (type==TRANSITION_GRADIENT){
         fadeFrame=&ambientGradientFrame;
     }
     else if(type==TRANSITION_DEFAULT){
@@ -3373,11 +3374,14 @@ void ModelMapper::fadeIn(int type){
     else if(type==TRANSITION_END){
         fadeFrame=&endFrame;
     }
-    else if(type==TRANSITION_AMBIENT_CLOUDS){
+    else if(type==TRANSITION_CLOUDS){
         fadeFrame=&ambientCloudsFrame;
     }
-    else if(type==TRANSITION_AMBIENT_PARTY){
+    else if(type==TRANSITION_PARTY){
         fadeFrame=&ambientPartyFrame;
+    }
+    else if(type==TRANSITION_WAVES){
+        fadeFrame=&ambientWavesFrame;
     }
 }
 
