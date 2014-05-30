@@ -36,7 +36,12 @@
 					<a class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 					<% EVENT_TYPES.forEach(function(type){ %>
-						<li><a href="/events/?type=<%= utils.makeSlug(type) %>"><%= type %></a></li>
+						<% if(type =="Ambient"){ %>
+							<% if(auth == "auth"){ %><li><a href="/events/?type=<%= utils.makeSlug(type) %>"><%= type %></a></li><%}%>
+						<% }else{ %>
+							<li><a href="/events/?type=<%= utils.makeSlug(type) %>"><%= type %></a></li>
+						<% } %>
+
 					<% }) %>
 					</ul>
 				</li>
