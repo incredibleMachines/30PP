@@ -1,4 +1,5 @@
 var utils = require('../modules/Utils');
+var _ = require('underscore')
 
 
 /*
@@ -104,70 +105,79 @@ exports.sendEvents = function(_type,_Database,_Websocket){
 */
 exports.sendSingle = function(_Database, _Websocket){
 
-	return function(req,res){
+return function(req,res){
 		var slug = req.params.slug;
 		console.log("send single");
 		console.log("req: "+req);
 		console.log("slug: "+slug);
-		if(slug.indexOf("ambient")>-1 ){
-			if(slug.indexOf("gradient")>-1){
+		if(slug.indexOf("ambient")>-1){
 			//if its an ambient slug then we need to hardcore them.
 			//for now its just ambient_gradient
-			//if(slug.indexOf("gradient")>-1){
-			_Database.getDocumentBySlug('timeline','ambient_gradient', function(e, _event){
+			_Database.getDocumentBySlug('timeline','ambient', function(e, _event){
 				if(_event){
-					var socketCommand = {
-						command: "play",
-						event: {
-							title: _event.title,//"Ambient Gradient",
-							slug: _event.slug,
-							/** TODO: DB CALL NEEDS TO POPULATE THIS OBJECT **/
-							duration: _event.duration,
-							start_time: _event.start_time
-						}
-					}
+					if(slug !== "ambient"){
+						var counter = 0
 
-					console.log("socketCommand: "+JSON.stringify(socketCommand));
-					_Websocket.status(function(status){
-						if(status ==true){
-							_Websocket.socket(function(socket){
-								socket.send(JSON.stringify(socketCommand))
-								res.jsonp({success: {socketCommand: socketCommand}});
+						var scene = _.findWhere(_event.scenes, {slug: slug})
+
+						if(typeof scene !== "undefined" ){
+							var socketCommand ={
+								command:"play",
+								event:{ title: scene.title,
+												slug: scene.slug,
+												duration: scene.duration,
+												start_time: scene.start_time
+								}
+							};
+
+							console.log("socketCommand: "+JSON.stringify(socketCommand));
+							_Websocket.status(function(status){
+								if(status ==true){
+									_Websocket.socket(function(socket){
+										socket.send(JSON.stringify(socketCommand))
+										res.jsonp({success: {socketCommand: socketCommand}});
+									})
+								}else{
+									res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+								}
 							})
+
 						}else{
-							res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+							res.jsonp({error:'Event Not Found', requested: slug})
 						}
-					})
-				}
-				else {
-					res.jsonp({error:'Event Not Found', requested: slug})
-				}
-			})
-		}else{
-			var socketCommand = {
-				command: "play",
-				event:{
-					title: utils.reverseAPISlug(slug),
-					slug: slug,
-					duration: 0,
-					start_time: 0
-				}
-			}
-			console.log("socketCommand: "+JSON.stringify(socketCommand));
-			_Websocket.status(function(status){
-				if(status ==true){
-					_Websocket.socket(function(socket){
-						socket.send(JSON.stringify(socketCommand))
-						res.jsonp({success: {socketCommand: socketCommand}});
-					})
-				}else{
-					res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
-				}
+
+
+					}else{
+							var socketCommand = {
+								command: "play",
+								event: {
+									title: _event.title,//"Ambient Gradient",
+									slug: _event.slug,
+									/** TODO: DB CALL NEEDS TO POPULATE THIS OBJECT **/
+									duration: _event.duration,
+									start_time: _event.start_time
+								}
+							};
+
+							console.log("socketCommand: "+JSON.stringify(socketCommand));
+							_Websocket.status(function(status){
+								if(status ==true){
+									_Websocket.socket(function(socket){
+										socket.send(JSON.stringify(socketCommand))
+										res.jsonp({success: {socketCommand: socketCommand}});
+									})
+								}else{
+									res.jsonp({error:'PlayerApp Not Connected', socketCommand: socketCommand})
+								}
+							})
+						}
+
+					} else res.jsonp({error:'Event Not Found', requested: slug})
+				
 			})
 
-		}
 
-		}else{
+		}else{//ambient or gradient
 			_Database.getDocumentBySlug('timeline',slug, function(e, _event){
 				if(_event){
 					var socketCommand = {

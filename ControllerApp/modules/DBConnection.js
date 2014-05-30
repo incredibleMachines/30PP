@@ -181,13 +181,33 @@ exports.formatInit=function(_cb){
 				var events_counter = 0;
 				var eventsToSend = []
 				_events.forEach(function(event,i){
+						if(event.slug == 'ambient'){
+							var thisEvent = {};
+							thisEvent.title= event.title;
+							thisEvent.duration= event.duration;
+							thisEvent.start_time= event.start_time;
+							thisEvent.slug=event.slug;
+							eventsToSend.push(thisEvent);
+
+							event.scenes.forEach(function(scene){
+
+								var thisEvent = {};
+								thisEvent.title= scene.title;
+								thisEvent.duration= scene.duration;
+								thisEvent.start_time= scene.start_time;
+								thisEvent.slug=scene.slug;
+								eventsToSend.push(thisEvent);
+
+							})
+
+						}else{
 						var thisEvent = {};
 						thisEvent.title= event.title;
 						thisEvent.duration= event.duration;
 						thisEvent.start_time= event.start_time;
 						thisEvent.slug=event.slug;
 						eventsToSend.push(thisEvent);
-
+					}
 
 					//console.log(i+' :: '+JSON.stringify(event))
 					/*if(event.scenes.length>0){
