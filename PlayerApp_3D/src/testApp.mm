@@ -42,9 +42,9 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     //LOAD VIDEO
-    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 
-//     MSA::ofxCocoa::initPlayer("calibration_5_26.mov", meshTexture->texData.textureID);
+//     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
  
     //----------MODEL MAPPER   SETUP
     //Load mesh vector to tell ModelMapper which meshes to use 3D obj file and which to set as 2D textures
