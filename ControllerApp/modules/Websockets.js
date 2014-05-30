@@ -2,7 +2,7 @@ var colors = require('colors')
 var WebSocketServer = require('ws').Server;
 var _socket;
 var _Database;
-var _socket_status;
+var _socket_status = false;;
 var folders = require('../modules/FolderStructure');
 var _playerApp;
 
@@ -11,7 +11,7 @@ exports.Connect = function(_port,_Db,_pA){
 	_Database = _Db; //setup our global _db Connection when we load our socket
 	_playerApp = _pA;
 	ofSocket = new WebSocketServer({port:_port})
-	_socket_status = false;
+
 	ofSocket.on('connection',function(socket){
 		_socket = socket;
 		_socket_status = true;
