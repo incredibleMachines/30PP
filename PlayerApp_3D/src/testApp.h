@@ -7,8 +7,11 @@
 #define TEX_WIDTH 2048
 #define TEX_HEIGHT 3400
 
-#define AMBIENT_LOOP 0
+#define GRADIENT_LOOP 0
 #define DEFAULT_LOOP 1
+#define PARTY_LOOP 2
+#define WAVES_LOOP 3
+#define CLOUDS_LOOP 4
 
 
 class testApp : public ofBaseApp{
