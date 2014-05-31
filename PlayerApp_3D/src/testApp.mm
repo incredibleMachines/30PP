@@ -42,7 +42,7 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     //LOAD VIDEO
-MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 
 //     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
  
@@ -118,6 +118,7 @@ void testApp::update(){
         
         if(socketHandler.eventHandler.currentEvent=="default"){
             loopMode==CLOUDS_LOOP;
+            loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         

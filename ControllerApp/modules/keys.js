@@ -1,3 +1,3 @@
 exports.index = [
-                    {"un":"ww"},
-                    {"un":"ww"} ]
+                    {"admin":"30ParkPlaceGallery"},
+                    {"sales_center":"NeighborhoodGallery"} ]
