@@ -15,9 +15,9 @@ void testApp::setup() {
     //set loop mode to loop either ambient or default content
     loopMode=CLOUDS_LOOP;
     //set number of GL cameras/projectors
-    numScreens=1;
+    numScreens=3;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
-    startOffset=3.0;
+    startOffset=0;
     //set whether to check number of screens b/c less than 3 - will get set to true if cocoa ever detects less than three
     bScreenRestart=false;
 	
@@ -117,24 +117,28 @@ void testApp::update(){
         }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
+            currentEnd-=5;
+            loadTime+=8.5;
             loopMode==CLOUDS_LOOP;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="end"){
             if (loopMode==DEFAULT_LOOP){
-                loadTime=socketHandler.eventHandler.events[4].startTime;
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
                 map.fadeIn(TRANSITION_DEFAULT);
             }
 
-            else if (loopMode==CLOUDS_LOOP){
-                loadTime=socketHandler.eventHandler.events[1].startTime;
+            else {
+                loadTime=socketHandler.eventHandler.events[2].startTime;
+                currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
                 map.fadeIn(TRANSITION_CLOUDS);
             }
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
+            loadTime=socketHandler.eventHandler.events[2].startTime;
             loopMode==CLOUDS_LOOP;
             map.fadeIn(TRANSITION_CLOUDS);
             
@@ -220,23 +224,28 @@ void testApp::update(){
     //check for end of current event and then go to ambient/default start
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
         if(loopMode==CLOUDS_LOOP){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
+            loadTime=socketHandler.eventHandler.events[2].startTime;
+            currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
             map.fadeIn(TRANSITION_CLOUDS);
         }
         else if(loopMode==GRADIENT_LOOP){
-            loadTime=socketHandler.eventHandler.events[0].startTime;
+            loadTime=socketHandler.eventHandler.events[1].startTime;
+            currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
             map.fadeIn(TRANSITION_GRADIENT);
         }
         else if (loopMode==DEFAULT_LOOP){
-            loadTime=socketHandler.eventHandler.events[4].startTime;
+            loadTime=socketHandler.eventHandler.events[5].startTime;
+            currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         else if (loopMode==WAVES_LOOP){
-            loadTime=socketHandler.eventHandler.events[3].startTime;
+            loadTime=socketHandler.eventHandler.events[4].startTime;
+            currentEnd=socketHandler.eventHandler.events[4].startTime+socketHandler.eventHandler.events[4].duration;
             map.fadeIn(TRANSITION_WAVES);
         }
         else if (loopMode==PARTY_LOOP){
-            loadTime=socketHandler.eventHandler.events[2].startTime;
+            currentEnd=socketHandler.eventHandler.events[3].startTime+socketHandler.eventHandler.events[3].duration;
+            loadTime=socketHandler.eventHandler.events[3].startTime;
             map.fadeIn(TRANSITION_PARTY);
         }
         bCheckingTime=false;
@@ -350,47 +359,47 @@ void testApp::initVariables(){
 
     // set default variable for default loop
     if(loopMode==DEFAULT_LOOP){
-        currentEnd=socketHandler.eventHandler.events[4].startTime+socketHandler.eventHandler.events[4].duration;
+        currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
         currentTransition=TRANSITION_DEFAULT;
-        loadTime=socketHandler.eventHandler.events[4].startTime;
+        loadTime=socketHandler.eventHandler.events[5].startTime;
         map.fadeIn(TRANSITION_DEFAULT);
     }
     
     // set default variable for ambient loop
     else {
-        currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+        currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
         currentTransition=TRANSITION_CLOUDS;
-        loadTime=socketHandler.eventHandler.events[1].startTime;
+        loadTime=socketHandler.eventHandler.events[2].startTime;
         map.fadeIn(TRANSITION_CLOUDS);
     }
     
     //Pause times for default and detail loops
     
     //Gastronomy Default
-    pauseTimes.push_back(663);
-    pauseTimes.push_back(669.17);
-    pauseTimes.push_back(680.43);
-    pauseTimes.push_back(684.22);
+    pauseTimes.push_back(957.22);
+    pauseTimes.push_back(963.26);
+    pauseTimes.push_back(974.39);
+    pauseTimes.push_back(981.02);
     //Markets Default
-    pauseTimes.push_back(710.38);
-    pauseTimes.push_back(717);
-    pauseTimes.push_back(728);
-    pauseTimes.push_back(732);
+    pauseTimes.push_back(1003.32);
+    pauseTimes.push_back(1010.10);
+    pauseTimes.push_back(1020.33);
+    pauseTimes.push_back(1026.05);
     //Shopping Default
-    pauseTimes.push_back(758);
-    pauseTimes.push_back(764.06);
-    pauseTimes.push_back(774.32);
-    pauseTimes.push_back(780.16);
+    pauseTimes.push_back(1048.10);
+    pauseTimes.push_back(1055.14);
+    pauseTimes.push_back(1065.24);
+    pauseTimes.push_back(1071.19);
     //Art & Design Default
-    pauseTimes.push_back(804.17);
-    pauseTimes.push_back(811.03);
-    pauseTimes.push_back(821.25);
-    pauseTimes.push_back(826.12);
+    pauseTimes.push_back(1093.22);
+    pauseTimes.push_back(1100.05);
+    pauseTimes.push_back(1110.16);
+    pauseTimes.push_back(1116.36);
     //Leisure Default
-    pauseTimes.push_back(852.11);
-    pauseTimes.push_back(858.09);
-    pauseTimes.push_back(868.36);
-    pauseTimes.push_back(874.14);
+    pauseTimes.push_back(1138.01);
+    pauseTimes.push_back(1145.05);
+    pauseTimes.push_back(1155.30);
+    pauseTimes.push_back(1161.16);
     
     //Gastronomy Detail
     pauseTimes.push_back(908.46);
