@@ -224,7 +224,7 @@ app.post('/location/pathTest',function(req,res){
 //api handling
 //api routes are the only routes which we don't auth
 app.get('/api', api.index(Database,app.locals.EVENT_TYPES));
-app.get('/api/control/:ctrl', api.control(WebSocket))
+app.get('/api/control/:ctrl', api.control(WebSocket,playerApp))
 app.get('/api/play/ambient', api.sendEvents('ambient',Database,WebSocket))
 app.get('/api/play/sales', api.sendEvents('sales',Database,WebSocket))
 app.get('/api/play/:slug', api.sendSingle(Database, WebSocket))

@@ -31,7 +31,7 @@ exports.index = function(_Database,EVENT_TYPES){
 																			{'Ambient Party':  '/api/play/ambient_party'},
 																			{'Ambient Waves':  '/api/play/ambient_waves'}
 																																							]};
-		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end'}
+		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end',restart:'/api/control/restart'}
 
 		EVENT_TYPES.forEach(function(type,i){
 
@@ -173,7 +173,7 @@ return function(req,res){
 						}
 
 					} else res.jsonp({error:'Event Not Found', requested: slug})
-				
+
 			})
 
 
@@ -216,25 +216,32 @@ return function(req,res){
 	/api/control/resume
 	/api/control/end
 */
-exports.control = function(_Websocket){
+exports.control = function(_Websocket, _playerApp){
 	return function(req,res){
 		//get control from url parameter
 		var control = req.params.ctrl
 
-		if(control == 'pause'||control=='resume'||control=='end'){
-			_Websocket.status(function(status){ //check socket status
-				//console.log(status)
-				if(status==true){ //if we're connected
-					_Websocket.socket(function(socket){ //access the websocket async
-						//console.log(socket)
-						socket.send(JSON.stringify({command: control}))
-						res.jsonp({success:'Sent Command '+control})
+		if(control == 'pause'||control=='resume'|| control=='end' || control == 'restart'){
+			if(control != 'restart'){
+				_Websocket.status(function(status){ //check socket status
+					//console.log(status)
+					if(status==true){ //if we're connected
+						_Websocket.socket(function(socket){ //access the websocket async
+							//console.log(socket)
+							socket.send(JSON.stringify({command: control}))
+							res.jsonp({success:'Sent Command '+control})
 
-					})
-				}else{
-					res.jsonp({error:'PlayerApp Not Connected', command: control})
-				}
-			})
+						})
+
+					}else{
+						res.jsonp({error:'PlayerApp Not Connected', command: control})
+					}
+				})
+			}else{
+				//control does equal restart
+				//restart the playerapp
+				_playerApp.end()
+			}
 		}else{
 			res.jsonp({error:'Command Not Recognized: '+control})
 		}
