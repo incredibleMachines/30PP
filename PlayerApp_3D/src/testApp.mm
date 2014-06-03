@@ -86,8 +86,8 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update(){
     
-    if(ofGetWindowPositionX()!=1920){
-        ofSetWindowPosition(-1920,0);
+    if(ofGetWindowPositionX()!=-1920){
+        socketHandler.sendSocketCmd(RESTART_REQ);
     }
     
     //------ UPDATE DEM SOCKETS
@@ -141,6 +141,7 @@ void testApp::update(){
                 currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
                 map.fadeIn(TRANSITION_CLOUDS);
             }
+            socketHandler.sendSocketCmd(END_REQ);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
@@ -256,7 +257,9 @@ void testApp::update(){
         }
         bCheckingTime=false;
         ofSetWindowPosition(-1920,0);
+        if(socketHandler.eventHandler.currentEvent!="ambient_gradient"&&socketHandler.eventHandler.currentEvent=="ambient_clouds"&&socketHandler.eventHandler.currentEvent=="ambient_party"&&socketHandler.eventHandler.currentEvent=="ambient_waves"){
         socketHandler.sendSocketCmd(END_REQ);
+        }
     }
     
     //transition has reached midpoint, load and start playing new position in video
