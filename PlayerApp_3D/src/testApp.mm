@@ -86,10 +86,6 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update(){
     
-    if(ofGetWindowPositionX()!=-1920){
-        socketHandler.sendSocketCmd(RESTART_REQ);
-    }
-    
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
     
@@ -123,7 +119,7 @@ void testApp::update(){
         
         if(socketHandler.eventHandler.currentEvent=="default"){
             currentEnd-=5;
-            loadTime+=8.5;
+            loadTime+=8.0;
             loopMode==CLOUDS_LOOP;
             loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
@@ -310,6 +306,9 @@ void testApp::draw(){
     
     //check for number of screens present
     if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==false){
+        if(ofGetWindowPositionX()!=-1920){
+            socketHandler.sendSocketCmd(RESTART_REQ);
+        }
         map.draw();
     }
     
