@@ -1,2 +1,0 @@
-file './ambient.mov'
-file './default.mov'

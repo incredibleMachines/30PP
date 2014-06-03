@@ -98,6 +98,7 @@ void testApp::update(){
     
     //SOCKET EVENT RECEIVED
     if(socketHandler.eventHandler.bTriggerEvent==true){
+        ofSetWindowPosition(-1920,0);
         socketHandler.eventHandler.bTriggerEvent=false;
         
         //set load point to start time received from socket
@@ -250,6 +251,7 @@ void testApp::update(){
             map.fadeIn(TRANSITION_PARTY);
         }
         bCheckingTime=false;
+                ofSetWindowPosition(-1920,0);
     }
     
     //transition has reached midpoint, load and start playing new position in video
