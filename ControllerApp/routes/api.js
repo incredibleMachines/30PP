@@ -241,6 +241,7 @@ exports.control = function(_Websocket, _playerApp){
 				//control does equal restart
 				//restart the playerapp
 				_playerApp.end()
+				res.jsonp({success:'Sent Command '+control})
 			}
 		}else{
 			res.jsonp({error:'Command Not Recognized: '+control})
