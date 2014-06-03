@@ -86,6 +86,10 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update(){
     
+    if(ofGetWindowPositionX()!=1920){
+        ofSetWindowPosition(-1920,0);
+    }
+    
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
     
@@ -251,7 +255,8 @@ void testApp::update(){
             map.fadeIn(TRANSITION_PARTY);
         }
         bCheckingTime=false;
-                ofSetWindowPosition(-1920,0);
+        ofSetWindowPosition(-1920,0);
+        socketHandler.sendSocketCmd(END_REQ);
     }
     
     //transition has reached midpoint, load and start playing new position in video
