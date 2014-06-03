@@ -240,6 +240,7 @@ exports.control = function(_Websocket, _playerApp){
 			}else{
 				//control does equal restart
 				//restart the playerapp
+				_playerApp.restart(true)
 				_playerApp.end()
 				res.jsonp({success:'Sent Command '+control})
 			}
