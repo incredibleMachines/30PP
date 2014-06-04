@@ -86,10 +86,6 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update(){
     
-    if(ofGetWindowPositionX()!=1920){
-        ofSetWindowPosition(-1920,0);
-    }
-    
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
     
@@ -123,7 +119,7 @@ void testApp::update(){
         
         if(socketHandler.eventHandler.currentEvent=="default"){
             currentEnd-=5;
-            loadTime+=8.5;
+            loadTime+=8.0;
             loopMode==CLOUDS_LOOP;
             loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
@@ -141,6 +137,7 @@ void testApp::update(){
                 currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
                 map.fadeIn(TRANSITION_CLOUDS);
             }
+            socketHandler.sendSocketCmd(END_REQ);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
@@ -256,7 +253,9 @@ void testApp::update(){
         }
         bCheckingTime=false;
         ofSetWindowPosition(-1920,0);
+        if(socketHandler.eventHandler.currentEvent!="ambient_gradient"&&socketHandler.eventHandler.currentEvent=="ambient_clouds"&&socketHandler.eventHandler.currentEvent=="ambient_party"&&socketHandler.eventHandler.currentEvent=="ambient_waves"){
         socketHandler.sendSocketCmd(END_REQ);
+        }
     }
     
     //transition has reached midpoint, load and start playing new position in video
@@ -307,6 +306,9 @@ void testApp::draw(){
     
     //check for number of screens present
     if(MSA::ofxCocoa::getScreens()>=numScreens&&bScreenRestart==false){
+        if(ofGetWindowPositionX()!=-1920){
+            socketHandler.sendSocketCmd(RESTART_REQ);
+        }
         map.draw();
     }
     
