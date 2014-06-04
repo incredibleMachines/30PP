@@ -97,11 +97,11 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     
     ofBuffer buffer = ofBufferFromFile("settings.json");
     
-    cout<< "buffer.getText.length(): "<< buffer.getText().length() <<endl;
+//    cout<< "buffer.getText.length(): "<< buffer.getText().length() <<endl;
     
     Json::Reader reader;
     if(reader.parse(buffer.getText(), settings, false)){
-        cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
+//        cout<<"Number of Cameras: "+ofToString(settings["cameras"].size())<<endl;
         setupCameras();
     }
     
@@ -494,7 +494,6 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                                 surroundingVertices.push_back(surroundingVert);
                                                 surroundingVert.vertex=meshFaces[l].getVertex(2);
                                                 surroundingVertices.push_back(surroundingVert);
-                                                cout<<"Vert Added"<<endl;
                                             }
                                             else if(meshFaces[l].getVertex(1)==cameras[cameraSelect].mesh[i].getVertex(j)){
                                                 meshVertex surroundingVert;
@@ -502,7 +501,6 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                                 surroundingVertices.push_back(surroundingVert);
                                                 surroundingVert.vertex=meshFaces[l].getVertex(2);
                                                 surroundingVertices.push_back(surroundingVert);
-                                                cout<<"Vert Added"<<endl;
                                             }
                                             else if(meshFaces[l].getVertex(2)==cameras[cameraSelect].mesh[i].getVertex(j)){
                                                 meshVertex surroundingVert;
@@ -510,7 +508,6 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                                 surroundingVertices.push_back(surroundingVert);
                                                 surroundingVert.vertex=meshFaces[l].getVertex(1);
                                                 surroundingVertices.push_back(surroundingVert);
-                                                cout<<"Vert Added"<<endl;
                                             }
                                         }
                                     }
@@ -526,7 +523,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                             surroundingVertices.push_back(surroundingVert);
                                             surroundingVert.vertex=meshFaces[l].getVertex(2);
                                             surroundingVertices.push_back(surroundingVert);
-                                            cout<<"Vert Added"<<endl;
+                                         
                                         }
                                         else if(meshFaces[l].getVertex(1)==cameras[cameraSelect].mesh[i].getVertex(j)){
                                             meshVertex surroundingVert;
@@ -534,7 +531,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                             surroundingVertices.push_back(surroundingVert);
                                             surroundingVert.vertex=meshFaces[l].getVertex(2);
                                             surroundingVertices.push_back(surroundingVert);
-                                            cout<<"Vert Added"<<endl;
+
                                         }
                                         else if(meshFaces[l].getVertex(2)==cameras[cameraSelect].mesh[i].getVertex(j)){
                                             meshVertex surroundingVert;
@@ -542,7 +539,7 @@ void ModelMapper::mouseDragged(ofMouseEventArgs& args){
                                             surroundingVertices.push_back(surroundingVert);
                                             surroundingVert.vertex=meshFaces[l].getVertex(1);
                                             surroundingVertices.push_back(surroundingVert);
-                                            cout<<"Vert Added"<<endl;
+
                                         }
                                     }
                                 }
@@ -2045,7 +2042,7 @@ void ModelMapper::setMassMesh(string _reloadMesh){
 
 void ModelMapper::calculateMagnetPoints(){
     
-    cout<<"CALCULATE MAGNET POINTS"<<endl;
+
     magnetVertices.clear();
     
     if(selectMode!=SELECT_MODE_DOUBLE_PEN){

@@ -31,7 +31,7 @@ void testApp::setup() {
     //VIDEO TEXTURE FOR OFXCOCOA AVPLAYER ITEM VIDEO
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
-    cout<<data.textureTarget<<endl;
+//    cout<<data.textureTarget<<endl;
 	data.width = TEX_WIDTH;
 	data.height = TEX_HEIGHT;
 	data.tex_w = TEX_WIDTH;
