@@ -6,7 +6,7 @@ var _socket_status = false;;
 var folders = require('../modules/FolderStructure');
 var _playerApp;
 
-var http = require('http')
+var http = require('https')
 
 
 

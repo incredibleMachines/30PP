@@ -1,6 +1,6 @@
 var utils = require('../modules/Utils');
 var _ = require('underscore')
-var http = require('http')
+var http = require('https')
 
 /*
 	{ 	sales: { play_all: '/api/sales',
