@@ -21,6 +21,8 @@
 #define GO_REQ              "{\"command\" : \"go\"}" //not currently used
 #define CLOSE_REQ           "{\"command\" : \"close\"}"
 #define RESTART_REQ         "{\"command\" : \"restart\"}"
+#define END_REQ             "{\"command\" : \"end\"}"
+
 
 
 //--- SOCKET SERVER COMMANDS

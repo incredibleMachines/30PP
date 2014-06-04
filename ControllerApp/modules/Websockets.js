@@ -6,6 +6,9 @@ var _socket_status = false;;
 var folders = require('../modules/FolderStructure');
 var _playerApp;
 
+var http = require('http')
+
+
 
 exports.Connect = function(_port,_Db,_pA){
 	_Database = _Db; //setup our global _db Connection when we load our socket
@@ -75,6 +78,33 @@ function parseCommand(_json){
 			case 'restart':
 					_playerApp.restart(true)
 					_playerApp.end()
+			break;
+			case 'end':
+					//ping chris' savant system
+					// var options = {
+					// 	hostname: '10.1.31.20',
+					// 	port: 8080,
+					// 	path: '',
+					// 	method: 'GET'
+					// }
+					// var req = http.request(options,function(res){
+					// 	console.log('End Request Status: ' + res.statusCode);
+					// 	res.on('data', function (chunk) {
+					//     //console.log('BODY: ' + chunk);
+					//   });
+					// })
+					// req.on('error',function(e){
+					// 	console.error('problem with request	')
+					// })
+					// req.write('\n')
+					// req.end()
+					var url = "https://SPI33:SPI33@10.1.31.20:8081/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMFinish%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D"
+					http.get(url, function(res) {
+					  console.log("Got response: " + res.statusCode);
+					}).on('error', function(e) {
+					  console.log("Got error: " + e.message);
+					});
+
 			break;
 			default:
 				_socket.send(JSON.stringify({'command':'error', 'error': 'Request Malformed: Unknown Command Type - '+_json.command}));

@@ -42,7 +42,7 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     //LOAD VIDEO
-MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
 
 //     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
  
@@ -86,6 +86,10 @@ MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.m
 //--------------------------------------------------------------
 void testApp::update(){
     
+    if(ofGetWindowPositionX()!=1920){
+        ofSetWindowPosition(-1920,0);
+    }
+    
     //------ UPDATE DEM SOCKETS
     socketHandler.update();
     
@@ -98,6 +102,7 @@ void testApp::update(){
     
     //SOCKET EVENT RECEIVED
     if(socketHandler.eventHandler.bTriggerEvent==true){
+        ofSetWindowPosition(-1920,0);
         socketHandler.eventHandler.bTriggerEvent=false;
         
         //set load point to start time received from socket
@@ -120,6 +125,7 @@ void testApp::update(){
             currentEnd-=5;
             loadTime+=8.5;
             loopMode==CLOUDS_LOOP;
+            loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -249,6 +255,8 @@ void testApp::update(){
             map.fadeIn(TRANSITION_PARTY);
         }
         bCheckingTime=false;
+        ofSetWindowPosition(-1920,0);
+        socketHandler.sendSocketCmd(END_REQ);
     }
     
     //transition has reached midpoint, load and start playing new position in video
