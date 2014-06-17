@@ -13,7 +13,7 @@ void testApp::setup() {
     //not currently playing and checking for loop or pause point
     bCheckingTime=false;
     //set loop mode to loop either ambient or default content
-    loopMode=CLOUDS_LOOP;
+    loopMode=DEFAULT_LOOP;
     //set number of GL cameras/projectors
     numScreens=3;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
@@ -120,7 +120,7 @@ void testApp::update(){
         if(socketHandler.eventHandler.currentEvent=="default"){
             currentEnd-=5;
             loadTime+=8.0;
-            loopMode==CLOUDS_LOOP;
+            loopMode==DEFAULT_LOOP;
             loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
@@ -173,30 +173,30 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-            loopMode==CLOUDS_LOOP;
+            loopMode==DEFAULT_LOOP;
             loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
-            loopMode==CLOUDS_LOOP;
+            loopMode==DEFAULT_LOOP;
             loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
-                        loopMode==CLOUDS_LOOP;
+                        loopMode==DEFAULT_LOOP;
             loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
-                        loopMode==CLOUDS_LOOP;
+                        loopMode==DEFAULT_LOOP;
             map.fadeIn(TRANSITION_ARTS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="leisure"){
-                        loopMode==CLOUDS_LOOP;
+                        loopMode==DEFAULT_LOOP;
             loadTime+=startOffset;
             map.fadeIn(TRANSITION_LEISURE);
         }
