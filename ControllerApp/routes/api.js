@@ -1,6 +1,6 @@
 var utils = require('../modules/Utils');
 var _ = require('underscore')
-var http = require('https')
+var https = require('https')
 
 /*
 	{ 	sales: { play_all: '/api/sales',
@@ -83,12 +83,10 @@ exports.sendEvents = function(_type,_Database,_Websocket){
 						_Websocket.socket(function(socket){
 							socket.send(JSON.stringify(socketCommand))
 							if(_type === "default"){
-								var url = "https://SPI33:SPI33@10.1.31.20:8081/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMStart%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D"
-								http.get(url, function(res) {
-									console.log("Got response: " + res.statusCode);
-								}).on('error', function(e) {
-									console.log("Got error: " + e.message);
-								});
+								console.log('Sending Start Command')
+								//var url = "https://SPI33:SPI33@10.1.31.20:8081/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMStart%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D"
+
+								sendStartToSavant();
 							}
 							res.jsonp({success:{socketCommand: socketCommand}})
 						})
@@ -172,12 +170,7 @@ return function(req,res){
 								if(status ==true){
 									_Websocket.socket(function(socket){
 										socket.send(JSON.stringify(socketCommand))
-										var url = "https://SPI33:SPI33@10.1.31.20:8081/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMStart%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D"
-										http.get(url, function(res) {
-											console.log("Got response: " + res.statusCode);
-										}).on('error', function(e) {
-											console.log("Got error: " + e.message);
-										});
+										sendStartToSavant()
 										res.jsonp({success: {socketCommand: socketCommand}});
 									})
 								}else{
@@ -262,4 +255,14 @@ exports.control = function(_Websocket, _playerApp){
 			res.jsonp({error:'Command Not Recognized: '+control})
 		}
 	}
+}
+
+function sendStartToSavant(){
+	var url = "https://SPI33:SPI33@10.1.31.20:8081/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMStart%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D"
+	console.log(url)
+	https.get(url, function(res) {
+		console.log("Got response: " + res.statusCode);
+	}).on('error', function(e) {
+		console.log("Got error: " + e.message);
+	})
 }
