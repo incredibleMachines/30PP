@@ -267,6 +267,7 @@ function sendStartToSavant(){
 	}
 	//var url =
 	//console.log(url)
+	console.log('sending start to savant')
 	https.request(options, function(res) {
 		console.log("Got response: " + res.statusCode);
 	}).on('error', function(e) {
