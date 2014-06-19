@@ -265,52 +265,6 @@ app.get('/AfterEffects/script/:file',auth.index(Database),function(req,res){
 })
 
 
-app.get('/test/start',function(req,res){
-  res.jsonp({test:'start'})
-  console.log("sending Start Request to Savant")
-  var options = {
-    hostname: '10.1.31.20',
-    path:'/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMStart%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D',
-    port:8081,
-    auth: 'SPI33:SPI33',
-    rejectUnauthorized: false,
-    requestCert: true,
-    agent: false,
-    method: 'GET'
-  }
-
-  var url = "https://SPI33:SPI33@10.1.31.20:8081"
-  https.request(options, function(res) {
-    console.log("Got response: " + res.statusCode);
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-})
-
-app.get('/test/end',function(req,res){
-  res.jsonp({test:'end'})
-  console.log("sending End Request to Savant")
-
-  var options = {
-    hostname: '10.1.31.20',
-    path:'/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMFinish%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D',
-    port:8081,
-    auth: 'SPI33:SPI33',
-    rejectUnauthorized: false,
-    requestCert: true,
-    agent: false,
-    method: 'GET'
-  }
-
-  var url = "https://SPI33:SPI33@10.1.31.20:8081"
-  https.request(options, function(res) {
-    console.log("Got response: " + res.statusCode);
-  }).on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-})
-
-
 //app.get('/timeline/make', timeline.make(Database, app.locals.EVENT_TYPES));
 
 //implimentation wishlist
