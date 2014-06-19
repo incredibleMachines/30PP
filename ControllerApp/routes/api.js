@@ -238,7 +238,7 @@ exports.control = function(_Websocket, _playerApp){
 							socket.send(JSON.stringify({command: control}))
 
 							if(control =='pause' || control =='end'){
-								sendEndToSavant()
+								//sendEndToSavant()
 							}else if(control =='resume'||control =='restart'){
 								sendStartToSavant()
 							}
