@@ -253,7 +253,7 @@ void testApp::update(){
         }
         bCheckingTime=false;
         ofSetWindowPosition(-1920,0);
-        if(socketHandler.eventHandler.currentEvent!="ambient_gradient"&&socketHandler.eventHandler.currentEvent=="ambient_clouds"&&socketHandler.eventHandler.currentEvent=="ambient_party"&&socketHandler.eventHandler.currentEvent=="ambient_waves"){
+        if(socketHandler.eventHandler.currentEvent!="ambient_gradient"&&socketHandler.eventHandler.currentEvent!="ambient_clouds"&&socketHandler.eventHandler.currentEvent!="ambient_party"&&socketHandler.eventHandler.currentEvent!="ambient_waves"){
         socketHandler.sendSocketCmd(END_REQ);
         }
     }
