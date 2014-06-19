@@ -116,7 +116,6 @@ return function(req,res){
 		console.log("send single");
 		console.log("req: "+req);
 		console.log("slug: "+slug);
-		sendStartToSavant()
 
 		if(slug.indexOf("ambient")>-1){
 			//if its an ambient slug then we need to hardcore them.
@@ -172,6 +171,7 @@ return function(req,res){
 								if(status ==true){
 									_Websocket.socket(function(socket){
 										socket.send(JSON.stringify(socketCommand))
+										sendStartToSavant()
 										res.jsonp({success: {socketCommand: socketCommand}});
 									})
 								}else{
