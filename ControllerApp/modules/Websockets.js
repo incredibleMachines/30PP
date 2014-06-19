@@ -136,6 +136,9 @@ function sendEndRequestToSavant(){
 			path:'/assets/state/ctl.pl?command=%7B%22ctl%22%3A%7B%22zoneString%22%3A%22Neighborhood%22%2C%22componentString%22%3A%2230+Park+Place+Marketing+Center%22%2C%22logicalComponentString%22%3A%22%22%2C%22serviceVariantIDString%22%3A%221%22%2C%22serviceString%22%3A%22SVC_GEN_GENERIC%22%2C%22commandString%22%3A%22IMFinish%22%2C%22CommandArguments%22%3A%7B%7D%7D%7D',
 			port:8081,
 			auth: 'SPI33:SPI33',
+			rejectUnauthorized: false,
+			requestCert: true,
+			agent: false,
 			method: 'GET'
 		}
 
