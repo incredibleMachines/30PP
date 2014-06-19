@@ -171,7 +171,7 @@ return function(req,res){
 								if(status ==true){
 									_Websocket.socket(function(socket){
 										socket.send(JSON.stringify(socketCommand))
-										sendStartToSavant()
+										//sendStartToSavant()
 										res.jsonp({success: {socketCommand: socketCommand}});
 									})
 								}else{
