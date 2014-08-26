@@ -43,6 +43,10 @@ void testApp::setup() {
     
     //LOAD VIDEO
     MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+//        MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
+//            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/logo.mov", meshTexture->texData.textureID);
+//
+//            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/outtakes.mov", meshTexture->texData.textureID);
 
 //     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
  
@@ -352,6 +356,26 @@ void testApp::keyPressed(int key){
             break;            
         case ']':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+5);
+            break;
+            
+        case '1':
+            MSA::ofxCocoa::setTime(1);
+            break;
+            
+        case '2':
+            MSA::ofxCocoa::setTime(154);
+            break;
+            
+        case '3':
+            MSA::ofxCocoa::setTime(353);
+            break;
+            
+        case '4':
+            MSA::ofxCocoa::setTime(507);
+            break;
+            
+        case '5':
+            MSA::ofxCocoa::setTime(725);
             break;
             
         //debug quit app entirely and do not let node restart automatically
