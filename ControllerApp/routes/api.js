@@ -25,12 +25,12 @@ exports.index = function(_Database,EVENT_TYPES){
 		//res.jsonp({success:'success'})
 		var structure = {};
 		structure.sales = {play_all: '/api/play/sales', play_single:[]};
-		structure.ambient = {play_all: '/api/play/ambient_gradient',
+		/*structure.ambient = {play_all: '/api/play/ambient_gradient',
 												 play_single:[{'Ambient Gradient':'/api/play/ambient_gradient'},
 																		  {'Ambient Clouds': '/api/play/ambient_clouds'},
 																			{'Ambient Party':  '/api/play/ambient_party'},
 																			{'Ambient Waves':  '/api/play/ambient_waves'}
-																																							]};
+																																							]};*/
 		structure.commands = {pause:'/api/control/pause',resume:'/api/control/resume',end:'/api/control/end',restart:'/api/control/restart'}
 
 		EVENT_TYPES.forEach(function(type,i){
