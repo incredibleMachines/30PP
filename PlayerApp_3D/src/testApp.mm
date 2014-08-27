@@ -13,7 +13,7 @@ void testApp::setup() {
     //not currently playing and checking for loop or pause point
     bCheckingTime=false;
     //set loop mode to loop either ambient or default content
-    loopMode=DEFAULT_LOOP;
+    loopMode=GRADIENT_LOOP;
     //set number of GL cameras/projectors
     numScreens=3;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
@@ -42,8 +42,8 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     //LOAD VIDEO
-    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-//        MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
+//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+        MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
 //            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/logo.mov", meshTexture->texData.textureID);
 //
 //            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/outtakes.mov", meshTexture->texData.textureID);
@@ -122,10 +122,10 @@ void testApp::update(){
         }
         
         if(socketHandler.eventHandler.currentEvent=="default"){
-            currentEnd-=5;
-            loadTime+=8.0;
-            loopMode==DEFAULT_LOOP;
-            loadTime+=3;
+//            currentEnd-=5;
+//            loadTime+=8.0;
+//            loopMode==DEFAULT_LOOP;
+//            loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -137,92 +137,94 @@ void testApp::update(){
             }
 
             else {
-                loadTime=socketHandler.eventHandler.events[2].startTime;
-                currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
-                map.fadeIn(TRANSITION_CLOUDS);
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
             }
             socketHandler.sendSocketCmd(END_REQ);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
             loadTime=socketHandler.eventHandler.events[2].startTime;
-            loopMode==CLOUDS_LOOP;
+//            loopMode==CLOUDS_LOOP;
             map.fadeIn(TRANSITION_CLOUDS);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            loopMode==GRADIENT_LOOP;
+//            loopMode==GRADIENT_LOOP;
             map.fadeIn(TRANSITION_GRADIENT);
 
         }
         
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_clouds"){
-            loopMode==CLOUDS_LOOP;
+//            loopMode==CLOUDS_LOOP;
             map.fadeIn(TRANSITION_CLOUDS);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_party"){
-            loopMode=PARTY_LOOP;
+//            loopMode=PARTY_LOOP;
             map.fadeIn(TRANSITION_PARTY);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_waves"){
-            loopMode==WAVES_LOOP;
+//            loopMode==WAVES_LOOP;
             map.fadeIn(TRANSITION_WAVES);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-            loopMode==DEFAULT_LOOP;
-            loadTime+=startOffset;
+//            loopMode==DEFAULT_LOOP;
+//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
-            loopMode==DEFAULT_LOOP;
-            loadTime+=startOffset;
+//            loopMode==DEFAULT_LOOP;
+//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
-                        loopMode==DEFAULT_LOOP;
-            loadTime+=startOffset;
+//                        loopMode==DEFAULT_LOOP;
+//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
-                        loopMode==DEFAULT_LOOP;
+//                        loopMode==DEFAULT_LOOP;
             map.fadeIn(TRANSITION_ARTS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="leisure"){
-                        loopMode==DEFAULT_LOOP;
-            loadTime+=startOffset;
+//                        loopMode==DEFAULT_LOOP;
+//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_LEISURE);
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="pause"){
-            bool bCanPause=false;
-            
-            //look for next pause time
-            for(int i=0; i<pauseTimes.size();i++){
-                if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
-                    bCanPause=true;
-                    pauseTime=pauseTimes[i];
-                    break;
-                }
-            }
-            if(bCanPause==true){
-                bPausing=true;
-            }
-        }
+//        else if(socketHandler.eventHandler.currentEvent=="pause"){
+//            bool bCanPause=false;
+//            
+//            //look for next pause time
+//            for(int i=0; i<pauseTimes.size();i++){
+//                if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
+//                    bCanPause=true;
+//                    pauseTime=pauseTimes[i];
+//                    break;
+//                }
+//            }
+//            if(bCanPause==true){
+//                bPausing=true;
+//            }
+//        }
         
         else if(socketHandler.eventHandler.currentEvent=="resume"){
-            MSA::ofxCocoa::startPlayer();
+            loadTime=socketHandler.eventHandler.events[5].startTime;
+            currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+            map.fadeIn(TRANSITION_DEFAULT);
         }
         
     }
