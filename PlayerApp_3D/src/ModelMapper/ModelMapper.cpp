@@ -323,6 +323,17 @@ void ModelMapper::keyPressed(ofKeyEventArgs& args){
                 
             }
             break;
+//        case '1':
+//            if(adjustMode==ADJUST_MODE_2D){
+//                vector<vertex2D>tempVector;
+//                vertex2D tempVertex;
+//                tempVertex.index=4;
+//                tempVector.push_back(tempVertex);
+//                tempVector.push_back(tempVertex);
+//                tempVector.push_back(tempVertex);
+//                vertices2D.push_back(tempVector); 
+//            }
+//            break;
             
             
             
@@ -1361,7 +1372,7 @@ void ModelMapper::mousePressed(ofMouseEventArgs& args){
                 if(cameras[cameraSelect].which[i]==true){
                     
                     if(cameras[cameraSelect].meshObjects[i].isMesh==false){
-                        float nearestDistance = 25;
+                        float nearestDistance = 100;
                         
                         //parse through all vertices to determine nearest, if exists
                         for(int j = 0; j < cameras[cameraSelect].meshObjects[i].warped.size(); j++) {

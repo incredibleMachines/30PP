@@ -360,25 +360,25 @@ void testApp::keyPressed(int key){
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+5);
             break;
             
-        case '1':
-            MSA::ofxCocoa::setTime(1);
-            break;
-            
-        case '2':
-            MSA::ofxCocoa::setTime(154);
-            break;
-            
-        case '3':
-            MSA::ofxCocoa::setTime(353);
-            break;
-            
-        case '4':
-            MSA::ofxCocoa::setTime(507);
-            break;
-            
-        case '5':
-            MSA::ofxCocoa::setTime(725);
-            break;
+//        case '1':
+//            MSA::ofxCocoa::setTime(1);
+//            break;
+//            
+//        case '2':
+//            MSA::ofxCocoa::setTime(154);
+//            break;
+//            
+//        case '3':
+//            MSA::ofxCocoa::setTime(353);
+//            break;
+//            
+//        case '4':
+//            MSA::ofxCocoa::setTime(507);
+//            break;
+//            
+//        case '5':
+//            MSA::ofxCocoa::setTime(725);
+//            break;
             
         //debug quit app entirely and do not let node restart automatically
         case 'Q':
