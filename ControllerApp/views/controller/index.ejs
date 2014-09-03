@@ -23,7 +23,6 @@
         $.getJSON('/api',function(data){
           //console.log(data)
           var playSales = '<h4>Sales</h4><p><a class="btn btn-default" href="'+data.sales.play_all+'">Play All</a></p>'
-          var playAmbient = '<h4>Ambient</h4><p><a class="btn btn-default" href="'+data.ambient.play_all+'">Play All</a></p>'
 
           if(data.sales.play_single.length>0){
             var salesSingles = '<h4>Single Sales</h4>';
@@ -35,14 +34,18 @@
 
             }
           }
-          if(data.ambient.play_single.length>0){
-            var ambientSingles = "<h4>Single Ambient</h4>";
-            for(var i = 0; i< data.ambient.play_single.length; i++){
+          if(data.ambient){
+            var playAmbient = '<h4>Ambient</h4><p><a class="btn btn-default" href="'+data.ambient.play_all+'">Play All</a></p>'
 
-              for(var key in data.ambient.play_single[i]){
-                ambientSingles+= '<p><a class="btn btn-default" href="'+data.ambient.play_single[i][key]+'">Play '+key+'</a></p>'
+            if(data.ambient.play_single.length>0){
+              var ambientSingles = "<h4>Single Ambient</h4>";
+              for(var i = 0; i< data.ambient.play_single.length; i++){
+
+                for(var key in data.ambient.play_single[i]){
+                  ambientSingles+= '<p><a class="btn btn-default" href="'+data.ambient.play_single[i][key]+'">Play '+key+'</a></p>'
+                }
+
               }
-
             }
           }
 
@@ -54,8 +57,10 @@
           var html = '<article>'
           html+= '<section>'+playSales+'</section>'
           if(data.sales.play_single.length>0) html+= '<section>'+salesSingles+'</section>'
-          html+= '<section>'+playAmbient+'</section>'
-          if(data.ambient.play_single.length>0) html+= '<section>'+ambientSingles+'</section>'
+          if(data.ambient) {
+            html+= '<section>'+playAmbient+'</section>'
+            if(data.ambient.play_single.length>0) html+= '<section>'+ambientSingles+'</section>'
+          }
           html+= '<section>'+controlsButtons+'</section>'
           html+= '</article>'
 
