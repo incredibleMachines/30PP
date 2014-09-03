@@ -15,7 +15,7 @@ void testApp::setup() {
     //set loop mode to loop either ambient or default content
     loopMode=GRADIENT_LOOP;
     //set number of GL cameras/projectors
-    numScreens=1;
+    numScreens=3;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
     startOffset=0;
     //set whether to check number of screens b/c less than 3 - will get set to true if cocoa ever detects less than three
@@ -31,7 +31,7 @@ void testApp::setup() {
     //VIDEO TEXTURE FOR OFXCOCOA AVPLAYER ITEM VIDEO
     ofTextureData data;
     data.textureTarget=GL_TEXTURE_RECTANGLE;
-//    cout<<data.textureTarget<<endl;
+    //    cout<<data.textureTarget<<endl;
 	data.width = TEX_WIDTH;
 	data.height = TEX_HEIGHT;
 	data.tex_w = TEX_WIDTH;
@@ -42,9 +42,14 @@ void testApp::setup() {
     meshTexture->allocate(data);
     
     //LOAD VIDEO
-//    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
-        MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
- 
+    //    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
+    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
+    //            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/logo.mov", meshTexture->texData.textureID);
+    //
+    //            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/outtakes.mov", meshTexture->texData.textureID);
+    
+    //     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
+    
     //----------MODEL MAPPER   SETUP
     //Load mesh vector to tell ModelMapper which meshes to use 3D obj file and which to set as 2D textures
     
@@ -116,11 +121,14 @@ void testApp::update(){
             }
         }
         
+        cout<<loadTime<<endl;
+        cout<<currentEnd<<endl;
+        
         if(socketHandler.eventHandler.currentEvent=="default"){
-//            currentEnd-=5;
-//            loadTime+=8.0;
-//            loopMode==DEFAULT_LOOP;
-//            loadTime+=3;
+            //            currentEnd-=5;
+            //            loadTime+=8.0;
+            //            loopMode==DEFAULT_LOOP;
+            //            loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -130,7 +138,7 @@ void testApp::update(){
                 currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
                 map.fadeIn(TRANSITION_DEFAULT);
             }
-
+            
             else {
                 loadTime=socketHandler.eventHandler.events[1].startTime;
                 currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
@@ -140,80 +148,87 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
-
-                loadTime=socketHandler.eventHandler.events[1].startTime;
-                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-                map.fadeIn(TRANSITION_DEFAULT);
-
+            loadTime=socketHandler.eventHandler.events[2].startTime;
+            //            loopMode==CLOUDS_LOOP;
+            map.fadeIn(TRANSITION_CLOUDS);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
-            currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-            map.fadeIn(TRANSITION_DEFAULT);
-
+            //            loopMode==GRADIENT_LOOP;
+            map.fadeIn(TRANSITION_GRADIENT);
+            
         }
         
+        
         else if(socketHandler.eventHandler.currentEvent=="ambient_clouds"){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
-            currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-            map.fadeIn(TRANSITION_DEFAULT);
+            //            loopMode==CLOUDS_LOOP;
+            map.fadeIn(TRANSITION_CLOUDS);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_party"){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
-            currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-            map.fadeIn(TRANSITION_DEFAULT);
+            //            loopMode=PARTY_LOOP;
+            map.fadeIn(TRANSITION_PARTY);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_waves"){
-            loadTime=socketHandler.eventHandler.events[1].startTime;
-            currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
-            map.fadeIn(TRANSITION_DEFAULT);
+            //            loopMode==WAVES_LOOP;
+            map.fadeIn(TRANSITION_WAVES);
+            
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
+            //            loopMode==DEFAULT_LOOP;
+            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
+            //            loopMode==DEFAULT_LOOP;
+            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
+            //                        loopMode==DEFAULT_LOOP;
+            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
+            //                        loopMode==DEFAULT_LOOP;
             map.fadeIn(TRANSITION_ARTS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="parks-activities"){
+            //                        loopMode==DEFAULT_LOOP;
+            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_LEISURE);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="for-children"){
-            map.fadeIn(TRANSITION_LEISURE);
+            //                        loopMode==DEFAULT_LOOP;
+            //            loadTime+=startOffset;
+            map.fadeIn(TRANSITION_CHILDREN);
         }
         
-//        else if(socketHandler.eventHandler.currentEvent=="pause"){
-//            bool bCanPause=false;
-//            
-//            //look for next pause time
-//            for(int i=0; i<pauseTimes.size();i++){
-//                if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
-//                    bCanPause=true;
-//                    pauseTime=pauseTimes[i];
-//                    break;
-//                }
-//            }
-//            if(bCanPause==true){
-//                bPausing=true;
-//            }
-//        }
+        //        else if(socketHandler.eventHandler.currentEvent=="pause"){
+        //            bool bCanPause=false;
+        //
+        //            //look for next pause time
+        //            for(int i=0; i<pauseTimes.size();i++){
+        //                if(pauseTimes[i]>MSA::ofxCocoa::getCurrentTime()){
+        //                    bCanPause=true;
+        //                    pauseTime=pauseTimes[i];
+        //                    break;
+        //                }
+        //            }
+        //            if(bCanPause==true){
+        //                bPausing=true;
+        //            }
+        //        }
         
         else if(socketHandler.eventHandler.currentEvent=="resume"){
             loadTime=socketHandler.eventHandler.events[5].startTime;
@@ -254,7 +269,7 @@ void testApp::update(){
         bCheckingTime=false;
         ofSetWindowPosition(-1920,0);
         if(socketHandler.eventHandler.currentEvent!="ambient_gradient"&&socketHandler.eventHandler.currentEvent!="ambient_clouds"&&socketHandler.eventHandler.currentEvent!="ambient_party"&&socketHandler.eventHandler.currentEvent!="ambient_waves"){
-        socketHandler.sendSocketCmd(END_REQ);
+            socketHandler.sendSocketCmd(END_REQ);
         }
     }
     
@@ -297,7 +312,7 @@ void testApp::update(){
     //Pass texture into ModelMapper
     map.update(meshTexture);
     
- 
+    
 }
 
 //--------------------------------------------------------------
@@ -319,7 +334,7 @@ void testApp::draw(){
     else {
         bScreenRestart=true;
     }
-
+    
     //if screens were not present and now are, restart app via socket command
     if(bScreenRestart==true&&bStartScreenRestart==true){
         socketHandler.sendSocketCmd(RESTART_REQ);
@@ -333,14 +348,14 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
     switch(key){
             
-        //debug pause and position controls
+            //debug pause and position controls
         case 'p':
             MSA::ofxCocoa::pausePlayer();
             break;
         case 'P':
             MSA::ofxCocoa::startPlayer();
             break;
-
+            
         case '{':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-10);
             break;
@@ -349,12 +364,32 @@ void testApp::keyPressed(int key){
             break;
         case '[':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()-5);
-            break;            
+            break;
         case ']':
             MSA::ofxCocoa::setTime(MSA::ofxCocoa::getCurrentTime()+5);
             break;
             
-        //debug quit app entirely and do not let node restart automatically
+            //        case '1':
+            //            MSA::ofxCocoa::setTime(1);
+            //            break;
+            //
+            //        case '2':
+            //            MSA::ofxCocoa::setTime(154);
+            //            break;
+            //
+            //        case '3':
+            //            MSA::ofxCocoa::setTime(353);
+            //            break;
+            //
+            //        case '4':
+            //            MSA::ofxCocoa::setTime(507);
+            //            break;
+            //
+            //        case '5':
+            //            MSA::ofxCocoa::setTime(725);
+            //            break;
+            
+            //debug quit app entirely and do not let node restart automatically
         case 'Q':
             socketHandler.sendSocketCmd(CLOSE_REQ);
             break;
@@ -366,7 +401,7 @@ void testApp::exit(){
 }
 
 void testApp::initVariables(){
-
+    
     // set default variable for default loop
     if(loopMode==DEFAULT_LOOP){
         currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
@@ -380,7 +415,7 @@ void testApp::initVariables(){
         currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
         currentTransition=TRANSITION_CLOUDS;
         loadTime=socketHandler.eventHandler.events[2].startTime;
-        map.fadeIn(TRANSITION_DEFAULT);
+        map.fadeIn(TRANSITION_CLOUDS);
     }
     
     //Pause times for default and detail loops

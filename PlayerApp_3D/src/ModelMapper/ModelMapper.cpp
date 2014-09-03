@@ -78,12 +78,17 @@ void ModelMapper::setup(int _numCams, int _guiCam, vector< vector<int> > _whichM
     transitionTime=1000;
     loadTime=500;
     ofLoadImage(ambientGradientFrame,"Ambient_Gradient_Frame.png");
+    ofLoadImage(artsFrame,"Gastronomy_Frame.png");
     ofLoadImage(gastronomyFrame,"Gastronomy_Frame.png");
-    ofLoadImage(endFrame,"End_Frame.jpg");
-    ofLoadImage(defaultFrame,"Default_Frame.jpg");
+    ofLoadImage(leisureFrame,"Gastronomy_Frame.png");
+    ofLoadImage(shoppingFrame,"Gastronomy_Frame.png");
+    ofLoadImage(marketsFrame,"Gastronomy_Frame.png");
+    ofLoadImage(endFrame,"Ambient_Gradient_Frame.png");
+    ofLoadImage(defaultFrame,"Ambient_Gradient_Frame.png");
     ofLoadImage(ambientCloudsFrame,"Ambient_Clouds_Frame.jpg");
     ofLoadImage(ambientPartyFrame,"Ambient_Party_Frame.jpg");
     ofLoadImage(ambientWavesFrame,"Ambient_Waves_Frame.jpg");
+    ofLoadImage(childrenFrame,"Gastronomy_Frame.png");
     bTransitioning=false;
     bTransitionStarted=false;
     bTransitionFinished=false;
@@ -3362,25 +3367,32 @@ void ModelMapper::fadeIn(int type){
         fadeFrame=&ambientGradientFrame;
     }
     else if(type==TRANSITION_ARTS){
-        fadeFrame=&gastronomyFrame;
+//        fadeFrame=&artsFrame;
+        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_GASTRONOMY){
         fadeFrame=&gastronomyFrame;
+//        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_LEISURE){
-        fadeFrame=&gastronomyFrame;
+//        fadeFrame=&leisureFrame;
+        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_CHILDREN){
-        fadeFrame=&gastronomyFrame;
+        //        fadeFrame=&leisureFrame;
+        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_SHOPPING){
-        fadeFrame=&gastronomyFrame;
+//        fadeFrame=&shoppingFrame;
+        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_MARKETS){
         fadeFrame=&gastronomyFrame;
+//        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_END){
-        fadeFrame=&ambientGradientFrame;
+//        fadeFrame=&endFrame;
+        fadeFrame=&marketsFrame;
     }
     else if(type==TRANSITION_CLOUDS){
         fadeFrame=&ambientCloudsFrame;
