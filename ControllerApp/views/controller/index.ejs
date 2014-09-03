@@ -57,8 +57,10 @@
           var html = '<article>'
           html+= '<section>'+playSales+'</section>'
           if(data.sales.play_single.length>0) html+= '<section>'+salesSingles+'</section>'
-          html+= '<section>'+playAmbient+'</section>'
-          if(data.ambient) { if(data.ambient.play_single.length>0) html+= '<section>'+ambientSingles+'</section>'}
+          if(data.ambient) {
+            html+= '<section>'+playAmbient+'</section>'
+            if(data.ambient.play_single.length>0) html+= '<section>'+ambientSingles+'</section>'
+          }
           html+= '<section>'+controlsButtons+'</section>'
           html+= '</article>'
 
