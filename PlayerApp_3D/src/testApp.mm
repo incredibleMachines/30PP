@@ -44,11 +44,6 @@ void testApp::setup() {
     //LOAD VIDEO
 //    MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/concatOutput.mov", meshTexture->texData.textureID);
         MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/output.mov", meshTexture->texData.textureID);
-//            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/logo.mov", meshTexture->texData.textureID);
-//
-//            MSA::ofxCocoa::initPlayer("../../../ControllerApp/includes/videos/outtakes.mov", meshTexture->texData.textureID);
-
-//     MSA::ofxCocoa::initPlayer("default_leisure.mov", meshTexture->texData.textureID);
  
     //----------MODEL MAPPER   SETUP
     //Load mesh vector to tell ModelMapper which meshes to use 3D obj file and which to set as 2D textures
@@ -145,63 +140,101 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient"){
-            loadTime=socketHandler.eventHandler.events[2].startTime;
-//            loopMode==CLOUDS_LOOP;
-            map.fadeIn(TRANSITION_CLOUDS);
+            if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            
+            else {
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            socketHandler.sendSocketCmd(END_REQ);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-//            loopMode==GRADIENT_LOOP;
-            map.fadeIn(TRANSITION_GRADIENT);
+            if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            
+            else {
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            socketHandler.sendSocketCmd(END_REQ);
 
         }
         
-        
         else if(socketHandler.eventHandler.currentEvent=="ambient_clouds"){
-//            loopMode==CLOUDS_LOOP;
-            map.fadeIn(TRANSITION_CLOUDS);
+            if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            
+            else {
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            socketHandler.sendSocketCmd(END_REQ);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_party"){
-//            loopMode=PARTY_LOOP;
-            map.fadeIn(TRANSITION_PARTY);
+            if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            
+            else {
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            socketHandler.sendSocketCmd(END_REQ);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_waves"){
-//            loopMode==WAVES_LOOP;
-            map.fadeIn(TRANSITION_WAVES);
+            if (loopMode==DEFAULT_LOOP){
+                loadTime=socketHandler.eventHandler.events[5].startTime;
+                currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
             
+            else {
+                loadTime=socketHandler.eventHandler.events[1].startTime;
+                currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
+                map.fadeIn(TRANSITION_DEFAULT);
+            }
+            socketHandler.sendSocketCmd(END_REQ);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-//            loopMode==DEFAULT_LOOP;
-//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
-//            loopMode==DEFAULT_LOOP;
-//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
-//                        loopMode==DEFAULT_LOOP;
-//            loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
-//                        loopMode==DEFAULT_LOOP;
             map.fadeIn(TRANSITION_ARTS);
         }
         
-        else if(socketHandler.eventHandler.currentEvent=="leisure"){
-//                        loopMode==DEFAULT_LOOP;
-//            loadTime+=startOffset;
+        else if(socketHandler.eventHandler.currentEvent=="parks-activities"){
             map.fadeIn(TRANSITION_LEISURE);
         }
         

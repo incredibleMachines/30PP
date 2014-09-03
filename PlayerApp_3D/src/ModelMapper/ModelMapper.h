@@ -60,6 +60,7 @@
 #define TRANSITION_CLOUDS 8
 #define TRANSITION_PARTY 9
 #define TRANSITION_WAVES 10
+#define TRANSITION_CHILDREN 11
 
 class ModelMapper {
 public:
@@ -365,7 +366,7 @@ public:
     //timer on transition
     int transitionTimer;
     //textures for each individual transition graphic
-    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame, endFrame, ambientCloudsFrame, ambientPartyFrame, ambientWavesFrame;
+    ofTexture defaultFrame, gastronomyFrame, marketsFrame, shoppingFrame, artsFrame, leisureFrame, ambientGradientFrame, endFrame, ambientCloudsFrame, ambientPartyFrame, ambientWavesFrame, childrenFrame;
     //reference for current transition graphic
     ofTexture * fadeFrame;
     
