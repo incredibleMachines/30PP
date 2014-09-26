@@ -15,7 +15,7 @@ void testApp::setup() {
     //set loop mode to loop either ambient or default content
     loopMode=GRADIENT_LOOP;
     //set number of GL cameras/projectors
-    numScreens=3;
+    numScreens=1;
     //set how many seconds into detail section to start after transition, determines speed of transition (smaller = longer)
     startOffset=0;
     //set whether to check number of screens b/c less than 3 - will get set to true if cocoa ever detects less than three
@@ -124,11 +124,19 @@ void testApp::update(){
         cout<<loadTime<<endl;
         cout<<currentEnd<<endl;
         
+        if(socketHandler.eventHandler.currentEvent=="loop"){
+            loopMode=DEFAULT_LOOP;
+            map.fadeIn(TRANSITION_DEFAULT);
+            loadTime=socketHandler.eventHandler.events[5].startTime;
+            currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
+        }
+        
+        else{
+            loopMode=GRADIENT_LOOP;
+        }
+        
+        
         if(socketHandler.eventHandler.currentEvent=="default"){
-            //            currentEnd-=5;
-            //            loadTime+=8.0;
-            //            loopMode==DEFAULT_LOOP;
-            //            loadTime+=3;
             map.fadeIn(TRANSITION_DEFAULT);
         }
         
@@ -155,62 +163,47 @@ void testApp::update(){
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_gradient"){
-            //            loopMode==GRADIENT_LOOP;
             map.fadeIn(TRANSITION_GRADIENT);
             
         }
         
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_clouds"){
-            //            loopMode==CLOUDS_LOOP;
             map.fadeIn(TRANSITION_CLOUDS);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_party"){
-            //            loopMode=PARTY_LOOP;
             map.fadeIn(TRANSITION_PARTY);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="ambient_waves"){
-            //            loopMode==WAVES_LOOP;
             map.fadeIn(TRANSITION_WAVES);
             
         }
         
         else if(socketHandler.eventHandler.currentEvent=="gastronomy"){
-            //            loopMode==DEFAULT_LOOP;
-            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_GASTRONOMY);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="markets"){
-            //            loopMode==DEFAULT_LOOP;
-            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_MARKETS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="shopping"){
-            //                        loopMode==DEFAULT_LOOP;
-            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_SHOPPING);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="art-design"){
-            //                        loopMode==DEFAULT_LOOP;
             map.fadeIn(TRANSITION_ARTS);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="parks-activities"){
-            //                        loopMode==DEFAULT_LOOP;
-            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_LEISURE);
         }
         
         else if(socketHandler.eventHandler.currentEvent=="for-children"){
-            //                        loopMode==DEFAULT_LOOP;
-            //            loadTime+=startOffset;
             map.fadeIn(TRANSITION_CHILDREN);
         }
         
@@ -241,12 +234,7 @@ void testApp::update(){
     
     //check for end of current event and then go to ambient/default start
     if(bCheckingTime==true&&MSA::ofxCocoa::getCurrentTime()>currentEnd-1){
-        if(loopMode==CLOUDS_LOOP){
-            loadTime=socketHandler.eventHandler.events[2].startTime;
-            currentEnd=socketHandler.eventHandler.events[2].startTime+socketHandler.eventHandler.events[2].duration;
-            map.fadeIn(TRANSITION_CLOUDS);
-        }
-        else if(loopMode==GRADIENT_LOOP){
+        if(loopMode==GRADIENT_LOOP){
             loadTime=socketHandler.eventHandler.events[1].startTime;
             currentEnd=socketHandler.eventHandler.events[1].startTime+socketHandler.eventHandler.events[1].duration;
             map.fadeIn(TRANSITION_GRADIENT);
@@ -255,16 +243,6 @@ void testApp::update(){
             loadTime=socketHandler.eventHandler.events[5].startTime;
             currentEnd=socketHandler.eventHandler.events[5].startTime+socketHandler.eventHandler.events[5].duration;
             map.fadeIn(TRANSITION_DEFAULT);
-        }
-        else if (loopMode==WAVES_LOOP){
-            loadTime=socketHandler.eventHandler.events[4].startTime;
-            currentEnd=socketHandler.eventHandler.events[4].startTime+socketHandler.eventHandler.events[4].duration;
-            map.fadeIn(TRANSITION_WAVES);
-        }
-        else if (loopMode==PARTY_LOOP){
-            currentEnd=socketHandler.eventHandler.events[3].startTime+socketHandler.eventHandler.events[3].duration;
-            loadTime=socketHandler.eventHandler.events[3].startTime;
-            map.fadeIn(TRANSITION_PARTY);
         }
         bCheckingTime=false;
         ofSetWindowPosition(-1920,0);
